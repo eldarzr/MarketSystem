@@ -34,7 +34,7 @@ public interface MarketIntr {
 
 
     //shop functions
-    void createShop(String userName, String shopName);
+    void createShop(String userName, String shopName) throws Exception;
 
     void openShop(String userName, String shopName);
 

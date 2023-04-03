@@ -1,9 +1,5 @@
 package BusinessLayer;
 
-import BusinessLayer.Purchases.Cart;
-import BusinessLayer.Purchases.PurchaseIntr;
-import BusinessLayer.Purchases.ShopBag;
-import BusinessLayer.Shops.ProductIntr;
 import BusinessLayer.Shops.ShopIntr;
 import BusinessLayer.Users.User;
 import BusinessLayer.Users.UserIntr;
@@ -135,8 +131,11 @@ public class Market implements MarketIntr{
     }
 
     @Override
-    public void createShop(String userName, String shopName) {
-
+    public void createShop(String userName, String shopName) throws Exception {
+      checkIfLoggedIn(userName);
+      if(!shops.containsKey(shopName))
+        throw new Exception("there is already shop with that name");
+      Shop shop = new Shop(shopName);
     }
 
     @Override
