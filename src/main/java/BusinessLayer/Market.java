@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import java.util.Collection;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 public class Market implements MarketIntr{
@@ -23,8 +23,8 @@ public class Market implements MarketIntr{
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    ConcurrentLinkedQueue<User> allUsers = new ConcurrentLinkedQueue<>();
-    ConcurrentLinkedQueue<User> loginUsers = new ConcurrentLinkedQueue<>();
+    ConcurrentHashMap<String,User> allUsers = new ConcurrentHashMap<>();
+    ConcurrentHashMap<String,User> loginUsers = new ConcurrentHashMap<>();
 
     public Market() {
         this.passwordEncoder = passwordEncoder();
@@ -57,21 +57,16 @@ public class Market implements MarketIntr{
         checkValidEmail(email);
         String encodedPassword = passwordEncoder.encode(password);
         User nuser = new User(userName,email,encodedPassword);
-        allUsers.add(nuser);
+        allUsers.put(userName,nuser);
     }
 
     private static void checkValidEmail(String email) throws AddressException {
-//        try {
             InternetAddress emailVal = new InternetAddress(email);
             emailVal.validate();
-//        } catch (AddressException e) {
-//            throw new IllegalArgumentException("Invalid email address");
-//        }
     }
 
     public void checkValidPassword(String password) {
         // Check if password is at least 8 characters long
-
         if (password.length() < 8) {
             throw new IllegalArgumentException("Password must be at least of length 8");
         }
@@ -126,7 +121,7 @@ public class Market implements MarketIntr{
             throw new IllegalArgumentException(String.format("User: %s already logged in",userName));
         if(!passwordEncoder.matches(password,user.getPassword()))
             throw new IllegalArgumentException("incorrect password");
-        loginUsers.add(user);
+        loginUsers.put(user.getName(),user);
     }
 
     @Override
@@ -285,20 +280,14 @@ public class Market implements MarketIntr{
     }
 
     private User findUserByName(String targetName) {
-        for (User user : allUsers) {
-            if (user.getName().equals(targetName)) {
-                return user;
-            }
-        }
+        if(allUsers.containsKey(targetName))
+            return allUsers.get(targetName);
         throw new IllegalArgumentException(String.format("user name: %s is unknown",targetName));
     }
 
     private boolean isLoggedIn(String userName){
-        for (User user : loginUsers) {
-            if (user.getName().equals(userName)) {
-                return true;
-            }
-        }
+        if(loginUsers.containsKey(userName))
+            return true;
         return false;
     }
 }

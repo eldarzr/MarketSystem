@@ -1,18 +1,13 @@
 package BusinessLayer;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MarketTest {
+class MarketLoginRegisterTests {
 
     Market market;
-
-    @org.junit.jupiter.api.Test
-    void register() throws Exception {
-        market.register("nivuzan","nivuzan@gmail.com","TryTry123");
-    }
-
     @org.junit.jupiter.api.Test
     void register_invalid_username(){
         String[] names = {"1231asasd", "", "a","asdasdasdasdasdasdasasd","!sd2","username!"};
@@ -44,11 +39,31 @@ class MarketTest {
     }
 
     @org.junit.jupiter.api.Test
-    void login() {
+    void register() throws Exception {
+        market.register("nivuzan","nivuzan@gmail.com","TryTry123");
     }
+
+    @org.junit.jupiter.api.Test
+    void login() throws Exception {
+        market.register("nivuzan","nivuzan@gmail.com","TryTry123");
+        market.login("nivuzan","TryTry123");
+    }
+
+    @org.junit.jupiter.api.Test
+    void login_fail() throws Exception {
+        String username = "nivuzan";
+        assertThrows(Exception.class, () -> {
+            market.login(username,"aN12332");
+        },String.format("successful login with username : %s",username));
+    }
+
 
     @BeforeEach
     void setUp() {
         market = new Market();
+    }
+
+    @AfterEach
+    void tearDown() {
     }
 }
