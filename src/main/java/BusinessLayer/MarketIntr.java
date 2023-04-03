@@ -6,10 +6,10 @@ import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Shops.ProductIntr;
 import BusinessLayer.Shops.ShopIntr;
 import BusinessLayer.Users.UserIntr;
+import java.util.*;
 
-import java.util.Collection;
 
-public interface Market {
+public interface MarketIntr {
 
     //open and initialize the market system
     void init();

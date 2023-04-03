@@ -2,7 +2,7 @@ BusinessLayer\Purchases\PurchaseIntr.class
 BusinessLayer\Users\UserIntr.class
 BusinessLayer\Shops\ProductIntr.class
 BusinessLayer\Shops\ShopIntr.class
+BusinessLayer\MarketIntr.class
 BusinessLayer\Main.class
-BusinessLayer\Market.class
 BusinessLayer\Purchases\Cart.class
 BusinessLayer\Purchases\ShopBag.class
