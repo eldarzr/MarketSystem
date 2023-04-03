@@ -21,7 +21,7 @@ public interface MarketIntr {
 
     void closeSession(String userName);
 
-    void register(String userName, String password);
+    void register(String userName, String email, String password) throws Exception;
 
     void login(String userName, String password);
 
