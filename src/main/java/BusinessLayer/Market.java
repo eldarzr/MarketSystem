@@ -23,7 +23,7 @@ public class Market implements MarketIntr{
 
     ConcurrentHashMap<String,User> allUsers = new ConcurrentHashMap<>();
     ConcurrentHashMap<String,User> loginUsers = new ConcurrentHashMap<>();
-    ConcurrentHashMap<String,User> shops = new ConcurrentHashMap<>();
+    ConcurrentHashMap<String,Shop> shops = new ConcurrentHashMap<>();
 
     public Market() {
         this.passwordEncoder = passwordEncoder();
@@ -135,10 +135,12 @@ public class Market implements MarketIntr{
 
     @Override
     public void createShop(String userName, String shopName) throws Exception {
-      isLoggedIn(userName);
-      if(!shops.containsKey(shopName))
+      if(!isLoggedIn(userName))
+          throw new Exception(String.format("the user %s is not login", userName));
+        if(shops.containsKey(shopName))
         throw new Exception("there is already shop with that name");
       Shop shop = new Shop(shopName);
+      shops.put(shopName, shop);
     }
 
     @Override
