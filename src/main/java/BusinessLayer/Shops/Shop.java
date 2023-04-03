@@ -2,7 +2,7 @@ package BusinessLayer.Shops;
 
 public class Shop implements ShopIntr{
 	String name;
-	Boolean open;
+	boolean open;
 
 	public Shop(String name) {
 		this.name = name;
@@ -17,11 +17,11 @@ public class Shop implements ShopIntr{
 		this.name = name;
 	}
 
-	public Boolean isOpen() {
+	public boolean isOpen() {
 		return open;
 	}
 
-	public void setState(Boolean open) {
+	public void setState(boolean open) {
 		this.open = open;
 	}
 }
