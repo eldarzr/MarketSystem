@@ -1,8 +1,9 @@
 package BusinessLayer;
 
-import BusinessLayer.Shops.ShopIntr;
-import BusinessLayer.Users.User;
-import BusinessLayer.Users.UserIntr;
+import BusinessLayer.Shops.*;
+import BusinessLayer.Users.*;
+import BusinessLayer.Purchases.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
@@ -21,6 +23,7 @@ public class Market implements MarketIntr{
 
     ConcurrentHashMap<String,User> allUsers = new ConcurrentHashMap<>();
     ConcurrentHashMap<String,User> loginUsers = new ConcurrentHashMap<>();
+    ConcurrentHashMap<String,User> shops = new ConcurrentHashMap<>();
 
     public Market() {
         this.passwordEncoder = passwordEncoder();
@@ -132,7 +135,7 @@ public class Market implements MarketIntr{
 
     @Override
     public void createShop(String userName, String shopName) throws Exception {
-      checkIfLoggedIn(userName);
+      isLoggedIn(userName);
       if(!shops.containsKey(shopName))
         throw new Exception("there is already shop with that name");
       Shop shop = new Shop(shopName);
