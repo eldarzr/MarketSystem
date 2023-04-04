@@ -1,16 +1,27 @@
 package BusinessLayer.Users;
 
+import BusinessLayer.MemberRoleInShop;
+import BusinessLayer.Shops.Shop;
+
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 public class User {
 
     private String name;
     private String email;
     private String password;
     private boolean twoFactorEnabled;
+    private ConcurrentLinkedQueue<String> foundedShops;
+    //map of shop name to role of this user in the shop
+    private ConcurrentHashMap<String, MemberRoleInShop> roles;
 
     public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.foundedShops = new ConcurrentLinkedQueue<>();
+        this.roles = new ConcurrentHashMap<>();
     }
 
 
@@ -44,5 +55,11 @@ public class User {
 
     public void setTwoFactorEnabled(boolean twoFactorEnabled) {
         this.twoFactorEnabled = twoFactorEnabled;
+    }
+
+    public void addFoundedShop(String shopName) throws Exception {
+        if(foundedShops.contains(shopName))
+            throw new Exception(String.format("the user %s already have shop named %s", name, shopName));
+        foundedShops.add(shopName);
     }
 }
