@@ -137,9 +137,11 @@ public class Market implements MarketIntr{
     public void createShop(String userName, String shopName) throws Exception {
       if(!isLoggedIn(userName))
           throw new Exception(String.format("the user %s is not login", userName));
-        if(shops.containsKey(shopName))
+      if(shops.containsKey(shopName))
         throw new Exception("there is already shop with that name");
-      Shop shop = new Shop(shopName);
+      User user = findUserByName(userName);
+      Shop shop = new Shop(shopName, userName);
+      user.addFoundedShop(shopName);
       shops.put(shopName, shop);
     }
 
