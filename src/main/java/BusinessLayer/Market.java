@@ -5,6 +5,8 @@ import BusinessLayer.Shops.*;
 import BusinessLayer.Users.*;
 import BusinessLayer.Purchases.*;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,9 +15,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Market implements MarketIntr{
 
@@ -192,8 +197,28 @@ public class Market implements MarketIntr{
     }
 
     @Override
-    public ShopIntr getShop(String userName, String shopName) {
-        return null;
+    public ShopIntr getShop(String userName, String shopName) throws Exception {
+        Collection<ShopIntr> shopsToReturn = getShopsLimited(userName, shopName, 2);
+        if (shopsToReturn == null && shopsToReturn.size() < 1)
+            throw new Exception(String.format("there is no shop in this name: %s", shopName));
+        return shopsToReturn.stream().collect(Collectors.toList()).get(0);
+    }
+
+    public Collection<ShopIntr> getShops(String userName, String shopName) throws Exception {
+        return getShopsLimited(userName, shopName, 2);
+    }
+
+
+    private Collection<ShopIntr> getShopsLimited(String userName, String shopName, int max_distance) throws Exception {
+        LevenshteinDistance distance = new LevenshteinDistance();
+        if (!isLoggedIn(userName))
+            throw new Exception(String.format("the user %s is not login", userName));
+        Collection<ShopIntr> shopsToReturn = new ConcurrentLinkedDeque<>();
+        for (String shopName1 : shops.keySet()) {
+            if (distance.apply(shopName, shopName1) <= max_distance)
+                shopsToReturn.add(shops.get(shopName1));
+        }
+        return shopsToReturn;
     }
 
     @Override

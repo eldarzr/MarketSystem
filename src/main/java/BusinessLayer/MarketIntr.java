@@ -54,7 +54,7 @@ public interface MarketIntr {
 
     void addProductItems(String userName, String shopName, String productName, int quantity);
 
-    ShopIntr getShop(String userName, String shopName);
+    ShopIntr getShop(String userName, String shopName) throws Exception;
 
     ProductIntr getProduct(String userName, String shopName, String productName);
 
