@@ -76,4 +76,8 @@ public class User {
             throw new Exception(String.format("the user %s already have shop named %s", name, shopName));
         foundedShops.add(shopName);
     }
+
+    public void addShopRole(String roleShop , MemberRoleInShop role) {
+        roles.put(roleShop , role);
+    }
 }

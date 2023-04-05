@@ -1,5 +1,6 @@
 package BusinessLayer;
 
+import BusinessLayer.Enums.ManageType;
 import BusinessLayer.Enums.UserType;
 import BusinessLayer.Shops.*;
 import BusinessLayer.Users.*;
@@ -144,6 +145,7 @@ public class Market implements MarketIntr{
       Shop shop = new Shop(shopName, userName);
       user.addFoundedShop(shopName);
       shops.put(shopName, shop);
+      MemberRoleInShop.createOwner(user,shop);
     }
 
     @Override
@@ -219,22 +221,26 @@ public class Market implements MarketIntr{
             throw new Exception("there is no such shop named :" +shopName);
         Shop reqShop = shops.get(shopName);
         reqShop.setShopOwner(actor,actOn);
-
     }
 
-    private User validateUserIsntGuest(String appointedBy) throws Exception {
-        if(!allUsers.containsKey(appointedBy))
-            throw new Exception("there is no such user named :" +appointedBy);
-        User user = allUsers.get(appointedBy);
-
+    private User validateUserIsntGuest(String userName) throws Exception {
+        if(!allUsers.containsKey(userName))
+            throw new Exception("there is no such user named :" +userName);
+        User user = allUsers.get(userName);
         if(user.getUserType() == UserType.GUEST)
-            throw new Exception("guest cannot set shop owners");
+            throw new Exception("guests cannot do it");
         return user;
+
     }
 
     @Override
-    public void appointShopManager(String appointedBy, String appointee, String shopName) {
-
+    public void appointShopManager(String appointedBy, String appointee, String shopName) throws Exception {
+        User actor = validateUserIsntGuest(appointedBy);
+        User actOn = validateUserIsntGuest(appointee);
+        if(!shops.containsKey(shopName))
+            throw new Exception("there is no such shop named :" +shopName);
+        Shop reqShop = shops.get(shopName);
+        reqShop.setShopManager(actor,actOn);
     }
 
     @Override
