@@ -2,6 +2,7 @@ package BusinessLayer.Shops;
 
 import BusinessLayer.MemberRoleInShop;
 
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Shop implements ShopIntr{
@@ -10,12 +11,14 @@ public class Shop implements ShopIntr{
 	private String founderUserName;
 	//map of user name to role in this shop
 	private ConcurrentHashMap<String, MemberRoleInShop> roles;
+	private ConcurrentHashMap<String, ProductIntr> products;
 
 	public Shop(String name, String founderUserName) {
 		this.name = name;
 		this.open = false;
 		this.founderUserName = founderUserName;
 		this.roles = new ConcurrentHashMap<>();
+		this.products = new ConcurrentHashMap<String, ProductIntr>();
 	}
 
 	public String getName() {
@@ -36,5 +39,9 @@ public class Shop implements ShopIntr{
 
 	public String getFounder() {
 		return founderUserName;
+	}
+
+	public Collection<ProductIntr> getProducts() {
+		return products.values();
 	}
 }
