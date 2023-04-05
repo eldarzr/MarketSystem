@@ -1,5 +1,6 @@
 package BusinessLayer;
 
+import BusinessLayer.Enums.UserType;
 import BusinessLayer.Shops.*;
 import BusinessLayer.Users.*;
 import BusinessLayer.Purchases.*;
@@ -211,8 +212,24 @@ public class Market implements MarketIntr{
     }
 
     @Override
-    public void appointShopOwner(String appointedBy, String appointee, String shopName) {
+    public void appointShopOwner(String appointedBy, String appointee, String shopName) throws Exception {
+        User actor = validateUserIsntGuest(appointedBy);
+        User actOn = validateUserIsntGuest(appointee);
+        if(!shops.containsKey(shopName))
+            throw new Exception("there is no such shop named :" +shopName);
+        Shop reqShop = shops.get(shopName);
+        reqShop.setShopOwner(actor,actOn);
 
+    }
+
+    private User validateUserIsntGuest(String appointedBy) throws Exception {
+        if(!allUsers.containsKey(appointedBy))
+            throw new Exception("there is no such user named :" +appointedBy);
+        User user = allUsers.get(appointedBy);
+
+        if(user.getUserType() == UserType.GUEST)
+            throw new Exception("guest cannot set shop owners");
+        return user;
     }
 
     @Override

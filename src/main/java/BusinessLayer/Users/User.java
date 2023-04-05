@@ -1,5 +1,6 @@
 package BusinessLayer.Users;
 
+import BusinessLayer.Enums.UserType;
 import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.Shops.Shop;
 
@@ -7,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class User {
-
+    private UserType userType;
     private String name;
     private String email;
     private String password;
@@ -22,6 +23,11 @@ public class User {
         this.password = password;
         this.foundedShops = new ConcurrentLinkedQueue<>();
         this.roles = new ConcurrentHashMap<>();
+        userType = UserType.MEMBER;
+    }
+
+    public User() {
+        userType = UserType.GUEST;
     }
 
 
@@ -51,6 +57,14 @@ public class User {
 
     public boolean isTwoFactorEnabled() {
         return twoFactorEnabled;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
     }
 
     public void setTwoFactorEnabled(boolean twoFactorEnabled) {

@@ -63,7 +63,7 @@ public interface MarketIntr {
     Collection<PurchaseIntr> getShopPurchaseHistory(String shopName);
 
     //4.4
-    void appointShopOwner(String appointedBy, String appointee, String shopName);
+    void appointShopOwner(String appointedBy, String appointee, String shopName) throws Exception;
 
     //4.6
     void appointShopManager(String appointedBy, String appointee, String shopName);
