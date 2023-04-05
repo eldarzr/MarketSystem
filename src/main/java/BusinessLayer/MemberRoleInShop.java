@@ -26,4 +26,28 @@ public class MemberRoleInShop {
 		//TODO: add logic to add manager
 		return new MemberRoleInShop(grantor, MANAGER, permissions);
 	}
+
+	public User getGrantor() {
+		return grantor;
+	}
+
+	public void setGrantor(User grantor) {
+		this.grantor = grantor;
+	}
+
+	public ManageType getType() {
+		return type;
+	}
+
+	public void setType(ManageType type) {
+		this.type = type;
+	}
+
+	public ManagePermissions getPermissions() {
+		return permissions;
+	}
+
+	public void setPermissions(ManagePermissions permissions) {
+		this.permissions = permissions;
+	}
 }
