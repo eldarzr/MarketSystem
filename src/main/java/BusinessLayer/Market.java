@@ -214,7 +214,7 @@ public class Market implements MarketIntr{
     @Override
     public void appointShopOwner(String appointedBy, String appointee, String shopName) throws Exception {
         User actor = validateUserIsntGuest(appointedBy);
-        User actOn = validateUserIsntGuest(appointedBy);
+        User actOn = validateUserIsntGuest(appointee);
         if(!shops.containsKey(shopName))
             throw new Exception("there is no such shop named :" +shopName);
         Shop reqShop = shops.get(shopName);
