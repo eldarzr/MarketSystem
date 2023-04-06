@@ -250,23 +250,16 @@ public class Market implements MarketIntr{
     }
 
     @Override
-    public Collection<ProductIntr> basicSearch(String userName, String productName) throws Exception {
-        Collection<ProductIntr> prodsToReturn = getProducts(userName, shops.keySet(), productName);
-        if (prodsToReturn.size() < 1)
-            throw new Exception(String.format("there is no product in this name: %s", productName));
-        return prodsToReturn;
+    public List<ProductIntr> basicSearch(String userName, String productName) throws Exception {
+        return getProducts(userName, shops.keySet(), productName);
     }
 
     @Override
-    public Collection<ProductIntr> extendedSearch(String userName, String productName, double minPrice, double maxPrice,
+    public List<ProductIntr> extendedSearch(String userName, String productName, double minPrice, double maxPrice,
                                                   String category) throws Exception{
-        Collection<ProductIntr> prodsToReturn = basicSearch(userName, productName);
-        prodsToReturn = prodsToReturn.stream().filter(
+        return basicSearch(userName, productName).stream().filter(
                 (ProductIntr product) -> product.isOnPrice(minPrice, maxPrice) && product.isOnCategory(category))
                 .collect(Collectors.toList());
-        if (prodsToReturn.size() < 1)
-            throw new Exception(String.format("there is no product in this conditions"));
-        return prodsToReturn;
     }
 
     @Override
