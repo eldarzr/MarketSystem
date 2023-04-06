@@ -18,6 +18,7 @@ import javax.mail.internet.InternetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.regex.Pattern;
@@ -31,6 +32,8 @@ public class Market implements MarketIntr{
     ConcurrentHashMap<String,User> allUsers = new ConcurrentHashMap<>();
     ConcurrentHashMap<String,User> loginUsers = new ConcurrentHashMap<>();
     ConcurrentHashMap<String,Shop> shops = new ConcurrentHashMap<>();
+    private final int SHOP_DISTANCE_MAX_LIMIT = 2;
+    private final int PRODUCT_DISTANCE_MAX_LIMIT = 2;
 
     public Market() {
         this.passwordEncoder = passwordEncoder();
@@ -199,49 +202,48 @@ public class Market implements MarketIntr{
 
     @Override
     public ShopIntr getShop(String userName, String shopName) throws Exception {
-        Collection<ShopIntr> shopsToReturn = getShopsLimited(userName, shopName, 2);
+        List<Shop> shopsToReturn = getShops(userName, shopName);
         if (shopsToReturn.size() < 1)
             throw new Exception(String.format("there is no shop in this name: %s", shopName));
-        return new ArrayList<>(shopsToReturn).get(0);
+        return getShops(userName, shopName).get(0);
     }
 
-    public Collection<ShopIntr> getShops(String userName, String shopName) throws Exception {
-        return getShopsLimited(userName, shopName, 2);
-    }
-
-
-    private Collection<ShopIntr> getShopsLimited(String userName, String shopName, int max_distance) throws Exception {
+    public List<Shop> getShops(String userName, String shopName) throws Exception {
         LevenshteinDistance distance = new LevenshteinDistance();
         if (!isLoggedIn(userName))
             throw new Exception(String.format("the user %s is not login", userName));
-        Collection<ShopIntr> shopsToReturn = new ConcurrentLinkedDeque<>();
+        List<Shop> shopsToReturn = new ArrayList<>();
         for (String shopName1 : shops.keySet()) {
-            if (distance.apply(shopName, shopName1) <= max_distance)
+            if (distance.apply(shopName, shopName1) <= SHOP_DISTANCE_MAX_LIMIT)
                 shopsToReturn.add(shops.get(shopName1));
         }
-        return shopsToReturn;
+        return shopsToReturn.stream().sorted((shop1, shop2) ->
+                distance.apply(shop1.getName(), shopName) - distance.apply(shop2.getName(), shopName)).
+                collect(Collectors.toList());
     }
 
-    private Collection<ProductIntr> getProductsLimited(String userName, Collection<String> shopNames,
-                                                       String productName, int max_distance) throws Exception {
+    private List<ProductIntr> getProducts(String userName, Collection<String> shopNames,
+                                                       String productName) throws Exception {
         LevenshteinDistance distance = new LevenshteinDistance();
         if (!isLoggedIn(userName))
             throw new Exception(String.format("the user %s is not login", userName));
-        Collection<ProductIntr> prodsToReturn = new ConcurrentLinkedDeque<>();
+        List<ProductIntr> prodsToReturn = new ArrayList<>();
         for (String shopName : shopNames){
             for (ProductIntr product : shops.get(shopName).getProducts()) {
-                if (distance.apply(product.getName(), productName) <= max_distance)
+                if (distance.apply(product.getName(), productName) <= PRODUCT_DISTANCE_MAX_LIMIT)
                     prodsToReturn.add(product);
             }
     }
-        return prodsToReturn;
+        return prodsToReturn.stream().sorted((prod1, prod2) ->
+                distance.apply(prod1.getName(), productName) - distance.apply(prod2.getName(), productName)).
+                collect(Collectors.toList());
     }
 
     @Override
     public ProductIntr getProduct(String userName, String shopName, String productName) throws Exception {
         ArrayList<String> shopsNames = new ArrayList<>();
         shopsNames.add(shopName);
-        Collection<ProductIntr> prodsToReturn = getProductsLimited(userName, shopsNames, productName, 2);
+        Collection<ProductIntr> prodsToReturn = getProducts(userName, shopsNames, productName);
         if (prodsToReturn.size() < 1)
             throw new Exception(String.format("there is no product in this name: %s", productName));
         return prodsToReturn.stream().collect(Collectors.toList()).get(0);
@@ -249,7 +251,7 @@ public class Market implements MarketIntr{
 
     @Override
     public Collection<ProductIntr> basicSearch(String userName, String productName) throws Exception {
-        Collection<ProductIntr> prodsToReturn = getProductsLimited(userName, shops.keySet(), productName, 2);
+        Collection<ProductIntr> prodsToReturn = getProducts(userName, shops.keySet(), productName);
         if (prodsToReturn.size() < 1)
             throw new Exception(String.format("there is no product in this name: %s", productName));
         return prodsToReturn;
