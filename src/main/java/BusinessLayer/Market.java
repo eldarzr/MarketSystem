@@ -24,20 +24,12 @@ import java.util.stream.Collectors;
 
 public class Market implements MarketIntr{
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
-    ConcurrentHashMap<String,User> allUsers = new ConcurrentHashMap<>();
-    ConcurrentHashMap<String,User> loginUsers = new ConcurrentHashMap<>();
     ConcurrentHashMap<String,Shop> shops = new ConcurrentHashMap<>();
+    UsersHandler usersHandler;
 
     public Market() {
-        this.passwordEncoder = passwordEncoder();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        usersHandler = UsersHandler.getInstance();
     }
 
     @Override
@@ -56,82 +48,17 @@ public class Market implements MarketIntr{
     }
 
     @Override
-    public void register(String userName, String email, String password) throws Exception{
-        checkValidUserName(userName);
-        checkValidPassword(password);
-        checkValidEmail(email);
-        String encodedPassword = passwordEncoder.encode(password);
-        User nuser = new User(userName,email,encodedPassword);
-        allUsers.put(userName,nuser);
+    public void register(String userName, String email, String password) throws Exception {
+        usersHandler.register(userName, email, password);
     }
-
-    private static void checkValidEmail(String email) throws AddressException {
-            InternetAddress emailVal = new InternetAddress(email);
-            emailVal.validate();
-    }
-
-    public void checkValidPassword(String password) {
-        // Check if password is at least 8 characters long
-        if (password.length() < 8) {
-            throw new IllegalArgumentException("Password must be at least of length 8");
-        }
-
-        // Check if password contains at least one uppercase letter, one lowercase letter, and one digit
-        boolean hasUpperCase = false;
-        boolean hasLowerCase = false;
-        boolean hasDigit = false;
-        for (char c : password.toCharArray()) {
-            if (Character.isUpperCase(c)) {
-                hasUpperCase = true;
-            } else if (Character.isLowerCase(c)) {
-                hasLowerCase = true;
-            } else if (Character.isDigit(c)) {
-                hasDigit = true;
-            }
-        }
-        if(!hasUpperCase)
-            throw new IllegalArgumentException("Password must contain at least one upper case letter");
-        if(!hasLowerCase)
-            throw new IllegalArgumentException("Password must contain at least one lower case letter");
-        if(!hasDigit)
-            throw new IllegalArgumentException("password must contain at lesat one number");
-    }
-
-    private void checkValidUserName(String username) {
-        int lower_bound = 4;
-        int upper_bound = 16;
-        // Check if username is between lower_bound and upper_bound characters long
-        if (username.length() < lower_bound || username.length() > upper_bound) {
-            throw new IllegalArgumentException(String.format("user name length need to be bigger than %d and lower than %d",lower_bound,upper_bound));
-        }
-
-        // Check if username only contains alphanumeric characters or underscores
-        Pattern pattern = Pattern.compile("^[a-zA-Z0-9_]*$");
-        if (!pattern.matcher(username).matches()) {
-            throw new IllegalArgumentException("password can contain only alphanumeric characters or underscores");
-        }
-
-        // Check if username starts with a letter
-        char firstChar = username.charAt(0);
-        if (!Character.isLetter(firstChar)) {
-            throw new IllegalArgumentException("password must start with a letter");
-        }
-    }
-
-
     @Override
     public void login(String userName, String password) {
-        User user = findUserByName(userName);
-        if(isLoggedIn(user.getName()))
-            throw new IllegalArgumentException(String.format("User: %s already logged in",userName));
-        if(!passwordEncoder.matches(password,user.getPassword()))
-            throw new IllegalArgumentException("incorrect password");
-        loginUsers.put(user.getName(),user);
+        usersHandler.login(userName, password);
     }
 
     @Override
     public void logout(String userName) {
-
+        usersHandler.logout(userName);
     }
 
     @Override
@@ -243,14 +170,15 @@ public class Market implements MarketIntr{
         if(!shops.containsKey(shopName))
             throw new Exception("there is no such shop named :" +shopName);
         Shop reqShop = shops.get(shopName);
-        reqShop.setShopOwner(actor,actOn);
+//        reqShop.setShopOwner(actor,actOn);
 
     }
 
     private User validateUserIsntGuest(String appointedBy) throws Exception {
-        if(!allUsers.containsKey(appointedBy))
-            throw new Exception("there is no such user named :" +appointedBy);
-        User user = allUsers.get(appointedBy);
+        User user = findUserByName(appointedBy);
+//        if(!usersHandler.findUserByName(appointedBy))
+//            throw new Exception("there is no such user named :" +appointedBy);
+//        User user = allUsers.get(appointedBy);
 
         if(user.getUserType() == UserType.GUEST)
             throw new Exception("guest cannot set shop owners");
@@ -327,15 +255,19 @@ public class Market implements MarketIntr{
 
     }
 
-    private User findUserByName(String targetName) {
-        if(allUsers.containsKey(targetName))
-            return allUsers.get(targetName);
-        throw new IllegalArgumentException(String.format("user name: %s is unknown",targetName));
+    //this function reset everything on the system, for now only use is for testing
+    //need to add logic to reset all shops, but since we dont have a controller yet and I'm not sure what we want
+    //to do I left it like this
+    public void resetAll(){
+        usersHandler.reset();
     }
 
-    private boolean isLoggedIn(String userName){
-        if(loginUsers.containsKey(userName))
-            return true;
-        return false;
+    private boolean isLoggedIn(String userName) {
+        return usersHandler.isLoggedIn(userName);
     }
+
+    private User findUserByName(String userName) {
+        return usersHandler.findUserByName(userName);
+    }
+
 }
