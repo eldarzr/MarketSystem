@@ -5,13 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b632bc94-40ae-4fc8-ad09-f0a6a998ea35" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Enums/ManagePermissions.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Enums/ManageType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/MemberRoleInShop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Market.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Market.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Shops/Shop.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Shops/Shop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Users/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Users/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,8 +17,8 @@
       <list>
         <option value="Interface" />
         <option value="JUnit5 Test Class" />
-        <option value="Class" />
         <option value="Enum" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -62,6 +56,9 @@
       <recent name="BusinessLayer" />
       <recent name="BusinessLayer.Shops" />
     </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="BusinessLayer" />
+    </key>
   </component>
   <component name="RunAnythingCache">
     <option name="myCommands">
@@ -72,10 +69,24 @@
       <command value="mvn clean" />
       <command value="mvn clean test" />
       <command value="mvn clean compile" />
+      <command value="mvn install:install-file -Dfile=commons-text-1.10.0.jar -DgroupId=org.apache.commons -DartifactId=commons-text -Dversion=1.10.0 -Dpackaging=jar" />
       <command value="mvn clean install" />
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.MarketCreateShopTest">
+  <component name="RunManager" selected="JUnit.MarketgetShopTest">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="BusinessLayer.Main" />
+      <module name="MarketSystem" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="BusinessLayer.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="MarketCreateShopTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="MarketSystem" />
       <extension name="coverage">
@@ -123,7 +134,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MarketCreateShopTest.createShopSuccess" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="MarketgetShopTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="MarketSystem" />
       <extension name="coverage">
         <pattern>
@@ -132,23 +143,7 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="BusinessLayer" />
-      <option name="MAIN_CLASS_NAME" value="BusinessLayer.MarketCreateShopTest" />
-      <option name="METHOD_NAME" value="createShopSuccess" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MarketLoginRegisterTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="MarketSystem" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="BusinessLayer.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="BusinessLayer" />
-      <option name="MAIN_CLASS_NAME" value="BusinessLayer.MarketLoginRegisterTests" />
+      <option name="MAIN_CLASS_NAME" value="BusinessLayer.MarketgetShopTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -181,20 +176,20 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="JUnit.MarketLoginRegisterTests" />
       <item itemvalue="JUnit.MarketCreateShopTest" />
-      <item itemvalue="JUnit.MarketCreateShopTest.createShopSuccess" />
       <item itemvalue="JUnit.MarketCreateShopTest.createShopFailDoubleName" />
       <item itemvalue="JUnit.MarketCreateShopTest.createShopFailNotRegistered (1)" />
       <item itemvalue="Maven.MarketSystem [mvn,exec:java]" />
+      <item itemvalue="Application.Main" />
+      <item itemvalue="JUnit.MarketgetShopTest" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.MarketgetShopTest" />
+        <item itemvalue="Application.Main" />
         <item itemvalue="JUnit.MarketCreateShopTest" />
         <item itemvalue="JUnit.MarketCreateShopTest.createShopFailNotRegistered (1)" />
         <item itemvalue="JUnit.MarketCreateShopTest.createShopFailDoubleName" />
-        <item itemvalue="JUnit.MarketCreateShopTest.createShopSuccess" />
-        <item itemvalue="JUnit.MarketLoginRegisterTests" />
       </list>
     </recent_temporary>
   </component>
