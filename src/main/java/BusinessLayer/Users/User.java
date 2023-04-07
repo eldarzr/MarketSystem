@@ -13,16 +13,16 @@ public class User {
     private String email;
     private String password;
     private boolean twoFactorEnabled;
-    private ConcurrentLinkedQueue<String> foundedShops;
-    //map of shop name to role of this user in the shop
-    private ConcurrentHashMap<String, MemberRoleInShop> roles;
+//    private ConcurrentLinkedQueue<String> foundedShops;
+//    //map of shop name to role of this user in the shop
+//    private ConcurrentHashMap<String, MemberRoleInShop> roles;
 
     public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.foundedShops = new ConcurrentLinkedQueue<>();
-        this.roles = new ConcurrentHashMap<>();
+//        this.foundedShops = new ConcurrentLinkedQueue<>();
+//        this.roles = new ConcurrentHashMap<>();
         userType = UserType.MEMBER;
     }
 
@@ -71,13 +71,13 @@ public class User {
         this.twoFactorEnabled = twoFactorEnabled;
     }
 
-    public void addFoundedShop(String shopName) throws Exception {
-        if(foundedShops.contains(shopName))
-            throw new Exception(String.format("the user %s already have shop named %s", name, shopName));
-        foundedShops.add(shopName);
-    }
+//    public void addFoundedShop(String shopName) throws Exception {
+//        if(foundedShops.contains(shopName))
+//            throw new Exception(String.format("the user %s already have shop named %s", name, shopName));
+//        foundedShops.add(shopName);
+//    }
 
-    public void addShopRole(String roleShop , MemberRoleInShop role) {
-        roles.put(roleShop , role);
-    }
+//    public void addShopRole(String roleShop , MemberRoleInShop role) {
+//        roles.put(roleShop , role);
+//    }
 }

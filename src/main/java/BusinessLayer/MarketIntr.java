@@ -71,7 +71,8 @@ public interface MarketIntr {
     void removeShopManager(String managerName, String userToRemove, String shopName);
 
     //4.7
-    void changeManagerPermissions(String manager, String permission);
+
+    void changeManagerPermissions(String actor, String actOn, String shopName, int permission) throws Exception;
 
     //4.11
     Collection<UserIntr> getShopManagersAndPermissions(String userName, String shopName);
