@@ -1,19 +1,18 @@
 package BusinessLayer.Enums;
 
 public enum ManagePermissions {
-	MANAGE_STOCK((int) Math.pow(2,0)),
-	MANAGE_PURCHASE_TYPE((int) Math.pow(2,1)),
-	MANAGE_DISCOUNT_TYPE((int) Math.pow(2,2)),
-	MANAGE_PURCHASE_POLICY((int) Math.pow(2,3)),
-	MANAGE_DISCOUNT_POLICY((int) Math.pow(2,4)),
-	MANAGE_DISCOUNT_CONSTRAINTS((int) Math.pow(2,5)),
-	MANAGE_PURCHASE_CONSTRAINTS((int) Math.pow(2,6)),
-	WATCH_MANAGERS_INFO((int) Math.pow(2,7)),
-	WATCH_HISTORY((int) Math.pow(2,8)),
-	MESSAGES_ACCESS((int) Math.pow(2,9)),
-	//get all the other access
-	FULL_ACCESS((int) Math.pow(2,10) - 1),
-	READ_ONLY_ACCESS(WATCH_HISTORY.value + WATCH_MANAGERS_INFO.value);
+	MANAGE_STOCK(1 << 0),
+	MANAGE_PURCHASE_TYPE(1 << 1),
+	MANAGE_DISCOUNT_TYPE(1 << 2),
+	MANAGE_PURCHASE_POLICY(1 << 3),
+	MANAGE_DISCOUNT_POLICY(1 << 4),
+	MANAGE_DISCOUNT_CONSTRAINTS(1 << 5),
+	MANAGE_PURCHASE_CONSTRAINTS(1 << 6),
+	WATCH_MANAGERS_INFO(1 << 7),
+	WATCH_HISTORY(1 << 8),
+	MESSAGES_ACCESS(1 << 9),
+	FULL_ACCESS((1 << 10) - 1),
+	READ_ONLY_ACCESS(WATCH_HISTORY.getValue() | WATCH_MANAGERS_INFO.getValue());
 
 	private final int value;
 
