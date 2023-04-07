@@ -15,10 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.regex.Pattern;
@@ -201,7 +198,7 @@ public class Market implements MarketIntr{
     }
 
     @Override
-    public ShopIntr getShop(String userName, String shopName) throws Exception {
+    public Shop getShop(String userName, String shopName) throws Exception {
         List<Shop> shopsToReturn = getShops(userName, shopName);
         if (shopsToReturn.size() < 1)
             throw new Exception(String.format("there is no shop in this name: %s", shopName));
@@ -214,7 +211,7 @@ public class Market implements MarketIntr{
             throw new Exception(String.format("the user %s is not login", userName));
         List<Shop> shopsToReturn = new ArrayList<>();
         for (String shopName1 : shops.keySet()) {
-            if (distance.apply(shopName, shopName1) <= SHOP_DISTANCE_MAX_LIMIT)
+            if (distance.apply(shopName.toLowerCase(), shopName1.toLowerCase()) <= SHOP_DISTANCE_MAX_LIMIT)
                 shopsToReturn.add(shops.get(shopName1));
         }
         return shopsToReturn.stream().sorted((shop1, shop2) ->
@@ -230,7 +227,8 @@ public class Market implements MarketIntr{
         List<ProductIntr> prodsToReturn = new ArrayList<>();
         for (String shopName : shopNames){
             for (ProductIntr product : shops.get(shopName).getProducts()) {
-                if (distance.apply(product.getName(), productName) <= PRODUCT_DISTANCE_MAX_LIMIT)
+                if (distance.apply(
+                        product.getName().toLowerCase(), productName.toLowerCase()) <= PRODUCT_DISTANCE_MAX_LIMIT)
                     prodsToReturn.add(product);
             }
     }
