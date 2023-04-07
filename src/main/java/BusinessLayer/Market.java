@@ -148,8 +148,9 @@ public class Market implements MarketIntr{
         throw new Exception("there is already shop with that name");
       User user = findUserByName(userName);
       Shop shop = new Shop(shopName, userName);
-      user.addFoundedShop(shopName);
+      //user.addFoundedShop(shopName);
       shops.put(shopName, shop);
+      MemberRoleInShop.createOwner(userName,shop);
     }
 
     @Override
@@ -267,28 +268,35 @@ public class Market implements MarketIntr{
 
     @Override
     public void appointShopOwner(String appointedBy, String appointee, String shopName) throws Exception {
-        User actor = validateUserIsntGuest(appointedBy);
-        User actOn = validateUserIsntGuest(appointee);
-        if(!shops.containsKey(shopName))
-            throw new Exception("there is no such shop named :" +shopName);
-        Shop reqShop = shops.get(shopName);
-        reqShop.setShopOwner(actor,actOn);
-
+        validateUserIsntGuest(appointedBy);
+        isLoggedIn(appointedBy);
+        validateUserIsntGuest(appointee);
+        Shop reqShop = checkForShop(shopName);
+        reqShop.setShopOwner(appointedBy,appointee);
     }
 
-    private User validateUserIsntGuest(String appointedBy) throws Exception {
-        if(!allUsers.containsKey(appointedBy))
-            throw new Exception("there is no such user named :" +appointedBy);
-        User user = allUsers.get(appointedBy);
+    public Shop checkForShop(String shopName) throws Exception {
+        if(!shops.containsKey(shopName))
+            throw new Exception("there is no such shop named :" +shopName);
+        return shops.get(shopName);
+    }
 
+    private User validateUserIsntGuest(String userName) throws Exception {
+        User user = findUserByName(userName);
         if(user.getUserType() == UserType.GUEST)
-            throw new Exception("guest cannot set shop owners");
+            throw new Exception("guests cannot do it");
         return user;
+
     }
 
     @Override
-    public void appointShopManager(String appointedBy, String appointee, String shopName) {
+    public void appointShopManager(String appointedBy, String appointee, String shopName) throws Exception {
 
+        validateUserIsntGuest(appointedBy);
+        isLoggedIn(appointedBy);
+        validateUserIsntGuest(appointee);
+        Shop reqShop = checkForShop(shopName);
+        reqShop.setShopManager(appointedBy,appointee);
     }
 
     @Override
@@ -297,7 +305,12 @@ public class Market implements MarketIntr{
     }
 
     @Override
-    public void changeManagerPermissions(String manager, String permission) {
+    public void changeManagerPermissions(String actor, String actOn, String shopName,int permission) throws Exception {
+        validateUserIsntGuest(actor);
+        isLoggedIn(actor);
+        validateUserIsntGuest(actOn);
+        Shop reqShop = checkForShop(shopName);
+        reqShop.setManageOption(actor,actOn,permission);
 
     }
 
