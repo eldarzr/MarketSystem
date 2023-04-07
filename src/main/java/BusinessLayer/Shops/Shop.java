@@ -4,6 +4,7 @@ import BusinessLayer.Enums.ManageType;
 import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.Users.User;
 
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Shop implements ShopIntr{
@@ -12,12 +13,14 @@ public class Shop implements ShopIntr{
 	private String founderUserName;
 	//map of user name to role in this shop
 	private ConcurrentHashMap<String, MemberRoleInShop> roles;
+	private ConcurrentHashMap<String, ProductIntr> products;
 
 	public Shop(String name, String founderUserName) {
 		this.name = name;
 		this.open = false;
 		this.founderUserName = founderUserName;
 		this.roles = new ConcurrentHashMap<>();
+		this.products = new ConcurrentHashMap<String, ProductIntr>();
 	}
 
 	public String getName() {
@@ -72,29 +75,12 @@ public class Shop implements ShopIntr{
 
 	}
 
-
 	public MemberRoleInShop validateUserHasRole(String actorUserName) throws Exception {
 		if (!roles.containsKey(actorUserName)) {
 			throw new Exception("the user :" + actorUserName + " isnt belong to the shop:" + this.name + "at all");
 		}
 		return roles.get(actorUserName);
 	}
-
-
-
-
-//	public void addRole(User user, ManageType type) throws Exception {
-//		MemberRoleInShop.
-//		switch (type) {
-//			case OWNER:
-//				MemberRoleInShop newRole =  MemberRoleInShop.createOwner(user);
-//				roles.put(founderUserName, newRole);
-//				user.addFoundedShop(this.name);
-//				user.addRole(newRole);
-//			case MANAGER:
-//				roles.put(founderUserName, MemberRoleInShop.createManager(user, ManagePermissions.READ_ONLY_ACCESS));
-//		}
-//	}
 
 	public void addRole(String name, MemberRoleInShop role) throws Exception {
 		if(roles.containsKey(name))
@@ -117,8 +103,9 @@ public class Shop implements ShopIntr{
 		reqRole.setPermissions(permission);
 
 		}
-
-
 	}
 
-
+	public Collection<ProductIntr> getProducts() {
+		return products.values();
+	}
+}

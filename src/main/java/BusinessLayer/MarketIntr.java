@@ -54,11 +54,14 @@ public interface MarketIntr {
 
     void addProductItems(String userName, String shopName, String productName, int quantity);
 
-    ShopIntr getShop(String userName, String shopName);
+    ShopIntr getShop(String userName, String shopName) throws Exception;
 
-    ProductIntr getProduct(String userName, String shopName, String productName);
+    ProductIntr getProduct(String userName, String shopName, String productName) throws Exception;
 
-    Collection<ProductIntr> search(String userName, String productName);
+    Collection<ProductIntr> basicSearch(String userName, String productName) throws Exception;
+
+    Collection<ProductIntr> extendedSearch(String userName, String productName, double minPrice, double maxPrice,
+                                           String category) throws Exception;
 
     Collection<PurchaseIntr> getShopPurchaseHistory(String shopName);
 
