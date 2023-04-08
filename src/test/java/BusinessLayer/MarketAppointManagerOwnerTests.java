@@ -1,5 +1,6 @@
 package BusinessLayer;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +25,11 @@ class MarketAppointManagerOwnerTests {
             market.createShop(usersName[i], shopNames[i]);
         }
         market.register(usersName[2], emails[2], passwords[2]);
+    }
 
+    @AfterEach
+    void tearDown() {
+        market.resetAll();
     }
 
     @Test

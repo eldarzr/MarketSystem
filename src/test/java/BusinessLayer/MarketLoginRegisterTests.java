@@ -1,6 +1,7 @@
 package BusinessLayer;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -8,6 +9,17 @@ import static org.junit.jupiter.api.Assertions.*;
 class MarketLoginRegisterTests {
 
     Market market;
+
+    @BeforeEach
+    void setUp() {
+        market = new Market();
+    }
+
+    @AfterEach
+    void tearDown() {
+        market.resetAll();
+    }
+
     @org.junit.jupiter.api.Test
     void register_invalid_username(){
         String[] names = {"1231asasd", "", "a","asdasdasdasdasdasdasasd","!sd2","username!"};
@@ -57,13 +69,37 @@ class MarketLoginRegisterTests {
         },String.format("successful login with username : %s",username));
     }
 
-
-    @BeforeEach
-    void setUp() {
-        market = new Market();
+    @org.junit.jupiter.api.Test
+    void double_login() throws Exception {
+        market.register("nivuzan","nivuzan@gmail.com","TryTry123");
+        market.login("nivuzan","TryTry123");
+        assertThrows(Exception.class, () -> {
+            market.login("nivuzan","TryTry123");
+        },"successful double login");
     }
 
-    @AfterEach
-    void tearDown() {
+    @org.junit.jupiter.api.Test
+    void logout() throws Exception {
+        market.register("nivuzan","nivuzan@gmail.com","TryTry123");
+        market.login("nivuzan","TryTry123");
+        market.logout("nivuzan");
     }
+
+    @org.junit.jupiter.api.Test
+    void logout_fail() throws Exception {
+        String username = "nivuzan";
+        assertThrows(Exception.class, () -> {
+            market.logout(username);
+        },String.format("successful logout with username : %s without register and login",username));
+    }
+
+    @org.junit.jupiter.api.Test
+    void logout_fail_with_register() throws Exception {
+        String username = "nivuzan";
+        assertThrows(Exception.class, () -> {
+            market.register("nivuzan","nivuzan@gmail.com","TryTry123");
+            market.logout(username);
+        },String.format("successful logout with username : %s without register and login",username));
+    }
+
 }

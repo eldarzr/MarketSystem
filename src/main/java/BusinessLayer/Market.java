@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -23,22 +24,14 @@ import java.util.stream.Collectors;
 
 public class Market implements MarketIntr{
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
-    ConcurrentHashMap<String,User> allUsers = new ConcurrentHashMap<>();
-    ConcurrentHashMap<String,User> loginUsers = new ConcurrentHashMap<>();
     ConcurrentHashMap<String,Shop> shops = new ConcurrentHashMap<>();
+    UsersHandler usersHandler;
     private final int SHOP_DISTANCE_MAX_LIMIT = 2;
     private final int PRODUCT_DISTANCE_MAX_LIMIT = 2;
 
     public Market() {
-        this.passwordEncoder = passwordEncoder();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        usersHandler = UsersHandler.getInstance();
     }
 
     @Override
@@ -46,95 +39,33 @@ public class Market implements MarketIntr{
 
     }
 
+    //todo: niv
     @Override
     public String startSession() {
         return null;
     }
 
+    //todo: niv
     @Override
     public void closeSession(String userName) {
 
     }
 
     @Override
-    public void register(String userName, String email, String password) throws Exception{
-        checkValidUserName(userName);
-        checkValidPassword(password);
-        checkValidEmail(email);
-        String encodedPassword = passwordEncoder.encode(password);
-        User nuser = new User(userName,email,encodedPassword);
-        allUsers.put(userName,nuser);
+    public void register(String userName, String email, String password) throws Exception {
+        usersHandler.register(userName, email, password);
     }
-
-    private static void checkValidEmail(String email) throws AddressException {
-            InternetAddress emailVal = new InternetAddress(email);
-            emailVal.validate();
-    }
-
-    public void checkValidPassword(String password) {
-        // Check if password is at least 8 characters long
-        if (password.length() < 8) {
-            throw new IllegalArgumentException("Password must be at least of length 8");
-        }
-
-        // Check if password contains at least one uppercase letter, one lowercase letter, and one digit
-        boolean hasUpperCase = false;
-        boolean hasLowerCase = false;
-        boolean hasDigit = false;
-        for (char c : password.toCharArray()) {
-            if (Character.isUpperCase(c)) {
-                hasUpperCase = true;
-            } else if (Character.isLowerCase(c)) {
-                hasLowerCase = true;
-            } else if (Character.isDigit(c)) {
-                hasDigit = true;
-            }
-        }
-        if(!hasUpperCase)
-            throw new IllegalArgumentException("Password must contain at least one upper case letter");
-        if(!hasLowerCase)
-            throw new IllegalArgumentException("Password must contain at least one lower case letter");
-        if(!hasDigit)
-            throw new IllegalArgumentException("password must contain at lesat one number");
-    }
-
-    private void checkValidUserName(String username) {
-        int lower_bound = 4;
-        int upper_bound = 16;
-        // Check if username is between lower_bound and upper_bound characters long
-        if (username.length() < lower_bound || username.length() > upper_bound) {
-            throw new IllegalArgumentException(String.format("user name length need to be bigger than %d and lower than %d",lower_bound,upper_bound));
-        }
-
-        // Check if username only contains alphanumeric characters or underscores
-        Pattern pattern = Pattern.compile("^[a-zA-Z0-9_]*$");
-        if (!pattern.matcher(username).matches()) {
-            throw new IllegalArgumentException("password can contain only alphanumeric characters or underscores");
-        }
-
-        // Check if username starts with a letter
-        char firstChar = username.charAt(0);
-        if (!Character.isLetter(firstChar)) {
-            throw new IllegalArgumentException("password must start with a letter");
-        }
-    }
-
-
     @Override
     public void login(String userName, String password) {
-        User user = findUserByName(userName);
-        if(isLoggedIn(user.getName()))
-            throw new IllegalArgumentException(String.format("User: %s already logged in",userName));
-        if(!passwordEncoder.matches(password,user.getPassword()))
-            throw new IllegalArgumentException("incorrect password");
-        loginUsers.put(user.getName(),user);
+        usersHandler.login(userName, password);
     }
 
     @Override
     public void logout(String userName) {
-
+        usersHandler.logout(userName);
     }
 
+    //todo: naor
     @Override
     public Collection<PurchaseIntr> getUserPurchaseHistory(String userName) {
         return null;
@@ -155,44 +86,51 @@ public class Market implements MarketIntr{
 
     @Override
     public void openShop(String userName, String shopName) {
-
+        throw new NotImplementedException();
     }
 
+    //todo: naor
     @Override
     public void closeShop(String userName, String shopName) {
-
     }
 
+    //todo: eldar
     @Override
     public void addNewProduct(String userName, String shopName, String productName, String desc, double price) {
 
     }
 
+    //todo: eldar
     @Override
-    public void removeNewProduct(String userName, String shopName, String productName) {
+    public void removeProduct(String userName, String shopName, String productName) {
 
     }
 
+    //todo: eldar
     @Override
     public void updateProductName(String userName, String shopName, String productOldName, String productNewName) {
 
     }
 
+    //todo: eldar
     @Override
     public void updateProductDesc(String userName, String shopName, String productName, String productNewDesc) {
 
     }
 
+    //todo: eldar
     @Override
     public void updateProductPrice(String userName, String shopName, String productName, double price) {
 
     }
 
+    //todo: eldar
     @Override
     public void updateProductQuantity(String userName, String shopName, String productName, int quantity) {
 
     }
 
+    //todo: eldar
     @Override
     public void addProductItems(String userName, String shopName, String productName, int quantity) {
 
@@ -262,11 +200,6 @@ public class Market implements MarketIntr{
     }
 
     @Override
-    public Collection<PurchaseIntr> getShopPurchaseHistory(String shopName) {
-        return null;
-    }
-
-    @Override
     public void appointShopOwner(String appointedBy, String appointee, String shopName) throws Exception {
         validateUserIsntGuest(appointedBy);
         isLoggedIn(appointedBy);
@@ -279,19 +212,11 @@ public class Market implements MarketIntr{
         if(!shops.containsKey(shopName))
             throw new Exception("there is no such shop named :" +shopName);
         return shops.get(shopName);
-    }
-
-    private User validateUserIsntGuest(String userName) throws Exception {
-        User user = findUserByName(userName);
-        if(user.getUserType() == UserType.GUEST)
-            throw new Exception("guests cannot do it");
-        return user;
-
+//      reqShop.setShopOwner(actor,actOn);
     }
 
     @Override
     public void appointShopManager(String appointedBy, String appointee, String shopName) throws Exception {
-
         validateUserIsntGuest(appointedBy);
         isLoggedIn(appointedBy);
         validateUserIsntGuest(appointee);
@@ -299,6 +224,7 @@ public class Market implements MarketIntr{
         reqShop.setShopManager(appointedBy,appointee);
     }
 
+    //todo: naor
     @Override
     public void removeShopManager(String managerName, String userToRemove, String shopName) {
 
@@ -311,14 +237,15 @@ public class Market implements MarketIntr{
         validateUserIsntGuest(actOn);
         Shop reqShop = checkForShop(shopName);
         reqShop.setManageOption(actor,actOn,permission);
-
     }
 
+    //todo: naor - talk with eldar
     @Override
     public Collection<UserIntr> getShopManagersAndPermissions(String userName, String shopName) {
         return null;
     }
 
+    //todo: naor
     @Override
     public Collection<PurchaseIntr> getShopPurchaseHistory(String userName, String shopName) {
         return null;
@@ -326,58 +253,75 @@ public class Market implements MarketIntr{
 
     @Override
     public void removeShop(String adminName, String userName, String shopName) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void blockUser(String adminName, String UserName) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public Collection<PurchaseIntr> getShopPurchaseHistoryByAdmin(String adminName, String shopName) {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public Collection<PurchaseIntr> getUserPurchaseHistoryByAdmin(String adminName, String memberName) {
-        return null;
+        throw new NotImplementedException();
     }
 
+    //todo: niv
     @Override
     public Cart getCart(String userName) {
         return null;
     }
 
+    //todo: niv
     @Override
     public ShopBag getShopBag(String userName, String ShopName) {
         return null;
     }
 
+    //todo: niv
     @Override
     public void addProductsToCart(String userName, String shopName, String productName, int quantity) {
 
     }
 
+    //todo: niv
     @Override
     public void updateProductsFromCart(String userName, String shopName, String productName, int newQuantity) {
 
     }
 
+    //todo: niv
     @Override
     public void purchaseCart(String userName) {
 
     }
 
-    private User findUserByName(String targetName) {
-        if(allUsers.containsKey(targetName))
-            return allUsers.get(targetName);
-        throw new IllegalArgumentException(String.format("user name: %s is unknown",targetName));
+    //this function reset everything on the system, for now only use is for testing
+    //need to add logic to reset all shops, but since we dont have a controller yet and I'm not sure what we want
+    //to do I left it like this
+    public void resetAll(){
+        usersHandler.reset();
     }
 
-    private boolean isLoggedIn(String userName){
-        if(loginUsers.containsKey(userName))
-            return true;
-        return false;
+    private boolean isLoggedIn(String userName) {
+        return usersHandler.isLoggedIn(userName);
     }
+
+    private User findUserByName(String userName) {
+        return usersHandler.findUserByName(userName);
+    }
+
+    private User validateUserIsntGuest(String userName) throws Exception {
+        User user = findUserByName(userName);
+//      User user = allUsers.get(appointedBy);
+        if(user.getUserType() == UserType.GUEST)
+            throw new Exception("guests cannot do it");
+        return user;
+    }
+
 }

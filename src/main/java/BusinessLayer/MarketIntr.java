@@ -42,7 +42,7 @@ public interface MarketIntr {
 
     void addNewProduct(String userName, String shopName, String productName, String desc, double price);
 
-    void removeNewProduct(String userName, String shopName, String productName);
+    void removeProduct(String userName, String shopName, String productName);
 
     void updateProductName(String userName, String shopName, String productOldName, String productNewName);
 
@@ -62,8 +62,6 @@ public interface MarketIntr {
 
     Collection<ProductIntr> extendedSearch(String userName, String productName, double minPrice, double maxPrice,
                                            String category) throws Exception;
-
-    Collection<PurchaseIntr> getShopPurchaseHistory(String shopName);
 
     //4.4
     void appointShopOwner(String appointedBy, String appointee, String shopName) throws Exception;
