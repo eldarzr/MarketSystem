@@ -3,6 +3,8 @@ package BusinessLayer;
 
 import BusinessLayer.Enums.ManagePermissionsEnum;
 
+import java.util.List;
+
 import static BusinessLayer.Enums.ManagePermissionsEnum.*;
 
 public class ManagePermissions {
@@ -38,6 +40,10 @@ public class ManagePermissions {
 		permissions[managePermissionsEnum.getValue()] = false;
 	}
 
+	public boolean validatePermission(ManagePermissionsEnum permissionsEnum){
+		return permissions[permissionsEnum.getValue()];
+	}
+
 	public static ManagePermissions getFullAccessPermissions(){
 		ManagePermissions mp = new ManagePermissions();
 		mp.changeToFullAccess();
@@ -49,5 +55,4 @@ public class ManagePermissions {
 		mp.changeToReadOnlyAccess();
 		return mp;
 	}
-
 }
