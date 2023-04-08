@@ -49,7 +49,6 @@ class MarketgetShopTest {
 
 	@Test
 	void getShopFail() throws Exception {
-		market.createShop(usersName[0], shopNames[0]);
 		assertThrows(Exception.class, () -> market.getShop(usersName[0], "bla bla"));
 	}
 

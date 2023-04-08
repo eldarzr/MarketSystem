@@ -1,11 +1,11 @@
 package BusinessLayer;
 
-import BusinessLayer.Enums.ManagePermissions;
+import BusinessLayer.ManagePermissions;
 import BusinessLayer.Enums.ManageType;
 import BusinessLayer.Shops.Shop;
 import BusinessLayer.Users.User;
 import static BusinessLayer.Enums.ManageType.*;
-import static BusinessLayer.Enums.ManagePermissions.*;
+import static BusinessLayer.Enums.ManagePermissionsEnum.*;
 
 public class MemberRoleInShop {
 	private Shop roleShop;
@@ -25,17 +25,17 @@ public class MemberRoleInShop {
 
 	public static MemberRoleInShop createOwner(String user,Shop shop) throws Exception {
 		//TODO: add logic to add owner
-		return adjustRole(new MemberRoleInShop(shop ,user , null, OWNER, FULL_ACCESS));
+		return adjustRole(new MemberRoleInShop(shop ,user , null, OWNER, ManagePermissions.getFullAccessPermissions()));
 	}
 
 	public static MemberRoleInShop createOwner(String roleUser , Shop roleShop , String grantor) throws Exception {
 		//TODO: add logic to add owner
-		return adjustRole(new MemberRoleInShop(roleShop , roleUser , grantor , OWNER, FULL_ACCESS));
+		return adjustRole(new MemberRoleInShop(roleShop , roleUser , grantor , OWNER, ManagePermissions.getFullAccessPermissions()));
 	}
 
 	public static MemberRoleInShop createManager(String roleUser , Shop roleShop , String grantor) throws Exception {
 		//TODO: add logic to add manager
-		return adjustRole(new MemberRoleInShop(roleShop,roleUser,grantor, MANAGER, READ_ONLY_ACCESS));
+		return adjustRole(new MemberRoleInShop(roleShop,roleUser,grantor, MANAGER, ManagePermissions.getReadOnlyPermissions()));
 	}
 
 	public void setGrantor(String grantor) {
@@ -81,9 +81,9 @@ public class MemberRoleInShop {
 	private ManagePermissions acheivePermission(int permissions) throws Exception {
 		switch (permissions){
 			case 0:
-				return FULL_ACCESS;
+				return ManagePermissions.getFullAccessPermissions();
 			case 1:
-				return READ_ONLY_ACCESS;
+				return ManagePermissions.getReadOnlyPermissions();
 			default:
 				throw new Exception("there is no such permission");
 	}
