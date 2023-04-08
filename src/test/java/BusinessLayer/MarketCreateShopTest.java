@@ -21,6 +21,7 @@ class MarketCreateShopTest {
 
 	@AfterEach
 	void tearDown() {
+		market.resetAll();
 	}
 
 	@Test

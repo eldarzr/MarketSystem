@@ -103,7 +103,6 @@ public class Shop implements ShopIntr{
 		reqRole.setPermissions(permission);
 
 		}
-	}
 
 	public Collection<ProductIntr> getProducts() {
 		return products.values();

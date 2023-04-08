@@ -28,6 +28,7 @@ class MarketgetShopTest {
 
 	@AfterEach
 	void tearDown() {
+		market.resetAll();
 	}
 
 	@Test

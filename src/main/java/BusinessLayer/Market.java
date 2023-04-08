@@ -219,7 +219,6 @@ public class Market implements MarketIntr{
 
     @Override
     public void appointShopManager(String appointedBy, String appointee, String shopName) throws Exception {
-
         validateUserIsntGuest(appointedBy);
         isLoggedIn(appointedBy);
         validateUserIsntGuest(appointee);
@@ -239,7 +238,6 @@ public class Market implements MarketIntr{
         validateUserIsntGuest(actOn);
         Shop reqShop = checkForShop(shopName);
         reqShop.setManageOption(actor,actOn,permission);
-
     }
 
     @Override

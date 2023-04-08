@@ -33,6 +33,7 @@ class MarketGetProductTest {
 
 	@AfterEach
 	void tearDown() {
+		market.resetAll();
 	}
 
 	@Test
