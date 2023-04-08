@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -38,11 +39,13 @@ public class Market implements MarketIntr{
 
     }
 
+    //todo: niv
     @Override
     public String startSession() {
         return null;
     }
 
+    //todo: niv
     @Override
     public void closeSession(String userName) {
 
@@ -62,6 +65,7 @@ public class Market implements MarketIntr{
         usersHandler.logout(userName);
     }
 
+    //todo: naor
     @Override
     public Collection<PurchaseIntr> getUserPurchaseHistory(String userName) {
         return null;
@@ -82,44 +86,51 @@ public class Market implements MarketIntr{
 
     @Override
     public void openShop(String userName, String shopName) {
-
+        throw new NotImplementedException();
     }
 
+    //todo: naor
     @Override
     public void closeShop(String userName, String shopName) {
-
     }
 
+    //todo: eldar
     @Override
     public void addNewProduct(String userName, String shopName, String productName, String desc, double price) {
 
     }
 
+    //todo: eldar
     @Override
-    public void removeNewProduct(String userName, String shopName, String productName) {
+    public void removeProduct(String userName, String shopName, String productName) {
 
     }
 
+    //todo: eldar
     @Override
     public void updateProductName(String userName, String shopName, String productOldName, String productNewName) {
 
     }
 
+    //todo: eldar
     @Override
     public void updateProductDesc(String userName, String shopName, String productName, String productNewDesc) {
 
     }
 
+    //todo: eldar
     @Override
     public void updateProductPrice(String userName, String shopName, String productName, double price) {
 
     }
 
+    //todo: eldar
     @Override
     public void updateProductQuantity(String userName, String shopName, String productName, int quantity) {
 
     }
 
+    //todo: eldar
     @Override
     public void addProductItems(String userName, String shopName, String productName, int quantity) {
 
@@ -189,11 +200,6 @@ public class Market implements MarketIntr{
     }
 
     @Override
-    public Collection<PurchaseIntr> getShopPurchaseHistory(String shopName) {
-        return null;
-    }
-
-    @Override
     public void appointShopOwner(String appointedBy, String appointee, String shopName) throws Exception {
         validateUserIsntGuest(appointedBy);
         isLoggedIn(appointedBy);
@@ -209,14 +215,6 @@ public class Market implements MarketIntr{
 //      reqShop.setShopOwner(actor,actOn);
     }
 
-    private User validateUserIsntGuest(String userName) throws Exception {
-        User user = findUserByName(userName);
-//      User user = allUsers.get(appointedBy);
-        if(user.getUserType() == UserType.GUEST)
-            throw new Exception("guests cannot do it");
-        return user;
-    }
-
     @Override
     public void appointShopManager(String appointedBy, String appointee, String shopName) throws Exception {
         validateUserIsntGuest(appointedBy);
@@ -226,6 +224,7 @@ public class Market implements MarketIntr{
         reqShop.setShopManager(appointedBy,appointee);
     }
 
+    //todo: naor
     @Override
     public void removeShopManager(String managerName, String userToRemove, String shopName) {
 
@@ -240,11 +239,13 @@ public class Market implements MarketIntr{
         reqShop.setManageOption(actor,actOn,permission);
     }
 
+    //todo: naor - talk with eldar
     @Override
     public Collection<UserIntr> getShopManagersAndPermissions(String userName, String shopName) {
         return null;
     }
 
+    //todo: naor
     @Override
     public Collection<PurchaseIntr> getShopPurchaseHistory(String userName, String shopName) {
         return null;
@@ -252,44 +253,49 @@ public class Market implements MarketIntr{
 
     @Override
     public void removeShop(String adminName, String userName, String shopName) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void blockUser(String adminName, String UserName) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public Collection<PurchaseIntr> getShopPurchaseHistoryByAdmin(String adminName, String shopName) {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public Collection<PurchaseIntr> getUserPurchaseHistoryByAdmin(String adminName, String memberName) {
-        return null;
+        throw new NotImplementedException();
     }
 
+    //todo: niv
     @Override
     public Cart getCart(String userName) {
         return null;
     }
 
+    //todo: niv
     @Override
     public ShopBag getShopBag(String userName, String ShopName) {
         return null;
     }
 
+    //todo: niv
     @Override
     public void addProductsToCart(String userName, String shopName, String productName, int quantity) {
 
     }
 
+    //todo: niv
     @Override
     public void updateProductsFromCart(String userName, String shopName, String productName, int newQuantity) {
 
     }
 
+    //todo: niv
     @Override
     public void purchaseCart(String userName) {
 
@@ -308,6 +314,14 @@ public class Market implements MarketIntr{
 
     private User findUserByName(String userName) {
         return usersHandler.findUserByName(userName);
+    }
+
+    private User validateUserIsntGuest(String userName) throws Exception {
+        User user = findUserByName(userName);
+//      User user = allUsers.get(appointedBy);
+        if(user.getUserType() == UserType.GUEST)
+            throw new Exception("guests cannot do it");
+        return user;
     }
 
 }
