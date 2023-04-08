@@ -1,11 +1,16 @@
 package BusinessLayer.Shops;
 
+import BusinessLayer.Enums.ManagePermissionsEnum;
 import BusinessLayer.Enums.ManageType;
 import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.Users.User;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
+import static BusinessLayer.Enums.ManagePermissionsEnum.*;
 
 public class Shop implements ShopIntr{
 	String name;
@@ -13,14 +18,14 @@ public class Shop implements ShopIntr{
 	private String founderUserName;
 	//map of user name to role in this shop
 	private ConcurrentHashMap<String, MemberRoleInShop> roles;
-	private ConcurrentHashMap<String, ProductIntr> products;
+	private ConcurrentHashMap<String, ShopProduct> products;
 
 	public Shop(String name, String founderUserName) {
 		this.name = name;
 		this.open = false;
 		this.founderUserName = founderUserName;
 		this.roles = new ConcurrentHashMap<>();
-		this.products = new ConcurrentHashMap<String, ProductIntr>();
+		this.products = new ConcurrentHashMap<>();
 	}
 
 	public String getName() {
@@ -104,7 +109,54 @@ public class Shop implements ShopIntr{
 
 		}
 
-	public Collection<ProductIntr> getProducts() {
-		return products.values();
+	public List<Product> getProducts() {
+		return products.values().stream().collect(Collectors.toList());
+	}
+
+	public void addNewProduct(String userName, String productName, String category, String desc, double price) throws Exception {
+		if(products.containsKey(productName))
+			throw new Exception(String.format("there is already product %s in the shop %s", productName, name));
+		validatePermissionsException(userName, MANAGE_STOCK);
+		products.put(productName, new ShopProduct(productName, category, desc, price));
+	}
+
+	private void validatePermissionsException(String userName, ManagePermissionsEnum permissionsEnum) throws Exception {
+		if(!roles.containsKey(userName))
+			throw new Exception(String.format("the user %s is not manager or owner of the shop %s", userName, name));
+		if(!roles.get(userName).getPermissions().validatePermission(permissionsEnum))
+			throw new Exception(String.format("the user %s does not have the right permission for the shop %s",
+					userName, name));
+	}
+
+	public void removeProduct(String userName, String productName) throws Exception {
+		if(!products.containsKey(productName))
+			throw new Exception(String.format("there is no product %s in the shop %s", productName, name));
+		validatePermissionsException(userName, MANAGE_STOCK);
+		products.remove(productName);
+	}
+
+	public void updateProductName(String userName, String productOldName, String productNewName) throws Exception {
+		if(!products.containsKey(productOldName))
+			throw new Exception(String.format("there is no product %s in the shop %s", productOldName, name));
+		validatePermissionsException(userName, MANAGE_STOCK);
+		synchronized (products) {
+			ShopProduct product = products.remove(productOldName);
+			product.setName(productNewName);
+			products.put(productNewName, product);
+		}
+	}
+
+	public void updateProductDesc(String userName, String productName, String productNewDesc) throws Exception {
+		if(!products.containsKey(productName))
+			throw new Exception(String.format("there is no product %s in the shop %s", productName, name));
+		validatePermissionsException(userName, MANAGE_STOCK);
+		products.get(productName).setDescription(productNewDesc);
+	}
+
+	public void updateProductPrice(String userName, String productName, double price) throws Exception {
+		if(!products.containsKey(productName))
+			throw new Exception(String.format("there is no product %s in the shop %s", productName, name));
+		validatePermissionsException(userName, MANAGE_STOCK);
+		products.get(productName).setPrice(price);
 	}
 }

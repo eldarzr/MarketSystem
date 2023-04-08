@@ -6,11 +6,13 @@ public class Product implements ProductIntr{
 
 	private String name;
 	private String category;
+	private String description;
 	private double price;
 
-	public Product(String name, String category, double price) {
+	public Product(String name, String category, String description, double price) {
 		this.name = name;
 		this.category = category;
+		this.description = description;
 		this.price = price;
 	}
 
@@ -50,5 +52,13 @@ public class Product implements ProductIntr{
 	public boolean isOnCategory(String category) {
 		LevenshteinDistance distance = new LevenshteinDistance();
 		return distance.apply(this.category, category) <= 2;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

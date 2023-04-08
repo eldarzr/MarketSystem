@@ -40,15 +40,16 @@ public interface MarketIntr {
 
     void closeShop(String userName, String shopName);
 
-    void addNewProduct(String userName, String shopName, String productName, String desc, double price);
+    public void addNewProduct(String userName, String shopName, String productName, String category, String desc,
+                              double price) throws Exception;
 
-    void removeProduct(String userName, String shopName, String productName);
+    void removeProduct(String userName, String shopName, String productName) throws Exception;
 
-    void updateProductName(String userName, String shopName, String productOldName, String productNewName);
+    void updateProductName(String userName, String shopName, String productOldName, String productNewName) throws Exception;
 
-    void updateProductDesc(String userName, String shopName, String productName, String productNewDesc);
+    void updateProductDesc(String userName, String shopName, String productName, String productNewDesc) throws Exception;
 
-    void updateProductPrice(String userName, String shopName, String productName, double price);
+    void updateProductPrice(String userName, String shopName, String productName, double price) throws Exception;
 
     void updateProductQuantity(String userName, String shopName, String productName, int quantity);
 
