@@ -139,16 +139,18 @@ public class Market implements MarketIntr{
         shops.get(shopName).updateProductPrice(userName, productName, price);
     }
 
-    //todo: eldar
     @Override
-    public void updateProductQuantity(String userName, String shopName, String productName, int quantity) {
-
+    public void updateProductQuantity(String userName, String shopName, String productName, int quantity) throws Exception {
+        if(!isLoggedIn(userName))
+            throw new Exception(String.format("the user %s is not login", userName));
+        if(shopName == null || !shops.containsKey(shopName))
+            throw new Exception("there is already shop with that name");
+        shops.get(shopName).updateProductQuantity(userName, productName, quantity);
     }
 
-    //todo: eldar
     @Override
     public void addProductItems(String userName, String shopName, String productName, int quantity) {
-
+        // this function seems to be useless due to the function right up
     }
 
     @Override

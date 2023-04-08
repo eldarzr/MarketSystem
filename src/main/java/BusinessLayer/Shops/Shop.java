@@ -159,4 +159,11 @@ public class Shop implements ShopIntr{
 		validatePermissionsException(userName, MANAGE_STOCK);
 		products.get(productName).setPrice(price);
 	}
+
+	public void updateProductQuantity(String userName, String productName, int quantity) throws Exception {
+		if(!products.containsKey(productName))
+			throw new Exception(String.format("there is no product %s in the shop %s", productName, name));
+		validatePermissionsException(userName, MANAGE_STOCK);
+		products.get(productName).setQuantity(quantity);
+	}
 }

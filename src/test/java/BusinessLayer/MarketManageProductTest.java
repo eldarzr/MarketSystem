@@ -1,6 +1,7 @@
 package BusinessLayer;
 
 import BusinessLayer.Shops.ProductIntr;
+import BusinessLayer.Shops.ShopProduct;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,8 @@ class MarketManageProductTest {
 	String[] shopNames = {"shop1", "shop2"};
 	String[] prodNames = {"prod1", "prod2"};
 	String[] descs = {"desc1", "desc2"};
-	double[] prices = {5, 10};
+	double[] prices = {5.5, 10.12};
+	int[] quantity = {5, 10};
 	String[] prodNamesNew = {"newProd1", "newProd2"};
 	String[] descsNew = {"newDesc1", "newDesc2"};
 	double[] pricesNew = {5, 10};
@@ -157,6 +159,32 @@ class MarketManageProductTest {
 		market.logout(usersName[0]);
 		assertThrows(Exception.class, () -> market.updateProductPrice(usersName[0], shopNames[1], prodNames[0],
 				pricesNew[0]));
+	}
+
+	@Test
+	void updateProductQuantitySuccess() throws Exception {
+		for(int i = 0; i < usersName.length; i++) {
+			market.addNewProduct(usersName[i], shopNames[i], prodNames[i], cat[i], descs[i], prices[i]);
+			market.updateProductQuantity(usersName[i], shopNames[i], prodNames[i], quantity[i]);
+			ShopProduct product = (ShopProduct) market.getProduct(usersName[i], shopNames[i], prodNames[i]);
+			assertTrue(product.getQuantity() == quantity[i]);
+		}
+	}
+
+	@Test
+	void updateProductQuantityFailLogin() throws Exception {
+		market.addNewProduct(usersName[0], shopNames[0], prodNames[0], cat[0], descs[0], prices[0]);
+		market.logout(usersName[0]);
+		assertThrows(Exception.class, () -> market.updateProductQuantity(usersName[0], shopNames[0], prodNames[0],
+				quantity[0]));
+	}
+
+	@Test
+	void updateProductQuantityFailPermission() throws Exception {
+		market.addNewProduct(usersName[0], shopNames[0], prodNames[0], cat[0], descs[0], prices[0]);
+		market.logout(usersName[0]);
+		assertThrows(Exception.class, () -> market.updateProductQuantity(usersName[0], shopNames[1], prodNames[0],
+				quantity[0]));
 	}
 
 
