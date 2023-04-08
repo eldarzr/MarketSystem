@@ -3,12 +3,38 @@
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="b632bc94-40ae-4fc8-ad09-f0a6a998ea35" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/test/java/AcceptanceTests/BridgeGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/AcceptanceTests/MarketSystemBridge.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/AcceptanceTests/MarketSystemProxyBridge.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/AcceptanceTests/MarketSystemRealBridge.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/AcceptanceTests/Tests/GuestBasicTests.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/AcceptanceTests/Tests/GuestTests.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/AcceptanceTests/Tests/ShopBasicTests.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MarketSystem.iml" beforeDir="false" afterPath="$PROJECT_DIR$/MarketSystem.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Market.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Market.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/BusinessLayer/MarketCreateShopTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/BusinessLayer/MarketCreateShopTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/MarketIntr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/MarketIntr.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -18,9 +44,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="JUnit5 Test Class" />
         <option value="Interface" />
         <option value="Class" />
-        <option value="JUnit5 Test Class" />
       </list>
     </option>
   </component>
@@ -29,6 +55,13 @@
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2020.2.2\plugins\maven\lib\maven3" />
+      </MavenGeneralSettings>
+    </option>
   </component>
   <component name="MavenRunner">
     <option name="skipTests" value="true" />
@@ -179,10 +212,10 @@
     <list>
       <item itemvalue="JUnit.MarketLoginRegisterTests" />
       <item itemvalue="JUnit.MarketCreateShopTest" />
-      <item itemvalue="Maven.MarketSystem [mvn,exec:java]" />
       <item itemvalue="JUnit.MarketCreateShopTest.createShopSuccess" />
       <item itemvalue="JUnit.MarketCreateShopTest.createShopFailDoubleName" />
       <item itemvalue="JUnit.MarketCreateShopTest.createShopFailNotRegistered (1)" />
+      <item itemvalue="Maven.MarketSystem [mvn,exec:java]" />
     </list>
     <recent_temporary>
       <list>
@@ -216,5 +249,15 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="446" y="47" key="#com.intellij.ide.util.MemberChooser" timestamp="1680958096732">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="446" y="47" key="#com.intellij.ide.util.MemberChooser/0.0.1280.680@0.0.1280.680" timestamp="1680958096732" />
+    <state x="303" y="1" width="672" height="678" key="search.everywhere.popup" timestamp="1680965937455">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="303" y="1" width="672" height="678" key="search.everywhere.popup/0.0.1280.680@0.0.1280.680" timestamp="1680965937455" />
   </component>
 </project>

@@ -1,4 +1,4 @@
-package BusinessLayer;
+package AcceptanceTests;
 
 import BusinessLayer.Purchases.Cart;
 import BusinessLayer.Purchases.PurchaseIntr;
@@ -6,16 +6,10 @@ import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Shops.ProductIntr;
 import BusinessLayer.Shops.ShopIntr;
 import BusinessLayer.Users.UserIntr;
-import java.util.*;
 
+import java.util.Collection;
 
-public interface MarketIntr  {
-
-    //Gabi added:
-    void addAdmin(String userName);
-
-    void unregister(String userName);
-
+public interface MarketSystemBridge {
     //open and initialize the market system
     void init();
 
@@ -28,9 +22,11 @@ public interface MarketIntr  {
 
     void register(String userName, String email, String password) throws Exception;
 
+    void unregister(String userName);
+
     void login(String userName, String password);
 
-
+    void addAdmin(String userName);
     //member function
 
     void logout(String userName);
@@ -110,7 +106,7 @@ public interface MarketIntr  {
     //connect to payment adapter and delivery adapter
     void purchaseCart(String userName);
 
-    // Queries for tests
+    //Queries
     boolean isRegistered(String userName);
 
     boolean isLogged(String userName);
@@ -144,9 +140,4 @@ public interface MarketIntr  {
     int getQuantityOfProductPurchasedInShop(String shopName, String productName);
 
     int getQuantityOfProductPurchasedInShopByUser(String userName, String shopName, String productName);
-
-    //boolean fireEldar(String eldarName);
-
-
-
 }

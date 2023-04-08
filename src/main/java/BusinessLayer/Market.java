@@ -35,6 +35,16 @@ public class Market implements MarketIntr{
     }
 
     @Override
+    public void addAdmin(String userName) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void unregister(String userName) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public void init() {
 
     }
@@ -281,6 +291,91 @@ public class Market implements MarketIntr{
     @Override
     public void purchaseCart(String userName) {
 
+    }
+
+    @Override
+    public boolean isRegistered(String userName) {
+        return false;
+    }
+
+    @Override
+    public boolean isLogged(String userName) {
+        return false;
+    }
+
+    @Override
+    public boolean isBlocked(String userName) {
+        return false;
+    }
+
+    @Override
+    public boolean isAdmin(String userName) {
+        return false;
+    }
+
+    @Override
+    public boolean shopExists(String shopName) {
+        return false;
+    }
+
+    @Override
+    public boolean isShopOpen(String shopName) {
+        return false;
+    }
+
+    @Override
+    public boolean productExistsInShop(String shopName, String productName) {
+        return false;
+    }
+
+    @Override
+    public boolean productExistsInCart(String userName, String productName) {
+        return false;
+    }
+
+    @Override
+    public boolean hasPermission(String userName, String shopName, String permission) {
+        return false;
+    }
+
+    @Override
+    public int getProductQuantityInShop(String shopName, String productName) {
+        return 0;
+    }
+
+    @Override
+    public String getProductDescription(String shopName, String productName) {
+        return null;
+    }
+
+    @Override
+    public double getProductPrice(String shopName, String productName) {
+        return 0;
+    }
+
+    @Override
+    public String getShopFounder(String shopName) {
+        return null;
+    }
+
+    @Override
+    public Collection<String> getShopOwners(String shopName) {
+        return null;
+    }
+
+    @Override
+    public Collection<String> getShopManagers(String shopName) {
+        return null;
+    }
+
+    @Override
+    public int getQuantityOfProductPurchasedInShop(String shopName, String productName) {
+        return 0;
+    }
+
+    @Override
+    public int getQuantityOfProductPurchasedInShopByUser(String userName, String shopName, String productName) {
+        return 0;
     }
 
     private User findUserByName(String targetName) {
