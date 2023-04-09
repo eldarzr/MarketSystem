@@ -9,7 +9,12 @@ import BusinessLayer.Users.UserIntr;
 import java.util.*;
 
 
-public interface MarketIntr {
+public interface MarketIntr  {
+
+    //Gabi added:
+    void addAdmin(String userName);
+
+    void unregister(String userName);
 
     //open and initialize the market system
     void init();
@@ -106,6 +111,43 @@ public interface MarketIntr {
 
     //connect to payment adapter and delivery adapter
     void purchaseCart(String userName);
+
+    // Queries for tests
+    boolean isRegistered(String userName);
+
+    boolean isLogged(String userName);
+
+    boolean isBlocked(String userName);
+
+    boolean isAdmin(String userName);
+
+    boolean shopExists(String shopName);
+
+    boolean isShopOpen(String shopName);
+
+    boolean productExistsInShop(String shopName, String productName);
+
+    boolean productExistsInCart(String userName, String productName);
+
+    boolean hasPermission(String userName, String shopName, String permission);
+
+    int getProductQuantityInShop(String shopName, String productName);
+
+    String getProductDescription(String shopName, String productName);
+
+    double getProductPrice(String shopName, String productName);
+
+    String getShopFounder(String shopName);
+
+    Collection<String> getShopOwners(String shopName);
+
+    Collection<String> getShopManagers(String shopName);
+
+    int getQuantityOfProductPurchasedInShop(String shopName, String productName);
+
+    int getQuantityOfProductPurchasedInShopByUser(String userName, String shopName, String productName);
+
+    //boolean fireEldar(String eldarName);
 
 
 
