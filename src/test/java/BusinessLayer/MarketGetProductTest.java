@@ -16,7 +16,8 @@ class MarketGetProductTest {
 	String[] emails = {"eldar@gmail.com", "niv@gmail.com"};
 	String[] shopNames = {"shop1", "shop2"};
 	String[] prodNames = {"prod1", "prod2"};
-	String[] descs = {"desc1", "desc2"};
+	String[] descs = {"description1", "description2"};
+	String[] cat = {"cat1", "cat2"};
 	double[] prices = {5, 10};
 
 	@BeforeEach
@@ -27,7 +28,7 @@ class MarketGetProductTest {
 			market.register(usersName[i], emails[i], passwords[i]);
 			market.login(usersName[i], passwords[i]);
 			market.createShop(usersName[i], shopNames[i]);
-			market.addNewProduct(usersName[i], shopNames[i], prodNames[i], descs[i], prices[i]);
+			market.addNewProduct(usersName[i], shopNames[i], prodNames[i], cat[i], descs[i], prices[i]);
 		}
 	}
 
@@ -40,7 +41,7 @@ class MarketGetProductTest {
 	void getProdSuccess() throws Exception {
 		for(int i = 0; i < usersName.length; i++) {
 			ProductIntr product = market.getProduct(usersName[i], shopNames[i], prodNames[i]);
-			assertTrue(product.getName().equals(shopNames[i]));
+			assertTrue(product.getName().equals(prodNames[i]));
 		}
 	}
 

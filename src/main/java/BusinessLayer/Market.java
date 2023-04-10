@@ -94,46 +94,67 @@ public class Market implements MarketIntr{
     public void closeShop(String userName, String shopName) {
     }
 
-    //todo: eldar
     @Override
-    public void addNewProduct(String userName, String shopName, String productName, String desc, double price) {
-
+    public void addNewProduct(String userName, String shopName, String productName, String category, String desc, double price) throws Exception {
+        if(!isLoggedIn(userName))
+            throw new Exception(String.format("the user %s is not login", userName));
+        if(shopName == null || !shops.containsKey(shopName))
+            throw new Exception("there is already shop with that name");
+        shops.get(shopName).addNewProduct(userName, productName, category, desc, price);
     }
 
-    //todo: eldar
     @Override
-    public void removeProduct(String userName, String shopName, String productName) {
-
+    public void removeProduct(String userName, String shopName, String productName) throws Exception {
+        if(!isLoggedIn(userName))
+            throw new Exception(String.format("the user %s is not login", userName));
+        if(shopName == null || !shops.containsKey(shopName))
+            throw new Exception("there is already shop with that name");
+        shops.get(shopName).removeProduct(userName, productName);
     }
 
-    //todo: eldar
     @Override
-    public void updateProductName(String userName, String shopName, String productOldName, String productNewName) {
-
+    public void updateProductName(String userName, String shopName, String productOldName, String productNewName) throws Exception {
+        if(!isLoggedIn(userName))
+            throw new Exception(String.format("the user %s is not login", userName));
+        if(shopName == null || !shops.containsKey(shopName))
+            throw new Exception("there is already shop with that name");
+        shops.get(shopName).updateProductName(userName, productOldName, productNewName);
     }
 
-    //todo: eldar
     @Override
-    public void updateProductDesc(String userName, String shopName, String productName, String productNewDesc) {
-
+    public void updateProductDesc(String userName, String shopName, String productName, String productNewDesc) throws Exception {
+        if(!isLoggedIn(userName))
+            throw new Exception(String.format("the user %s is not login", userName));
+        if(shopName == null || !shops.containsKey(shopName))
+            throw new Exception("there is already shop with that name");
+        shops.get(shopName).updateProductDesc(userName, productName, productNewDesc);
     }
 
-    //todo: eldar
     @Override
-    public void updateProductPrice(String userName, String shopName, String productName, double price) {
-
+    public void updateProductPrice(String userName, String shopName, String productName, double price) throws Exception {
+        if(!isLoggedIn(userName))
+            throw new Exception(String.format("the user %s is not login", userName));
+        if(shopName == null || !shops.containsKey(shopName))
+            throw new Exception("there is already shop with that name");
+        shops.get(shopName).updateProductPrice(userName, productName, price);
     }
 
-    //todo: eldar
     @Override
-    public void updateProductQuantity(String userName, String shopName, String productName, int quantity) {
-
+    public void updateProductQuantity(String userName, String shopName, String productName, int quantity) throws Exception {
+        if(!isLoggedIn(userName))
+            throw new Exception(String.format("the user %s is not login", userName));
+        if(shopName == null || !shops.containsKey(shopName))
+            throw new Exception("there is already shop with that name");
+        shops.get(shopName).updateProductQuantity(userName, productName, quantity);
     }
 
-    //todo: eldar
     @Override
-    public void addProductItems(String userName, String shopName, String productName, int quantity) {
-
+    public void addProductItems(String userName, String shopName, String productName, int quantity) throws Exception {
+        if(!isLoggedIn(userName))
+            throw new Exception(String.format("the user %s is not login", userName));
+        if(shopName == null || !shops.containsKey(shopName))
+            throw new Exception("there is already shop with that name");
+        shops.get(shopName).addProductQuantity(userName, productName, quantity);
     }
 
     @Override
