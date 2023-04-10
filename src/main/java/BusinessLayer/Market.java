@@ -149,8 +149,12 @@ public class Market implements MarketIntr{
     }
 
     @Override
-    public void addProductItems(String userName, String shopName, String productName, int quantity) {
-        // this function seems to be useless due to the function right up
+    public void addProductItems(String userName, String shopName, String productName, int quantity) throws Exception {
+        if(!isLoggedIn(userName))
+            throw new Exception(String.format("the user %s is not login", userName));
+        if(shopName == null || !shops.containsKey(shopName))
+            throw new Exception("there is already shop with that name");
+        shops.get(shopName).addProductQuantity(userName, productName, quantity);
     }
 
     @Override

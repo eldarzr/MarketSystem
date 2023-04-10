@@ -117,7 +117,7 @@ public class Shop implements ShopIntr{
 		if(products.containsKey(productName))
 			throw new Exception(String.format("there is already product %s in the shop %s", productName, name));
 		validatePermissionsException(userName, MANAGE_STOCK);
-		products.put(productName, new ShopProduct(productName, category, desc, price));
+		products.put(productName, ShopProduct.createProduct(productName, category, desc, price));
 	}
 
 	private void validatePermissionsException(String userName, ManagePermissionsEnum permissionsEnum) throws Exception {
@@ -129,15 +129,13 @@ public class Shop implements ShopIntr{
 	}
 
 	public void removeProduct(String userName, String productName) throws Exception {
-		if(!products.containsKey(productName))
-			throw new Exception(String.format("there is no product %s in the shop %s", productName, name));
+		validateProductExists(productName);
 		validatePermissionsException(userName, MANAGE_STOCK);
 		products.remove(productName);
 	}
 
 	public void updateProductName(String userName, String productOldName, String productNewName) throws Exception {
-		if(!products.containsKey(productOldName))
-			throw new Exception(String.format("there is no product %s in the shop %s", productOldName, name));
+		validateProductExists(productOldName);
 		validatePermissionsException(userName, MANAGE_STOCK);
 		synchronized (products) {
 			ShopProduct product = products.remove(productOldName);
@@ -147,23 +145,31 @@ public class Shop implements ShopIntr{
 	}
 
 	public void updateProductDesc(String userName, String productName, String productNewDesc) throws Exception {
-		if(!products.containsKey(productName))
-			throw new Exception(String.format("there is no product %s in the shop %s", productName, name));
+		validateProductExists(productName);
 		validatePermissionsException(userName, MANAGE_STOCK);
 		products.get(productName).setDescription(productNewDesc);
 	}
 
 	public void updateProductPrice(String userName, String productName, double price) throws Exception {
-		if(!products.containsKey(productName))
-			throw new Exception(String.format("there is no product %s in the shop %s", productName, name));
+		validateProductExists(productName);
 		validatePermissionsException(userName, MANAGE_STOCK);
 		products.get(productName).setPrice(price);
 	}
 
 	public void updateProductQuantity(String userName, String productName, int quantity) throws Exception {
-		if(!products.containsKey(productName))
-			throw new Exception(String.format("there is no product %s in the shop %s", productName, name));
+		validateProductExists(productName);
 		validatePermissionsException(userName, MANAGE_STOCK);
 		products.get(productName).setQuantity(quantity);
+	}
+
+	public void addProductQuantity(String userName, String productName, int quantity) throws Exception {
+		validateProductExists(productName);
+		validatePermissionsException(userName, MANAGE_STOCK);
+		products.get(productName).addQuantity(quantity);
+	}
+
+	private void validateProductExists(String productName) throws Exception {
+		if(!products.containsKey(productName))
+			throw new Exception(String.format("there is no product %s in the shop %s", productName, name));
 	}
 }

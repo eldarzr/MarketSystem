@@ -53,7 +53,7 @@ public interface MarketIntr {
 
     void updateProductQuantity(String userName, String shopName, String productName, int quantity) throws Exception;
 
-    void addProductItems(String userName, String shopName, String productName, int quantity);
+    void addProductItems(String userName, String shopName, String productName, int quantity) throws Exception;
 
     ShopIntr getShop(String userName, String shopName) throws Exception;
 

@@ -16,7 +16,7 @@ class MarketGetProductTest {
 	String[] emails = {"eldar@gmail.com", "niv@gmail.com"};
 	String[] shopNames = {"shop1", "shop2"};
 	String[] prodNames = {"prod1", "prod2"};
-	String[] descs = {"desc1", "desc2"};
+	String[] descs = {"description1", "description2"};
 	String[] cat = {"cat1", "cat2"};
 	double[] prices = {5, 10};
 
