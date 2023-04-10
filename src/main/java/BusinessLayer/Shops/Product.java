@@ -2,6 +2,8 @@ package BusinessLayer.Shops;
 
 import org.apache.commons.text.similarity.LevenshteinDistance;
 
+import java.util.Locale;
+
 public class Product implements ProductIntr{
 
 	protected String name;
@@ -70,7 +72,7 @@ public class Product implements ProductIntr{
 	@Override
 	public boolean isOnCategory(String category) {
 		LevenshteinDistance distance = new LevenshteinDistance();
-		return distance.apply(this.category, category) <= 2;
+		return distance.apply(this.category.toLowerCase(), category.toLowerCase()) <= 0;
 	}
 
 	public String getDescription() {

@@ -185,13 +185,13 @@ public class Market implements MarketIntr{
         if (!isLoggedIn(userName))
             throw new Exception(String.format("the user %s is not login", userName));
         List<ProductIntr> prodsToReturn = new ArrayList<>();
-        for (String shopName : shopNames){
+        for (String shopName : shopNames) {
             for (ProductIntr product : shops.get(shopName).getProducts()) {
                 if (distance.apply(
                         product.getName().toLowerCase(), productName.toLowerCase()) <= PRODUCT_DISTANCE_MAX_LIMIT)
                     prodsToReturn.add(product);
             }
-    }
+        }
         return prodsToReturn.stream().sorted((prod1, prod2) ->
                 distance.apply(prod1.getName(), productName) - distance.apply(prod2.getName(), productName)).
                 collect(Collectors.toList());
@@ -204,7 +204,7 @@ public class Market implements MarketIntr{
         Collection<ProductIntr> prodsToReturn = getProducts(userName, shopsNames, productName);
         if (prodsToReturn.size() < 1)
             throw new Exception(String.format("there is no product in this name: %s", productName));
-        return prodsToReturn.stream().collect(Collectors.toList()).get(0);
+        return new ArrayList<>(prodsToReturn).get(0);
     }
 
     @Override
@@ -215,9 +215,8 @@ public class Market implements MarketIntr{
     @Override
     public List<ProductIntr> extendedSearch(String userName, String productName, double minPrice, double maxPrice,
                                                   String category) throws Exception{
-        return basicSearch(userName, productName).stream().filter(
-                (ProductIntr product) -> product.isOnPrice(minPrice, maxPrice) && product.isOnCategory(category))
-                .collect(Collectors.toList());
+        return Search.createExtendedSearch(productName, category, minPrice, maxPrice).
+                apply(basicSearch(userName, productName));
     }
 
     @Override
