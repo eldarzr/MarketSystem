@@ -38,7 +38,7 @@ public interface MarketIntr {
 
     void openShop(String userName, String shopName);
 
-    void closeShop(String userName, String shopName);
+    void closeShop(String userName, String shopName) throws Exception;
 
     public void addNewProduct(String userName, String shopName, String productName, String category, String desc,
                               double price) throws Exception;

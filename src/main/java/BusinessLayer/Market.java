@@ -25,13 +25,14 @@ import java.util.stream.Collectors;
 public class Market implements MarketIntr{
 
 
-    ConcurrentHashMap<String,Shop> shops = new ConcurrentHashMap<>();
     UsersHandler usersHandler;
+    ShopHandler shopHandler;
     private final int SHOP_DISTANCE_MAX_LIMIT = 2;
     private final int PRODUCT_DISTANCE_MAX_LIMIT = 2;
 
     public Market() {
         usersHandler = UsersHandler.getInstance();
+        shopHandler = shopHandler.getInstance();
     }
 
     @Override
@@ -68,20 +69,19 @@ public class Market implements MarketIntr{
     //todo: naor
     @Override
     public Collection<PurchaseIntr> getUserPurchaseHistory(String userName) {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void createShop(String userName, String shopName) throws Exception {
       if(!isLoggedIn(userName))
           throw new Exception(String.format("the user %s is not login", userName));
-      if(shops.containsKey(shopName))
-        throw new Exception("there is already shop with that name");
+      //shopHandler.shopExists(shopName);
       User user = findUserByName(userName);
       Shop shop = new Shop(shopName, userName);
       //user.addFoundedShop(shopName);
-      shops.put(shopName, shop);
-      MemberRoleInShop.createOwner(userName,shop);
+      shopHandler.addShop(shopName,shop);
+      MemberRoleInShop.createOwner(userName,shop, user::sendMessage);
     }
 
     @Override
@@ -91,11 +91,17 @@ public class Market implements MarketIntr{
 
     //todo: naor
     @Override
-    public void closeShop(String userName, String shopName) {
+    public void closeShop(String userName, String shopName) throws Exception {
+        validateUserIsntGuest(userName);
+        isLoggedIn(userName);
+        shopHandler.closeShop(userName,shopName);
+
     }
 
     @Override
     public void addNewProduct(String userName, String shopName, String productName, String category, String desc, double price) throws Exception {
+       ConcurrentHashMap<String , Shop> shops = shopHandler.getShops();
+
         if(!isLoggedIn(userName))
             throw new Exception(String.format("the user %s is not login", userName));
         if(shopName == null || !shops.containsKey(shopName))
@@ -103,8 +109,11 @@ public class Market implements MarketIntr{
         shops.get(shopName).addNewProduct(userName, productName, category, desc, price);
     }
 
+
+
     @Override
     public void removeProduct(String userName, String shopName, String productName) throws Exception {
+        ConcurrentHashMap<String , Shop> shops = shopHandler.getShops();
         if(!isLoggedIn(userName))
             throw new Exception(String.format("the user %s is not login", userName));
         if(shopName == null || !shops.containsKey(shopName))
@@ -114,6 +123,7 @@ public class Market implements MarketIntr{
 
     @Override
     public void updateProductName(String userName, String shopName, String productOldName, String productNewName) throws Exception {
+        ConcurrentHashMap<String , Shop> shops = shopHandler.getShops();
         if(!isLoggedIn(userName))
             throw new Exception(String.format("the user %s is not login", userName));
         if(shopName == null || !shops.containsKey(shopName))
@@ -123,6 +133,7 @@ public class Market implements MarketIntr{
 
     @Override
     public void updateProductDesc(String userName, String shopName, String productName, String productNewDesc) throws Exception {
+        ConcurrentHashMap<String , Shop> shops = shopHandler.getShops();
         if(!isLoggedIn(userName))
             throw new Exception(String.format("the user %s is not login", userName));
         if(shopName == null || !shops.containsKey(shopName))
@@ -132,6 +143,7 @@ public class Market implements MarketIntr{
 
     @Override
     public void updateProductPrice(String userName, String shopName, String productName, double price) throws Exception {
+        ConcurrentHashMap<String , Shop> shops = shopHandler.getShops();
         if(!isLoggedIn(userName))
             throw new Exception(String.format("the user %s is not login", userName));
         if(shopName == null || !shops.containsKey(shopName))
@@ -141,6 +153,7 @@ public class Market implements MarketIntr{
 
     @Override
     public void updateProductQuantity(String userName, String shopName, String productName, int quantity) throws Exception {
+        ConcurrentHashMap<String , Shop> shops = shopHandler.getShops();
         if(!isLoggedIn(userName))
             throw new Exception(String.format("the user %s is not login", userName));
         if(shopName == null || !shops.containsKey(shopName))
@@ -150,6 +163,7 @@ public class Market implements MarketIntr{
 
     @Override
     public void addProductItems(String userName, String shopName, String productName, int quantity) throws Exception {
+        ConcurrentHashMap<String , Shop> shops = shopHandler.getShops();
         if(!isLoggedIn(userName))
             throw new Exception(String.format("the user %s is not login", userName));
         if(shopName == null || !shops.containsKey(shopName))
@@ -170,6 +184,7 @@ public class Market implements MarketIntr{
         if (!isLoggedIn(userName))
             throw new Exception(String.format("the user %s is not login", userName));
         List<Shop> shopsToReturn = new ArrayList<>();
+        ConcurrentHashMap<String,Shop> shops =shopHandler.getShops();
         for (String shopName1 : shops.keySet()) {
             if (distance.apply(shopName.toLowerCase(), shopName1.toLowerCase()) <= SHOP_DISTANCE_MAX_LIMIT)
                 shopsToReturn.add(shops.get(shopName1));
@@ -185,7 +200,8 @@ public class Market implements MarketIntr{
         if (!isLoggedIn(userName))
             throw new Exception(String.format("the user %s is not login", userName));
         List<ProductIntr> prodsToReturn = new ArrayList<>();
-        for (String shopName : shopNames) {
+        ConcurrentHashMap<String,Shop> shops =shopHandler.getShops();
+        for (String shopName : shopNames){
             for (ProductIntr product : shops.get(shopName).getProducts()) {
                 if (distance.apply(
                         product.getName().toLowerCase(), productName.toLowerCase()) <= PRODUCT_DISTANCE_MAX_LIMIT)
@@ -209,6 +225,7 @@ public class Market implements MarketIntr{
 
     @Override
     public List<ProductIntr> basicSearch(String userName, String productName) throws Exception {
+        ConcurrentHashMap<String,Shop> shops =shopHandler.getShops();
         return getProducts(userName, shops.keySet(), productName);
     }
 
@@ -223,15 +240,13 @@ public class Market implements MarketIntr{
     public void appointShopOwner(String appointedBy, String appointee, String shopName) throws Exception {
         validateUserIsntGuest(appointedBy);
         isLoggedIn(appointedBy);
-        validateUserIsntGuest(appointee);
+        User user = validateUserIsntGuest(appointee);
         Shop reqShop = checkForShop(shopName);
-        reqShop.setShopOwner(appointedBy,appointee);
+        reqShop.setShopOwner(appointedBy,appointee , user::sendMessage);
     }
 
     public Shop checkForShop(String shopName) throws Exception {
-        if(!shops.containsKey(shopName))
-            throw new Exception("there is no such shop named :" +shopName);
-        return shops.get(shopName);
+        return shopHandler.getShop(shopName);
 //      reqShop.setShopOwner(actor,actOn);
     }
 
@@ -239,15 +254,15 @@ public class Market implements MarketIntr{
     public void appointShopManager(String appointedBy, String appointee, String shopName) throws Exception {
         validateUserIsntGuest(appointedBy);
         isLoggedIn(appointedBy);
-        validateUserIsntGuest(appointee);
+        User user = validateUserIsntGuest(appointee);
         Shop reqShop = checkForShop(shopName);
-        reqShop.setShopManager(appointedBy,appointee);
+        reqShop.setShopManager(appointedBy,appointee ,user::sendMessage);
     }
 
     //todo: naor
     @Override
     public void removeShopManager(String managerName, String userToRemove, String shopName) {
-
+        throw new NotImplementedException();
     }
 
     @Override
@@ -326,6 +341,7 @@ public class Market implements MarketIntr{
     //to do I left it like this
     public void resetAll(){
         usersHandler.reset();
+        shopHandler.reset();
     }
 
     private boolean isLoggedIn(String userName) {

@@ -3,11 +3,11 @@ package BusinessLayer.Shops;
 import BusinessLayer.Enums.ManagePermissionsEnum;
 import BusinessLayer.Enums.ManageType;
 import BusinessLayer.MemberRoleInShop;
-import BusinessLayer.Users.User;
+import BusinessLayer.MessageObserver;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 
 import static BusinessLayer.Enums.ManagePermissionsEnum.*;
@@ -15,10 +15,12 @@ import static BusinessLayer.Enums.ManagePermissionsEnum.*;
 public class Shop implements ShopIntr{
 	String name;
 	boolean open;
-	private String founderUserName;
+	boolean isActive;
+	private final String founderUserName;
 	//map of user name to role in this shop
 	private ConcurrentHashMap<String, MemberRoleInShop> roles;
 	private ConcurrentHashMap<String, ShopProduct> products;
+	private ConcurrentLinkedQueue<MessageObserver> observers;
 
 	public Shop(String name, String founderUserName) {
 		this.name = name;
@@ -26,6 +28,8 @@ public class Shop implements ShopIntr{
 		this.founderUserName = founderUserName;
 		this.roles = new ConcurrentHashMap<>();
 		this.products = new ConcurrentHashMap<>();
+		this.isActive = true;
+		this.observers = new ConcurrentLinkedQueue<>();
 	}
 
 	public String getName() {
@@ -48,7 +52,7 @@ public class Shop implements ShopIntr{
 		return founderUserName;
 	}
 
-	public void setShopOwner(String actor, String actOn) throws Exception {
+	public void setShopOwner(String actor, String actOn , MessageObserver sendMessage) throws Exception {
 
 		validateUserHasRole(actor);
 		MemberRoleInShop actorMRIS = roles.get(actor);
@@ -64,11 +68,11 @@ public class Shop implements ShopIntr{
 			actOnMRIS.setGrantor(actor);
 			return;
 		}
-		MemberRoleInShop.createOwner(actOn,this, actor);
+		MemberRoleInShop.createOwner(actOn,this, actor , sendMessage);
 
 	}
 
-	public void setShopManager(String actor, String actOn) throws Exception {
+	public void setShopManager(String actor, String actOn , MessageObserver sendMessage) throws Exception {
 		validateUserHasRole(actor);
 		MemberRoleInShop actorMRIS = roles.get(actor);
 		if(actorMRIS.getType()!= ManageType.OWNER)
@@ -76,7 +80,7 @@ public class Shop implements ShopIntr{
 		if (roles.containsKey(actOn)) {
 			throw new Exception("the user :" + actOn + "is already have a role in the store");
 		}
-		MemberRoleInShop.createManager(actOn,this,actor);
+		MemberRoleInShop.createManager(actOn,this,actor , sendMessage);
 
 	}
 
@@ -109,7 +113,20 @@ public class Shop implements ShopIntr{
 
 		}
 
-	public List<Product> getProducts() {
+	public void closeShop(String userName) throws Exception {
+		if(!this.founderUserName.equals(userName))
+			throw new Exception("only the founder can close a store");
+		this.isActive = false;
+		for (MessageObserver observer : this.observers ){
+			 observer.update("the shop named : " +this.name + " is closed");
+		}
+		//TODO : Only managers & owners can acheive information on the shop.
+		//TODO : products of the store should be unavialbe now when a member looking for them.
+
+
+	}
+
+	public List<ShopProduct> getProducts() {
 		return products.values().stream().collect(Collectors.toList());
 	}
 
@@ -144,6 +161,9 @@ public class Shop implements ShopIntr{
 		}
 	}
 
+	public void addObserver(MessageObserver obs) {
+		this.observers.add(obs);
+	}
 	public void updateProductDesc(String userName, String productName, String productNewDesc) throws Exception {
 		validateProductExists(productName);
 		validatePermissionsException(userName, MANAGE_STOCK);
@@ -172,4 +192,7 @@ public class Shop implements ShopIntr{
 		if(!products.containsKey(productName))
 			throw new Exception(String.format("there is no product %s in the shop %s", productName, name));
 	}
-}
+
+
+	}
+
