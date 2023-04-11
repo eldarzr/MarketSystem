@@ -14,13 +14,10 @@ public class ShopHandler {
     }
 
 
-    public void shopExists(String shopName) throws Exception {
-        if(shops.containsKey(shopName))
-            throw new Exception("there is already shop with that name");
-    }
 
     public void addShop(String shopName, Shop shop) throws Exception {
-        shopExists(shopName);
+        if(shops.containsKey(shopName))
+            throw new Exception("there is already shop with that name");
         shops.put(shopName, shop);
     }
 
