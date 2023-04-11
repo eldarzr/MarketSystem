@@ -55,7 +55,7 @@ class MarketGetProductTest {
 
 	@Test
 	void getProdFail() throws Exception {
-		assertThrows(Exception.class, () -> market.getProduct(usersName[0], shopNames[0], "bla bla"));
+		assertNull(market.getProduct(usersName[0], shopNames[0], "bla bla"));
 	}
 
 }
