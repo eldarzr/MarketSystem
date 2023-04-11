@@ -12,6 +12,7 @@ public class User {
     private String name;
     private String email;
     private String password;
+    private ConcurrentLinkedQueue<String> shopsMessages = new ConcurrentLinkedQueue<>();
     private boolean twoFactorEnabled;
 //    private ConcurrentLinkedQueue<String> foundedShops;
 //    //map of shop name to role of this user in the shop
@@ -30,7 +31,9 @@ public class User {
         userType = UserType.GUEST;
     }
 
-
+    public void sendMessage(String message){
+        shopsMessages.add(message);
+    }
     public String getName() {
         return name;
     }

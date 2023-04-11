@@ -17,9 +17,9 @@ class MarketSearchTest {
 	String[] emails = {"eldar@gmail.com", "niv@gmail.com"};
 	String[] shopNames = {"shop1", "shop2"};
 	String[] prodNames = {"prod1", "prod11", "prod111"};
-	String[] descs = {"desc1", "desc2"};
-	String[] cats = {"cat1", "cat2"};
-	double[] prices = {5, 10};
+	String[] descs = {"desc1", "desc2", "desc3"};
+	String[] cats = {"cat1", "cat2", "cat3"};
+	double[] prices = {5, 7, 10};
 
 	@BeforeEach
 	void setUp() throws Exception {
@@ -31,7 +31,7 @@ class MarketSearchTest {
 			market.createShop(usersName[i], shopNames[i]);
 		}
 		for(int i = 0; i < prodNames.length; i++) {
-			market.addNewProduct(usersName[0], shopNames[0], prodNames[i], descs[0], prices[0]);
+			market.addNewProduct(usersName[0], shopNames[0], prodNames[i], cats[i], descs[i], prices[i]);
 		}
 	}
 

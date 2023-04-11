@@ -3,6 +3,7 @@ package BusinessLayer;
 import BusinessLayer.ManagePermissions;
 import BusinessLayer.Enums.ManageType;
 import BusinessLayer.Shops.Shop;
+//import BusinessLayer.Shops.ShopMessageObserver;
 import BusinessLayer.Users.User;
 import static BusinessLayer.Enums.ManageType.*;
 import static BusinessLayer.Enums.ManagePermissionsEnum.*;
@@ -23,19 +24,21 @@ public class MemberRoleInShop {
 		this.roleUser = roleUser;
 	}
 
-	public static MemberRoleInShop createOwner(String user,Shop shop) throws Exception {
+	public static MemberRoleInShop createOwner(String user, Shop shop, MessageObserver observer) throws Exception {
 		//TODO: add logic to add owner
-		return adjustRole(new MemberRoleInShop(shop ,user , null, OWNER, ManagePermissions.getFullAccessPermissions()));
+		return adjustRole(new MemberRoleInShop(shop ,user , null, OWNER, ManagePermissions.getFullAccessPermissions()),observer);
 	}
 
-	public static MemberRoleInShop createOwner(String roleUser , Shop roleShop , String grantor) throws Exception {
+	public static MemberRoleInShop createOwner(String roleUser , Shop roleShop , String grantor , MessageObserver observer) throws Exception {
 		//TODO: add logic to add owner
-		return adjustRole(new MemberRoleInShop(roleShop , roleUser , grantor , OWNER, ManagePermissions.getFullAccessPermissions()));
+		return adjustRole(new MemberRoleInShop(roleShop , roleUser , grantor , OWNER,
+				ManagePermissions.getFullAccessPermissions()) , observer);
 	}
 
-	public static MemberRoleInShop createManager(String roleUser , Shop roleShop , String grantor) throws Exception {
+	public static MemberRoleInShop createManager(String roleUser , Shop roleShop , String grantor, MessageObserver observer) throws Exception {
 		//TODO: add logic to add manager
-		return adjustRole(new MemberRoleInShop(roleShop,roleUser,grantor, MANAGER, ManagePermissions.getReadOnlyPermissions()));
+		return adjustRole(new MemberRoleInShop(roleShop,roleUser,grantor, MANAGER,
+				ManagePermissions.getReadOnlyPermissions()), observer);
 	}
 
 	public void setGrantor(String grantor) {
@@ -89,12 +92,20 @@ public class MemberRoleInShop {
 	}
 
 }
-
-	private static MemberRoleInShop adjustRole(MemberRoleInShop role) throws Exception {
+	private static MemberRoleInShop adjustRole(MemberRoleInShop role , MessageObserver obs) throws Exception {
 		String roleUser = role.roleUser;
 		Shop roleShop = role.roleShop;
 //		roleUser.addShopRole(roleShop.getName() ,role);
 		roleShop.addRole(roleUser,role);
+		roleShop.addObserver(obs);
 		return role;
 	}
+
+//	private static MemberRoleInShop adjustRole(MemberRoleInShop role) throws Exception {
+//		String roleUser = role.roleUser;
+//		Shop roleShop = role.roleShop;
+////		roleUser.addShopRole(roleShop.getName() ,role);
+//		roleShop.addRole(roleUser,role);
+//		return role;
+//	}
 }

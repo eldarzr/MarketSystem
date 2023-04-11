@@ -61,6 +61,11 @@ class MarketAppointManagerOwnerTests {
     }
 
     @Test
+    void appointShopManager_aba() throws Exception {
+        market.closeShop("eldar","shop1");
+    }
+
+    @Test
     void appointShopManager_success2() throws Exception {
         market.appointShopOwner("eldar","naor","shop1");
         market.appointShopManager("naor","niv12","shop1");
