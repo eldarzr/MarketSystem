@@ -37,19 +37,19 @@ public class Search {
 	}
 
 	private List<ProductIntr> filterCategory(List<ProductIntr> products) {
-		return this.cat.equals(IGNORED_STRING) ?
+		return this.cat != IGNORED_STRING ?
 				products.stream().filter(prod -> prod.isOnCategory(this.cat)).collect(Collectors.toList()) :
 				products;
 	}
 
 	private List<ProductIntr> filterMaxBound(List<ProductIntr> products) {
-		return this.maxPrice == IGNORED_INT ?
+		return this.maxPrice != IGNORED_INT ?
 				products.stream().filter(prod -> prod.getPrice() <= this.maxPrice).collect(Collectors.toList()) :
 				products;
 	}
 
 	private List<ProductIntr> filterMinBound(List<ProductIntr> products) {
-		return this.minPrice == IGNORED_INT ?
+		return this.minPrice != IGNORED_INT ?
 				products.stream().filter(prod -> prod.getPrice() >= this.minPrice).collect(Collectors.toList()) :
 				products;
 	}
