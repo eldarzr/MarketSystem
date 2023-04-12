@@ -10,7 +10,7 @@ import BusinessLayer.Users.UserIntr;
 
 import java.util.Collection;
 
-public class MarketSystemProxyBridge implements MarketIntr {
+public class MarketSystemProxyBridge implements MarketSystemBridge {
     MarketSystemRealBridge realBridge;
 
     private void nullCheck() {
@@ -66,7 +66,7 @@ public class MarketSystemProxyBridge implements MarketIntr {
     }
 
     @Override
-    public Collection<PurchaseIntr> getUserPurchaseHistory(String userName) {
+    public Collection<PurchaseBridge> getUserPurchaseHistory(String userName) {
         nullCheck();
         return realBridge.getUserPurchaseHistory(userName);
     }
@@ -132,24 +132,24 @@ public class MarketSystemProxyBridge implements MarketIntr {
     }
 
     @Override
-    public ShopIntr getShop(String userName, String shopName) {
+    public ShopBridge getShop(String userName, String shopName) {
         nullCheck();
         return realBridge.getShop(userName, shopName);
     }
 
     @Override
-    public ProductIntr getProduct(String userName, String shopName, String productName) {
+    public ProductBridge getProduct(String userName, String shopName, String productName) {
         nullCheck();
         return realBridge.getProduct(userName, shopName, productName);
     }
 
     @Override
-    public Collection<ProductIntr> basicSearch(String userName, String productName) throws Exception {
+    public Collection<ProductBridge> basicSearch(String userName, String productName) throws Exception {
         return null;
     }
 
     @Override
-    public Collection<ProductIntr> extendedSearch(String userName, String productName, double minPrice, double maxPrice, String category) throws Exception {
+    public Collection<ProductBridge> extendedSearch(String userName, String productName, double minPrice, double maxPrice, String category) throws Exception {
         return null;
     }
 
@@ -187,7 +187,7 @@ public class MarketSystemProxyBridge implements MarketIntr {
     }
 
     @Override
-    public Collection<PurchaseIntr> getShopPurchaseHistory(String userName, String shopName) {
+    public Collection<PurchaseBridge> getShopPurchaseHistory(String userName, String shopName) {
         nullCheck();
         return realBridge.getShopPurchaseHistory(userName, shopName);
     }
@@ -205,25 +205,25 @@ public class MarketSystemProxyBridge implements MarketIntr {
     }
 
     @Override
-    public Collection<PurchaseIntr> getShopPurchaseHistoryByAdmin(String adminName, String shopName) {
+    public Collection<PurchaseBridge> getShopPurchaseHistoryByAdmin(String adminName, String shopName) {
         nullCheck();
         return realBridge.getShopPurchaseHistoryByAdmin(adminName, shopName);
     }
 
     @Override
-    public Collection<PurchaseIntr> getUserPurchaseHistoryByAdmin(String adminName, String memberName) {
+    public Collection<PurchaseBridge> getUserPurchaseHistoryByAdmin(String adminName, String memberName) {
         nullCheck();
         return realBridge.getUserPurchaseHistoryByAdmin(adminName, memberName);
     }
 
     @Override
-    public Cart getCart(String userName) {
+    public ShoppingCartBridge getCart(String userName) {
         nullCheck();
         return realBridge.getCart(userName);
     }
 
     @Override
-    public ShopBag getShopBag(String userName, String ShopName) {
+    public ShopBagBridge getShopBag(String userName, String ShopName) {
         nullCheck();
         return realBridge.getShopBag(userName, ShopName);
     }

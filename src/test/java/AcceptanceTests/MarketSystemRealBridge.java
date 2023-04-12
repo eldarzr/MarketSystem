@@ -10,7 +10,7 @@ import BusinessLayer.Users.UserIntr;
 
 import java.util.Collection;
 
-public class MarketSystemRealBridge implements MarketIntr {
+public class MarketSystemRealBridge implements MarketSystemBridge {
 
     public void init() {
         throw new UnsupportedOperationException();
@@ -46,7 +46,7 @@ public class MarketSystemRealBridge implements MarketIntr {
         throw new UnsupportedOperationException();
     }
 
-    public Collection<PurchaseIntr> getUserPurchaseHistory(String userName) {
+    public Collection<PurchaseBridge> getUserPurchaseHistory(String userName) {
         throw new UnsupportedOperationException();
     }
 
@@ -95,21 +95,21 @@ public class MarketSystemRealBridge implements MarketIntr {
         throw new UnsupportedOperationException();
     }
 
-    public ShopIntr getShop(String userName, String shopName) {
+    public ShopBridge getShop(String userName, String shopName) {
         throw new UnsupportedOperationException();
     }
 
-    public ProductIntr getProduct(String userName, String shopName, String productName) {
+    public ProductBridge getProduct(String userName, String shopName, String productName) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Collection<ProductIntr> basicSearch(String userName, String productName) throws Exception {
+    public Collection<ProductBridge> basicSearch(String userName, String productName) throws Exception {
         return null;
     }
 
     @Override
-    public Collection<ProductIntr> extendedSearch(String userName, String productName, double minPrice, double maxPrice, String category) throws Exception {
+    public Collection<ProductBridge> extendedSearch(String userName, String productName, double minPrice, double maxPrice, String category) throws Exception {
         return null;
     }
 
@@ -146,7 +146,7 @@ public class MarketSystemRealBridge implements MarketIntr {
         throw new UnsupportedOperationException();
     }
 
-    public Collection<PurchaseIntr> getShopPurchaseHistory(String userName, String shopName) {
+    public Collection<PurchaseBridge> getShopPurchaseHistory(String userName, String shopName) {
         throw new UnsupportedOperationException();
     }
 
@@ -158,19 +158,19 @@ public class MarketSystemRealBridge implements MarketIntr {
         throw new UnsupportedOperationException();
     }
 
-    public Collection<PurchaseIntr> getShopPurchaseHistoryByAdmin(String adminName, String shopName) {
+    public Collection<PurchaseBridge> getShopPurchaseHistoryByAdmin(String adminName, String shopName) {
         throw new UnsupportedOperationException();
     }
 
-    public Collection<PurchaseIntr> getUserPurchaseHistoryByAdmin(String adminName, String memberName) {
+    public Collection<PurchaseBridge> getUserPurchaseHistoryByAdmin(String adminName, String memberName) {
         throw new UnsupportedOperationException();
     }
 
-    public Cart getCart(String userName) {
+    public ShoppingCartBridge getCart(String userName) {
         return null;
     }
-
-    public ShopBag getShopBag(String userName, String ShopName) {
+    @Override
+    public ShopBagBridge getShopBag(String userName, String ShopName) {
         throw new UnsupportedOperationException();
     }
 
