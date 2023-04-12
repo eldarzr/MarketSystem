@@ -37,7 +37,7 @@ class MarketgetShopTest {
 	@Test
 	void getShopSuccess() throws Exception {
 		for(int i = 0; i < usersName.length; i++) {
-			Shop shop = market.getShop(usersName[i], shopNames[i]);
+			Shop shop = market.searchShop(usersName[i], shopNames[i]);
 			assertTrue(shop.getName().equals(shopNames[i]));
 		}
 	}
@@ -45,14 +45,14 @@ class MarketgetShopTest {
 	@Test
 	void getShopSuccessDistance1() throws Exception {
 		for(int i = 0; i < usersName.length; i++) {
-			Shop shop = market.getShop(usersName[i], shopNames[(i + 1) % 2]);
+			Shop shop = market.searchShop(usersName[i], shopNames[(i + 1) % 2]);
 			assertNotNull(shop);
 		}
 	}
 
 	@Test
 	void getShopFail() throws Exception {
-		assertThrows(Exception.class, () -> market.getShop(usersName[0], "bla bla"));
+		assertNull(market.searchShop(usersName[0], "bla bla"));
 	}
 
 	@Test

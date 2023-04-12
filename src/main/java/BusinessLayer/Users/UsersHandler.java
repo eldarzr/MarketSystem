@@ -1,5 +1,6 @@
 package BusinessLayer.Users;
 
+import BusinessLayer.Enums.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -129,4 +130,8 @@ public class UsersHandler {
         allUsers.clear();
         loginUsers.clear();
     }
+
+	public boolean isAdmin(String userName) {
+        return allUsers.get(userName).getUserType() == UserType.ADMIN;
+	}
 }
