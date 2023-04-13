@@ -13,10 +13,13 @@ import static BusinessLayer.Enums.ManagePermissionsEnum.*;
 public class ManagePermissions {
 
 	private boolean[] permissions;
+
+	private Lock lock;
 	private final int NUM_OF_PERMISSIONS = ManagePermissionsEnum.values().length;
 
 	public ManagePermissions() {
 		permissions = new boolean[NUM_OF_PERMISSIONS];
+		this.lock = new ReentrantLock();
 	}
 
 	public void changeToFullAccess() {
@@ -74,7 +77,6 @@ public class ManagePermissions {
 	// The following method will be used later to get information on the permissions.
 	public List<Integer> getActivatedPermissions() {
 		List<Integer> activated = new ArrayList<>();
-		Lock lock = new ReentrantLock();
 		lock.lock();
 		try {
 			for (ManagePermissionsEnum permission : ManagePermissionsEnum.values()) {

@@ -98,7 +98,7 @@ public class Shop implements ShopIntr{
 		roles.put(name,role);
 	}
 
-	private MemberRoleInShop setManageOptions(String actor, String actOn) throws Exception {
+	private MemberRoleInShop validatePermissionsChangeAllowed(String actor, String actOn) throws Exception {
 		validateUserHasRole(actor);
 		MemberRoleInShop actorMRIS = roles.get(actor);
 		if (actorMRIS.getType() != ManageType.OWNER)
@@ -115,13 +115,13 @@ public class Shop implements ShopIntr{
 	}
 
 	public void addManageOption(String actor, String actOn , int permission) throws Exception {
-		MemberRoleInShop reqRole = setManageOptions(actor,actOn);
+		MemberRoleInShop reqRole = validatePermissionsChangeAllowed(actor,actOn);
 		reqRole.addPermission(permission);
 		}
 
 		/// TODO : ADD / SET - CONCURRENCY ETC
 	public MemberRoleInShop setManageOption(String actor, String actOn, List<Integer> permissions) throws Exception {
-		MemberRoleInShop reqRole = setManageOptions(actor,actOn);
+		MemberRoleInShop reqRole = validatePermissionsChangeAllowed(actor,actOn);
 		reqRole.setPermissions(permissions);
 		return reqRole;
 	}
