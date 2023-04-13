@@ -1,25 +1,21 @@
 package BusinessLayer;
 
 import BusinessLayer.Enums.UserType;
-import BusinessLayer.Shops.*;
-import BusinessLayer.Users.*;
-import BusinessLayer.Purchases.*;
-
+import BusinessLayer.Purchases.Cart;
+import BusinessLayer.Purchases.PurchaseIntr;
+import BusinessLayer.Purchases.ShopBag;
+import BusinessLayer.Shops.ProductIntr;
+import BusinessLayer.Shops.Shop;
+import BusinessLayer.Users.User;
+import BusinessLayer.Users.UserIntr;
+import BusinessLayer.Users.UsersHandler;
 import org.apache.commons.lang3.NotImplementedException;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.similarity.LevenshteinDistance;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Market implements MarketIntr{
@@ -32,6 +28,16 @@ public class Market implements MarketIntr{
 
     public Market() {
         usersHandler = UsersHandler.getInstance();
+    }
+
+    @Override
+    public void addAdmin(String userName) {
+
+    }
+
+    @Override
+    public void unregister(String userName) {
+
     }
 
     @Override
@@ -299,6 +305,91 @@ public class Market implements MarketIntr{
     @Override
     public void purchaseCart(String userName) {
 
+    }
+
+    @Override
+    public boolean isRegistered(String userName) {
+        return false;
+    }
+
+    @Override
+    public boolean isLogged(String userName) {
+        return false;
+    }
+
+    @Override
+    public boolean isBlocked(String userName) {
+        return false;
+    }
+
+    @Override
+    public boolean isAdmin(String userName) {
+        return false;
+    }
+
+    @Override
+    public boolean shopExists(String shopName) {
+        return false;
+    }
+
+    @Override
+    public boolean isShopOpen(String shopName) {
+        return false;
+    }
+
+    @Override
+    public boolean productExistsInShop(String shopName, String productName) {
+        return false;
+    }
+
+    @Override
+    public boolean productExistsInCart(String userName, String productName) {
+        return false;
+    }
+
+    @Override
+    public boolean hasPermission(String userName, String shopName, String permission) {
+        return false;
+    }
+
+    @Override
+    public int getProductQuantityInShop(String shopName, String productName) {
+        return 0;
+    }
+
+    @Override
+    public String getProductDescription(String shopName, String productName) {
+        return null;
+    }
+
+    @Override
+    public double getProductPrice(String shopName, String productName) {
+        return 0;
+    }
+
+    @Override
+    public String getShopFounder(String shopName) {
+        return null;
+    }
+
+    @Override
+    public Collection<String> getShopOwners(String shopName) {
+        return null;
+    }
+
+    @Override
+    public Collection<String> getShopManagers(String shopName) {
+        return null;
+    }
+
+    @Override
+    public int getQuantityOfProductPurchasedInShop(String shopName, String productName) {
+        return 0;
+    }
+
+    @Override
+    public int getQuantityOfProductPurchasedInShopByUser(String userName, String shopName, String productName) {
+        return 0;
     }
 
     //this function reset everything on the system, for now only use is for testing

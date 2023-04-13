@@ -1,9 +1,6 @@
 package AcceptanceTests.Tests;
 
-import AcceptanceTests.MarketSystemBridge;
-import AcceptanceTests.MarketSystemRealBridge;
-import AcceptanceTests.PaymentMethodBridge;
-import AcceptanceTests.PaymentServiceProviderBridge;
+import AcceptanceTests.*;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,11 +1,5 @@
 package AcceptanceTests;
 
-import BusinessLayer.MarketIntr;
-import BusinessLayer.Purchases.Cart;
-import BusinessLayer.Purchases.PurchaseIntr;
-import BusinessLayer.Purchases.ShopBag;
-import BusinessLayer.Shops.ProductIntr;
-import BusinessLayer.Shops.ShopIntr;
 import BusinessLayer.Users.UserIntr;
 
 import java.util.Collection;
@@ -295,7 +289,7 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
     }
 
     @Override
-    public boolean hasPermission(String userName, String shopName, String permission) {
+    public boolean hasPermission(String userName, String shopName, int permission) {
         nullCheck();
         return realBridge.hasPermission(userName, shopName, permission);
     }
@@ -346,5 +340,65 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
     public int getQuantityOfProductPurchasedInShopByUser(String userName, String shopName, String productName) {
         nullCheck();
         return realBridge.getQuantityOfProductPurchasedInShopByUser(userName, shopName, productName);
+    }
+
+    @Override
+    public void clearData() {
+
+    }
+
+    @Override
+    public void addPaymentProvider(PaymentServiceProviderBridge paymentSystem) {
+
+    }
+
+    @Override
+    public boolean isGuest(String userName) {
+        return false;
+    }
+
+    @Override
+    public String[] getShopList() {
+        return new String[0];
+    }
+
+    @Override
+    public String[] getProductList(String shopName) {
+        return new String[0];
+    }
+
+    @Override
+    public void updateProductQuantityInCart(String UserName, String shopName, String productName, int newQuantity) {
+
+    }
+
+    @Override
+    public void removeProductsFromCart(String UserName, String shopName, String productName) {
+
+    }
+
+    @Override
+    public void addNewProduct(String testUser, String shopName, String productName, String desc, double price, int quantity) {
+
+    }
+
+    @Override
+    public void purchaseCart(String userName, String cardNumber, String cardName, String cardDate, String cardVerificationCode) {
+
+    }
+
+    @Override
+    public void purchaseCart(String userName, String cardNumber, String cardName, String cardDate, String cardVerificationCode, String discountCode) {
+
+    }
+
+    @Override
+    public void setDiscountPolicy(SystemDiscountPolicyBridge systemDiscountPolicyBridge) {
+
+    }
+
+    @Override
+    public boolean isShopOwner(String ownerUserName, String shopName) {
+        return false;
     }
 }

@@ -123,7 +123,7 @@ public interface MarketSystemBridge {
 
     boolean productExistsInCart(String userName, String productName);
 
-    boolean hasPermission(String userName, String shopName, String permission);
+    boolean hasPermission(String userName, String shopName, int permission);
 
     int getProductQuantityInShop(String shopName, String productName);
 
@@ -135,7 +135,11 @@ public interface MarketSystemBridge {
 
     Collection<String> getShopOwners(String shopName);
 
+
+
     Collection<String> getShopManagers(String shopName);
+
+
 
     int getQuantityOfProductPurchasedInShop(String shopName, String productName);
 
@@ -162,4 +166,12 @@ public interface MarketSystemBridge {
     void purchaseCart(String userName, String cardNumber, String cardName, String cardDate, String cardVerificationCode, String discountCode);
 
     void setDiscountPolicy(SystemDiscountPolicyBridge systemDiscountPolicyBridge);
+
+    boolean isShopOwner(String ownerUserName, String shopName);
+
+    boolean isShopManager(String ownerUserName, String shopName);
+
+    Collection<Integer> getManagerPermissionsInShop(String shopManager, String shopName);
+
+    void removeShopOwner(String ShopOwner, String shopOwner, String shopName);
 }

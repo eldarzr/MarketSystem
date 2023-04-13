@@ -1,6 +1,4 @@
-package AcceptanceTests.Tests;
-
-import AcceptanceTests.PaymentMethodBridge;
+package AcceptanceTests;
 
 public class PaymentMethodRealBridge implements PaymentMethodBridge {
     @Override
