@@ -15,6 +15,7 @@ public class ShopAndProductCreationAndManipulationTests extends TestCase {
     MarketSystemBridge bridge;
     boolean setUpComplete = false;
     boolean testsComplete = false;
+    String category = "category";
 
     //In set up we register 10 users (gabi0 - gabi9) and log in to the first 5 (gabi0 - gabi4)
     public void setUp() throws Exception{
@@ -100,7 +101,7 @@ public class ShopAndProductCreationAndManipulationTests extends TestCase {
             String productName = "Basketball";
             double price = 240;
             String desc = "Nike basketball size 7";
-            bridge.addNewProduct(userName,shopName,productName,desc,price);
+            bridge.addNewProduct(userName,shopName,productName,category,desc,price);
             Assert.assertTrue(bridge.productExistsInShop(shopName,productName));
         }catch (Exception e){
             Assert.fail();
@@ -115,7 +116,7 @@ public class ShopAndProductCreationAndManipulationTests extends TestCase {
             String productName = "Basketball";
             double price = 240;
             String desc = "Nike basketball size 7";
-            bridge.addNewProduct(userName,shopName,productName,desc,price);
+            bridge.addNewProduct(userName,shopName,category,productName,desc,price);
             Assert.fail("shouldn't be able to add a product with the same name");
         }catch (Exception e){
             Assert.assertTrue(true);
@@ -130,7 +131,7 @@ public class ShopAndProductCreationAndManipulationTests extends TestCase {
             String productName = "Soccer Ball";
             double price = 150;
             String desc = "Adidas soccer ball size 5";
-            bridge.addNewProduct(userName,shopName,productName,desc,price);
+            bridge.addNewProduct(userName,shopName,category,productName,desc,price);
             Assert.fail("shouldn't be able to add a product as a non-appointed user");
         }catch (Exception e){
             Assert.assertTrue(true);
@@ -147,7 +148,7 @@ public class ShopAndProductCreationAndManipulationTests extends TestCase {
             String productName = "Soccer Ball";
             double price = 100;
             String desc = "Adidas soccer ball size 5";
-            bridge.addNewProduct(userName, shopName, productName, desc, price);
+            bridge.addNewProduct(userName,shopName,category,productName,desc,price);
             Assert.fail("non-logged in owner should not be able to add product");
         } catch (Exception e){
             Assert.assertTrue(true);
@@ -164,7 +165,7 @@ public class ShopAndProductCreationAndManipulationTests extends TestCase {
             String productName = "Football";
             double price = 210;
             String desc = "Nike NFL football";
-            bridge.addNewProduct(userName,shopName,productName,desc,price);
+            bridge.addNewProduct(userName,shopName,category,productName,desc,price);
             Assert.assertTrue(bridge.productExistsInShop(shopName,productName));
         }catch (Exception e){
             Assert.fail(e.getMessage());

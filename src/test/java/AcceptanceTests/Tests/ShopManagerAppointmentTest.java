@@ -10,6 +10,7 @@ import static org.junit.Assert.*;
 
 public class ShopManagerAppointmentTest {
     private MarketSystemBridge market;
+    private String category = "category";
 
     @Before
     public void setUp() {
@@ -58,7 +59,7 @@ public class ShopManagerAppointmentTest {
         assertTrue(market.hasPermission(member, "MyShop", 3));
 
         // check that the manager can add/remove products and update product's name/price/description
-        market.addNewProduct(member, "MyShop", "NewProduct", "New Product Description", 10.0);
+        market.addNewProduct(member, "MyShop", "NewProduct", category, "New Product Description", 10.0);
         assertTrue(market.productExistsInShop("MyShop", "NewProduct"));
 
         market.updateProductName(member, "MyShop", "NewProduct", "RenamedProduct");

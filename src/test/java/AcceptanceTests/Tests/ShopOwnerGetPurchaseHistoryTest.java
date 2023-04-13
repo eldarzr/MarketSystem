@@ -41,7 +41,7 @@ public class ShopOwnerGetPurchaseHistoryTest {
     }
 
     @Test
-    public void testGetShopPurchaseHistory() {
+    public void testGetShopPurchaseHistory() throws Exception {
         // get purchase history before any changes
         Collection<PurchaseBridge> purchaseHistory = marketSystem.getShopPurchaseHistory(shopOwner, shopName);
         assertEquals(2, purchaseHistory.size());

@@ -15,6 +15,7 @@ import static org.junit.Assert.*;
 public class ShoppingCartActionsTest {
     private MarketSystemBridge market;
     private String tempUserName;
+    private String category = "category";
 
     @Before
     public void setUp() throws Exception {
@@ -26,7 +27,7 @@ public class ShoppingCartActionsTest {
         market.register("testUser", "testUser@example.com", "password");
         market.login("testUser", "password");
         market.createShop("testUser", "My Shop");
-        market.addNewProduct("testUser", "My Shop", "item1", "Item 1 description", 10.0);
+        market.addNewProduct("testUser", "My Shop", "item1", category, "Item 1 description", 10.0);
         market.logout("testUser");
     }
 

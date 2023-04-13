@@ -24,6 +24,7 @@ public class DeliverySystemTests {
     private double price;
     private int quantity;
     private String deliveryDetails;
+    private String category = "category";
 
     @Mock
     private DeliveryServiceProviderBridge deliveryService;
@@ -53,7 +54,7 @@ public class DeliverySystemTests {
         quantity = 5;
         try {
             market.createShop(userName, shopName);
-            market.addNewProduct(userName, shopName, productName, "My Product Description", price);
+            market.addNewProduct(userName, shopName, productName, category, "My Product Description", price);
             market.updateProductQuantity(userName, shopName, productName, quantity);
         } catch (Exception e) {
             fail("Exception thrown while creating shop, adding product, or updating product quantity: " + e.getMessage());

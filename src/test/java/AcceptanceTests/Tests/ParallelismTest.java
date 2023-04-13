@@ -76,7 +76,13 @@ public class ParallelismTest {
         marketSystem.addNewProduct(user, shopName, productName, "description", 10, 1);
 
         // Delete the product and try to buy it at the same time
-        Runnable task1 = () -> marketSystem.removeProduct(user, shopName, productName);
+        Runnable task1 = () -> {
+            try {
+                marketSystem.removeProduct(user, shopName, productName);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        };
         Runnable task2 = () -> marketSystem.addProductsToCart(user, shopName, productName, 1);
         executor.submit(task1);
         executor.submit(task2);

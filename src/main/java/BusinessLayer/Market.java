@@ -216,7 +216,7 @@ public class Market implements MarketIntr{
     }
 
     public String getRolesInformation(String userName, String shopName) throws Exception {
-        return getShop(userName,shopName).getRolesInfo();
+        return searchShop(userName,shopName).getRolesInfo();
     }
 
     //todo: naor

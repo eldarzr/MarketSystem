@@ -16,6 +16,7 @@ public class PaymentSystemTests extends TestCase {
     private String productName;
     private double productPrice;
     private int productQuantity;
+    private String category = "category";
 
     @BeforeEach
     public void setup() {
@@ -40,7 +41,7 @@ public class PaymentSystemTests extends TestCase {
         // Create a new shop
         marketSystem.createShop(userName, shopName);
         // Add a new product to the shop
-        marketSystem.addNewProduct(userName, shopName, productName, "product1 description", productPrice);
+        marketSystem.addNewProduct(userName, shopName, productName, category, "product1 description", productPrice);
         // Add the product to the user's cart
         marketSystem.addProductsToCart(userName, shopName, productName, productQuantity);
         // Purchase the user's cart using the payment system

@@ -47,7 +47,7 @@ public class SystemAdminGetShopPurchaseHistoryTest {
     }
 
     @Test
-    public void testGetShopPurchaseHistory() {
+    public void testGetShopPurchaseHistory() throws Exception {
         // log in as system admin to get purchase history
         marketSystem.login(systemAdmin, "password");
         // get purchase history before any changes

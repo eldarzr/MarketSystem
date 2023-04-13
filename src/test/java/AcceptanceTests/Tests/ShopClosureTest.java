@@ -17,6 +17,7 @@ public class ShopClosureTest {
     private static String shopName;
     private static String productName;
     private static double productPrice;
+    private String category = "category";
 
     @BeforeClass
     public static void setUpClass() {
@@ -76,7 +77,7 @@ public class ShopClosureTest {
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws Exception {
         // Close shop
         marketSystem.closeShop(shopOwner, shopName);
     }

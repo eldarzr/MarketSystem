@@ -9,7 +9,9 @@ import BusinessLayer.Shops.ProductIntr;
 import BusinessLayer.Shops.ShopIntr;
 import BusinessLayer.Users.UserIntr;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class MarketSystemRealBridge implements MarketSystemBridge {
 
@@ -53,7 +55,8 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     }
 
     public Collection<PurchaseBridge> getUserPurchaseHistory(String userName) {
-        return market.getUserPurchaseHistory(userName);
+//        return market.getUserPurchaseHistory(userName);
+        return null;
     }
 
     public void createShop(String userName, String shopName) throws Exception {
@@ -97,21 +100,25 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     }
 
     public ShopBridge getShop(String userName, String shopName) throws Exception {
-        return market.searchShop(userName, shopName);
+//        return market.searchShop(userName, shopName);
+        return null;
     }
 
     public ProductBridge getProduct(String userName, String shopName, String productName) throws Exception {
-        return market.getProduct(userName, shopName, productName);
+//        return market.getProduct(userName, shopName, productName);
+        return null;
     }
 
     @Override
     public Collection<ProductBridge> basicSearch(String userName, String productName) throws Exception {
-        return market.basicSearch(userName, productName);
+//        return market.basicSearch(userName, productName);
+        return null;
     }
 
     @Override
     public Collection<ProductBridge> extendedSearch(String userName, String productName, double minPrice, double maxPrice, String category) throws Exception {
-        return market.extendedSearch(userName, productName, minPrice, maxPrice, category);
+//        return market.extendedSearch(userName, productName, minPrice, maxPrice, category);
+        return null;
     }
 
     public void appointShopOwner(String appointedBy, String appointee, String shopName) throws Exception {
@@ -128,15 +135,19 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
 
     @Override
     public void changeManagerPermissions(String actor, String actOn, String shopName, int permission) throws Exception {
-        market.changeManagerPermissions(actor, actOn, shopName, permission);
+        List<Integer> permissions = new ArrayList<>();
+        permissions.add(permission);
+        market.changeManagerPermissions(actor, actOn, shopName, permissions);
     }
 
-    public Collection<UserIntr> getShopManagersAndPermissions(String userName, String shopName) {
-        return market.getShopManagersAndPermissions(userName, shopName);
+    public Collection<UserIntr> getShopManagersAndPermissions(String userName, String shopName) throws Exception {
+//        return market.getShopManagersAndPermissions(userName, shopName);
+        return null;
     }
 
     public Collection<PurchaseBridge> getShopPurchaseHistory(String userName, String shopName) {
-        return market.getShopPurchaseHistory(userName, shopName);
+//        return market.getShopPurchaseHistory(userName, shopName);
+        return null;
     }
 
     public void removeShop(String adminName, String userName, String shopName) {
@@ -148,19 +159,23 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     }
 
     public Collection<PurchaseBridge> getShopPurchaseHistoryByAdmin(String adminName, String shopName) {
-        return market.getShopPurchaseHistoryByAdmin(adminName, shopName);
+        //return market.getShopPurchaseHistoryByAdmin(adminName, shopName);
+        return null;
     }
 
     public Collection<PurchaseBridge> getUserPurchaseHistoryByAdmin(String adminName, String memberName) {
-        return market.getUserPurchaseHistoryByAdmin(adminName, memberName);
+        //return market.getUserPurchaseHistoryByAdmin(adminName, memberName);
+        return null;
     }
 
     public ShoppingCartBridge getCart(String userName) {
-        return market.getCart(userName);
+//        return market.getCart(userName);
+        return null;
     }
     @Override
     public ShopBagBridge getShopBag(String userName, String shopName) {
-        return market.getShopBag(userName, shopName);
+//        return market.getShopBag(userName, shopName);
+        return null;
     }
 
     public void addProductsToCart(String userName, String shopName, String productName, int quantity) {

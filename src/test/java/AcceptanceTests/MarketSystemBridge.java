@@ -39,7 +39,7 @@ public interface MarketSystemBridge {
 
     void closeShop(String userName, String shopName) throws Exception;
 
-    void addNewProduct(String userName, String shopName, String productName, String desc, double price);
+    void addNewProduct(String userName, String shopName, String productName, String category, String desc, double price) throws Exception;
 
     void removeProduct(String userName, String shopName, String productName) throws Exception;
 
@@ -75,7 +75,7 @@ public interface MarketSystemBridge {
     void changeManagerPermissions(String actor, String actOn, String shopName, int permission) throws Exception;
 
     //4.11
-    Collection<UserIntr> getShopManagersAndPermissions(String userName, String shopName);
+    Collection<UserIntr> getShopManagersAndPermissions(String userName, String shopName) throws Exception;
 
     //4.13
     Collection<PurchaseBridge> getShopPurchaseHistory(String userName, String shopName);

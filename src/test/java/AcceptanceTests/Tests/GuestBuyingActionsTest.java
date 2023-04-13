@@ -12,6 +12,7 @@ public class GuestBuyingActionsTest {
     private MarketSystemBridge market;
 
     private String tempUserName;
+    private String category = "category";
 
     @Before
     public void setUp() throws Exception {
@@ -24,8 +25,8 @@ public class GuestBuyingActionsTest {
         market.register("johndoe", "johndoe@example.com", "password");
         market.login("johndoe", "password");
         market.createShop("johndoe", shopName);
-        market.addNewProduct("johndoe", shopName, "item1", "Item 1 description", 10.0);
-        market.addNewProduct("johndoe", shopName, "item2", "Item 2 description", 15.0);
+        market.addNewProduct("johndoe", shopName, "item1", category, "Item 1 description", 10.0);
+        market.addNewProduct("johndoe", shopName, "item2", category,"Item 2 description", 15.0);
         market.logout("johndoe");
     }
 

@@ -71,7 +71,7 @@ public class ShopRolesTest {
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws Exception {
         // Close shop
         marketSystem.closeShop(shopOwner, shopName);
     }

@@ -10,6 +10,7 @@ public class SystemInitiationTests extends TestCase {
     MarketSystemBridge bridge;
     boolean setUpIsDone = false;
     boolean initiationIsDone = false;
+    private String category = "category";
 
     public void setUp() throws Exception {
         super.setUp();
@@ -34,7 +35,7 @@ public class SystemInitiationTests extends TestCase {
         bridge.createShop(founderName,shopName);
         bridge.appointShopOwner(founderName,appointedOwnerName,shopName);
         bridge.appointShopOwner(founderName,appointedOwner_notLoggedIn,shopName);
-        bridge.addNewProduct(founderName,shopName,productName,productDesc,productPrice);
+        bridge.addNewProduct(founderName,shopName,productName,category,productDesc,productPrice);
         bridge.updateProductQuantity(founderName,shopName,productName,productQuantity);
 
     }

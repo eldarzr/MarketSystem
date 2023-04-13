@@ -84,9 +84,9 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
     }
 
     @Override
-    public void addNewProduct(String userName, String shopName, String productName, String desc, double price) {
+    public void addNewProduct(String userName, String shopName, String productName, String category, String desc, double price) throws Exception {
         nullCheck();
-        realBridge.addNewProduct(userName, shopName, productName, desc, price);
+        realBridge.addNewProduct(userName, shopName, productName, category, desc, price);
     }
 
     @Override
@@ -175,7 +175,7 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
 
 
     @Override
-    public Collection<UserIntr> getShopManagersAndPermissions(String userName, String shopName) {
+    public Collection<UserIntr> getShopManagersAndPermissions(String userName, String shopName) throws Exception {
         nullCheck();
         return realBridge.getShopManagersAndPermissions(userName, shopName);
     }
