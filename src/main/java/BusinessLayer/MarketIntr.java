@@ -4,6 +4,7 @@ import BusinessLayer.Purchases.Cart;
 import BusinessLayer.Purchases.PurchaseIntr;
 import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Shops.ProductIntr;
+import BusinessLayer.Shops.Shop;
 import BusinessLayer.Shops.ShopIntr;
 
 import java.util.*;
@@ -55,9 +56,9 @@ public interface MarketIntr {
 
     void addProductItems(String userName, String shopName, String productName, int quantity) throws Exception;
 
-    ShopIntr getShop(String userName, String shopName) throws Exception;
+	Shop searchShop(String userName, String shopName) throws Exception;
 
-    ProductIntr getProduct(String userName, String shopName, String productName) throws Exception;
+	ProductIntr getProduct(String userName, String shopName, String productName) throws Exception;
 
     Collection<ProductIntr> basicSearch(String userName, String productName) throws Exception;
 
