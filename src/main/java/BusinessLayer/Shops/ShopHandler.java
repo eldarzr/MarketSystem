@@ -1,10 +1,12 @@
 package BusinessLayer.Shops;
 
+import BusinessLayer.MemberRoleInShop;
+
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ShopHandler {
     ConcurrentHashMap<String,Shop> shops;
-
 
     private static class  ShopHolder {
         private static ShopHandler  instance = new ShopHandler() ;
@@ -14,6 +16,10 @@ public class ShopHandler {
     }
 
 
+    public Collection<MemberRoleInShop> getShopManagementPermissions(String userName, String shopName) throws Exception {
+        Shop shop = getShop(shopName);
+        return shop.getManagementPermissions(userName);
+    }
 
     public void addShop(String shopName, Shop shop) throws Exception {
         if(shops.containsKey(shopName))

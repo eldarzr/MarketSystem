@@ -5,6 +5,7 @@ import BusinessLayer.Enums.ManageType;
 import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.MessageObserver;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -97,7 +98,7 @@ public class Shop implements ShopIntr{
 		roles.put(name,role);
 	}
 
-	public void setManageOption(String actor, String actOn , int permission) throws Exception {
+	private MemberRoleInShop setManageOptions(String actor, String actOn) throws Exception {
 		validateUserHasRole(actor);
 		MemberRoleInShop actorMRIS = roles.get(actor);
 		if (actorMRIS.getType() != ManageType.OWNER)
@@ -107,21 +108,34 @@ public class Shop implements ShopIntr{
 		}
 		MemberRoleInShop reqRole = roles.get(actOn);
 		String roleGrantor = reqRole.getGrantor();
+
 		if(!roleGrantor.equals(actor) || !actor.equals(founderUserName))
 			throw new Exception("only the grantor or the shop founder can set manager permissions");
-		reqRole.setPermissions(permission);
+		return reqRole;
+	}
 
+	public void addManageOption(String actor, String actOn , int permission) throws Exception {
+		MemberRoleInShop reqRole = setManageOptions(actor,actOn);
+		reqRole.addPermission(permission);
 		}
 
+		/// TODO : ADD / SET - CONCURRENCY ETC
+	public MemberRoleInShop setManageOption(String actor, String actOn, List<Integer> permissions) throws Exception {
+		MemberRoleInShop reqRole = setManageOptions(actor,actOn);
+		reqRole.setPermissions(permissions);
+		return reqRole;
+	}
+
 	public void closeShop(String userName) throws Exception {
+
 		if(!this.founderUserName.equals(userName))
 			throw new Exception("only the founder can close a store");
 		this.isActive = false;
 		for (MessageObserver observer : this.observers ){
 			 observer.update("the shop named : " +this.name + " is closed");
 		}
-		//TODO : Only managers & owners can acheive information on the shop.
-		//TODO : products of the store should be unavialbe now when a member looking for them.
+		//TODO : Only owners & Admins can acheive information on the shop.
+		//TODO : products of the store should be unavilable now when a member looking for them.
 
 
 	}
@@ -194,5 +208,21 @@ public class Shop implements ShopIntr{
 	}
 
 
+	public Collection<MemberRoleInShop> getManagementPermissions(String userName) throws Exception {
+		validateUserHasRole(userName);
+		MemberRoleInShop actorMRIS = roles.get(userName);
+		if (actorMRIS.getType() != ManageType.OWNER) {
+			throw new Exception("only owners can get the Management information");
+		}
+		return this.roles.values();
 	}
+
+	public String getRolesInfo() {
+		StringBuilder rolesInfo = new StringBuilder();
+		for (MemberRoleInShop role : roles.values()) {
+			rolesInfo.append(role.getRoleInfo());
+		}
+		return rolesInfo.toString();
+	}
+}
 

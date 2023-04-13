@@ -5,6 +5,9 @@ import BusinessLayer.Enums.ManageType;
 import BusinessLayer.Shops.Shop;
 //import BusinessLayer.Shops.ShopMessageObserver;
 import BusinessLayer.Users.User;
+
+import java.util.List;
+
 import static BusinessLayer.Enums.ManageType.*;
 import static BusinessLayer.Enums.ManagePermissionsEnum.*;
 
@@ -77,9 +80,11 @@ public class MemberRoleInShop {
 		this.permissions = permissions;
 	}
 
-	public void setPermissions(int permissions) throws Exception {
-			setPermissions(acheivePermission(permissions));
+	public void setPermissions(List<Integer> permissions) throws Exception {
+		synchronized (this.permissions) {
+			this.permissions.setNewPermissions(permissions);
 		}
+	}
 
 	private ManagePermissions acheivePermission(int permissions) throws Exception {
 		switch (permissions){
@@ -100,6 +105,17 @@ public class MemberRoleInShop {
 		roleShop.addObserver(obs);
 		return role;
 	}
+
+	public void addPermission(int permission) throws Exception {
+		this.permissions.addAnotherPermission(permission);
+	}
+
+	public String getRoleInfo() {
+		StringBuilder rolesInfo = new StringBuilder();
+		rolesInfo.append("The user ").append(roleUser).append(" is a ").append(type).append(" in the store\n");
+		return rolesInfo.toString();
+	}
+
 
 //	private static MemberRoleInShop adjustRole(MemberRoleInShop role) throws Exception {
 //		String roleUser = role.roleUser;

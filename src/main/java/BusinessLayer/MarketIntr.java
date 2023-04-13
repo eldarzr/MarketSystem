@@ -5,7 +5,7 @@ import BusinessLayer.Purchases.PurchaseIntr;
 import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Shops.ProductIntr;
 import BusinessLayer.Shops.ShopIntr;
-import BusinessLayer.Users.UserIntr;
+
 import java.util.*;
 
 
@@ -74,10 +74,12 @@ public interface MarketIntr {
 
     //4.7
 
-    void changeManagerPermissions(String actor, String actOn, String shopName, int permission) throws Exception;
+    MemberRoleInShop changeManagerPermissions(String actor, String actOn, String shopName, List<Integer> permission) throws Exception;
+
+    void addManagerPermissions(String actor, String actOn, String shopName, int permission) throws Exception;
 
     //4.11
-    Collection<UserIntr> getShopManagersAndPermissions(String userName, String shopName);
+    Collection<MemberRoleInShop> getShopManagersAndPermissions(String userName, String shopName) throws Exception;
 
     //4.13
     Collection<PurchaseIntr> getShopPurchaseHistory(String userName, String shopName);
