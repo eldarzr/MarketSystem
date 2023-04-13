@@ -6,20 +6,10 @@ import BusinessLayer.Users.*;
 import BusinessLayer.Purchases.*;
 
 import org.apache.commons.lang3.NotImplementedException;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.similarity.LevenshteinDistance;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Market implements MarketIntr{
@@ -201,18 +191,32 @@ public class Market implements MarketIntr{
     }
 
     @Override
-    public void changeManagerPermissions(String actor, String actOn, String shopName,int permission) throws Exception {
+    public MemberRoleInShop changeManagerPermissions(String actor, String actOn, String shopName, List<Integer> permission) throws Exception {
         validateUserIsntGuest(actor);
         isLoggedIn(actor);
         validateUserIsntGuest(actOn);
         Shop reqShop = checkForShop(shopName);
-        reqShop.setManageOption(actor,actOn,permission);
+       return reqShop.setManageOption(actor,actOn,permission);
+    }
+
+    @Override
+    public void addManagerPermissions(String actor, String actOn, String shopName,int permission) throws Exception {
+        validateUserIsntGuest(actor);
+        isLoggedIn(actor);
+        validateUserIsntGuest(actOn);
+        Shop reqShop = checkForShop(shopName);
+        reqShop.addManageOption(actor,actOn,permission);
     }
 
     //todo: naor - talk with eldar
     @Override
-    public Collection<UserIntr> getShopManagersAndPermissions(String userName, String shopName) {
-        return null;
+    public Collection<MemberRoleInShop> getShopManagersAndPermissions(String userName, String shopName) throws Exception {
+        isLoggedIn(userName);
+        return shopHandler.getShopManagementPermissions(userName,shopName);
+    }
+
+    public String getRolesInformation(String userName, String shopName) throws Exception {
+        return getShop(userName,shopName).getRolesInfo();
     }
 
     //todo: naor
