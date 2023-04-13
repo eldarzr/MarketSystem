@@ -3,6 +3,7 @@ package AcceptanceTests.Tests;
 import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
 import org.junit.*;
+import org.junit.jupiter.api.BeforeEach;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -25,14 +26,14 @@ public class ShopRoleTests2 {
 
         // Register users
         try {
-            marketSystem.register("shopOwner", "shopOwner@gmail.com", "123456");
-            marketSystem.login("shopOwner", "123456");
+            marketSystem.register("shopOwner", "shopOwner@gmail.com", "Passw0rd!!!");
+            marketSystem.login("shopOwner", "Passw0rd!!!");
             shopOwner = "shopOwner";
 
-            marketSystem.register("shopManager1", "shopManager1@gmail.com", "123456");
+            marketSystem.register("shopManager1", "shopManager1@gmail.com", "Passw0rd!!!");
             shopManager1 = "shopManager1";
 
-            marketSystem.register("shopManager2", "shopManager2@gmail.com", "123456");
+            marketSystem.register("shopManager2", "shopManager2@gmail.com", "Passw0rd!!!");
             shopManager2 = "shopManager2";
         } catch (Exception e) {
             fail("Failed to set up test: " + e.getMessage());
@@ -64,7 +65,7 @@ public class ShopRoleTests2 {
         marketSystem.clearData();
     }
 
-    @Before
+    @BeforeEach
     public void setUp() {
         // Open shop
         marketSystem.openShop(shopOwner, shopName);
@@ -100,7 +101,7 @@ public class ShopRoleTests2 {
 
             // Check non-shop owner/manager permissions
             String nonShopOwnerManager = "nonShopOwnerManager";
-            marketSystem.register(nonShopOwnerManager, "nonShopOwnerManager@gmail.com", "123456");
+            marketSystem.register(nonShopOwnerManager, "nonShopOwnerManager@gmail.com", "Passw0rd!!!");
             assertFalse(marketSystem.isShopOwner(nonShopOwnerManager, shopName));
             assertFalse(marketSystem.isShopManager(nonShopOwnerManager, shopName));
             marketSystem.unregister(nonShopOwnerManager);
@@ -133,7 +134,7 @@ public class ShopRoleTests2 {
 
             // Check non-shop owner cannot appoint new shop owner
             String nonShopOwner = "nonShopOwner";
-            marketSystem.register(nonShopOwner, "nonShopOwner@gmail.com", "123456");
+            marketSystem.register(nonShopOwner, "nonShopOwner@gmail.com", "Passw0rd!!!");
             try {
                 marketSystem.appointShopOwner(nonShopOwner, "newShopOwner2", shopName);
                 fail("Expected exception: User is not a shop owner");
@@ -152,7 +153,7 @@ public class ShopRoleTests2 {
         try {
             // Appoint shop manager
             String newManager = "newManager";
-            marketSystem.register(newManager, "newManager@gmail.com", "123456");
+            marketSystem.register(newManager, "newManager@gmail.com", "Passw0rd!!!");
             marketSystem.appointShopManager(shopOwner, newManager, shopName);
             // Check new shop manager permissions
             Collection<String> shopManagers = marketSystem.getShopManagers(shopName);
@@ -161,7 +162,7 @@ public class ShopRoleTests2 {
 
             // Check non-shop owner cannot appoint new shop manager
             String nonShopOwner = "nonShopOwner";
-            marketSystem.register(nonShopOwner, "nonShopOwner@gmail.com", "123456");
+            marketSystem.register(nonShopOwner, "nonShopOwner@gmail.com", "Passw0rd!!!");
             try {
                 marketSystem.appointShopManager(nonShopOwner, "newManager2", shopName);
                 fail("Expected exception: User is not a shop owner");
@@ -187,7 +188,7 @@ public class ShopRoleTests2 {
 
             // Check non-shop owner cannot remove shop owner
             String nonShopOwner = "nonShopOwner";
-            marketSystem.register(nonShopOwner, "nonShopOwner@gmail.com", "123456");
+            marketSystem.register(nonShopOwner, "nonShopOwner@gmail.com", "Passw0rd!!!");
             try {
                 marketSystem.removeShopOwner(nonShopOwner, shopManager1, shopName);
                 fail("Expected exception: User is not a shop owner");
@@ -213,7 +214,7 @@ public class ShopRoleTests2 {
 
             // Check non-shop owner cannot remove shop manager
             String nonShopOwner = "nonShopOwner";
-            marketSystem.register(nonShopOwner, "nonShopOwner@gmail.com", "123456");
+            marketSystem.register(nonShopOwner, "nonShopOwner@gmail.com", "Passw0rd!!!");
             try {
                 marketSystem.removeShopManager(nonShopOwner, shopManager2, shopName);
                 fail("Expected exception: User is not a shop owner");

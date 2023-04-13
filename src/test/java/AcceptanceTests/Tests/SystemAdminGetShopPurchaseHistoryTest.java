@@ -5,6 +5,7 @@ import AcceptanceTests.MarketSystemRealBridge;
 import AcceptanceTests.PurchaseBridge;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
@@ -17,15 +18,15 @@ public class SystemAdminGetShopPurchaseHistoryTest {
     private String shopOwner;
     private String shopName;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         marketSystem = new MarketSystemRealBridge();
         systemAdmin = "testSystemAdmin";
         shopOwner = "testShopOwner";
         shopName = "testShop";
         // create system admin account and shop owner account
-        marketSystem.register(systemAdmin, "mail@post.org", "password");
-        marketSystem.register(shopOwner, "mail@post.org", "password");
+        marketSystem.register(systemAdmin, "mail@post.org", "Passw0rd!!!");
+        marketSystem.register(shopOwner, "mail@post.org", "Passw0rd!!!");
         // add system admin role to the system admin account
         marketSystem.addAdmin(systemAdmin);
         // create a shop using the shop owner account
@@ -49,7 +50,7 @@ public class SystemAdminGetShopPurchaseHistoryTest {
     @Test
     public void testGetShopPurchaseHistory() throws Exception {
         // log in as system admin to get purchase history
-        marketSystem.login(systemAdmin, "password");
+        marketSystem.login(systemAdmin, "Passw0rd!!!");
         // get purchase history before any changes
         Collection<PurchaseBridge> purchaseHistory = marketSystem.getShopPurchaseHistory(shopOwner, shopName);
         assertEquals(2, purchaseHistory.size());

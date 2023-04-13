@@ -15,6 +15,7 @@ public interface MarketIntr {
     //open and initialize the market system
     void init();
 
+    public void resetAll();
 
     //guest functions
     //return string that identifies him

@@ -35,9 +35,9 @@ public class PaymentSystemTests extends TestCase {
         // Initialize the market system
         marketSystem.init();
         // Register a new user
-        marketSystem.register(userName, "user1@gmail.com", "password");
+        marketSystem.register(userName, "user1@gmail.com", "Passw0rd!!!");
         // Login the user
-        marketSystem.login(userName, "password");
+        marketSystem.login(userName, "Passw0rd!!!");
         // Create a new shop
         marketSystem.createShop(userName, shopName);
         // Add a new product to the shop

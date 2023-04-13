@@ -2,11 +2,6 @@ package AcceptanceTests;
 
 import BusinessLayer.Market;
 import BusinessLayer.MarketIntr;
-import BusinessLayer.Purchases.Cart;
-import BusinessLayer.Purchases.PurchaseIntr;
-import BusinessLayer.Purchases.ShopBag;
-import BusinessLayer.Shops.ProductIntr;
-import BusinessLayer.Shops.ShopIntr;
 import BusinessLayer.Users.UserIntr;
 
 import java.util.ArrayList;
@@ -43,6 +38,7 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     }
 
     public void login(String userName, String password) {
+        market.login(userName, password);
     }
 
     @Override
@@ -190,18 +186,6 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
         market.purchaseCart(userName);
     }
 
-    public boolean isRegistered(String userName) {
-        return false;
-    }
-
-    public boolean isLogged(String userName) {
-        return false;
-    }
-
-    public boolean isBlocked(String userName) {
-        return false;
-    }
-
     public boolean isAdmin(String userName) {
         return false;
     }
@@ -219,11 +203,6 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     }
 
     public boolean productExistsInCart(String userName, String productName) {
-        return false;
-    }
-
-    @Override
-    public boolean hasPermission(String userName, String shopName, int permission) {
         return false;
     }
 
@@ -265,7 +244,7 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
 
     @Override
     public void clearData() {
-
+        market.resetAll();
     }
 
     @Override

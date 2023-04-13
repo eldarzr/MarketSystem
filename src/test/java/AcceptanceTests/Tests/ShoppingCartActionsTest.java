@@ -6,26 +6,27 @@ import AcceptanceTests.ProductBridge;
 import AcceptanceTests.ShoppingCartBridge;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
 
 import java.util.Collection;
 
 import static org.junit.Assert.*;
 
 public class ShoppingCartActionsTest {
-    private MarketSystemBridge market;
+    private MarketSystemBridge market= new MarketSystemRealBridge();
     private String tempUserName;
     private String category = "category";
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         market = new MarketSystemRealBridge();
         market.init();
         tempUserName = market.startSession();
 
         // create a shop with a product for testing
-        market.register("testUser", "testUser@example.com", "password");
-        market.login("testUser", "password");
+        market.register("testUser", "testUser@example.com", "Passw0rd!!!");
+        market.login("testUser", "Passw0rd!!!");
         market.createShop("testUser", "My Shop");
         market.addNewProduct("testUser", "My Shop", "item1", category, "Item 1 description", 10.0);
         market.logout("testUser");
@@ -34,7 +35,7 @@ public class ShoppingCartActionsTest {
     @After
     public void tearDown() {
         market.logout(tempUserName);
-        market = null;
+        market.clearData();
     }
 
     @Test

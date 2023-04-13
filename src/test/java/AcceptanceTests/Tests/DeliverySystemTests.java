@@ -5,7 +5,8 @@ import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -16,7 +17,7 @@ import static org.mockito.Mockito.when;
 
 public class DeliverySystemTests {
 
-    private MarketSystemBridge market;
+    private MarketSystemBridge market= new MarketSystemRealBridge();
     private String userName;
     private String password;
     private String shopName;
@@ -29,7 +30,7 @@ public class DeliverySystemTests {
     @Mock
     private DeliveryServiceProviderBridge deliveryService;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         // Initialize the market system
@@ -39,7 +40,7 @@ public class DeliverySystemTests {
         // Register and login a user
         userName = "johndoe";
         String email = "johndoe@example.com";
-        password = "password";
+        password = "Passw0rd!!!";
         try {
             market.register(userName, email, password);
             market.login(userName, password);

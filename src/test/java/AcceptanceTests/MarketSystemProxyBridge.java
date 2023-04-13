@@ -240,59 +240,6 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
         realBridge.purchaseCart(userName);
     }
 
-    @Override
-    public boolean isRegistered(String userName) {
-        nullCheck();
-        return realBridge.isRegistered(userName);
-    }
-
-    @Override
-    public boolean isLogged(String userName) {
-        nullCheck();
-        return realBridge.isLogged(userName);
-    }
-
-    @Override
-    public boolean isBlocked(String userName) {
-        nullCheck();
-        return realBridge.isBlocked(userName);
-    }
-
-    @Override
-    public boolean isAdmin(String userName) {
-        nullCheck();
-        return realBridge.isAdmin(userName);
-    }
-
-    @Override
-    public boolean shopExists(String shopName) {
-        nullCheck();
-        return realBridge.shopExists(shopName);
-    }
-
-    @Override
-    public boolean isShopOpen(String shopName) {
-        nullCheck();
-        return realBridge.isShopOpen(shopName);
-    }
-
-    @Override
-    public boolean productExistsInShop(String shopName, String productName) {
-        nullCheck();
-        return realBridge.productExistsInShop(shopName, productName);
-    }
-
-    @Override
-    public boolean productExistsInCart(String userName, String productName) {
-        nullCheck();
-        return realBridge.productExistsInCart(userName, productName);
-    }
-
-    @Override
-    public boolean hasPermission(String userName, String shopName, int permission) {
-        nullCheck();
-        return realBridge.hasPermission(userName, shopName, permission);
-    }
 
     @Override
     public int getProductQuantityInShop(String shopName, String productName) {

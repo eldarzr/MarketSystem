@@ -22,7 +22,7 @@ public class ShopOwnerGetPurchaseHistoryTest {
         shopOwner = "testShopOwner";
         shopName = "testShop";
         // create shop owner account and shop
-        marketSystem.register(shopOwner,"mail@post.org", "password");
+        marketSystem.register(shopOwner,"mail@post.org", "Passw0rd!!!");
         marketSystem.createShop(shopOwner, shopName);
         // add some products to the shop
         marketSystem.addNewProduct(shopOwner, shopName, "product1", "description", 10, 50);

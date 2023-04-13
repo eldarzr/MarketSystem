@@ -4,7 +4,8 @@ import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
 
 import static org.junit.Assert.*;
 
@@ -20,7 +21,7 @@ public class AppointShopManagerParallelismTest {
 
     private String shopManager;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         marketSystem = new MarketSystemRealBridge();
 

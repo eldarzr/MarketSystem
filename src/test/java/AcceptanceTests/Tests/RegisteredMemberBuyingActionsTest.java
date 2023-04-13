@@ -3,29 +3,30 @@ package AcceptanceTests.Tests;
 import AcceptanceTests.*;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
 
 import java.util.Collection;
 
 import static org.junit.Assert.*;
 
 public class RegisteredMemberBuyingActionsTest {
-    private MarketSystemBridge market;
+    private MarketSystemBridge market= new MarketSystemRealBridge();
     private String tempUserName;
     private ShoppingCartBridge cart;
     private ShopBridge shop;
     private ProductBridge product;
 
     // initialize the MarketSystemRealBridge object before each test
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         market = new MarketSystemRealBridge();
         market.init();
         tempUserName = market.startSession();
 
         // create a shop with a product for testing
-        market.register("testUser", "testUser@example.com", "password");
-        market.login("testUser", "password");
+        market.register("testUser", "testUser@example.com", "Passw0rd!!!");
+        market.login("testUser", "Passw0rd!!!");
         market.createShop("testUser", "My Shop");
         market.addNewProduct("testUser", "My Shop", "item1", "Item 1 description", 10.0, 100);
         market.logout("testUser");
@@ -46,7 +47,7 @@ public class RegisteredMemberBuyingActionsTest {
     @After
     public void tearDown() {
         market.logout(tempUserName);
-        market = null;
+        market.clearData();
         cart = null;
         shop = null;
         product = null;
@@ -57,7 +58,7 @@ public class RegisteredMemberBuyingActionsTest {
     public void testCartSavedOnLogout() {
         try {
             // log in as registered user
-            market.login("testUser", "password");
+            market.login("testUser", "Passw0rd!!!");
 
             // log out and verify that the cart is saved
             market.logout("testUser");

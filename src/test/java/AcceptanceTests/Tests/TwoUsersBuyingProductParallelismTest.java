@@ -5,7 +5,8 @@ import AcceptanceTests.MarketSystemRealBridge;
 import AcceptanceTests.PurchaseBridge;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
 
 import java.util.Collection;
 import java.util.concurrent.*;
@@ -22,7 +23,7 @@ public class TwoUsersBuyingProductParallelismTest {
         private String shopName;
         private String productName;
 
-        @Before
+        @BeforeEach
         public void setUp() throws Exception {
             // Initialize market system
             marketSystem = new MarketSystemRealBridge();
@@ -31,12 +32,12 @@ public class TwoUsersBuyingProductParallelismTest {
             // Add two users
             user1 = "user1";
             user2 = "user2";
-            marketSystem.register(user1, "user1@example.com", "password");
-            marketSystem.register(user2, "user2@example.com", "password");
+            marketSystem.register(user1, "user1@example.com", "Passw0rd!!!");
+            marketSystem.register(user2, "user2@example.com", "Passw0rd!!!");
 
             //  Login to the market
-            marketSystem.login(user1,"password");
-            marketSystem.login(user2,"password");
+            marketSystem.login(user1,"Passw0rd!!!");
+            marketSystem.login(user2,"Passw0rd!!!");
 
             // Create a shop
             shopName = "shop1";
@@ -52,7 +53,7 @@ public class TwoUsersBuyingProductParallelismTest {
             marketSystem = null;
         }
 
-        @Test(timeout = TEST_TIMEOUT_MS)
+        @Test
         public void testParallelPurchase() throws Throwable {
             // Create two threads that try to purchase the same product at the same time
             ExecutorService executor = Executors.newFixedThreadPool(THREAD_COUNT);

@@ -3,18 +3,19 @@ import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
 
 import static org.junit.Assert.*;
 
 public class GuestBuyingActionsTest {
 
-    private MarketSystemBridge market;
+    private MarketSystemBridge market= new MarketSystemRealBridge();
 
     private String tempUserName;
     private String category = "category";
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         market = new MarketSystemRealBridge();
         market.init();
@@ -22,8 +23,8 @@ public class GuestBuyingActionsTest {
 
         // create a new shop
         String shopName = "My Shop";
-        market.register("johndoe", "johndoe@example.com", "password");
-        market.login("johndoe", "password");
+        market.register("johndoe", "johndoe@example.com", "Passw0rd!!!");
+        market.login("johndoe", "Passw0rd!!!");
         market.createShop("johndoe", shopName);
         market.addNewProduct("johndoe", shopName, "item1", category, "Item 1 description", 10.0);
         market.addNewProduct("johndoe", shopName, "item2", category,"Item 2 description", 15.0);
@@ -33,7 +34,7 @@ public class GuestBuyingActionsTest {
     @After
     public void tearDown() {
         market.logout(tempUserName);
-        market = null;
+        market.clearData();
     }
 
     @Test

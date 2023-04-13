@@ -106,25 +106,6 @@ public interface MarketSystemBridge {
     //connect to payment adapter and delivery adapter
     void purchaseCart(String userName);
 
-    // Queries for tests
-    boolean isRegistered(String userName);
-
-    boolean isLogged(String userName);
-
-    boolean isBlocked(String userName);
-
-    boolean isAdmin(String userName);
-
-    boolean shopExists(String shopName);
-
-    boolean isShopOpen(String shopName);
-
-    boolean productExistsInShop(String shopName, String productName);
-
-    boolean productExistsInCart(String userName, String productName);
-
-    boolean hasPermission(String userName, String shopName, int permission);
-
     int getProductQuantityInShop(String shopName, String productName);
 
     String getProductDescription(String shopName, String productName);

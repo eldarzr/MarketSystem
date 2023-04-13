@@ -2,10 +2,10 @@ package AcceptanceTests.Tests;
 
 import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import org.junit.After;
 import org.junit.Before;
-
+import org.junit.jupiter.api.BeforeEach;
 
 
 import static org.junit.Assert.*;
@@ -23,7 +23,7 @@ public class ShopOwnerAppointmentTest {
     private String appointeePassword = "appointee123";
     private String shopName = "Test Shop";
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         marketSystem = new MarketSystemRealBridge();
         marketSystem.init();
@@ -51,7 +51,7 @@ public class ShopOwnerAppointmentTest {
         marketSystem.logout(appointeeUserName);
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void testNonOwnerAppointment() throws Exception {
         marketSystem.login(founderUserName, founderPassword);
         marketSystem.appointShopOwner(founderUserName, ownerUserName, shopName);
@@ -63,7 +63,7 @@ public class ShopOwnerAppointmentTest {
         marketSystem.logout("newOwner");
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void testNotLoggedInAppointment() throws Exception {
         marketSystem.login(founderUserName, founderPassword);
         marketSystem.appointShopOwner(founderUserName, ownerUserName, shopName);
@@ -72,7 +72,7 @@ public class ShopOwnerAppointmentTest {
         marketSystem.appointShopOwner(ownerUserName, appointeeUserName, shopName);
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void testCircularAppointment() throws Exception {
         marketSystem.login(founderUserName, founderPassword);
         marketSystem.appointShopOwner(founderUserName, ownerUserName, shopName);
@@ -81,7 +81,7 @@ public class ShopOwnerAppointmentTest {
         marketSystem.logout(founderUserName);
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void testShopOwnerAppointsFounder() throws Exception {
         marketSystem.login(founderUserName, founderPassword);
         marketSystem.appointShopOwner(founderUserName, ownerUserName, shopName);

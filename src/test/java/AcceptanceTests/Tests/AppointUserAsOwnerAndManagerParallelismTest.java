@@ -4,6 +4,7 @@ import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.*;
@@ -11,7 +12,7 @@ import static org.junit.Assert.*;
 public class AppointUserAsOwnerAndManagerParallelismTest {
     MarketSystemBridge system;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         system = new MarketSystemRealBridge();
     }
@@ -28,13 +29,12 @@ public class AppointUserAsOwnerAndManagerParallelismTest {
         String userName = "testUser";
         String shopName = "testShop";
         system.init();
-        system.addAdmin("admin");
-        system.register(shopOwner1, "shopowner1@gmail.com", "password");
-        system.login(shopOwner1, "password");
+        system.register(shopOwner1, "shopowner1@gmail.com", "Passw0rd!!!");
+        system.login(shopOwner1, "Passw0rd!!!");
         system.createShop(shopOwner1, shopName);
         system.logout(shopOwner1);
-        system.register(shopOwner2, "shopowner2@gmail.com", "password");
-        system.login(shopOwner2, "password");
+        system.register(shopOwner2, "shopowner2@gmail.com", "Passw0rd!!!");
+        system.login(shopOwner2, "Passw0rd!!!");
         // Act
         Runnable appointAsOwner = () -> {
             try {

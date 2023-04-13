@@ -4,7 +4,8 @@ import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,7 +18,7 @@ public class ParallelismTest {
     private MarketSystemBridge marketSystem;
     private ExecutorService executor;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         // Instantiate the MarketSystem and initialize it
         marketSystem = new MarketSystemRealBridge();
