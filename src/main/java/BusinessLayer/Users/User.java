@@ -70,17 +70,12 @@ public class User {
         this.userType = userType;
     }
 
+    public ConcurrentLinkedQueue<String> getShopsMessages() {
+        return shopsMessages;
+    }
+
     public void setTwoFactorEnabled(boolean twoFactorEnabled) {
         this.twoFactorEnabled = twoFactorEnabled;
     }
 
-//    public void addFoundedShop(String shopName) throws Exception {
-//        if(foundedShops.contains(shopName))
-//            throw new Exception(String.format("the user %s already have shop named %s", name, shopName));
-//        foundedShops.add(shopName);
-//    }
-
-//    public void addShopRole(String roleShop , MemberRoleInShop role) {
-//        roles.put(roleShop , role);
-//    }
 }

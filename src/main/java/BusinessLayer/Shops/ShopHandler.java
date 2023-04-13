@@ -1,5 +1,8 @@
 package BusinessLayer.Shops;
 
+import BusinessLayer.MemberRoleInShop;
+
+import java.util.Collection;
 import BusinessLayer.Search;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 
@@ -14,7 +17,6 @@ public class ShopHandler {
     private final int PRODUCT_DISTANCE_MAX_LIMIT = 2;
     private LevenshteinDistance distance = new LevenshteinDistance();
 
-
     private static class  ShopHolder {
         private static ShopHandler  instance = new ShopHandler() ;
     }
@@ -23,6 +25,10 @@ public class ShopHandler {
     }
 
 
+    public Collection<MemberRoleInShop> getShopManagementPermissions(String userName, String shopName) throws Exception {
+        Shop shop = getShop(shopName);
+        return shop.getManagementPermissions(userName);
+    }
 
     public void addShop(String shopName, Shop shop) throws Exception {
         if(shops.containsKey(shopName))
