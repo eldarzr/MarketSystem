@@ -222,6 +222,8 @@ public class Shop implements ShopIntr {
 			rolesInfo.append(role.getRoleInfo());
 		}
 		return rolesInfo.toString();
+	}
+
 	public boolean isActive() {
 		return active;
 	}

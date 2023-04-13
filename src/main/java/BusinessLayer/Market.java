@@ -216,7 +216,7 @@ public class Market implements MarketIntr{
     }
 
     public String getRolesInformation(String userName, String shopName) throws Exception {
-        return getShop(userName,shopName).getRolesInfo();
+        return searchShop(userName,shopName).getRolesInfo();
     }
 
     //todo: naor
@@ -278,6 +278,7 @@ public class Market implements MarketIntr{
     //this function reset everything on the system, for now only use is for testing
     //need to add logic to reset all shops, but since we dont have a controller yet and I'm not sure what we want
     //to do I left it like this
+    @Override
     public void resetAll(){
         usersHandler.reset();
         shopHandler.reset();
