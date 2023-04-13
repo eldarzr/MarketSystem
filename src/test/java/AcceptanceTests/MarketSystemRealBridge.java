@@ -41,7 +41,6 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     }
 
     public void login(String userName, String password) {
-        market.login(userName, password);
     }
 
     @Override
@@ -50,147 +49,130 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     }
 
     public void logout(String userName) {
-        throw new UnsupportedOperationException();
+        market.logout(userName);
     }
 
     public Collection<PurchaseBridge> getUserPurchaseHistory(String userName) {
-        throw new UnsupportedOperationException();
+        return market.getUserPurchaseHistory(userName);
     }
 
-    public void createShop(String userName, String shopName) {
-        throw new UnsupportedOperationException();
+    public void createShop(String userName, String shopName) throws Exception {
+        market.createShop(userName, shopName);
     }
 
     public void openShop(String userName, String shopName) {
-        throw new UnsupportedOperationException();
     }
 
-    public void closeShop(String userName, String shopName) {
-        throw new UnsupportedOperationException();
+    public void closeShop(String userName, String shopName) throws Exception {
+        market.closeShop(userName, shopName);
     }
 
-    public void addNewProduct(String userName, String shopName, String productName, String desc, double price) {
-        throw new UnsupportedOperationException();
+    public void addNewProduct(String userName, String shopName, String productName, String category, String desc, double price) throws Exception {
+        market.addNewProduct(userName, shopName, productName, category, desc, price);
     }
 
     @Override
-    public void removeProduct(String userName, String shopName, String productName) {
-
+    public void removeProduct(String userName, String shopName, String productName) throws Exception {
+        market.removeProduct(userName, shopName, productName);
     }
 
-    public void removeNewProduct(String userName, String shopName, String productName) {
-        throw new UnsupportedOperationException();
+    public void updateProductName(String userName, String shopName, String productOldName, String productNewName) throws Exception {
+        market.updateProductName(userName, shopName, productOldName, productNewName);
     }
 
-    public void updateProductName(String userName, String shopName, String productOldName, String productNewName) {
-        throw new UnsupportedOperationException();
+    public void updateProductDesc(String userName, String shopName, String productName, String productNewDesc) throws Exception {
+        market.updateProductDesc(userName, shopName, productName, productNewDesc);
     }
 
-    public void updateProductDesc(String userName, String shopName, String productName, String productNewDesc) {
-        throw new UnsupportedOperationException();
+    public void updateProductPrice(String userName, String shopName, String productName, double price) throws Exception {
+        market.updateProductPrice(userName, shopName, productName, price);
     }
 
-    public void updateProductPrice(String userName, String shopName, String productName, double price) {
-        throw new UnsupportedOperationException();
+    public void updateProductQuantity(String userName, String shopName, String productName, int quantity) throws Exception {
+        market.updateProductQuantity(userName, shopName, productName, quantity);
     }
 
-    public void updateProductQuantity(String userName, String shopName, String productName, int quantity) {
-        throw new UnsupportedOperationException();
+    public void addProductItems(String userName, String shopName, String productName, int quantity) throws Exception {
+        market.addProductItems(userName, shopName, productName, quantity);
     }
 
-    public void addProductItems(String userName, String shopName, String productName, int quantity) {
-        throw new UnsupportedOperationException();
+    public ShopBridge getShop(String userName, String shopName) throws Exception {
+        return market.searchShop(userName, shopName);
     }
 
-    public ShopBridge getShop(String userName, String shopName) {
-        throw new UnsupportedOperationException();
-    }
-
-    public ProductBridge getProduct(String userName, String shopName, String productName) {
-        throw new UnsupportedOperationException();
+    public ProductBridge getProduct(String userName, String shopName, String productName) throws Exception {
+        return market.getProduct(userName, shopName, productName);
     }
 
     @Override
     public Collection<ProductBridge> basicSearch(String userName, String productName) throws Exception {
-        return null;
+        return market.basicSearch(userName, productName);
     }
 
     @Override
     public Collection<ProductBridge> extendedSearch(String userName, String productName, double minPrice, double maxPrice, String category) throws Exception {
-        return null;
+        return market.extendedSearch(userName, productName, minPrice, maxPrice, category);
     }
 
-    public Collection<ProductIntr> search(String userName, String productName) {
-        throw new UnsupportedOperationException();
+    public void appointShopOwner(String appointedBy, String appointee, String shopName) throws Exception {
+        market.appointShopOwner(appointedBy, appointee, shopName);
     }
 
-    public Collection<PurchaseIntr> getShopPurchaseHistory(String shopName) {
-        throw new UnsupportedOperationException();
-    }
-
-    public void appointShopOwner(String appointedBy, String appointee, String shopName) {
-        throw new UnsupportedOperationException();
-    }
-
-    public void appointShopManager(String appointedBy, String appointee, String shopName) {
-        throw new UnsupportedOperationException();
+    public void appointShopManager(String appointedBy, String appointee, String shopName) throws Exception {
+        market.appointShopManager(appointedBy, appointee, shopName);
     }
 
     public void removeShopManager(String managerName, String userToRemove, String shopName) {
-        throw new UnsupportedOperationException();
+        market.removeShopManager(managerName, userToRemove, shopName);
     }
 
     @Override
     public void changeManagerPermissions(String actor, String actOn, String shopName, int permission) throws Exception {
-
-    }
-
-    public void changeManagerPermissions(String manager, String permission) {
-        throw new UnsupportedOperationException();
+        market.changeManagerPermissions(actor, actOn, shopName, permission);
     }
 
     public Collection<UserIntr> getShopManagersAndPermissions(String userName, String shopName) {
-        throw new UnsupportedOperationException();
+        return market.getShopManagersAndPermissions(userName, shopName);
     }
 
     public Collection<PurchaseBridge> getShopPurchaseHistory(String userName, String shopName) {
-        throw new UnsupportedOperationException();
+        return market.getShopPurchaseHistory(userName, shopName);
     }
 
     public void removeShop(String adminName, String userName, String shopName) {
-        throw new UnsupportedOperationException();
+        market.removeShop(adminName, userName, shopName);
     }
 
-    public void blockUser(String adminName, String UserName) {
-        throw new UnsupportedOperationException();
+    public void blockUser(String adminName, String userName) {
+        market.blockUser(adminName, userName);
     }
 
     public Collection<PurchaseBridge> getShopPurchaseHistoryByAdmin(String adminName, String shopName) {
-        throw new UnsupportedOperationException();
+        return market.getShopPurchaseHistoryByAdmin(adminName, shopName);
     }
 
     public Collection<PurchaseBridge> getUserPurchaseHistoryByAdmin(String adminName, String memberName) {
-        throw new UnsupportedOperationException();
+        return market.getUserPurchaseHistoryByAdmin(adminName, memberName);
     }
 
     public ShoppingCartBridge getCart(String userName) {
-        return null;
+        return market.getCart(userName);
     }
     @Override
-    public ShopBagBridge getShopBag(String userName, String ShopName) {
-        throw new UnsupportedOperationException();
+    public ShopBagBridge getShopBag(String userName, String shopName) {
+        return market.getShopBag(userName, shopName);
     }
 
     public void addProductsToCart(String userName, String shopName, String productName, int quantity) {
-        throw new UnsupportedOperationException();
+        market.addProductsToCart(userName, shopName, productName, quantity);
     }
 
     public void updateProductsFromCart(String userName, String shopName, String productName, int newQuantity) {
-        throw new UnsupportedOperationException();
+        market.updateProductsFromCart(userName, shopName, productName, newQuantity);
     }
 
     public void purchaseCart(String userName) {
-        throw new UnsupportedOperationException();
+        market.purchaseCart(userName);
     }
 
     public boolean isRegistered(String userName) {

@@ -78,7 +78,7 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
     }
 
     @Override
-    public void closeShop(String userName, String shopName) {
+    public void closeShop(String userName, String shopName) throws Exception {
         nullCheck();
         realBridge.closeShop(userName, shopName);
     }
@@ -90,49 +90,49 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
     }
 
     @Override
-    public void removeProduct(String userName, String shopName, String productName) {
+    public void removeProduct(String userName, String shopName, String productName) throws Exception {
         nullCheck();
         realBridge.removeProduct(userName, shopName, productName);
     }
 
     @Override
-    public void updateProductName(String userName, String shopName, String productOldName, String productNewName) {
+    public void updateProductName(String userName, String shopName, String productOldName, String productNewName) throws Exception {
         nullCheck();
         realBridge.updateProductName(userName, shopName, productOldName, productNewName);
     }
 
     @Override
-    public void updateProductDesc(String userName, String shopName, String productName, String productNewDesc) {
+    public void updateProductDesc(String userName, String shopName, String productName, String productNewDesc) throws Exception {
         nullCheck();
         realBridge.updateProductDesc(userName, shopName, productName, productNewDesc);
     }
 
     @Override
-    public void updateProductPrice(String userName, String shopName, String productName, double price) {
+    public void updateProductPrice(String userName, String shopName, String productName, double price) throws Exception {
         nullCheck();
         realBridge.updateProductPrice(userName, shopName, productName, price);
     }
 
     @Override
-    public void updateProductQuantity(String userName, String shopName, String productName, int quantity) {
+    public void updateProductQuantity(String userName, String shopName, String productName, int quantity) throws Exception {
         nullCheck();
         realBridge.updateProductQuantity(userName, shopName, productName, quantity);
     }
 
     @Override
-    public void addProductItems(String userName, String shopName, String productName, int quantity) {
+    public void addProductItems(String userName, String shopName, String productName, int quantity) throws Exception {
         nullCheck();
         realBridge.addProductItems(userName, shopName, productName, quantity);
     }
 
     @Override
-    public ShopBridge getShop(String userName, String shopName) {
+    public ShopBridge getShop(String userName, String shopName) throws Exception {
         nullCheck();
         return realBridge.getShop(userName, shopName);
     }
 
     @Override
-    public ProductBridge getProduct(String userName, String shopName, String productName) {
+    public ProductBridge getProduct(String userName, String shopName, String productName) throws Exception {
         nullCheck();
         return realBridge.getProduct(userName, shopName, productName);
     }
@@ -150,13 +150,13 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
 
 
     @Override
-    public void appointShopOwner(String appointedBy, String appointee, String shopName) {
+    public void appointShopOwner(String appointedBy, String appointee, String shopName) throws Exception {
         nullCheck();
         realBridge.appointShopOwner(appointedBy, appointee, shopName);
     }
 
     @Override
-    public void appointShopManager(String appointedBy, String appointee, String shopName) {
+    public void appointShopManager(String appointedBy, String appointee, String shopName) throws Exception {
         nullCheck();
         realBridge.appointShopManager(appointedBy, appointee, shopName);
     }
