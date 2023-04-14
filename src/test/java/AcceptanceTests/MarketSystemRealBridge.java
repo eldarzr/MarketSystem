@@ -18,6 +18,7 @@ import java.util.List;
 public class MarketSystemRealBridge implements MarketSystemBridge {
 
     private final String adminUserName = "admin"; // update later to a userName that will always be an admin
+    private final String ADMIN_PASSWORD = "Aa123456";
     MarketIntr market;
 
     public MarketSystemRealBridge() {
@@ -211,33 +212,43 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     }
 
     public int getProductQuantityInShop(String shopName, String productName) throws Exception {
+        market.login(adminUserName,ADMIN_PASSWORD);
         Shop shop = market.searchShop(adminUserName,shopName);
+        market.logout(adminUserName);
         for(ShopProduct p : shop.getProducts())
             if(p.getName().equals(productName)) return p.getQuantity();
         return 0;
     }
 
     public String getProductDescription(String shopName, String productName) throws Exception {
+        market.login(adminUserName,ADMIN_PASSWORD);
         Shop shop = market.searchShop(adminUserName,shopName);
+        market.logout(adminUserName);
         for(ShopProduct p : shop.getProducts())
             if(p.getName().equals(productName)) return p.getDescription();
         return null;
     }
 
     public double getProductPrice(String shopName, String productName) throws Exception {
+        market.login(adminUserName,ADMIN_PASSWORD);
         Shop shop = market.searchShop(adminUserName,shopName);
+        market.logout(adminUserName);
         for(ShopProduct p : shop.getProducts())
             if(p.getName().equals(productName)) return p.getPrice();
         return -1;
     }
 
     public String getShopFounder(String shopName) throws Exception {
+        market.login(adminUserName,ADMIN_PASSWORD);
         Shop shop = market.searchShop(adminUserName,shopName);
+        market.logout(adminUserName);
         return shop.getFounder();
     }
 
     public Collection<String> getShopOwners(String shopName) throws Exception {
+        market.login(adminUserName,ADMIN_PASSWORD);
         Collection<MemberRoleInShop> memberRoleInShops  =market.getShopManagersAndPermissions(adminUserName,shopName);
+        market.logout(adminUserName);
         Collection<String> ret = new ArrayList<>();
         for(MemberRoleInShop m : memberRoleInShops){
             if(m.getType().equals(ManageType.OWNER))ret.add(m.getRoleUser());
@@ -246,7 +257,9 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     }
 
     public Collection<String> getShopManagers(String shopName) throws Exception {
+        market.login(adminUserName,ADMIN_PASSWORD);
         Collection<MemberRoleInShop> memberRoleInShops  =market.getShopManagersAndPermissions(adminUserName,shopName);
+        market.logout(adminUserName);
         Collection<String> ret = new ArrayList<>();
         for(MemberRoleInShop m : memberRoleInShops){
             if(m.getType().equals(ManageType.MANAGER))ret.add(m.getRoleUser());
@@ -314,7 +327,9 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
 
     @Override
     public Collection<Integer> getManagerPermissionsInShop(String shopManager, String shopName) throws Exception {
+        market.login(adminUserName,ADMIN_PASSWORD);
         Collection<MemberRoleInShop>  memberRoleInShops = market.getShopManagersAndPermissions(adminUserName,shopName);
+        market.logout(adminUserName);
         for ( MemberRoleInShop m : memberRoleInShops){
             if(m.getRoleUser().equals(shopManager)){
                 return m.getPermissions().getActivatedPermissions();
