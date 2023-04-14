@@ -1,12 +1,16 @@
 package BusinessLayer;
 
+import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
+import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Purchases.Cart;
-import BusinessLayer.Purchases.PurchaseIntr;
+import BusinessLayer.Purchases.Purchase;
 import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Shops.ProductIntr;
 import BusinessLayer.Shops.Shop;
 import BusinessLayer.Shops.ShopIntr;
+import BusinessLayer.Users.UserIntr;
 
+import java.io.IOException;
 import java.util.*;
 
 
@@ -25,14 +29,14 @@ public interface MarketIntr {
 
     void register(String userName, String email, String password) throws Exception;
 
-    void login(String userName, String password);
+    void login(String guestName, String userName, String password);
 
 
     //member function
 
-    void logout(String userName);
+    String logout(String userName);
 
-    Collection<PurchaseIntr> getUserPurchaseHistory(String userName);
+    Collection<Purchase> getUserPurchaseHistory(String userName);
 
 
     //shop functions
@@ -84,7 +88,7 @@ public interface MarketIntr {
     Collection<MemberRoleInShop> getShopManagersAndPermissions(String userName, String shopName) throws Exception;
 
     //4.13
-    Collection<PurchaseIntr> getShopPurchaseHistory(String userName, String shopName);
+    Collection<Purchase> getShopPurchaseHistory(String userName, String shopName);
 
     //admin functions
 
@@ -95,10 +99,10 @@ public interface MarketIntr {
     void blockUser(String adminName, String UserName);
 
     //6.1
-    Collection<PurchaseIntr> getShopPurchaseHistoryByAdmin(String adminName, String shopName);
+    Collection<Purchase> getShopPurchaseHistoryByAdmin(String adminName, String shopName);
 
     //6.2
-    Collection<PurchaseIntr> getUserPurchaseHistoryByAdmin(String adminName, String memberName);
+    Collection<Purchase> getUserPurchaseHistoryByAdmin(String adminName, String memberName);
 
 
     //cart function
@@ -107,13 +111,14 @@ public interface MarketIntr {
 
     ShopBag getShopBag(String userName, String ShopName);
 
-    void addProductsToCart(String userName, String shopName, String productName, int quantity);
+    void addProductToCart(String userName, String shopName, String productName, int quantity) throws Exception;
 
-    void updateProductsFromCart(String userName, String shopName, String productName, int newQuantity);
+    //todo remove product from cart
+    void removeProductFromCart(String userName, String shopName, String productName) throws Exception;
+
+    void updateCartProductQuantity(String userName, String shopName, String productName, int newQuantity) throws Exception;
 
     //connect to payment adapter and delivery adapter
-    void purchaseCart(String userName);
-
-
+    void purchaseCart(String userName, PaymentDetails paymentDetails, SupplyDetails supplyDetails) throws Exception;
 
 }

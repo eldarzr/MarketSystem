@@ -2,6 +2,8 @@ package BusinessLayer.Users;
 
 import BusinessLayer.Enums.UserType;
 import BusinessLayer.MemberRoleInShop;
+import BusinessLayer.Purchases.Cart;
+import BusinessLayer.Shops.Product;
 import BusinessLayer.Shops.Shop;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,26 +16,27 @@ public class User {
     private String password;
     private ConcurrentLinkedQueue<String> shopsMessages = new ConcurrentLinkedQueue<>();
     private boolean twoFactorEnabled;
-//    private ConcurrentLinkedQueue<String> foundedShops;
-//    //map of shop name to role of this user in the shop
-//    private ConcurrentHashMap<String, MemberRoleInShop> roles;
+
+    Cart currentCart;
 
     public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
-//        this.foundedShops = new ConcurrentLinkedQueue<>();
-//        this.roles = new ConcurrentHashMap<>();
         userType = UserType.MEMBER;
+        currentCart = new Cart();
     }
 
-    public User() {
+    public User(String guestName) {
+        name = guestName;
         userType = UserType.GUEST;
+        currentCart = new Cart();
     }
 
-    public void sendMessage(String message){
+    public void sendMessage(String message) {
         shopsMessages.add(message);
     }
+
     public String getName() {
         return name;
     }
@@ -78,4 +81,20 @@ public class User {
         this.twoFactorEnabled = twoFactorEnabled;
     }
 
+    public Cart getCart() {
+        return currentCart;
+    }
+
+    public void addProductToCart(String shopName, Product product, int quantity) throws Exception {
+        getCart().addProduct(shopName, product, quantity);
+    }
+
+    public void updateProductsFromCart(String shopName, String productName, int newQuantity) throws Exception {
+        getCart().updateProductQuantity(shopName, productName, newQuantity);
+    }
+
+    public void removeProductFromCart(String shopName, String productName) throws Exception {
+        getCart().removeProduct(shopName,productName);
+    }
 }
+

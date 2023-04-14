@@ -129,6 +129,14 @@ public class ShopHandler {
     public List<ProductIntr> basicSearch(String productName, boolean isAdmin) throws Exception {
         return getProducts(shops.keySet(), productName, isAdmin);
     }
+	
+	public List<Shop> getShops(List<String> shopsNames) throws Exception {
+        List<Shop> shops = new LinkedList<>();
+        for(String shopName : shopsNames){
+            shops.add(getShop(shopName));
+        }
+        return shops;
+    }
 
     public List<ProductIntr> extendedSearch(String productName, double minPrice, double maxPrice,
                                             String category, boolean isAdmin) throws Exception{

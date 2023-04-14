@@ -2,9 +2,12 @@ package BusinessLayer.Shops;
 
 import org.apache.commons.text.similarity.LevenshteinDistance;
 
-import java.util.Locale;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Product implements ProductIntr{
+
+	Lock productLock = new ReentrantLock();
 
 	protected String name;
 	protected String category;
@@ -86,4 +89,18 @@ public class Product implements ProductIntr{
 			throw new Exception(String.format("product description must be longer then %s", MIN_DESCRIPTION_LENGTH));
 		this.description = description;
 	}
+
+	public Lock getProductLock() {
+		return productLock;
+	}
+
+	public void lockProduct(){
+		productLock.lock();
+	}
+
+	public void unlockProduct(){
+		productLock.unlock();
+	}
+
+
 }

@@ -28,8 +28,9 @@ class MarketManageProductTest {
 		market = new Market();
 		market.init();
 		for(int i = 0; i < usersName.length; i++) {
+			String guestName = market.startSession();
 			market.register(usersName[i], emails[i], passwords[i]);
-			market.login(usersName[i], passwords[i]);
+			market.login(guestName,usersName[i], passwords[i]);
 			market.createShop(usersName[i], shopNames[i]);
 		}
 	}

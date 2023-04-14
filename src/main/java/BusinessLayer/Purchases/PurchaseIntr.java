@@ -1,4 +1,5 @@
 package BusinessLayer.Purchases;
 
- public interface PurchaseIntr {
+public interface PurchaseIntr {
+    void process() throws Exception;
 }
