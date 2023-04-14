@@ -2,9 +2,9 @@ package AcceptanceTests.Tests;
 
 import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
-
-import org.junit.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -13,16 +13,17 @@ import static org.junit.Assert.*;
 
 public class ShopRoleTests2 {
 
-    private static MarketSystemBridge marketSystem;
+    private static MarketSystemBridge marketSystem = new MarketSystemRealBridge();
     private static String shopOwner;
     private static String shopManager1;
     private static String shopManager2;
     private static String shopName;
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
+
+    @BeforeEach
+    public void setUp() throws Exception {
+     
         // Set up market system
-        marketSystem = new MarketSystemRealBridge();
         marketSystem.init();
 
         // Register users
@@ -57,25 +58,10 @@ public class ShopRoleTests2 {
         }
     }
 
-    @AfterClass
-    public static void tearDownClass() {
-        // Unregister users and clear data
-        marketSystem.unregister("shopOwner");
-        marketSystem.unregister("shopManager1");
-        marketSystem.unregister("shopManager2");
-        marketSystem.clearData();
-    }
-
-    @BeforeEach
-    public void setUp() throws Exception {
-        // Open shop
-        marketSystem.openShop(shopOwner, shopName);
-    }
-
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
-        // Close shop
-        marketSystem.closeShop(shopOwner, shopName);
+
+        marketSystem.clearData();
     }
 
     @Test
@@ -114,8 +100,13 @@ public class ShopRoleTests2 {
     @Test
     public void testAppointShopOwner() {
         try {
+            String newShopOwnerUserName = "newShopOwner";
+            //register and login the new shop owner
+            marketSystem.register(newShopOwnerUserName,"newShopOwnerManager@gmail.com","Passw0rd!!!");
+            marketSystem.login(newShopOwnerUserName,"Passw0rd!!!");
+
             // Appoint shop owner
-            marketSystem.appointShopOwner(shopOwner, "newShopOwner", shopName);
+            marketSystem.appointShopOwner(shopOwner, newShopOwnerUserName, shopName);
 
             // Check new shop owner permissions
             Collection<String> shopOwners = marketSystem.getShopOwners(shopName);
@@ -143,7 +134,7 @@ public class ShopRoleTests2 {
                 assertEquals("User is not a shop owner", e.getMessage());
             }
             assertFalse(marketSystem.isShopOwner("newShopOwner2", shopName));
-            marketSystem.unregister(nonShopOwner);
+            //marketSystem.unregister(nonShopOwner);
         } catch (Exception e) {
             fail("Failed to test appointing shop owner: " + e.getMessage());
         }
