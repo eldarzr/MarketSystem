@@ -4,15 +4,21 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.*;
+
 
 class MarketLoginRegisterTests {
 
     Market market;
+    String guestName;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         market = new Market();
+        market.init();
+        guestName = market.startSession();
     }
 
     @AfterEach
@@ -58,30 +64,30 @@ class MarketLoginRegisterTests {
     @org.junit.jupiter.api.Test
     void login() throws Exception {
         market.register("nivuzan","nivuzan@gmail.com","TryTry123");
-        market.login("nivuzan","TryTry123");
+        market.login(guestName,"nivuzan","TryTry123");
     }
 
     @org.junit.jupiter.api.Test
     void login_fail() throws Exception {
         String username = "nivuzan";
         assertThrows(Exception.class, () -> {
-            market.login(username,"aN12332");
+            market.login(guestName,username,"aN12332");
         },String.format("successful login with username : %s",username));
     }
 
     @org.junit.jupiter.api.Test
     void double_login() throws Exception {
         market.register("nivuzan","nivuzan@gmail.com","TryTry123");
-        market.login("nivuzan","TryTry123");
+        market.login(guestName,"nivuzan","TryTry123");
         assertThrows(Exception.class, () -> {
-            market.login("nivuzan","TryTry123");
+            market.login(guestName,"nivuzan","TryTry123");
         },"successful double login");
     }
 
     @org.junit.jupiter.api.Test
     void logout() throws Exception {
         market.register("nivuzan","nivuzan@gmail.com","TryTry123");
-        market.login("nivuzan","TryTry123");
+        market.login(guestName,"nivuzan","TryTry123");
         market.logout("nivuzan");
     }
 
