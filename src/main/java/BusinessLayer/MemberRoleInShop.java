@@ -5,6 +5,11 @@ import BusinessLayer.Enums.ManageType;
 import BusinessLayer.Shops.Shop;
 //import BusinessLayer.Shops.ShopMessageObserver;
 import BusinessLayer.Users.User;
+
+import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import static BusinessLayer.Enums.ManageType.*;
 import static BusinessLayer.Enums.ManagePermissionsEnum.*;
 
@@ -16,12 +21,15 @@ public class MemberRoleInShop {
 	private ManageType type;
 	private ManagePermissions permissions;
 
+	private Lock lock;
+
 	private MemberRoleInShop(Shop roleShop , String roleUser , String grantor, ManageType type, ManagePermissions permissions) {
 		this.grantor = grantor;
 		this.type = type;
 		this.permissions = permissions;
 		this.roleShop =  roleShop;
 		this.roleUser = roleUser;
+		this.lock = new ReentrantLock();
 	}
 
 	public static MemberRoleInShop createOwner(String user, Shop shop, MessageObserver observer) throws Exception {
@@ -77,21 +85,11 @@ public class MemberRoleInShop {
 		this.permissions = permissions;
 	}
 
-	public void setPermissions(int permissions) throws Exception {
-			setPermissions(acheivePermission(permissions));
-		}
-
-	private ManagePermissions acheivePermission(int permissions) throws Exception {
-		switch (permissions){
-			case 0:
-				return ManagePermissions.getFullAccessPermissions();
-			case 1:
-				return ManagePermissions.getReadOnlyPermissions();
-			default:
-				throw new Exception("there is no such permission");
+	public void setPermissions(List<Integer> permissions) throws Exception {
+		lock.lock();
+			this.permissions.setNewPermissions(permissions);
+		lock.unlock();
 	}
-
-}
 	private static MemberRoleInShop adjustRole(MemberRoleInShop role , MessageObserver obs) throws Exception {
 		String roleUser = role.roleUser;
 		Shop roleShop = role.roleShop;
@@ -100,6 +98,17 @@ public class MemberRoleInShop {
 		roleShop.addObserver(obs);
 		return role;
 	}
+
+	public void addPermission(int permission) throws Exception {
+		this.permissions.addAnotherPermission(permission);
+	}
+
+	public String getRoleInfo() {
+		StringBuilder rolesInfo = new StringBuilder();
+		rolesInfo.append("The user ").append(roleUser).append(" is a ").append(type).append(" in the store\n");
+		return rolesInfo.toString();
+	}
+
 
 //	private static MemberRoleInShop adjustRole(MemberRoleInShop role) throws Exception {
 //		String roleUser = role.roleUser;

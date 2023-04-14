@@ -25,8 +25,10 @@ public class Market implements MarketIntr{
     ShopHandler shopHandler;
     private final int SHOP_DISTANCE_MAX_LIMIT = 2;
     private final int PRODUCT_DISTANCE_MAX_LIMIT = 2;
+    private final String ADMIN_NAME = "admin";
+    private final String ADMIN_MAIL = "admin@gmail.com";
+    private final String ADMIN_PASSWORD = "Aa123456";
 
-    //we need to change Market to be singleton , it will be more comfortable with the logger and in future version
     public Market() {
         usersHandler = UsersHandler.getInstance();
         shopHandler = shopHandler.getInstance();
@@ -34,10 +36,16 @@ public class Market implements MarketIntr{
 
     @Override
     public void init() throws IOException {
+		loadAdmin();
         createLogger();
         logger.info("init finished");
     }
 
+    private void loadAdmin() throws Exception {
+        register(ADMIN_NAME, ADMIN_MAIL, ADMIN_PASSWORD);
+        addAdmin(ADMIN_NAME);
+    }
+	
     private void createLogger() throws IOException {
         // Create a file handler and set its formatter
         try {
@@ -63,7 +71,6 @@ public class Market implements MarketIntr{
             throw new IOException("Failed to create file handler: " + e.getMessage());
         }
 
-    }
 
     //return guest username
     @Override
@@ -133,138 +140,76 @@ public class Market implements MarketIntr{
 
     @Override
     public void addNewProduct(String userName, String shopName, String productName, String category, String desc, double price) throws Exception {
-       ConcurrentHashMap<String , Shop> shops = shopHandler.getShops();
-
-        if(!isLoggedIn(userName))
-            throw new Exception(String.format("the user %s is not login", userName));
-        if(shopName == null || !shops.containsKey(shopName))
-            throw new Exception("there is already shop with that name");
-        shops.get(shopName).addNewProduct(userName, productName, category, desc, price);
+        validateLoggedInException(userName);
+        shopHandler.addNewProduct(userName, shopName, productName, category, desc, price);
     }
+
+
 
     @Override
     public void removeProduct(String userName, String shopName, String productName) throws Exception {
-        ConcurrentHashMap<String , Shop> shops = shopHandler.getShops();
-        if(!isLoggedIn(userName))
-            throw new Exception(String.format("the user %s is not login", userName));
-        if(shopName == null || !shops.containsKey(shopName))
-            throw new Exception("there is already shop with that name");
-        shops.get(shopName).removeProduct(userName, productName);
+        validateLoggedInException(userName);
+        shopHandler.removeProduct(userName, shopName, productName);
     }
 
     @Override
     public void updateProductName(String userName, String shopName, String productOldName, String productNewName) throws Exception {
-        ConcurrentHashMap<String , Shop> shops = shopHandler.getShops();
-        if(!isLoggedIn(userName))
-            throw new Exception(String.format("the user %s is not login", userName));
-        if(shopName == null || !shops.containsKey(shopName))
-            throw new Exception("there is already shop with that name");
-        shops.get(shopName).updateProductName(userName, productOldName, productNewName);
+        validateLoggedInException(userName);
+        shopHandler.updateProductName(userName, shopName, productOldName, productNewName);
     }
 
     @Override
     public void updateProductDesc(String userName, String shopName, String productName, String productNewDesc) throws Exception {
-        ConcurrentHashMap<String , Shop> shops = shopHandler.getShops();
-        if(!isLoggedIn(userName))
-            throw new Exception(String.format("the user %s is not login", userName));
-        if(shopName == null || !shops.containsKey(shopName))
-            throw new Exception("there is already shop with that name");
-        shops.get(shopName).updateProductDesc(userName, productName, productNewDesc);
+        validateLoggedInException(userName);
+        shopHandler.updateProductDesc(userName, shopName, productName, productNewDesc);
     }
 
     @Override
     public void updateProductPrice(String userName, String shopName, String productName, double price) throws Exception {
-        ConcurrentHashMap<String , Shop> shops = shopHandler.getShops();
-        if(!isLoggedIn(userName))
-            throw new Exception(String.format("the user %s is not login", userName));
-        if(shopName == null || !shops.containsKey(shopName))
-            throw new Exception("there is already shop with that name");
-        shops.get(shopName).updateProductPrice(userName, productName, price);
+        validateLoggedInException(userName);
+        shopHandler.updateProductPrice(userName, shopName, productName, price);
     }
 
     @Override
     public void updateProductQuantity(String userName, String shopName, String productName, int quantity) throws Exception {
-        ConcurrentHashMap<String , Shop> shops = shopHandler.getShops();
-        if(!isLoggedIn(userName))
-            throw new Exception(String.format("the user %s is not login", userName));
-        if(shopName == null || !shops.containsKey(shopName))
-            throw new Exception("there is already shop with that name");
-        shops.get(shopName).updateProductQuantity(userName, productName, quantity);
+        validateLoggedInException(userName);
+        shopHandler.updateProductQuantity(userName, shopName, productName, quantity);
     }
 
     @Override
     public void addProductItems(String userName, String shopName, String productName, int quantity) throws Exception {
-        ConcurrentHashMap<String , Shop> shops = shopHandler.getShops();
-        if(!isLoggedIn(userName))
-            throw new Exception(String.format("the user %s is not login", userName));
-        if(shopName == null || !shops.containsKey(shopName))
-            throw new Exception("there is already shop with that name");
-        shops.get(shopName).addProductQuantity(userName, productName, quantity);
+        validateLoggedInException(userName);
+        shopHandler.addProductItems(userName, shopName, productName, quantity);
     }
 
     @Override
-    public Shop getShop(String userName, String shopName) throws Exception {
-        List<Shop> shopsToReturn = getShops(userName, shopName);
-        if (shopsToReturn.size() < 1)
-            throw new Exception(String.format("there is no shop in this name: %s", shopName));
-        return getShops(userName, shopName).get(0);
+    public Shop searchShop(String userName, String shopName) throws Exception {
+        validateLoggedInException(userName);
+        return shopHandler.searchShop(shopName, isAdmin(userName));
     }
 
     public List<Shop> getShops(String userName, String shopName) throws Exception {
-        LevenshteinDistance distance = new LevenshteinDistance();
-        if (!isLoggedIn(userName))
-            throw new Exception(String.format("the user %s is not login", userName));
-        List<Shop> shopsToReturn = new ArrayList<>();
-        ConcurrentHashMap<String,Shop> shops =shopHandler.getShops();
-        for (String shopName1 : shops.keySet()) {
-            if (distance.apply(shopName.toLowerCase(), shopName1.toLowerCase()) <= SHOP_DISTANCE_MAX_LIMIT)
-                shopsToReturn.add(shops.get(shopName1));
-        }
-        return shopsToReturn.stream().sorted((shop1, shop2) ->
-                distance.apply(shop1.getName(), shopName) - distance.apply(shop2.getName(), shopName)).
-                collect(Collectors.toList());
-    }
-
-    private List<ProductIntr> getProducts(String userName, Collection<String> shopNames,
-                                                       String productName) throws Exception {
-        LevenshteinDistance distance = new LevenshteinDistance();
-        if (!isLoggedIn(userName))
-            throw new Exception(String.format("the user %s is not login", userName));
-        List<ProductIntr> prodsToReturn = new ArrayList<>();
-        ConcurrentHashMap<String,Shop> shops =shopHandler.getShops();
-        for (String shopName : shopNames){
-            for (ProductIntr product : shops.get(shopName).getProducts()) {
-                if (distance.apply(
-                        product.getName().toLowerCase(), productName.toLowerCase()) <= PRODUCT_DISTANCE_MAX_LIMIT)
-                    prodsToReturn.add(product);
-            }
-        }
-        return prodsToReturn.stream().sorted((prod1, prod2) ->
-                distance.apply(prod1.getName(), productName) - distance.apply(prod2.getName(), productName)).
-                collect(Collectors.toList());
+        validateLoggedInException(userName);
+        return shopHandler.getShops(shopName, isAdmin(userName));
     }
 
     @Override
     public ProductIntr getProduct(String userName, String shopName, String productName) throws Exception {
-        ArrayList<String> shopsNames = new ArrayList<>();
-        shopsNames.add(shopName);
-        Collection<ProductIntr> prodsToReturn = getProducts(userName, shopsNames, productName);
-        if (prodsToReturn.size() < 1)
-            throw new Exception(String.format("there is no product in this name: %s", productName));
-        return new ArrayList<>(prodsToReturn).get(0);
+        validateLoggedInException(userName);
+        return shopHandler.getProduct(shopName, productName, isAdmin(userName));
     }
 
     @Override
     public List<ProductIntr> basicSearch(String userName, String productName) throws Exception {
-        ConcurrentHashMap<String,Shop> shops = shopHandler.getShops();
-        return getProducts(userName, shops.keySet(), productName);
+        validateLoggedInException(userName);
+        return shopHandler.basicSearch(productName, isAdmin(userName));
     }
 
     @Override
     public List<ProductIntr> extendedSearch(String userName, String productName, double minPrice, double maxPrice,
                                                   String category) throws Exception{
-        return Search.createExtendedSearch(productName, category, minPrice, maxPrice).
-                apply(basicSearch(userName, productName));
+        validateLoggedInException(userName);
+        return shopHandler.extendedSearch(productName, minPrice, maxPrice, category, isAdmin(userName));
     }
 
     @Override
@@ -296,25 +241,43 @@ public class Market implements MarketIntr{
     }
 
     @Override
-    public void changeManagerPermissions(String actor, String actOn, String shopName,int permission) throws Exception {
-        usersHandler.findMemberByName(actor);
-        usersHandler.findLoginUser(actor);
-        usersHandler.findMemberByName(actOn);
+    public MemberRoleInShop changeManagerPermissions(String actor, String actOn, String shopName, List<Integer> permission) throws Exception {
+        validateUserIsntGuest(actor);
+        isLoggedIn(actor);
+        validateUserIsntGuest(actOn);
         Shop reqShop = checkForShop(shopName);
-        reqShop.setManageOption(actor,actOn,permission);
+       return reqShop.setManageOption(actor,actOn,permission);
+    }
+
+    @Override
+    public void addManagerPermissions(String actor, String actOn, String shopName,int permission) throws Exception {
+        validateUserIsntGuest(actor);
+        isLoggedIn(actor);
+        validateUserIsntGuest(actOn);
+        Shop reqShop = checkForShop(shopName);
+        reqShop.addManageOption(actor,actOn,permission);
     }
 
     //todo: naor - talk with eldar
     @Override
-    public Collection<UserIntr> getShopManagersAndPermissions(String userName, String shopName) {
+    public Collection<MemberRoleInShop> getShopManagersAndPermissions(String userName, String shopName) throws Exception {
+        isLoggedIn(userName);
+        return shopHandler.getShopManagementPermissions(userName,shopName);
+    }
+
+    public String getRolesInformation(String userName, String shopName) throws Exception {
+        return searchShop(userName,shopName).getRolesInfo();
+    }
+
+    //todo: naor
+    @Override
+    public Collection<PurchaseIntr> getShopPurchaseHistory(String userName, String shopName) {
         return null;
     }
 
-    //todo: niv
-    //only shop owner gets to see shop Purchase history
     @Override
-    public Collection<Purchase> getShopPurchaseHistory(String userName, String shopName) {
-        return null;
+    public void addAdmin(String adminName) throws Exception {
+        usersHandler.addAdmin(adminName);
     }
 
     @Override
@@ -386,6 +349,7 @@ public class Market implements MarketIntr{
     //this function reset everything on the system, for now only use is for testing
     //need to add logic to reset all shops, but since we dont have a controller yet and I'm not sure what we want
     //to do I left it like this
+    @Override
     public void resetAll(){
         usersHandler.reset();
         shopHandler.reset();
@@ -393,6 +357,27 @@ public class Market implements MarketIntr{
 
     private boolean isLoggedIn(String userName) {
         return usersHandler.isLoggedIn(userName);
+    }
+
+    private User findUserByName(String userName) {
+        return usersHandler.findUserByName(userName);
+    }
+
+    private User validateUserIsntGuest(String userName) throws Exception {
+        User user = findUserByName(userName);
+//      User user = allUsers.get(appointedBy);
+        if(user.getUserType() == UserType.GUEST)
+            throw new Exception("guests cannot do it");
+        return user;
+    }
+
+    private void validateLoggedInException(String userName) throws Exception {
+        if(!isLoggedIn(userName))
+            throw new Exception(String.format("the user %s is not login", userName));
+    }
+
+    private boolean isAdmin(String userName) {
+        return usersHandler.isAdmin(userName);
     }
 
 }

@@ -1,5 +1,6 @@
 package BusinessLayer.Users;
 
+import BusinessLayer.Enums.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,6 +11,8 @@ import javax.mail.internet.InternetAddress;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+
+import static BusinessLayer.Enums.UserType.*;
 
 public class UsersHandler {
     private static final Logger logger = Logger.getLogger("Market");
@@ -177,6 +180,19 @@ public class UsersHandler {
         emailVal.validate();
     }
 
+    public void reset() {
+        allUsers.clear();
+        loginUsers.clear();
+    }
 
+	public boolean isAdmin(String userName) {
+        return allUsers.get(userName).getUserType() == ADMIN;
+	}
 
+    public void addAdmin(String adminName) throws Exception {
+        User admin = findUserByName(adminName);
+        if(admin.getUserType() == ADMIN)
+            throw new Exception(String.format("the user %s is already admin", adminName));
+        admin.setUserType(ADMIN);
+    }
 }

@@ -6,6 +6,7 @@ import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.MessageObserver;
 import BusinessLayer.Purchases.ShopBagItem;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -13,12 +14,12 @@ import java.util.stream.Collectors;
 
 import static BusinessLayer.Enums.ManagePermissionsEnum.*;
 
-public class Shop implements ShopIntr{
+public class Shop implements ShopIntr {
 	private final static int PRODUCT_MIN_QUANTITY = 0;
 
-	String name;
-	boolean open;
-	boolean isActive;
+	private String name;
+	private boolean open;
+	private boolean active;
 	private final String founderUserName;
 	//map of user name to role in this shop
 	private ConcurrentHashMap<String, MemberRoleInShop> roles;
@@ -31,7 +32,7 @@ public class Shop implements ShopIntr{
 		this.founderUserName = founderUserName;
 		this.roles = new ConcurrentHashMap<>();
 		this.products = new ConcurrentHashMap<>();
-		this.isActive = true;
+		this.active = true;
 		this.observers = new ConcurrentLinkedQueue<>();
 	}
 
@@ -55,11 +56,11 @@ public class Shop implements ShopIntr{
 		return founderUserName;
 	}
 
-	public void setShopOwner(String actor, String actOn , MessageObserver sendMessage) throws Exception {
+	public void setShopOwner(String actor, String actOn, MessageObserver sendMessage) throws Exception {
 
 		validateUserHasRole(actor);
 		MemberRoleInShop actorMRIS = roles.get(actor);
-		if(actorMRIS.getType()!= ManageType.OWNER)
+		if (actorMRIS.getType() != ManageType.OWNER)
 			throw new Exception("only owners can set new owners to a store");
 
 		// if the appointee is manager than:
@@ -71,19 +72,19 @@ public class Shop implements ShopIntr{
 			actOnMRIS.setGrantor(actor);
 			return;
 		}
-		MemberRoleInShop.createOwner(actOn,this, actor , sendMessage);
+		MemberRoleInShop.createOwner(actOn, this, actor, sendMessage);
 
 	}
 
-	public void setShopManager(String actor, String actOn , MessageObserver sendMessage) throws Exception {
+	public void setShopManager(String actor, String actOn, MessageObserver sendMessage) throws Exception {
 		validateUserHasRole(actor);
 		MemberRoleInShop actorMRIS = roles.get(actor);
-		if(actorMRIS.getType()!= ManageType.OWNER)
+		if (actorMRIS.getType() != ManageType.OWNER)
 			throw new Exception("only owners can set new managers to a store");
 		if (roles.containsKey(actOn)) {
 			throw new Exception("the user :" + actOn + "is already have a role in the store");
 		}
-		MemberRoleInShop.createManager(actOn,this,actor , sendMessage);
+		MemberRoleInShop.createManager(actOn, this, actor, sendMessage);
 
 	}
 
@@ -95,12 +96,12 @@ public class Shop implements ShopIntr{
 	}
 
 	public void addRole(String name, MemberRoleInShop role) throws Exception {
-		if(roles.containsKey(name))
-			throw new Exception( "the user : "+ name + " already have a role");
-		roles.put(name,role);
+		if (roles.containsKey(name))
+			throw new Exception("the user : " + name + " already have a role");
+		roles.put(name, role);
 	}
 
-	public void setManageOption(String actor, String actOn , int permission) throws Exception {
+	private MemberRoleInShop validatePermissionsChangeAllowed(String actor, String actOn) throws Exception {
 		validateUserHasRole(actor);
 		MemberRoleInShop actorMRIS = roles.get(actor);
 		if (actorMRIS.getType() != ManageType.OWNER)
@@ -110,21 +111,32 @@ public class Shop implements ShopIntr{
 		}
 		MemberRoleInShop reqRole = roles.get(actOn);
 		String roleGrantor = reqRole.getGrantor();
-		if(!roleGrantor.equals(actor) || !actor.equals(founderUserName))
+		if (!roleGrantor.equals(actor) || !actor.equals(founderUserName))
 			throw new Exception("only the grantor or the shop founder can set manager permissions");
-		reqRole.setPermissions(permission);
+		return reqRole;
+	}
 
+	public void addManageOption(String actor, String actOn , int permission) throws Exception {
+		MemberRoleInShop reqRole = validatePermissionsChangeAllowed(actor,actOn);
+		reqRole.addPermission(permission);
 		}
+
+		/// TODO : ADD / SET - CONCURRENCY ETC
+	public MemberRoleInShop setManageOption(String actor, String actOn, List<Integer> permissions) throws Exception {
+		MemberRoleInShop reqRole = validatePermissionsChangeAllowed(actor,actOn);
+		reqRole.setPermissions(permissions);
+		return reqRole;
+	}
 
 	public void closeShop(String userName) throws Exception {
-		if(!this.founderUserName.equals(userName))
+		if (!this.founderUserName.equals(userName))
 			throw new Exception("only the founder can close a store");
-		this.isActive = false;
-		for (MessageObserver observer : this.observers ){
-			 observer.update("the shop named : " +this.name + " is closed");
+		this.active = false;
+		for (MessageObserver observer : this.observers) {
+			observer.update("the shop named : " + this.name + " is closed");
 		}
-		//TODO : Only managers & owners can acheive information on the shop.
-		//TODO : products of the store should be unavialbe now when a member looking for them.
+		//TODO : Only owners & Admins can acheive information on the shop.
+		//TODO : products of the store should be unavilable now when a member looking for them.
 
 
 	}
@@ -134,16 +146,16 @@ public class Shop implements ShopIntr{
 	}
 
 	public void addNewProduct(String userName, String productName, String category, String desc, double price) throws Exception {
-		if(products.containsKey(productName))
+		if (products.containsKey(productName))
 			throw new Exception(String.format("there is already product %s in the shop %s", productName, name));
 		validatePermissionsException(userName, MANAGE_STOCK);
 		products.put(productName, ShopProduct.createProduct(productName, category, desc, price));
 	}
 
 	private void validatePermissionsException(String userName, ManagePermissionsEnum permissionsEnum) throws Exception {
-		if(!roles.containsKey(userName))
+		if (!roles.containsKey(userName))
 			throw new Exception(String.format("the user %s is not manager or owner of the shop %s", userName, name));
-		if(!roles.get(userName).getPermissions().validatePermission(permissionsEnum))
+		if (!roles.get(userName).getPermissions().validatePermission(permissionsEnum))
 			throw new Exception(String.format("the user %s does not have the right permission for the shop %s",
 					userName, name));
 	}
@@ -167,6 +179,7 @@ public class Shop implements ShopIntr{
 	public void addObserver(MessageObserver obs) {
 		this.observers.add(obs);
 	}
+
 	public void updateProductDesc(String userName, String productName, String productNewDesc) throws Exception {
 		validateProductExists(productName);
 		validatePermissionsException(userName, MANAGE_STOCK);
@@ -192,10 +205,9 @@ public class Shop implements ShopIntr{
 	}
 
 	private void validateProductExists(String productName) throws Exception {
-		if(!products.containsKey(productName))
+		if (!products.containsKey(productName))
 			throw new Exception(String.format("there is no product %s in the shop %s", productName, name));
 	}
-
 
 	//there is a problem with our logic of having Product and shopProduct we need to think maybe just hold a product instead of both.
 	//the problem is when the product already at the user cart and the quantity went from the original quantity we want the user to be able to see it at his cart
@@ -211,7 +223,39 @@ public class Shop implements ShopIntr{
 		}
 		return shopProduct;
 	}
+	
+	public Collection<MemberRoleInShop> getManagementPermissions(String userName) throws Exception {
+		validateUserHasRole(userName);
+		MemberRoleInShop actorMRIS = roles.get(userName);
+		if (actorMRIS.getType() != ManageType.OWNER) {
+			throw new Exception("only owners can get the Management information");
+		}
+		return this.roles.values();
+	}
 
+	public String getRolesInfo() {
+		StringBuilder rolesInfo = new StringBuilder();
+		for (MemberRoleInShop role : roles.values()) {
+			rolesInfo.append(role.getRoleInfo());
+		}
+		return rolesInfo.toString();
+	}
+	
+	public void newPurchase(String userName, ConcurrentHashMap<String, ShopBagItem> productsAndQuantities) {
+		//username is for history purpose will do it in another commit
+		for(String productName : productsAndQuantities.keySet()){
+			ShopProduct shopProduct = products.get(productName);
+			shopProduct.setQuantity(shopProduct.getQuantity() - productsAndQuantities.get(productName).getQuantity());
+		}
+	}
+	
+	public void newPurchase(String userName, ConcurrentHashMap<String, ShopBagItem> productsAndQuantities) {
+		//username is for history purpose will do it in another commit
+		for(String productName : productsAndQuantities.keySet()){
+			ShopProduct shopProduct = products.get(productName);
+			shopProduct.setQuantity(shopProduct.getQuantity() - productsAndQuantities.get(productName).getQuantity());
+		}
+	}
 
 
 	public void newPurchase(String userName, ConcurrentHashMap<String, ShopBagItem> productsAndQuantities) {
@@ -221,20 +265,6 @@ public class Shop implements ShopIntr{
 			shopProduct.setQuantity(shopProduct.getQuantity() - productsAndQuantities.get(productName).getQuantity());
 		}
 	}
-
-	public void validateAvailability(ConcurrentHashMap<String, ShopBagItem> productsAndQuantities) throws Exception {
-		for(String productName : productsAndQuantities.keySet()){
-			int realQuantity = products.get(productName).getQuantity();
-			int desireQuantity = productsAndQuantities.get(productName).getQuantity();
-			if(realQuantity < desireQuantity)
-				throw new Exception(String.format("there is not enough quantity of product : %s at shop : %s. desire quantity : %d , real quantity: %d",productName,this.getName(),desireQuantity,realQuantity));
-		}
-	}
-
-	public void revertPurchase(String name, ConcurrentHashMap<String, ShopBagItem> productsAndQuantities) {
-		for(String productName : productsAndQuantities.keySet()){
-			products.get(productName).addQuantity(productsAndQuantities.get(productName).getQuantity());
-		}
-	}
+	
 }
 

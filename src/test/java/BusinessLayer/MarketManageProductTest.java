@@ -68,7 +68,7 @@ class MarketManageProductTest {
 		ProductIntr product = market.getProduct(usersName[0], shopNames[0], prodNames[0]);
 		assertTrue(product.getName().equals(prodNames[0]));
 		market.removeProduct(usersName[0], shopNames[0], prodNames[0]);
-		assertThrows(Exception.class, () -> market.getProduct(usersName[0], shopNames[0], prodNames[0]));
+		assertNull(market.getProduct(usersName[0], shopNames[0], prodNames[0]));
 	}
 
 	@Test

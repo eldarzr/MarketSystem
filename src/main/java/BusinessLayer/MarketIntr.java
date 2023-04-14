@@ -6,6 +6,7 @@ import BusinessLayer.Purchases.Cart;
 import BusinessLayer.Purchases.Purchase;
 import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Shops.ProductIntr;
+import BusinessLayer.Shops.Shop;
 import BusinessLayer.Shops.ShopIntr;
 import BusinessLayer.Users.UserIntr;
 
@@ -16,8 +17,9 @@ import java.util.*;
 public interface MarketIntr {
 
     //open and initialize the market system
-    void init() throws IOException;
+    void init() throws Exception;
 
+    public void resetAll();
 
     //guest functions
     //return string that identifies him
@@ -59,9 +61,9 @@ public interface MarketIntr {
 
     void addProductItems(String userName, String shopName, String productName, int quantity) throws Exception;
 
-    ShopIntr getShop(String userName, String shopName) throws Exception;
+	Shop searchShop(String userName, String shopName) throws Exception;
 
-    ProductIntr getProduct(String userName, String shopName, String productName) throws Exception;
+	ProductIntr getProduct(String userName, String shopName, String productName) throws Exception;
 
     Collection<ProductIntr> basicSearch(String userName, String productName) throws Exception;
 
@@ -78,15 +80,19 @@ public interface MarketIntr {
 
     //4.7
 
-    void changeManagerPermissions(String actor, String actOn, String shopName, int permission) throws Exception;
+    MemberRoleInShop changeManagerPermissions(String actor, String actOn, String shopName, List<Integer> permission) throws Exception;
+
+    void addManagerPermissions(String actor, String actOn, String shopName, int permission) throws Exception;
 
     //4.11
-    Collection<UserIntr> getShopManagersAndPermissions(String userName, String shopName);
+    Collection<MemberRoleInShop> getShopManagersAndPermissions(String userName, String shopName) throws Exception;
 
     //4.13
     Collection<Purchase> getShopPurchaseHistory(String userName, String shopName);
 
     //admin functions
+
+    void addAdmin(String adminName) throws Exception;
 
     void removeShop(String adminName, String userName, String shopName);
 

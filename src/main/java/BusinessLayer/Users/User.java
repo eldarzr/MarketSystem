@@ -73,7 +73,10 @@ public class User {
         this.userType = userType;
     }
 
-    //we really should create functions at the market that calls all of this functions
+    public ConcurrentLinkedQueue<String> getShopsMessages() {
+        return shopsMessages;
+    }
+
     public void setTwoFactorEnabled(boolean twoFactorEnabled) {
         this.twoFactorEnabled = twoFactorEnabled;
     }

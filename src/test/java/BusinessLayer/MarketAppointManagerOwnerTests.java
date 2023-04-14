@@ -40,7 +40,7 @@ class MarketAppointManagerOwnerTests {
 
     @Test
     void appointShopOwner_failure1()  {
-       Exception exception = assertThrows(Exception.class, () ->   market.appointShopOwner("niv12","eldar","shop1"));
+        Exception exception = assertThrows(Exception.class, () ->   market.appointShopOwner("niv12","eldar","shop1"));
         System.out.println(exception.getMessage());
     }
 
