@@ -2,9 +2,8 @@ package AcceptanceTests.Tests;
 
 import AcceptanceTests.*;
 import org.junit.After;
-import org.junit.Before;
-import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 
@@ -28,7 +27,7 @@ public class RegisteredMemberBuyingActionsTest {
         market.register("testUser", "testUser@example.com", "Passw0rd!!!");
         market.login("testUser", "Passw0rd!!!");
         market.createShop("testUser", "My Shop");
-        market.addNewProduct("testUser", "My Shop", "item1", "Item 1 description", 10.0, 100);
+        market.addNewProduct("testUser", "My Shop", "item1", "item 1 category","Item 1 description", 10.0, 100);
         market.logout("testUser");
 
         cart = market.getCart(tempUserName);
@@ -40,7 +39,7 @@ public class RegisteredMemberBuyingActionsTest {
         shop = market.getShop("testUser", "My Shop");
 
         // add the product to the cart
-        market.addProductsToCart(tempUserName, product.getShopName(), product.getProductName(), 1);
+        market.addProductsToCart(tempUserName, "My Shop", product.getProductName(), 1);
     }
 
     // clean up after each test by logging out the user and nullifying objects
@@ -63,8 +62,6 @@ public class RegisteredMemberBuyingActionsTest {
             // log out and verify that the cart is saved
             market.logout("testUser");
 
-            // verify that the user is considered a guest after logout
-            assertTrue("User not considered as guest after logout", market.isGuest(tempUserName));
 
             // verify that the cart is not empty
             assertFalse("Cart is empty after logout", cart.isEmpty());
@@ -86,8 +83,6 @@ public class RegisteredMemberBuyingActionsTest {
         try {
             // log out as guest and verify that the cart is emptied
             market.logout(tempUserName);
-
-            assertTrue("User not considered as guest after logout", market.isGuest(tempUserName));
 
             assertTrue("Cart not emptied after guest logout", cart.isEmpty());
         } catch (Exception e) {

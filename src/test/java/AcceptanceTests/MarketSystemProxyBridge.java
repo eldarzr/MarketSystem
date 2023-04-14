@@ -1,7 +1,5 @@
 package AcceptanceTests;
 
-import BusinessLayer.Users.UserIntr;
-
 import java.util.Collection;
 
 public class MarketSystemProxyBridge implements MarketSystemBridge {
@@ -173,13 +171,6 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
     }
 
 
-
-    @Override
-    public Collection<UserIntr> getShopManagersAndPermissions(String userName, String shopName) throws Exception {
-        nullCheck();
-        return realBridge.getShopManagersAndPermissions(userName, shopName);
-    }
-
     @Override
     public Collection<PurchaseBridge> getShopPurchaseHistory(String userName, String shopName) {
         nullCheck();
@@ -242,51 +233,39 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
 
 
     @Override
-    public int getProductQuantityInShop(String shopName, String productName) {
+    public int getProductQuantityInShop(String shopName, String productName) throws Exception {
         nullCheck();
         return realBridge.getProductQuantityInShop(shopName, productName);
     }
 
     @Override
-    public String getProductDescription(String shopName, String productName) {
+    public String getProductDescription(String shopName, String productName) throws Exception {
         nullCheck();
         return realBridge.getProductDescription(shopName, productName);
     }
 
     @Override
-    public double getProductPrice(String shopName, String productName) {
+    public double getProductPrice(String shopName, String productName) throws Exception {
         nullCheck();
         return realBridge.getProductPrice(shopName, productName);
     }
 
     @Override
-    public String getShopFounder(String shopName) {
+    public String getShopFounder(String shopName) throws Exception {
         nullCheck();
         return realBridge.getShopFounder(shopName);
     }
 
     @Override
-    public Collection<String> getShopOwners(String shopName) {
+    public Collection<String> getShopOwners(String shopName) throws Exception {
         nullCheck();
         return realBridge.getShopOwners(shopName);
     }
 
     @Override
-    public Collection<String> getShopManagers(String shopName) {
+    public Collection<String> getShopManagers(String shopName) throws Exception {
         nullCheck();
         return realBridge.getShopManagers(shopName);
-    }
-
-    @Override
-    public int getQuantityOfProductPurchasedInShop(String shopName, String productName) {
-        nullCheck();
-        return realBridge.getQuantityOfProductPurchasedInShop(shopName, productName);
-    }
-
-    @Override
-    public int getQuantityOfProductPurchasedInShopByUser(String userName, String shopName, String productName) {
-        nullCheck();
-        return realBridge.getQuantityOfProductPurchasedInShopByUser(userName, shopName, productName);
     }
 
     @Override
@@ -300,21 +279,6 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
     }
 
     @Override
-    public boolean isGuest(String userName) {
-        return false;
-    }
-
-    @Override
-    public String[] getShopList() {
-        return new String[0];
-    }
-
-    @Override
-    public String[] getProductList(String shopName) {
-        return new String[0];
-    }
-
-    @Override
     public void updateProductQuantityInCart(String UserName, String shopName, String productName, int newQuantity) {
 
     }
@@ -325,7 +289,7 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
     }
 
     @Override
-    public void addNewProduct(String testUser, String shopName, String productName, String desc, double price, int quantity) {
+    public void addNewProduct(String testUser, String shopName, String productName, String desc,String category, double price, int quantity) {
 
     }
 

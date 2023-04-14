@@ -5,5 +5,4 @@ public interface ProductBridge {
     double getProductPrice();
     String getProductDescription();
     String getProductCategory();
-    String getShopName();
 }

@@ -4,7 +4,6 @@ import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
 import AcceptanceTests.PurchaseBridge;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -32,8 +31,8 @@ public class SystemAdminGetShopPurchaseHistoryTest {
         // create a shop using the shop owner account
         marketSystem.createShop(shopOwner, shopName);
         // add some products to the shop
-        marketSystem.addNewProduct(shopOwner, shopName, "product1", "description", 10, 50);
-        marketSystem.addNewProduct(shopOwner, shopName, "product2", "description", 5, 20);
+        marketSystem.addNewProduct(shopOwner, shopName, "product1","category", "description", 10, 50);
+        marketSystem.addNewProduct(shopOwner, shopName, "product2", "category","description", 5, 20);
         // make some purchases
         marketSystem.addProductsToCart("buyer1", shopName, "product1", 2);
         marketSystem.addProductsToCart("buyer1", shopName, "product2", 1);

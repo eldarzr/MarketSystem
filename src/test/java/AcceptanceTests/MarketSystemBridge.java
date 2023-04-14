@@ -1,7 +1,5 @@
 package AcceptanceTests;
 
-import BusinessLayer.Users.UserIntr;
-
 import java.util.Collection;
 
 public interface MarketSystemBridge {
@@ -74,8 +72,6 @@ public interface MarketSystemBridge {
 
     void changeManagerPermissions(String actor, String actOn, String shopName, int permission) throws Exception;
 
-    //4.11
-    Collection<UserIntr> getShopManagersAndPermissions(String userName, String shopName) throws Exception;
 
     //4.13
     Collection<PurchaseBridge> getShopPurchaseHistory(String userName, String shopName);
@@ -106,41 +102,30 @@ public interface MarketSystemBridge {
     //connect to payment adapter and delivery adapter
     void purchaseCart(String userName);
 
-    int getProductQuantityInShop(String shopName, String productName);
+    int getProductQuantityInShop(String shopName, String productName) throws Exception;
 
-    String getProductDescription(String shopName, String productName);
+    String getProductDescription(String shopName, String productName) throws Exception;
 
-    double getProductPrice(String shopName, String productName);
+    double getProductPrice(String shopName, String productName) throws Exception;
 
-    String getShopFounder(String shopName);
+    String getShopFounder(String shopName) throws Exception;
 
-    Collection<String> getShopOwners(String shopName);
-
-
-
-    Collection<String> getShopManagers(String shopName);
+    Collection<String> getShopOwners(String shopName) throws Exception;
 
 
 
-    int getQuantityOfProductPurchasedInShop(String shopName, String productName);
+    Collection<String> getShopManagers(String shopName) throws Exception;
 
-    int getQuantityOfProductPurchasedInShopByUser(String userName, String shopName, String productName);
 
     void clearData();
 
     void addPaymentProvider(PaymentServiceProviderBridge paymentSystem);
 
-    boolean isGuest(String userName);
-
-    String[] getShopList();
-
-    String[] getProductList(String shopName);
-
     void updateProductQuantityInCart(String UserName, String shopName, String productName, int newQuantity);
 
     void removeProductsFromCart(String UserName, String shopName, String productName);
 
-    void addNewProduct(String testUser, String shopName, String productName, String desc, double price, int quantity);
+    void addNewProduct(String testUser, String shopName, String productName,String category, String desc, double price, int quantity) throws Exception;
 
     void purchaseCart(String userName, String cardNumber, String cardName, String cardDate, String cardVerificationCode);
 
@@ -148,11 +133,11 @@ public interface MarketSystemBridge {
 
     void setDiscountPolicy(SystemDiscountPolicyBridge systemDiscountPolicyBridge);
 
-    boolean isShopOwner(String ownerUserName, String shopName);
+    boolean isShopOwner(String ownerUserName, String shopName) throws Exception;
 
-    boolean isShopManager(String ownerUserName, String shopName);
+    boolean isShopManager(String ownerUserName, String shopName) throws Exception;
 
-    Collection<Integer> getManagerPermissionsInShop(String shopManager, String shopName);
+    Collection<Integer> getManagerPermissionsInShop(String shopManager, String shopName) throws Exception;
 
     void removeShopOwner(String ShopOwner, String shopOwner, String shopName);
 }

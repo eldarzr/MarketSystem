@@ -25,8 +25,8 @@ public class ShopOwnerGetPurchaseHistoryTest {
         marketSystem.register(shopOwner,"mail@post.org", "Passw0rd!!!");
         marketSystem.createShop(shopOwner, shopName);
         // add some products to the shop
-        marketSystem.addNewProduct(shopOwner, shopName, "product1", "description", 10, 50);
-        marketSystem.addNewProduct(shopOwner, shopName, "product2", "description", 5, 20);
+        marketSystem.addNewProduct(shopOwner, shopName, "product1", "category","description", 10, 50);
+        marketSystem.addNewProduct(shopOwner, shopName, "product2", "category","description", 5, 20);
         // make some purchases
         marketSystem.addProductsToCart("buyer1",shopName, "product1", 2);
         marketSystem.addProductsToCart("buyer1",shopName, "product2", 1);

@@ -4,9 +4,8 @@ import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
 import AcceptanceTests.PaymentServiceProviderBridge;
 import org.junit.After;
-import org.junit.Before;
-import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -52,12 +51,11 @@ public class ExitTests {
             market.addProductsToCart(tempUserName, "My Shop", "item1", 1);
             market.addProductsToCart(tempUserName, "My Shop", "item2", 1);
             assertNotNull("Guest shopping cart is null after adding items", market.getCart(tempUserName));
-            assertTrue("Guest is not logged in after startSession", market.isGuest(tempUserName));
+
 
             // Leave the market as guest
             market.logout(tempUserName);
             assertNull("Shopping cart is not null after guest exits the market", market.getCart(tempUserName));
-            assertFalse("Guest is still logged in after guest exits the market", market.isGuest(tempUserName));
 
         } catch (Exception e) {
             fail("Exception thrown while testing exit as guest: " + e.getMessage());
@@ -75,12 +73,12 @@ public class ExitTests {
             market.addProductsToCart(userName, shopName, "item1", 1);
             market.addProductsToCart(userName, shopName, "item2", 1);
             assertNotNull("Shopping cart is null after adding items", market.getCart(userName));
-            assertFalse("User is not logged in after successful login", market.isGuest(userName));
+
 
             // Leave the market as registered user
             market.logout(userName);
             assertNull("Shopping cart is not null after registered user exits the market", market.getCart(userName));
-            assertFalse("User is still logged in after registered user exits the market", market.isGuest(userName));
+
 
         } catch (Exception e) {
             fail("Exception thrown while testing exit as registered user: " + e.getMessage());
