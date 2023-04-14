@@ -3,12 +3,8 @@ package BusinessLayer;
 import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-
-import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -73,14 +69,14 @@ class MarketPurchsae {
 
     @org.junit.jupiter.api.Test
     void addProductToCartAndBuyIt() throws Exception {
-        market.addProductToCart(cNames[0],shopNames[0],prodNames[0],quantity[0]-1);
+        market.addProductsToCart(cNames[0],shopNames[0],prodNames[0],quantity[0]-1);
         market.purchaseCart(cNames[0],paymentDetails,supplyDetails);
     }
 
     @org.junit.jupiter.api.Test
     void purchaseByGuest() throws Exception {
         String guestName = market.startSession();
-        market.addProductToCart(guestName,shopNames[0],prodNames[0],quantity[0]-1);
+        market.addProductsToCart(guestName,shopNames[0],prodNames[0],quantity[0]-1);
         market.purchaseCart(guestName,paymentDetails,supplyDetails);
     }
 
@@ -88,14 +84,14 @@ class MarketPurchsae {
     void purchaseByGuestFail() throws Exception {
         String guestName = market.startSession();
         assertThrows(Exception.class, () -> {
-            market.addProductToCart(guestName,shopNames[0],prodNames[0],quantity[0]+1);
+            market.addProductsToCart(guestName,shopNames[0],prodNames[0],quantity[0]+1);
         },"able to add product with not enough quantity");
     }
 
     @org.junit.jupiter.api.Test
     void purchaseByGuestFail_quantityChanged() throws Exception {
         String guestName = market.startSession();
-        market.addProductToCart(guestName,shopNames[0],prodNames[0],quantity[0]);
+        market.addProductsToCart(guestName,shopNames[0],prodNames[0],quantity[0]);
         market.updateProductQuantity(usersName[0],shopNames[0],prodNames[0],quantity[0]-1);
         assertThrows(Exception.class, () -> {
             market.purchaseCart(guestName,paymentDetails,supplyDetails);

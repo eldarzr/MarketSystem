@@ -7,8 +7,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -47,25 +45,25 @@ class MarketCartTests {
 
     @Test
     void addProductToCartSuccess() throws Exception {
-        market.addProductToCart(usersName[0], shopNames[0], prodNames[0], quantity[0]);
+        market.addProductsToCart(usersName[0], shopNames[0], prodNames[0], quantity[0]);
         assertEquals(prodNames[0], market.getCart(usersName[0]).getAllProducts().get(0).getName());
     }
 
     @Test
     void addProductToCartSuccessLogout() throws Exception {
         String userName = market.logout(usersName[0]);
-        market.addProductToCart(userName, shopNames[0], prodNames[0], quantity[0]);
+        market.addProductsToCart(userName, shopNames[0], prodNames[0], quantity[0]);
         assertEquals(prodNames[0], market.getCart(userName).getAllProducts().get(0).getName());
     }
 
     @Test
     void addProductToCartFailQuantity() throws Exception {
-        assertThrows(Exception.class, () -> market.addProductToCart(usersName[0], shopNames[0], prodNames[0], Integer.MAX_VALUE));
+        assertThrows(Exception.class, () -> market.addProductsToCart(usersName[0], shopNames[0], prodNames[0], Integer.MAX_VALUE));
     }
 
     @Test
     void removeProductToCartSuccess() throws Exception {
-        market.addProductToCart(usersName[0], shopNames[0], prodNames[0], quantity[0]);
+        market.addProductsToCart(usersName[0], shopNames[0], prodNames[0], quantity[0]);
         market.removeProductFromCart(usersName[0], shopNames[0], prodNames[0]);
         assertEquals(0, market.getCart(usersName[0]).getAllProducts().size());
     }
@@ -73,7 +71,7 @@ class MarketCartTests {
     @Test
     void removeProductToCartSuccessLogout() throws Exception {
         String userName = market.logout(usersName[0]);
-        market.addProductToCart(userName, shopNames[0], prodNames[0], quantity[0]);
+        market.addProductsToCart(userName, shopNames[0], prodNames[0], quantity[0]);
         market.removeProductFromCart(userName, shopNames[0], prodNames[0]);
         assertEquals(0, market.getCart(userName).getAllProducts().size());
     }
@@ -85,7 +83,7 @@ class MarketCartTests {
 
     @Test
     void updateProductToCartSuccess() throws Exception {
-        market.addProductToCart(usersName[0], shopNames[0], prodNames[0], quantity[0]);
+        market.addProductsToCart(usersName[0], shopNames[0], prodNames[0], quantity[0]);
         market.updateCartProductQuantity(usersName[0], shopNames[0], prodNames[0], 1);
         Cart cart = market.getCart(usersName[0]);
         ShopBag shopBag = cart.getShoppingBag(shopNames[0]);
@@ -96,7 +94,7 @@ class MarketCartTests {
     @Test
     void updateProductToCartSuccessLogout() throws Exception {
         String userName = market.logout(usersName[0]);
-        market.addProductToCart(userName, shopNames[0], prodNames[0], quantity[0]);
+        market.addProductsToCart(userName, shopNames[0], prodNames[0], quantity[0]);
         market.updateCartProductQuantity(userName, shopNames[0], prodNames[0], 1);
         Cart cart = market.getCart(userName);
         ShopBag shopBag = cart.getShoppingBag(shopNames[0]);

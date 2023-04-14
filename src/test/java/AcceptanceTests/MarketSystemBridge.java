@@ -95,12 +95,12 @@ public interface MarketSystemBridge {
 
     ShopBagBridge getShopBag(String userName, String ShopName);
 
-    void addProductsToCart(String userName, String shopName, String productName, int quantity);
+    void addProductsToCart(String userName, String shopName, String productName, int quantity) throws Exception;
 
-    void updateProductsFromCart(String userName, String shopName, String productName, int newQuantity);
+    void updateProductsFromCart(String userName, String shopName, String productName, int newQuantity) throws Exception;
 
     //connect to payment adapter and delivery adapter
-    void purchaseCart(String userName);
+    void purchaseCart(String userName) throws Exception;
 
     int getProductQuantityInShop(String shopName, String productName) throws Exception;
 
@@ -121,15 +121,15 @@ public interface MarketSystemBridge {
 
     void addPaymentProvider(PaymentServiceProviderBridge paymentSystem);
 
-    void updateProductQuantityInCart(String UserName, String shopName, String productName, int newQuantity);
+    void updateProductQuantityInCart(String UserName, String shopName, String productName, int newQuantity) throws Exception;
 
-    void removeProductsFromCart(String UserName, String shopName, String productName);
+    void removeProductsFromCart(String UserName, String shopName, String productName) throws Exception;
 
     void addNewProduct(String testUser, String shopName, String productName,String category, String desc, double price, int quantity) throws Exception;
 
-    void purchaseCart(String userName, String cardNumber, String cardName, String cardDate, String cardVerificationCode);
+    void purchaseCart(String userName, String cardNumber, String cardName, String cardDate, String cardVerificationCode) throws Exception;
 
-    void purchaseCart(String userName, String cardNumber, String cardName, String cardDate, String cardVerificationCode, String discountCode);
+    void purchaseCart(String userName, String cardNumber, String cardName, String cardDate, String cardVerificationCode, String discountCode) throws Exception;
 
     void setDiscountPolicy(SystemDiscountPolicyBridge systemDiscountPolicyBridge);
 

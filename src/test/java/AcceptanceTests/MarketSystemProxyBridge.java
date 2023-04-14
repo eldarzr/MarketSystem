@@ -214,19 +214,19 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
     }
 
     @Override
-    public void addProductsToCart(String userName, String shopName, String productName, int quantity) {
+    public void addProductsToCart(String userName, String shopName, String productName, int quantity) throws Exception {
         nullCheck();
         realBridge.addProductsToCart(userName, shopName, productName, quantity);
     }
 
     @Override
-    public void updateProductsFromCart(String userName, String shopName, String productName, int newQuantity) {
+    public void updateProductsFromCart(String userName, String shopName, String productName, int newQuantity) throws Exception {
         nullCheck();
         realBridge.updateProductsFromCart(userName, shopName, productName, newQuantity);
     }
 
     @Override
-    public void purchaseCart(String userName) {
+    public void purchaseCart(String userName) throws Exception {
         nullCheck();
         realBridge.purchaseCart(userName);
     }

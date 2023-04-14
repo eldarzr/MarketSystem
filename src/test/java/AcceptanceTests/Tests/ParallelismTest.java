@@ -49,8 +49,19 @@ public class ParallelismTest {
         marketSystem.addNewProduct(user1, shopName, productName, "category","description", 10, 1);
 
         // User1 and User2 both try to buy the product
-        Runnable task1 = () -> marketSystem.addProductsToCart(user1, shopName, productName, 1);
-        Runnable task2 = () -> marketSystem.addProductsToCart(user2, shopName, productName, 1);
+        Runnable task1 = () -> {
+            try{
+                marketSystem.addProductsToCart(user1, shopName, productName, 1);
+            }catch (Exception e){
+            }
+        };
+        Runnable task2 = () -> {
+            try{
+                marketSystem.addProductsToCart(user2, shopName, productName, 1);
+            }catch (Exception e){
+
+            }
+        };
         executor.submit(task1);
         executor.submit(task2);
 
@@ -83,7 +94,13 @@ public class ParallelismTest {
                 e.printStackTrace();
             }
         };
-        Runnable task2 = () -> marketSystem.addProductsToCart(user, shopName, productName, 1);
+        Runnable task2 = () -> {
+            try{
+                marketSystem.addProductsToCart(user, shopName, productName, 1);
+            }catch (Exception e){
+
+            }
+        };
         executor.submit(task1);
         executor.submit(task2);
 

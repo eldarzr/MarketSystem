@@ -1,6 +1,8 @@
 package AcceptanceTests;
 
 import BusinessLayer.Enums.ManageType;
+import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
+import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.Market;
 import BusinessLayer.MarketIntr;
 import BusinessLayer.MemberRoleInShop;
@@ -47,7 +49,8 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     }
 
     public void login(String userName, String password) {
-        market.login(userName, password);
+        String guestName = market.startSession();
+        market.login(guestName,userName, password);
     }
 
     @Override
@@ -199,20 +202,20 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
         return new ShopBagRealBridge(bag);
     }
 
-    public void addProductsToCart(String userName, String shopName, String productName, int quantity) {
+    public void addProductsToCart(String userName, String shopName, String productName, int quantity) throws Exception {
         market.addProductsToCart(userName, shopName, productName, quantity);
     }
 
-    public void updateProductsFromCart(String userName, String shopName, String productName, int newQuantity) {
-        market.updateProductsFromCart(userName, shopName, productName, newQuantity);
+    public void updateProductsFromCart(String userName, String shopName, String productName, int newQuantity) throws Exception {
+        market.updateCartProductQuantity(userName, shopName, productName, newQuantity);
     }
 
-    public void purchaseCart(String userName) {
-        market.purchaseCart(userName);
+    public void purchaseCart(String userName) throws Exception {
+        market.purchaseCart(userName,ExternalToolsFactory.createMockPaymentDetails(),ExternalToolsFactory.createMockSupplyDetails());;
     }
 
     public int getProductQuantityInShop(String shopName, String productName) throws Exception {
-        market.login(adminUserName,ADMIN_PASSWORD);
+        login(adminUserName,ADMIN_PASSWORD);
         Shop shop = market.searchShop(adminUserName,shopName);
         market.logout(adminUserName);
         for(ShopProduct p : shop.getProducts())
@@ -221,7 +224,7 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     }
 
     public String getProductDescription(String shopName, String productName) throws Exception {
-        market.login(adminUserName,ADMIN_PASSWORD);
+        login(adminUserName,ADMIN_PASSWORD);
         Shop shop = market.searchShop(adminUserName,shopName);
         market.logout(adminUserName);
         for(ShopProduct p : shop.getProducts())
@@ -230,7 +233,7 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     }
 
     public double getProductPrice(String shopName, String productName) throws Exception {
-        market.login(adminUserName,ADMIN_PASSWORD);
+        login(adminUserName,ADMIN_PASSWORD);
         Shop shop = market.searchShop(adminUserName,shopName);
         market.logout(adminUserName);
         for(ShopProduct p : shop.getProducts())
@@ -239,14 +242,14 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     }
 
     public String getShopFounder(String shopName) throws Exception {
-        market.login(adminUserName,ADMIN_PASSWORD);
+        login(adminUserName,ADMIN_PASSWORD);
         Shop shop = market.searchShop(adminUserName,shopName);
         market.logout(adminUserName);
         return shop.getFounder();
     }
 
     public Collection<String> getShopOwners(String shopName) throws Exception {
-        market.login(adminUserName,ADMIN_PASSWORD);
+        login(adminUserName,ADMIN_PASSWORD);
         Collection<MemberRoleInShop> memberRoleInShops  =market.getShopManagersAndPermissions(adminUserName,shopName);
         market.logout(adminUserName);
         Collection<String> ret = new ArrayList<>();
@@ -257,7 +260,7 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     }
 
     public Collection<String> getShopManagers(String shopName) throws Exception {
-        market.login(adminUserName,ADMIN_PASSWORD);
+        login(adminUserName,ADMIN_PASSWORD);
         Collection<MemberRoleInShop> memberRoleInShops  =market.getShopManagersAndPermissions(adminUserName,shopName);
         market.logout(adminUserName);
         Collection<String> ret = new ArrayList<>();
@@ -278,7 +281,7 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     }
 
     @Override
-    public void updateProductQuantityInCart(String UserName, String shopName, String productName, int newQuantity) {
+    public void updateProductQuantityInCart(String UserName, String shopName, String productName, int newQuantity) throws Exception {
         Cart cart = market.getCart(UserName);
         ShoppingCartBridge shoppingCartBridge = new ShoppingCartRealBridge(cart);
         int currentQuantity = shoppingCartBridge.getQuantityOfProduct(productName);
@@ -287,7 +290,7 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     }
 
     @Override
-    public void removeProductsFromCart(String UserName, String shopName, String productName) {
+    public void removeProductsFromCart(String UserName, String shopName, String productName) throws Exception {
         Cart cart = market.getCart(UserName);
         ShoppingCartBridge shoppingCartBridge = new ShoppingCartRealBridge(cart);
         int currentQuantity = shoppingCartBridge.getQuantityOfProduct(productName);
@@ -301,13 +304,15 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     }
 
     @Override
-    public void purchaseCart(String userName, String cardNumber, String cardName, String cardDate, String cardVerificationCode) {
-        market.purchaseCart(userName);
+    public void purchaseCart(String userName, String cardNumber, String cardName, String cardDate, String cardVerificationCode) throws Exception {
+        PaymentDetails paymentDetails = new CreditCardPaymentDetails(cardNumber,cardDate,cardDate,cardName,cardVerificationCode,"12");
+        market.purchaseCart(userName,paymentDetails,ExternalToolsFactory.createMockSupplyDetails());
     }
 
     @Override
-    public void purchaseCart(String userName, String cardNumber, String cardName, String cardDate, String cardVerificationCode, String discountCode) {
-        market.purchaseCart(userName);
+    public void purchaseCart(String userName, String cardNumber, String cardName, String cardDate, String cardVerificationCode, String discountCode) throws Exception {
+        PaymentDetails paymentDetails = new CreditCardPaymentDetails(cardNumber,cardDate,cardDate,cardName,cardVerificationCode,"12");
+        market.purchaseCart(userName,paymentDetails,ExternalToolsFactory.createMockSupplyDetails());
     }
 
     @Override
@@ -327,7 +332,7 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
 
     @Override
     public Collection<Integer> getManagerPermissionsInShop(String shopManager, String shopName) throws Exception {
-        market.login(adminUserName,ADMIN_PASSWORD);
+        login(adminUserName,ADMIN_PASSWORD);
         Collection<MemberRoleInShop>  memberRoleInShops = market.getShopManagersAndPermissions(adminUserName,shopName);
         market.logout(adminUserName);
         for ( MemberRoleInShop m : memberRoleInShops){
