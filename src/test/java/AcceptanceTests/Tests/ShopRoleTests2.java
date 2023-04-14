@@ -19,7 +19,7 @@ public class ShopRoleTests2 {
     private static String shopName;
 
     @BeforeClass
-    public static void setUpClass() {
+    public static void setUpClass() throws Exception {
         // Set up market system
         marketSystem = new MarketSystemRealBridge();
         marketSystem.init();
@@ -66,7 +66,7 @@ public class ShopRoleTests2 {
     }
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws Exception {
         // Open shop
         marketSystem.openShop(shopOwner, shopName);
     }

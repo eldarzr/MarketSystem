@@ -14,7 +14,7 @@ class MarketCreateShopTest {
 	String[] shopNames = {"shop1", "shop2"};
 
 	@BeforeEach
-	void setUp() {
+	void setUp() throws Exception {
 		market = new Market();
 		market.init();
 	}

@@ -19,6 +19,9 @@ public class Market implements MarketIntr{
     ShopHandler shopHandler;
     private final int SHOP_DISTANCE_MAX_LIMIT = 2;
     private final int PRODUCT_DISTANCE_MAX_LIMIT = 2;
+    private final String ADMIN_NAME = "admin";
+    private final String ADMIN_MAIL = "admin@gmail.com";
+    private final String ADMIN_PASSWORD = "Aa123456";
 
     public Market() {
         usersHandler = UsersHandler.getInstance();
@@ -26,8 +29,13 @@ public class Market implements MarketIntr{
     }
 
     @Override
-    public void init() {
+    public void init() throws Exception {
+        loadAdmin();
+    }
 
+    private void loadAdmin() throws Exception {
+        register(ADMIN_NAME, ADMIN_MAIL, ADMIN_PASSWORD);
+        addAdmin(ADMIN_NAME);
     }
 
     //todo: niv
@@ -223,6 +231,11 @@ public class Market implements MarketIntr{
     @Override
     public Collection<PurchaseIntr> getShopPurchaseHistory(String userName, String shopName) {
         return null;
+    }
+
+    @Override
+    public void addAdmin(String adminName) throws Exception {
+        usersHandler.addAdmin(adminName);
     }
 
     @Override

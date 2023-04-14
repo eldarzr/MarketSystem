@@ -10,7 +10,7 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
     }
 
     @Override
-    public void init() {
+    public void init() throws Exception {
         nullCheck();
         realBridge.init();
     }

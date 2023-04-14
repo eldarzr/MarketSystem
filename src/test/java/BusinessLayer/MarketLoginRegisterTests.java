@@ -11,7 +11,7 @@ class MarketLoginRegisterTests {
     Market market;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
         market = new Market();
     }
 
