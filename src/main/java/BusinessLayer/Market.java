@@ -108,7 +108,7 @@ public class Market implements MarketIntr{
 
     //next version
     @Override
-    public Collection<Purchase> getUserPurchaseHistory(String userName) {
+    public Collection<PurchaseIntr> getUserPurchaseHistory(String userName) {
         throw new NotImplementedException();
     }
 
@@ -270,7 +270,7 @@ public class Market implements MarketIntr{
 
     //todo: naor
     @Override
-    public Collection<Purchase> getShopPurchaseHistory(String userName, String shopName) {
+    public Collection<PurchaseIntr> getShopPurchaseHistory(String userName, String shopName) {
         return null;
     }
 
@@ -291,12 +291,12 @@ public class Market implements MarketIntr{
 
     //todo : niv
     @Override
-    public Collection<Purchase> getShopPurchaseHistoryByAdmin(String adminName, String shopName) {
+    public Collection<PurchaseIntr> getShopPurchaseHistoryByAdmin(String adminName, String shopName) {
         throw new NotImplementedException();
     }
 
     @Override
-    public Collection<Purchase> getUserPurchaseHistoryByAdmin(String adminName, String memberName) {
+    public Collection<PurchaseIntr> getUserPurchaseHistoryByAdmin(String adminName, String memberName) {
         throw new NotImplementedException();
     }
 
@@ -313,7 +313,7 @@ public class Market implements MarketIntr{
     }
 
     @Override
-    public void addProductToCart(String userName, String shopName, String productName, int quantity) throws Exception {
+    public void addProductsToCart(String userName, String shopName, String productName, int quantity) throws Exception {
         User user = usersHandler.findLoginUser(userName);
         Shop shop = shopHandler.getShop(shopName);
         Product product = shop.getProduct(productName,quantity);
