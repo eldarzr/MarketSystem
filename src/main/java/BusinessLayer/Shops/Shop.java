@@ -48,6 +48,10 @@ public class Shop implements ShopIntr {
 		return open;
 	}
 
+	public boolean isActive() {
+		return active;
+	}
+
 	public void setState(boolean open) {
 		this.open = open;
 	}
@@ -248,21 +252,19 @@ public class Shop implements ShopIntr {
 			shopProduct.setQuantity(shopProduct.getQuantity() - productsAndQuantities.get(productName).getQuantity());
 		}
 	}
-	
-	public void newPurchase(String userName, ConcurrentHashMap<String, ShopBagItem> productsAndQuantities) {
-		//username is for history purpose will do it in another commit
-		for(String productName : productsAndQuantities.keySet()){
-			ShopProduct shopProduct = products.get(productName);
-			shopProduct.setQuantity(shopProduct.getQuantity() - productsAndQuantities.get(productName).getQuantity());
+
+	public void validateAvailability(ConcurrentHashMap<String, ShopBagItem> productsAndQuantities) throws Exception {
+		for (String productName : productsAndQuantities.keySet()) {
+			int realQuantity = products.get(productName).getQuantity();
+			int desireQuantity = productsAndQuantities.get(productName).getQuantity();
+			if (realQuantity < desireQuantity)
+				throw new Exception(String.format("there is not enough quantity of product : %s at shop : %s. desire quantity : %d , real quantity: %d", productName, this.getName(), desireQuantity, realQuantity));
 		}
 	}
 
-
-	public void newPurchase(String userName, ConcurrentHashMap<String, ShopBagItem> productsAndQuantities) {
-		//username is for history purpose will do it in another commit
-		for(String productName : productsAndQuantities.keySet()){
-			ShopProduct shopProduct = products.get(productName);
-			shopProduct.setQuantity(shopProduct.getQuantity() - productsAndQuantities.get(productName).getQuantity());
+	public void revertPurchase(String name, ConcurrentHashMap<String, ShopBagItem> productsAndQuantities) {
+		for(String productName : productsAndQuantities.keySet()) {
+			products.get(productName).addQuantity(productsAndQuantities.get(productName).getQuantity());
 		}
 	}
 	

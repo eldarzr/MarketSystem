@@ -1,5 +1,6 @@
 package BusinessLayer;
 
+import BusinessLayer.Enums.UserType;
 import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
@@ -8,14 +9,11 @@ import BusinessLayer.Users.*;
 import BusinessLayer.Purchases.*;
 
 import org.apache.commons.lang3.NotImplementedException;
-import org.apache.commons.text.similarity.LevenshteinDistance;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.*;
-import java.util.stream.Collectors;
 
 public class Market implements MarketIntr{
 
@@ -35,7 +33,7 @@ public class Market implements MarketIntr{
     }
 
     @Override
-    public void init() throws IOException {
+    public void init() throws Exception {
 		loadAdmin();
         createLogger();
         logger.info("init finished");
@@ -70,6 +68,7 @@ public class Market implements MarketIntr{
             logger.severe("Failed to create file handler: " + e.getMessage());
             throw new IOException("Failed to create file handler: " + e.getMessage());
         }
+    }
 
 
     //return guest username
@@ -271,7 +270,7 @@ public class Market implements MarketIntr{
 
     //todo: naor
     @Override
-    public Collection<PurchaseIntr> getShopPurchaseHistory(String userName, String shopName) {
+    public Collection<Purchase> getShopPurchaseHistory(String userName, String shopName) {
         return null;
     }
 

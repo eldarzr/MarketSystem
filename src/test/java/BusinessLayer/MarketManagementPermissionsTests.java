@@ -28,8 +28,9 @@ class MarketManagementPermissionsTests {
         market = new Market();
         market.init();
         for(int i = 0; i < usersName.length-1; i++) {
+            String guestName = market.startSession();
             market.register(usersName[i], emails[i], passwords[i]);
-            market.login(usersName[i], passwords[i]);
+            market.login(guestName,usersName[i], passwords[i]);
             market.createShop(usersName[i], shopNames[i]);
         }
         market.register(usersName[4], emails[4], passwords[4]);

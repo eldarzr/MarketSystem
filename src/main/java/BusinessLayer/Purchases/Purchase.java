@@ -11,14 +11,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class Purchase {
+public class Purchase implements PurchaseIntr{
 
     List<Shop> shops;
     User user;
 
     PaymentDetails paymentDetails;
     SupplyDetails supplyDetails;
-
 
     public Purchase(User user, List<Shop> shops, PaymentDetails paymentDetails, SupplyDetails supplyDetails) {
         this.user = user;
@@ -27,6 +26,7 @@ public class Purchase {
         this.supplyDetails = supplyDetails;
     }
 
+    @Override
     public void process() throws Exception {
         handleStock();
         try{

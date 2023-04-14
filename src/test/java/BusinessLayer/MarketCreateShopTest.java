@@ -17,7 +17,7 @@ class MarketCreateShopTest {
 
 	String guestName;
 	@BeforeEach
-	void setUp() throws IOException {
+	void setUp() throws Exception {
 		market = new Market();
 		market.init();
 		guestName = market.startSession();

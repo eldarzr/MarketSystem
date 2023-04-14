@@ -14,7 +14,7 @@ class MarketStartCloseSession {
         Market market;
 
         @BeforeEach
-        void setUp() throws IOException {
+        void setUp() throws Exception {
             market = new Market();
             market.init();
         }

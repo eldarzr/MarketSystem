@@ -101,6 +101,13 @@ public class UsersHandler {
         return user;
     }
 
+    public User findUserByName(String userName) {
+        User user = loginUsers.get(userName);
+        if(user == null)
+            throw new IllegalArgumentException(String.format("user name: %s is unknown",userName));
+        return user;
+    }
+
     public boolean isLoggedIn(String userName){
         return loginUsers.containsKey(userName);
     }
@@ -130,11 +137,6 @@ public class UsersHandler {
             throw new IllegalArgumentException("Password must contain at least one lower case letter");
         if(!hasDigit)
             throw new IllegalArgumentException("password must contain at lesat one number");
-    }
-
-    public void reset() {
-        members.clear();
-        loginUsers.clear();
     }
 
     public String createGuest() {
@@ -181,18 +183,20 @@ public class UsersHandler {
     }
 
     public void reset() {
-        allUsers.clear();
+        members.clear();
         loginUsers.clear();
     }
 
 	public boolean isAdmin(String userName) {
-        return allUsers.get(userName).getUserType() == ADMIN;
+        return findMemberByName(userName).getUserType() == ADMIN;
 	}
 
     public void addAdmin(String adminName) throws Exception {
-        User admin = findUserByName(adminName);
+        User admin = findMemberByName(adminName);
         if(admin.getUserType() == ADMIN)
             throw new Exception(String.format("the user %s is already admin", adminName));
         admin.setUserType(ADMIN);
     }
+
+
 }
