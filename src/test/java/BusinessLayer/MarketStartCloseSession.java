@@ -1,7 +1,10 @@
 package BusinessLayer;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -10,9 +13,9 @@ class MarketStartCloseSession {
 
         Market market = new Market();
 
-        @BeforeEach
-        void setUp() {
-
+        @BeforeAll
+        void setUp() throws IOException {
+            market.init();
         }
 
         @AfterEach

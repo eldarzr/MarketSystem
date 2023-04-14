@@ -16,6 +16,10 @@ public class ShopBag {
 
     ConcurrentHashMap<String, ShopBagItem> productsAndQuantities;
 
+    public ShopBag() {
+        this.productsAndQuantities = new ConcurrentHashMap<>();
+    }
+
     public void addProduct(Product product, int quantity) {
         ShopBagItem shopBagItem = new ShopBagItem(product,quantity);
         productsAndQuantities.put(product.getName(),shopBagItem);

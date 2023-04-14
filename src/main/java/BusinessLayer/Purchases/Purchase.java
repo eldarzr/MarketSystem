@@ -23,6 +23,8 @@ public class Purchase {
     public Purchase(User user, List<Shop> shops, PaymentDetails paymentDetails, SupplyDetails supplyDetails) {
         this.user = user;
         this.shops = shops;
+        this.paymentDetails = paymentDetails;
+        this.supplyDetails = supplyDetails;
     }
 
     public void process() throws Exception {
