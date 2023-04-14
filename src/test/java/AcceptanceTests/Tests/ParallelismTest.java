@@ -18,7 +18,7 @@ public class ParallelismTest {
     private ExecutorService executor;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws Exception {
         // Instantiate the MarketSystem and initialize it
         marketSystem = new MarketSystemRealBridge();
         marketSystem.init();

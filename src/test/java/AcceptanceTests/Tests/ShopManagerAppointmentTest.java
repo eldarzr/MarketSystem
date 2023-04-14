@@ -14,7 +14,7 @@ public class ShopManagerAppointmentTest {
     private String category = "category";
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws Exception {
         // initialize the market system
         market = new MarketSystemRealBridge();
         market.init();

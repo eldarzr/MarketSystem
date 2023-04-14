@@ -10,7 +10,7 @@ public class LoginTests {
     private MarketSystemBridge market= new MarketSystemRealBridge();
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws Exception {
         market.init();
     }
 

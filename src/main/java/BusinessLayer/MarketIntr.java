@@ -13,7 +13,7 @@ import java.util.*;
 public interface MarketIntr {
 
     //open and initialize the market system
-    void init();
+    void init() throws Exception;
 
     public void resetAll();
 
@@ -87,6 +87,8 @@ public interface MarketIntr {
     Collection<PurchaseIntr> getShopPurchaseHistory(String userName, String shopName);
 
     //admin functions
+
+    void addAdmin(String adminName) throws Exception;
 
     void removeShop(String adminName, String userName, String shopName);
 

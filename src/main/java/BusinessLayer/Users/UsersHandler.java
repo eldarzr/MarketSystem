@@ -11,6 +11,8 @@ import javax.mail.internet.InternetAddress;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
+import static BusinessLayer.Enums.UserType.*;
+
 public class UsersHandler {
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -132,6 +134,13 @@ public class UsersHandler {
     }
 
 	public boolean isAdmin(String userName) {
-        return allUsers.get(userName).getUserType() == UserType.ADMIN;
+        return allUsers.get(userName).getUserType() == ADMIN;
 	}
+
+    public void addAdmin(String adminName) throws Exception {
+        User admin = findUserByName(adminName);
+        if(admin.getUserType() == ADMIN)
+            throw new Exception(String.format("the user %s is already admin", adminName));
+        admin.setUserType(ADMIN);
+    }
 }

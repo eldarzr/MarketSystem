@@ -13,7 +13,7 @@ public class AppointUserAsOwnerAndManagerParallelismTest {
     MarketSystemBridge system;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws Exception {
         system = new MarketSystemRealBridge();
     }
 

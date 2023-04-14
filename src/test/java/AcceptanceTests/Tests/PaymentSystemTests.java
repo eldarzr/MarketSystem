@@ -19,7 +19,7 @@ public class PaymentSystemTests extends TestCase {
     private String category = "category";
 
     @BeforeEach
-    public void setup() {
+    public void setUp() throws Exception {
         marketSystem = new MarketSystemRealBridge();
         paymentServiceProvider = new PaymentServiceProviderRealBridge();
         paymentMethod = new PaymentMethodRealBridge();
