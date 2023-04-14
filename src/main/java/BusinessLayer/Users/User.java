@@ -30,6 +30,7 @@ public class User {
     public User(String guestName) {
         name = guestName;
         userType = UserType.GUEST;
+        currentCart = new Cart();
     }
 
     public void sendMessage(String message) {

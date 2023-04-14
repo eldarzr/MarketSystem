@@ -145,7 +145,8 @@ public class Purchase {
         Thread.sleep(20);
     }
 
-    public void visitRevert(CreditCardPaymentDetails creditCardPaymentDetails) {
+    public void visitRevert(CreditCardPaymentDetails creditCardPaymentDetails) throws InterruptedException {
         //connect to credit card company for revert
+        Thread.sleep(20);
     }
 }

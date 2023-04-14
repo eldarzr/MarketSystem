@@ -50,7 +50,7 @@ public class CreditCardPaymentDetails implements PaymentDetails{
     }
 
     @Override
-    public void acceptRevert(Purchase purchase) {
+    public void acceptRevert(Purchase purchase) throws InterruptedException {
         purchase.visitRevert(this);
     }
 }

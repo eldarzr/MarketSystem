@@ -93,4 +93,6 @@ public class Product implements ProductIntr{
 	public Lock getProductLock() {
 		return productLock;
 	}
+
+	private void aquireLock()
 }

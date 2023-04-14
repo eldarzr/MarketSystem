@@ -11,10 +11,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class MarketStartCloseSession {
 
-        Market market = new Market();
+        Market market;
 
-        @BeforeAll
+        @BeforeEach
         void setUp() throws IOException {
+            market = new Market();
             market.init();
         }
 
