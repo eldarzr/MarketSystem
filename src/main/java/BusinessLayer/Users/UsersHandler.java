@@ -9,11 +9,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import static BusinessLayer.Enums.UserType.*;
 
 public class UsersHandler {
+    private static final Logger logger = Logger.getLogger("Market");
+
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Bean
@@ -23,7 +26,10 @@ public class UsersHandler {
 
     private static volatile UsersHandler instance;
 
-    ConcurrentHashMap<String,User> allUsers = new ConcurrentHashMap<>();
+    private int nextGuestId;
+    Object guestIdLock;
+
+    ConcurrentHashMap<String,User> members = new ConcurrentHashMap<>();
     ConcurrentHashMap<String,User> loginUsers = new ConcurrentHashMap<>();
 
     public static UsersHandler getInstance(){
@@ -39,6 +45,15 @@ public class UsersHandler {
 
     private UsersHandler() {
         this.passwordEncoder = passwordEncoder();
+        guestIdLock = new Object();
+    }
+
+    public void register(String guestName,String userName, String email, String password) throws Exception{
+        register(userName,email,password);
+        User guestUser = loginUsers.remove(guestName);
+        if(guestUser != null){
+            //todo: find new User, and copy guest cart to new user
+        }
     }
 
     public void register(String userName, String email, String password) throws Exception{
@@ -47,11 +62,16 @@ public class UsersHandler {
         checkValidEmail(email);
         String encodedPassword = passwordEncoder.encode(password);
         User nuser = new User(userName,email,encodedPassword);
-        allUsers.put(userName,nuser);
+        members.put(userName,nuser);
+    }
+
+    public void login(String guestName, String userName, String password) {
+        login(userName,password);
+        loginUsers.remove(guestName);
     }
 
     public void login(String userName, String password) {
-        User user = findUserByName(userName);
+        User user = findMemberByName(userName);
         if(isLoggedIn(user.getName()))
             throw new IllegalArgumentException(String.format("User: %s already logged in",userName));
         if(!passwordEncoder.matches(password,user.getPassword()))
@@ -59,16 +79,33 @@ public class UsersHandler {
         loginUsers.put(user.getName(),user);
     }
 
-    public void logout(String userName){
+    public void disconnect(String userName){
         if(!isLoggedIn(userName))
-            throw new IllegalArgumentException(String.format("user: %s already is not logged in", userName));
+            throw new IllegalArgumentException(String.format("user: %s is not logged in", userName));
         loginUsers.remove(userName);
     }
 
-    public User findUserByName(String targetName) {
-        if(allUsers.containsKey(targetName))
-            return allUsers.get(targetName);
-        throw new IllegalArgumentException(String.format("user name: %s is unknown",targetName));
+    //finds logged in members or guests
+    public User findLoginUser(String targetName) {
+        //this get method returns null if the key doesn't exist
+        User user = loginUsers.get(targetName);
+        if(user == null)
+            throw new IllegalArgumentException(String.format("User name:%s doesn't exist or is not currently logged in",targetName));
+        return user;
+    }
+
+    public User findMemberByName(String targetName) {
+        User user = members.get(targetName);
+        if(user == null)
+            throw new IllegalArgumentException(String.format("user name: %s is unknown",targetName));
+        return user;
+    }
+
+    public User findUserByName(String userName) {
+        User user = loginUsers.get(userName);
+        if(user == null)
+            throw new IllegalArgumentException(String.format("user name: %s is unknown",userName));
+        return user;
     }
 
     public boolean isLoggedIn(String userName){
@@ -102,6 +139,23 @@ public class UsersHandler {
             throw new IllegalArgumentException("password must contain at lesat one number");
     }
 
+    public String createGuest() {
+        String nextGuestName = getNextGuestName();
+        User user = new User(nextGuestName);
+        //guest is added only to login users, the reason is that as long as he is connected to the system we want to threat him as a login user
+        loginUsers.put(nextGuestName,user);
+        return nextGuestName;
+    }
+
+    private String getNextGuestName(){
+        String guestName = "Guest";
+        synchronized (guestIdLock){
+            guestName += nextGuestId;
+            nextGuestId++;
+        }
+        return guestName;
+    }
+
     private void checkValidUserName(String username) {
         int lower_bound = 4;
         int upper_bound = 16;
@@ -129,18 +183,20 @@ public class UsersHandler {
     }
 
     public void reset() {
-        allUsers.clear();
+        members.clear();
         loginUsers.clear();
     }
 
 	public boolean isAdmin(String userName) {
-        return allUsers.get(userName).getUserType() == ADMIN;
+        return findMemberByName(userName).getUserType() == ADMIN;
 	}
 
     public void addAdmin(String adminName) throws Exception {
-        User admin = findUserByName(adminName);
+        User admin = findMemberByName(adminName);
         if(admin.getUserType() == ADMIN)
             throw new Exception(String.format("the user %s is already admin", adminName));
         admin.setUserType(ADMIN);
     }
+
+
 }
