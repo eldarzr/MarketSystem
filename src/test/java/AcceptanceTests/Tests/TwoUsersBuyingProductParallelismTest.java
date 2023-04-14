@@ -4,9 +4,8 @@ import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
 import AcceptanceTests.PurchaseBridge;
 import org.junit.After;
-import org.junit.Before;
-import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 import java.util.concurrent.*;
@@ -45,7 +44,7 @@ public class TwoUsersBuyingProductParallelismTest {
 
             // Add a product to the shop
             productName = "product1";
-            marketSystem.addNewProduct(user1, shopName, productName, "description", 10.0,1);
+            marketSystem.addNewProduct(user1, shopName, productName, "category","description", 10.0,1);
         }
 
         @After

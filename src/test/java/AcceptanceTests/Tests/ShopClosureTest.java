@@ -57,7 +57,7 @@ public class ShopClosureTest {
         productName = "TestProduct";
         productPrice = 10;
         try {
-            marketSystem.addNewProduct(shopOwner, shopName, productName, "blah blah", productPrice, 1);
+            marketSystem.addNewProduct(shopOwner, shopName, productName, "catergory","desc", productPrice, 1);
         } catch (Exception e) {
             fail("Failed to set up test: " + e.getMessage());
         }

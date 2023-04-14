@@ -1,10 +1,11 @@
 package AcceptanceTests.Tests;
 import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
+import AcceptanceTests.ProductBridge;
+import AcceptanceTests.ShopBridge;
 import org.junit.After;
-import org.junit.Before;
-import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.*;
 
@@ -41,10 +42,9 @@ public class GuestBuyingActionsTest {
     public void testGuestCanViewShops() {
         try {
             // Guest can view existing shops
-            String[] shops = market.getShopList();
-            assertNotNull("List of shops is null", shops);
-            assertTrue("List of shops is empty", shops.length > 0);
-            assertTrue("Shop list does not contain expected shop", contains(shops, "My Shop"));
+            ShopBridge shop = market.getShop(tempUserName,"My Shop");
+            assertNotNull("shop is null", shop);
+            assertEquals("Something went wrong with the shop's name", "My Shop", shop.getShopName());
 
         } catch (Exception e) {
             fail("Exception thrown while testing guest can view shops: " + e.getMessage());
@@ -55,24 +55,13 @@ public class GuestBuyingActionsTest {
     public void testGuestCanViewProducts() {
         try {
             // Guest can view products in existing shops
-            String[] shops = market.getShopList();
-            String shopName = shops[0];
-            String[] products = market.getProductList(shopName);
-            assertNotNull("List of products is null", products);
-            assertTrue("List of products is empty", products.length > 0);
-            assertTrue("Product list does not contain expected product", contains(products, "item1"));
+            ProductBridge product = market.getProduct(tempUserName,"My Shop","item1");
+            assertNotNull("product is null", product);
+            assertEquals("Wrong product name", "item1", product.getProductName());
 
         } catch (Exception e) {
             fail("Exception thrown while testing guest can view products: " + e.getMessage());
         }
     }
 
-    private boolean contains(String[] arr, String val) {
-        for (String s : arr) {
-            if (s.equals(val)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

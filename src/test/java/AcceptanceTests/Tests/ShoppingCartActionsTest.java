@@ -5,9 +5,8 @@ import AcceptanceTests.MarketSystemRealBridge;
 import AcceptanceTests.ProductBridge;
 import AcceptanceTests.ShoppingCartBridge;
 import org.junit.After;
-import org.junit.Before;
-import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 
@@ -17,6 +16,7 @@ public class ShoppingCartActionsTest {
     private MarketSystemBridge market= new MarketSystemRealBridge();
     private String tempUserName;
     private String category = "category";
+    private String shopName = "My Shop";
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -58,7 +58,7 @@ public class ShoppingCartActionsTest {
             Collection<ProductBridge> products = market.basicSearch(tempUserName, "item1");
             ProductBridge product = products.iterator().next();
 
-            market.addProductsToCart(tempUserName, product.getShopName(), product.getProductName(), 1);
+            market.addProductsToCart(tempUserName, shopName, product.getProductName(), 1);
 
             assertFalse("Cart is empty", cart.isEmpty());
 
@@ -78,11 +78,11 @@ public class ShoppingCartActionsTest {
             Collection<ProductBridge> products = market.basicSearch(tempUserName, "item1");
             ProductBridge product = products.iterator().next();
 
-            market.addProductsToCart(tempUserName, product.getShopName(), product.getProductName(), 1);
+            market.addProductsToCart(tempUserName, shopName, product.getProductName(), 1);
 
             assertTrue("Product not in cart", cart.getProductNames().contains(product.getProductName()));
 
-            market.removeProductsFromCart(tempUserName, product.getShopName(), product.getProductName());
+            market.removeProductsFromCart(tempUserName, shopName, product.getProductName());
 
             assertFalse("Product still in cart", cart.getProductNames().contains(product.getProductName()));
             assertEquals("Incorrect quantity of product in cart", 0, cart.getQuantityOfProduct(product.getProductName()));
@@ -101,10 +101,10 @@ public class ShoppingCartActionsTest {
             ProductBridge product = products.iterator().next();
 
             // add one item to the cart
-            market.addProductsToCart(tempUserName, product.getShopName(), product.getProductName(), 1);
+            market.addProductsToCart(tempUserName, shopName, product.getProductName(), 1);
 
             // update the quantity to 2
-            market.updateProductQuantityInCart(tempUserName, product.getShopName(), product.getProductName(), 2);
+            market.updateProductQuantityInCart(tempUserName, shopName, product.getProductName(), 2);
 
             // check that the product is in the cart and has the correct quantity
             assertTrue("Product not in cart", cart.getProductNames().contains(product.getProductName()));

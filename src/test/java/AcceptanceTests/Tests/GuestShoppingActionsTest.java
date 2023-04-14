@@ -5,9 +5,8 @@ import AcceptanceTests.MarketSystemRealBridge;
 import AcceptanceTests.ProductBridge;
 import AcceptanceTests.ShoppingCartBridge;
 import org.junit.After;
-import org.junit.Before;
-import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 
@@ -18,10 +17,11 @@ public class GuestShoppingActionsTest {
     private MarketSystemBridge market= new MarketSystemRealBridge();
     private String tempUserName;
     private String category = "category";
+    private String shopName = "My Shop";
 
     @BeforeEach
     public void setUp() throws Exception {
-        market = new MarketSystemRealBridge();
+
         market.init();
         tempUserName = market.startSession();
 
@@ -54,13 +54,13 @@ public class GuestShoppingActionsTest {
             // Add product to cart
             Collection<ProductBridge> products = market.basicSearch(tempUserName, "item1");
             ProductBridge product = products.iterator().next();
-            market.addProductsToCart(tempUserName, product.getShopName(), product.getProductName(), 1);
+            market.addProductsToCart(tempUserName, shopName, product.getProductName(), 1);
             assertTrue("Product not added to cart", cart.getQuantityOfProduct(product.getProductName()) > 0);
 
             // Add another product to cart
             products = market.basicSearch(tempUserName, "item4");
             product = products.iterator().next();
-            market.addProductsToCart(tempUserName, product.getShopName(), product.getProductName(), 2);
+            market.addProductsToCart(tempUserName, shopName, product.getProductName(), 2);
             assertTrue("Product not added to cart", cart.getQuantityOfProduct(product.getProductName()) > 0);
             assertEquals("Incorrect quantity of product in cart", 2, cart.getQuantityOfProduct(product.getProductName()));
 
@@ -106,7 +106,7 @@ public class GuestShoppingActionsTest {
             // Add product to cart with negative quantity
             Collection<ProductBridge> products = market.basicSearch(tempUserName, "item2");
             ProductBridge product = products.iterator().next();
-            market.addProductsToCart(tempUserName, product.getShopName(), product.getProductName(), -1);
+            market.addProductsToCart(tempUserName, shopName, product.getProductName(), -1);
             fail("Added product with negative quantity to cart");
         } catch (Exception e) {
             // Expected exception
@@ -121,7 +121,7 @@ public class GuestShoppingActionsTest {
             // Add product to cart with zero quantity
             Collection<ProductBridge> products = market.basicSearch(tempUserName, "item1");
             ProductBridge product = products.iterator().next();
-            market.addProductsToCart(tempUserName, product.getShopName(), product.getProductName(), 0);
+            market.addProductsToCart(tempUserName, shopName, product.getProductName(), 0);
             assertEquals("Cart is not empty", 0, cart.calculateTotalPrice(), 0.0);
         } catch (Exception e) {
             fail("Exception thrown while testing add product to cart with zero quantity: " + e.getMessage());

@@ -71,7 +71,7 @@ public class ChangeManagerPermissionsTest {
     }
 
     @Test
-    public void testChangeManagerPermissions() {
+    public void testChangeManagerPermissions() throws Exception {
         // Set initial permissions
         try {
             marketSystem.changeManagerPermissions(shopOwner, shopManager, shopName, 1);

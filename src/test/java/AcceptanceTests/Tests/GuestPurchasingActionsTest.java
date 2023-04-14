@@ -2,9 +2,8 @@ package AcceptanceTests.Tests;
 
 import AcceptanceTests.*;
 import org.junit.After;
-import org.junit.Before;
-import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 
@@ -16,10 +15,10 @@ public class GuestPurchasingActionsTest {
     private ShoppingCartBridge cart;
     private ShopBridge shop;
     private ProductBridge product;
+    private String shopName = "My Shop";
 
     @BeforeEach
     public void setUp() throws Exception {
-        market = new MarketSystemRealBridge();
         market.init();
         tempUserName = market.startSession();
 
@@ -27,7 +26,7 @@ public class GuestPurchasingActionsTest {
         market.register("testUser", "testUser@example.com", "Passw0rd!!!");
         market.login("testUser", "Passw0rd!!!");
         market.createShop("testUser", "My Shop");
-        market.addNewProduct("testUser", "My Shop", "item1", "Item 1 description", 10.0, 100);
+        market.addNewProduct("testUser", "My Shop", "item1", "item 1 category","Item 1 description", 10.0, 100);
         market.logout("testUser");
 
         cart = market.getCart(tempUserName);
@@ -50,7 +49,7 @@ public class GuestPurchasingActionsTest {
     @Test
     public void testPurchaseCartWithoutDiscount() {
         try {
-            market.addProductsToCart(tempUserName, product.getShopName(), product.getProductName(), 1);
+            market.addProductsToCart(tempUserName, shopName, product.getProductName(), 1);
 
             double expectedTotalPrice = product.getProductPrice();
             double actualTotalPrice = cart.calculateTotalPrice();
@@ -59,8 +58,8 @@ public class GuestPurchasingActionsTest {
             market.purchaseCart(tempUserName, "1234567890123456", "John Doe", "01/23", "123");
             assertTrue("Cart not emptied after purchase", cart.isEmpty());
 
-            int expectedQuantityInStock = market.getProductQuantityInShop(product.getShopName(), product.getProductName()) - 1;
-            int actualQuantityInStock = market.getProductQuantityInShop(product.getShopName(), product.getProductName());
+            int expectedQuantityInStock = market.getProductQuantityInShop(shopName, product.getProductName()) - 1;
+            int actualQuantityInStock = market.getProductQuantityInShop(shopName, product.getProductName());
             assertEquals("Incorrect quantity of product in stock after purchase", expectedQuantityInStock, actualQuantityInStock);
 
         } catch (Exception e) {
@@ -88,7 +87,7 @@ public class GuestPurchasingActionsTest {
                 }
             });
 
-            market.addProductsToCart(tempUserName, product.getShopName(), product.getProductName(), 2);
+            market.addProductsToCart(tempUserName, shopName, product.getProductName(), 2);
 
             double expectedTotalPrice = product.getProductPrice() * 2 * 0.9;
             double actualTotalPrice = cart.getTotalPriceWithDiscount("TEST10");
@@ -96,8 +95,8 @@ public class GuestPurchasingActionsTest {
 
             market.purchaseCart(tempUserName, "1234567890123456", "John Doe", "01/23", "123", "TEST10");
             assertTrue("Cart not emptied after purchase", cart.isEmpty());
-            int expectedQuantityInStock = market.getProductQuantityInShop(product.getShopName(), product.getProductName()) - 2;
-            int actualQuantityInStock = market.getProductQuantityInShop(product.getShopName(), product.getProductName());
+            int expectedQuantityInStock = market.getProductQuantityInShop(shopName, product.getProductName()) - 2;
+            int actualQuantityInStock = market.getProductQuantityInShop(shopName, product.getProductName());
             assertEquals("Incorrect quantity of product in stock after purchase with shop discount", expectedQuantityInStock, actualQuantityInStock);
 
         } catch (Exception e) {
@@ -120,7 +119,7 @@ public class GuestPurchasingActionsTest {
                 }
             });
 
-            market.addProductsToCart(tempUserName, product.getShopName(), product.getProductName(), 3);
+            market.addProductsToCart(tempUserName, shopName, product.getProductName(), 3);
 
             double expectedTotalPrice = product.getProductPrice() * 3 * 0.95;
             double actualTotalPrice = cart.getTotalPriceWithDiscount(null);
@@ -129,8 +128,8 @@ public class GuestPurchasingActionsTest {
             market.purchaseCart(tempUserName, "1234567890123456", "John Doe", "01/23", "123", null);
             assertTrue("Cart not emptied after purchase", cart.isEmpty());
 
-            int expectedQuantityInStock = market.getProductQuantityInShop(product.getShopName(), product.getProductName()) - 3;
-            int actualQuantityInStock = market.getProductQuantityInShop(product.getShopName(), product.getProductName());
+            int expectedQuantityInStock = market.getProductQuantityInShop(shopName, product.getProductName()) - 3;
+            int actualQuantityInStock = market.getProductQuantityInShop(shopName, product.getProductName());
             assertEquals("Incorrect quantity of product in stock after purchase with system discount", expectedQuantityInStock, actualQuantityInStock);
 
         } catch (Exception e) {
