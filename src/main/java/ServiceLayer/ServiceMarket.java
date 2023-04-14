@@ -1,15 +1,12 @@
 package ServiceLayer;
 
-import BusinessLayer.Enums.UserType;
 import BusinessLayer.Market;
-import BusinessLayer.MarketIntr;
 import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.Purchases.Cart;
 import BusinessLayer.Purchases.PurchaseIntr;
 import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Shops.ProductIntr;
 import BusinessLayer.Shops.Shop;
-import BusinessLayer.Users.User;
 
 import java.util.Collection;
 import java.util.List;
@@ -22,180 +19,370 @@ public class ServiceMarket {
 		this.market = new Market();
 	}
 
-	
-	public void init() {
-		market.init();
+
+	public Response init() {
+		try {
+			market.init();
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
 	}
 
-	
-	public void resetAll() {
-		market.resetAll();
+
+	public Response resetAll() {
+		try {
+			market.resetAll();
+			return new Response();
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
 	}
 
-	
-	public String startSession() {
-		return market.startSession();
+
+	public ResponseT<String> startSession() {
+		try {
+		return new ResponseT<String>(market.startSession());
+
+		} catch (Exception exception) {
+			return new ResponseT(exception.getMessage());
+		}
 	}
 
-	
-	public void closeSession(String userName) {
-		market.closeSession(userName);
+
+	public Response closeSession(String userName) {
+		try {
+			market.closeSession(userName);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
 	}
 
-	public void register(String userName, String email, String password) throws Exception {
-		market.register(userName, email, password);
+	public Response register(String userName, String email, String password) throws Exception {
+		try {
+			market.register(userName, email, password);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
 	}
 
-	public void login(String userName, String password) {
-		market.login(userName, password);
+	public Response login(String userName, String password) {
+		try {
+			market.login(userName, password);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
 	}
 
-	public void logout(String userName) {
-		market.logout(userName);
+	public Response logout(String userName) {
+		try {
+			market.logout(userName);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
 	}
 
 	public Collection<PurchaseIntr> getUserPurchaseHistory(String userName) {
 		return market.getUserPurchaseHistory(userName);
 	}
 
-	public void createShop(String userName, String shopName) throws Exception {
-		market.createShop(userName, shopName);
+	public Response createShop(String userName, String shopName) throws Exception {
+		try {
+			market.createShop(userName, shopName);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
 	}
 
-	public void openShop(String userName, String shopName) {
-		market.openShop(userName, shopName);
+	public Response openShop(String userName, String shopName) {
+		try {
+			market.openShop(userName, shopName);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
 	}
 
-	public void closeShop(String userName, String shopName) throws Exception {
-		market.closeShop(userName, shopName);
+	public Response closeShop(String userName, String shopName) throws Exception {
+		try {
+			market.closeShop(userName, shopName);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
 	}
 
-	public void addNewProduct(String userName, String shopName, String productName, String category, String desc, double price) throws Exception {
-		market.addNewProduct(userName, shopName, productName, category, desc, price);
+	public Response addNewProduct(String userName, String shopName, String productName, String category, String desc, double price) throws Exception {
+		try {
+			market.addNewProduct(userName, shopName, productName, category, desc, price);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
 	}
 
-	public void removeProduct(String userName, String shopName, String productName) throws Exception {
-		market.removeProduct(userName, shopName, productName);
+	public Response removeProduct(String userName, String shopName, String productName) throws Exception {
+		try {
+			market.removeProduct(userName, shopName, productName);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
 	}
 
-	public void updateProductName(String userName, String shopName, String productOldName, String productNewName) throws Exception {
-		market.updateProductName(userName, shopName, productOldName, productNewName);
+	public Response updateProductName(String userName, String shopName, String productOldName, String productNewName) throws Exception {
+		try {
+			market.updateProductName(userName, shopName, productOldName, productNewName);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
 	}
 
-	public void updateProductDesc(String userName, String shopName, String productName, String productNewDesc) throws Exception {
-		market.updateProductDesc(userName, shopName, productName, productNewDesc);
+	public Response updateProductDesc(String userName, String shopName, String productName, String productNewDesc) throws Exception {
+		try {
+			market.updateProductDesc(userName, shopName, productName, productNewDesc);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
 	}
 
-	public void updateProductPrice(String userName, String shopName, String productName, double price) throws Exception {
-		market.updateProductPrice(userName, shopName, productName, price);
+	public Response updateProductPrice(String userName, String shopName, String productName, double price) throws Exception {
+		try {
+			market.updateProductPrice(userName, shopName, productName, price);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
 	}
 
-	public void updateProductQuantity(String userName, String shopName, String productName, int quantity) throws Exception {
-		market.updateProductQuantity(userName, shopName, productName, quantity);
+	public Response updateProductQuantity(String userName, String shopName, String productName, int quantity) throws Exception {
+		try {
+			market.updateProductQuantity(userName, shopName, productName, quantity);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
 	}
 
-	public void addProductItems(String userName, String shopName, String productName, int quantity) throws Exception {
-		market.addProductItems(userName, shopName, productName, quantity);
+	public Response addProductItems(String userName, String shopName, String productName, int quantity) throws Exception {
+		try {
+			market.addProductItems(userName, shopName, productName, quantity);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
 	}
 
-	public Shop searchShop(String userName, String shopName) throws Exception {
-		return market.searchShop(userName, shopName);
+	public ResponseT<Shop> searchShop(String userName, String shopName) throws Exception {
+		try {
+		return new ResponseT<>(market.searchShop(userName, shopName));
+
+		} catch (Exception exception) {
+			return new ResponseT(exception.getMessage());
+		}
 	}
 
-	
-	public ProductIntr getProduct(String userName, String shopName, String productName) throws Exception {
+
+	public ResponseT<ProductIntr> getProduct(String userName, String shopName, String productName) throws Exception {
+		try {
 		return null;
+
+		} catch (Exception exception) {
+			return new ResponseT(exception.getMessage());
+		}
 	}
 
-	public List<Shop> getShops(String userName, String shopName) throws Exception {
-		return market.getShops(userName, shopName);
+	public ResponseT<List<Shop>> getShops(String userName, String shopName) throws Exception {
+		try {
+		return new ResponseT<>(market.getShops(userName, shopName));
+
+		} catch (Exception exception) {
+			return new ResponseT(exception.getMessage());
+		}
 	}
 
-	public List<ProductIntr> basicSearch(String userName, String productName) throws Exception {
-		return market.basicSearch(userName, productName);
+	public ResponseT<List<ProductIntr>> basicSearch(String userName, String productName) throws Exception {
+		try {
+		return new ResponseT<>(market.basicSearch(userName, productName));
+
+		} catch (Exception exception) {
+			return new ResponseT(exception.getMessage());
+		}
 	}
 
-	public List<ProductIntr> extendedSearch(String userName, String productName, double minPrice, double maxPrice, String category) throws Exception {
-		return market.extendedSearch(userName, productName, minPrice, maxPrice, category);
+	public ResponseT<List<ProductIntr>> extendedSearch(String userName, String productName, double minPrice, double maxPrice, String category) throws Exception {
+		try {
+		return new ResponseT<>(market.extendedSearch(userName, productName, minPrice, maxPrice, category));
+
+		} catch (Exception exception) {
+			return new ResponseT(exception.getMessage());
+		}
 	}
 
-	public void appointShopOwner(String appointedBy, String appointee, String shopName) throws Exception {
-		market.appointShopOwner(appointedBy, appointee, shopName);
+	public Response appointShopOwner(String appointedBy, String appointee, String shopName) throws Exception {
+		try {
+			market.appointShopOwner(appointedBy, appointee, shopName);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
 	}
 
-	
-	public void appointShopManager(String appointedBy, String appointee, String shopName) throws Exception {
-		market.appointShopManager(appointedBy, appointee, shopName);
+
+	public Response appointShopManager(String appointedBy, String appointee, String shopName) throws Exception {
+		try {
+			market.appointShopManager(appointedBy, appointee, shopName);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
 	}
 
-	
-	public void removeShopManager(String managerName, String userToRemove, String shopName) {
-		market.removeShopManager(managerName, userToRemove, shopName);
+
+	public Response removeShopManager(String managerName, String userToRemove, String shopName) {
+		try {
+			market.removeShopManager(managerName, userToRemove, shopName);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
 	}
 
-	
-	public MemberRoleInShop changeManagerPermissions(String actor, String actOn, String shopName, List<Integer> permission) throws Exception {
-		return changeManagerPermissions(actor, actOn, shopName, permission);
+
+	public ResponseT<MemberRoleInShop> changeManagerPermissions(String actor, String actOn, String shopName, List<Integer> permission) throws Exception {
+		try {
+		return new ResponseT<>(market.changeManagerPermissions(actor, actOn, shopName, permission));
+
+		} catch (Exception exception) {
+			return new ResponseT(exception.getMessage());
+		}
 	}
 
-	
-	public void addManagerPermissions(String actor, String actOn, String shopName, int permission) throws Exception {
-		market.addManagerPermissions(actor, actOn, shopName, permission);
+
+	public Response addManagerPermissions(String actor, String actOn, String shopName, int permission) throws Exception {
+		try {
+			market.addManagerPermissions(actor, actOn, shopName, permission);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
 	}
 
-	
-	public Collection<MemberRoleInShop> getShopManagersAndPermissions(String userName, String shopName) throws Exception {
-		return market.getShopManagersAndPermissions(userName, shopName);
+
+	public ResponseT<Collection<MemberRoleInShop>> getShopManagersAndPermissions(String userName, String shopName) throws Exception {
+		try {
+		return new ResponseT<>(market.getShopManagersAndPermissions(userName, shopName));
+
+		} catch (Exception exception) {
+			return new ResponseT(exception.getMessage());
+		}
 	}
 
-	
-	public Collection<PurchaseIntr> getShopPurchaseHistory(String userName, String shopName) {
-		return market.getShopPurchaseHistory(userName, shopName);
+
+	public ResponseT<Collection<PurchaseIntr>> getShopPurchaseHistory(String userName, String shopName) {
+		try {
+		return new ResponseT<>(market.getShopPurchaseHistory(userName, shopName));
+
+		} catch (Exception exception) {
+			return new ResponseT(exception.getMessage());
+		}
 	}
 
-	
-	public void removeShop(String adminName, String userName, String shopName) {
-		market.removeShop(adminName, userName, shopName);
+
+	public Response removeShop(String adminName, String userName, String shopName) {
+		try {
+			market.removeShop(adminName, userName, shopName);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
 	}
 
-	
-	public void blockUser(String adminName, String userName) {
-		market.blockUser(adminName, userName);
+
+	public Response blockUser(String adminName, String userName) {
+		try {
+			market.blockUser(adminName, userName);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
 	}
 
-	
-	public Collection<PurchaseIntr> getShopPurchaseHistoryByAdmin(String adminName, String shopName) {
-		return market.getShopPurchaseHistoryByAdmin(adminName, shopName);
+
+	public ResponseT<Collection<PurchaseIntr>> getShopPurchaseHistoryByAdmin(String adminName, String shopName) {
+		try {
+		return new ResponseT<>(market.getShopPurchaseHistoryByAdmin(adminName, shopName));
+
+		} catch (Exception exception) {
+			return new ResponseT(exception.getMessage());
+		}
 	}
 
-	
-	public Collection<PurchaseIntr> getUserPurchaseHistoryByAdmin(String adminName, String memberName) {
-		return market.getUserPurchaseHistoryByAdmin(adminName, memberName);
+
+	public ResponseT<Collection<PurchaseIntr>> getUserPurchaseHistoryByAdmin(String adminName, String memberName) {
+		try {
+		return new ResponseT<>(market.getUserPurchaseHistoryByAdmin(adminName, memberName));
+
+		} catch (Exception exception) {
+			return new ResponseT(exception.getMessage());
+		}
 	}
 
-	
-	public Cart getCart(String userName) {
-		return market.getCart(userName);
+
+	public ResponseT<Cart> getCart(String userName) {
+		try {
+		return new ResponseT<>(market.getCart(userName));
+
+		} catch (Exception exception) {
+			return new ResponseT(exception.getMessage());
+		}
 	}
 
-	
-	public ShopBag getShopBag(String userName, String shopName) {
-		return market.getShopBag(userName, shopName);
+
+	public ResponseT<ShopBag> getShopBag(String userName, String shopName) {
+		try {
+		return new ResponseT<>(market.getShopBag(userName, shopName));
+
+		} catch (Exception exception) {
+			return new ResponseT(exception.getMessage());
+		}
 	}
 
-	
-	public void addProductsToCart(String userName, String shopName, String productName, int quantity) {
-		market.addProductsToCart(userName, shopName, productName, quantity);
+
+	public Response addProductsToCart(String userName, String shopName, String productName, int quantity) {
+		try {
+			market.addProductsToCart(userName, shopName, productName, quantity);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
 	}
 
-	
-	public void updateProductsFromCart(String userName, String shopName, String productName, int newQuantity) {
-		market.updateProductsFromCart(userName, shopName, productName, newQuantity);
+
+	public Response updateProductsFromCart(String userName, String shopName, String productName, int newQuantity) {
+		try {
+			market.updateProductsFromCart(userName, shopName, productName, newQuantity);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
 	}
 
-	
-	public void purchaseCart(String userName) {
-		market.purchaseCart(userName);
+
+	public Response purchaseCart(String userName) {
+		try {
+			market.purchaseCart(userName);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
 	}
 
 	// custom service methods for your application
