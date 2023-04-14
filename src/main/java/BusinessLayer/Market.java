@@ -1,74 +1,108 @@
 package BusinessLayer;
 
-import BusinessLayer.Enums.UserType;
+import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
+import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
+import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Shops.*;
 import BusinessLayer.Users.*;
 import BusinessLayer.Purchases.*;
 
 import org.apache.commons.lang3.NotImplementedException;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.similarity.LevenshteinDistance;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.regex.Pattern;
+import java.util.logging.*;
 import java.util.stream.Collectors;
 
 public class Market implements MarketIntr{
 
+    private static final Logger logger = Logger.getLogger("Market");
 
     UsersHandler usersHandler;
     ShopHandler shopHandler;
     private final int SHOP_DISTANCE_MAX_LIMIT = 2;
     private final int PRODUCT_DISTANCE_MAX_LIMIT = 2;
 
+    //we need to change Market to be singleton , it will be more comfortable with the logger and in future version
     public Market() {
         usersHandler = UsersHandler.getInstance();
         shopHandler = shopHandler.getInstance();
     }
 
     @Override
-    public void init() {
+    public void init() throws IOException {
+        createLogger();
+        logger.info("init finished");
+    }
+
+    private void createLogger() throws IOException {
+        // Create a file handler and set its formatter
+        try {
+            String logDirectory = "./logs";
+            File file = new File(logDirectory);
+
+            // Create directory if it does not exist
+            if (!file.exists()) {
+                file.mkdir();
+            }
+
+            FileHandler fileHandler = new FileHandler(logDirectory + "/Market.%u.%g.log");
+            SimpleFormatter formatter = new SimpleFormatter();
+            fileHandler.setFormatter(formatter);
+
+            // Add the file handler to the logger
+            logger.addHandler(fileHandler);
+
+            // Set the logging level to INFO
+            logger.setLevel(Level.INFO);
+        } catch (IOException e) {
+            logger.severe("Failed to create file handler: " + e.getMessage());
+            throw new IOException("Failed to create file handler: " + e.getMessage());
+        }
 
     }
 
-    //todo: niv
+    //return guest username
     @Override
     public String startSession() {
-        return null;
+        return usersHandler.createGuest();
     }
 
-    //todo: niv
     @Override
     public void closeSession(String userName) {
-
+        disconnect(userName);
     }
 
     @Override
     public void register(String userName, String email, String password) throws Exception {
         usersHandler.register(userName, email, password);
     }
-    @Override
-    public void login(String userName, String password) {
-        usersHandler.login(userName, password);
-    }
 
     @Override
-    public void logout(String userName) {
-        usersHandler.logout(userName);
+    public void login(String guestName, String userName, String password) {
+        usersHandler.login(guestName, userName, password);
     }
 
-    //todo: naor
+    //this function logout a member and return a guest name
+    // a guest does not suppose to call this function only for members
     @Override
-    public Collection<PurchaseIntr> getUserPurchaseHistory(String userName) {
+    public String logout(String userName) {
+        disconnect(userName);
+        return usersHandler.createGuest();
+    }
+
+    //the logic behind this function is that a member can log out and still be connected to the system as a guest.
+    //when a user closes is session the system will remove this guest from the login users list
+    private void disconnect(String userName){
+        usersHandler.disconnect(userName);
+    }
+
+    //next version
+    @Override
+    public Collection<Purchase> getUserPurchaseHistory(String userName) {
         throw new NotImplementedException();
     }
 
@@ -77,7 +111,7 @@ public class Market implements MarketIntr{
       if(!isLoggedIn(userName))
           throw new Exception(String.format("the user %s is not login", userName));
       //shopHandler.shopExists(shopName);
-      User user = findUserByName(userName);
+      User user = usersHandler.findMemberByName(userName);
       Shop shop = new Shop(shopName, userName);
       //user.addFoundedShop(shopName);
       shopHandler.addShop(shopName,shop);
@@ -92,10 +126,9 @@ public class Market implements MarketIntr{
     //todo: naor
     @Override
     public void closeShop(String userName, String shopName) throws Exception {
-        validateUserIsntGuest(userName);
-        isLoggedIn(userName);
+        usersHandler.findMemberByName(userName);
+        usersHandler.findLoginUser(userName);
         shopHandler.closeShop(userName,shopName);
-
     }
 
     @Override
@@ -108,8 +141,6 @@ public class Market implements MarketIntr{
             throw new Exception("there is already shop with that name");
         shops.get(shopName).addNewProduct(userName, productName, category, desc, price);
     }
-
-
 
     @Override
     public void removeProduct(String userName, String shopName, String productName) throws Exception {
@@ -225,7 +256,7 @@ public class Market implements MarketIntr{
 
     @Override
     public List<ProductIntr> basicSearch(String userName, String productName) throws Exception {
-        ConcurrentHashMap<String,Shop> shops =shopHandler.getShops();
+        ConcurrentHashMap<String,Shop> shops = shopHandler.getShops();
         return getProducts(userName, shops.keySet(), productName);
     }
 
@@ -238,28 +269,27 @@ public class Market implements MarketIntr{
 
     @Override
     public void appointShopOwner(String appointedBy, String appointee, String shopName) throws Exception {
-        validateUserIsntGuest(appointedBy);
+        usersHandler.findMemberByName(appointedBy);
         isLoggedIn(appointedBy);
-        User user = validateUserIsntGuest(appointee);
+        User user = usersHandler.findMemberByName(appointee);
         Shop reqShop = checkForShop(shopName);
         reqShop.setShopOwner(appointedBy,appointee , user::sendMessage);
     }
 
     public Shop checkForShop(String shopName) throws Exception {
         return shopHandler.getShop(shopName);
-//      reqShop.setShopOwner(actor,actOn);
     }
 
     @Override
     public void appointShopManager(String appointedBy, String appointee, String shopName) throws Exception {
-        validateUserIsntGuest(appointedBy);
+        usersHandler.findMemberByName(appointedBy);
         isLoggedIn(appointedBy);
-        User user = validateUserIsntGuest(appointee);
+        User user = usersHandler.findMemberByName(appointee);
         Shop reqShop = checkForShop(shopName);
         reqShop.setShopManager(appointedBy,appointee ,user::sendMessage);
     }
 
-    //todo: naor
+    //next version
     @Override
     public void removeShopManager(String managerName, String userToRemove, String shopName) {
         throw new NotImplementedException();
@@ -267,9 +297,9 @@ public class Market implements MarketIntr{
 
     @Override
     public void changeManagerPermissions(String actor, String actOn, String shopName,int permission) throws Exception {
-        validateUserIsntGuest(actor);
-        isLoggedIn(actor);
-        validateUserIsntGuest(actOn);
+        usersHandler.findMemberByName(actor);
+        usersHandler.findLoginUser(actor);
+        usersHandler.findMemberByName(actOn);
         Shop reqShop = checkForShop(shopName);
         reqShop.setManageOption(actor,actOn,permission);
     }
@@ -280,9 +310,10 @@ public class Market implements MarketIntr{
         return null;
     }
 
-    //todo: naor
+    //todo: niv
+    //only shop owner gets to see shop Purchase history
     @Override
-    public Collection<PurchaseIntr> getShopPurchaseHistory(String userName, String shopName) {
+    public Collection<Purchase> getShopPurchaseHistory(String userName, String shopName) {
         return null;
     }
 
@@ -296,44 +327,60 @@ public class Market implements MarketIntr{
         throw new NotImplementedException();
     }
 
+    //todo : niv
     @Override
-    public Collection<PurchaseIntr> getShopPurchaseHistoryByAdmin(String adminName, String shopName) {
+    public Collection<Purchase> getShopPurchaseHistoryByAdmin(String adminName, String shopName) {
         throw new NotImplementedException();
     }
 
     @Override
-    public Collection<PurchaseIntr> getUserPurchaseHistoryByAdmin(String adminName, String memberName) {
+    public Collection<Purchase> getUserPurchaseHistoryByAdmin(String adminName, String memberName) {
         throw new NotImplementedException();
     }
 
-    //todo: niv
+
     @Override
     public Cart getCart(String userName) {
-        return null;
+        return usersHandler.findLoginUser(userName).getCart();
     }
 
-    //todo: niv
+
     @Override
     public ShopBag getShopBag(String userName, String ShopName) {
-        return null;
+        return usersHandler.findLoginUser(userName).getCart().getShoppingBag(ShopName);
     }
+
+    @Override
+    public void addProductToCart(String userName, String shopName, String productName, int quantity) throws Exception {
+        User user = usersHandler.findLoginUser(userName);
+        Shop shop = shopHandler.getShop(shopName);
+        Product product = shop.getProduct(productName,quantity);
+        user.addProductToCart(shop.getName(),product,quantity);
+    }
+
+    @Override
+    public void removeProductFromCart(String userName, String shopName, String productName) throws Exception {
+        User user = usersHandler.findLoginUser(userName);
+        user.removeProductFromCart(shopName,productName);
+    }
+
 
     //todo: niv
     @Override
-    public void addProductsToCart(String userName, String shopName, String productName, int quantity) {
-
+    public void updateCartProductQuantity(String userName, String shopName, String productName, int newQuantity) throws Exception {
+        User user = usersHandler.findLoginUser(userName);
+        user.updateProductsFromCart(shopName,productName,newQuantity);
     }
 
-    //todo: niv
+    //I'm setting the basic logic behind this, we need to sit together and decide what to do with thread safety
+    //I know this is a big function, I don't mean to leave it that way it's just what I had in mind when trying to write this function
     @Override
-    public void updateProductsFromCart(String userName, String shopName, String productName, int newQuantity) {
-
-    }
-
-    //todo: niv
-    @Override
-    public void purchaseCart(String userName) {
-
+    public void purchaseCart(String userName, PaymentDetails paymentDetails, SupplyDetails supplyDetails) throws Exception {
+        User user = usersHandler.findLoginUser(userName);
+        List<Shop> shops = shopHandler.getShops(user.getCart().getShopsNames());
+        Purchase purchase = new Purchase(user,shops,paymentDetails,supplyDetails);
+        purchase.process();
+        //return invoice or order number or order summary something like this need to decide
     }
 
     //this function reset everything on the system, for now only use is for testing
@@ -346,18 +393,6 @@ public class Market implements MarketIntr{
 
     private boolean isLoggedIn(String userName) {
         return usersHandler.isLoggedIn(userName);
-    }
-
-    private User findUserByName(String userName) {
-        return usersHandler.findUserByName(userName);
-    }
-
-    private User validateUserIsntGuest(String userName) throws Exception {
-        User user = findUserByName(userName);
-//      User user = allUsers.get(appointedBy);
-        if(user.getUserType() == UserType.GUEST)
-            throw new Exception("guests cannot do it");
-        return user;
     }
 
 }

@@ -4,6 +4,7 @@ import BusinessLayer.Enums.ManagePermissionsEnum;
 import BusinessLayer.Enums.ManageType;
 import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.MessageObserver;
+import BusinessLayer.Purchases.ShopBagItem;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,6 +14,8 @@ import java.util.stream.Collectors;
 import static BusinessLayer.Enums.ManagePermissionsEnum.*;
 
 public class Shop implements ShopIntr{
+	private final static int PRODUCT_MIN_QUANTITY = 0;
+
 	String name;
 	boolean open;
 	boolean isActive;
@@ -194,5 +197,44 @@ public class Shop implements ShopIntr{
 	}
 
 
+	//there is a problem with our logic of having Product and shopProduct we need to think maybe just hold a product instead of both.
+	//the problem is when the product already at the user cart and the quantity went from the original quantity we want the user to be able to see it at his cart
+	public Product getProduct(String productName, int quantity) {
+		if(quantity < PRODUCT_MIN_QUANTITY)
+			throw new IllegalArgumentException("quantity cannot be negative");
+		ShopProduct shopProduct = products.get(productName);
+		if(shopProduct == null){
+			throw new IllegalArgumentException(String.format("could not find product: %s at shop : %s",productName,getName()));
+		}
+		if(shopProduct.getQuantity() < quantity){
+			throw new IllegalArgumentException(String.format("shop quantity is lower than desire quantity. shop quantity: %d , desire quantity: %d",shopProduct.getQuantity(),quantity));
+		}
+		return shopProduct;
 	}
+
+
+
+	public void newPurchase(String userName, ConcurrentHashMap<String, ShopBagItem> productsAndQuantities) {
+		//username is for history purpose will do it in another commit
+		for(String productName : productsAndQuantities.keySet()){
+			ShopProduct shopProduct = products.get(productName);
+			shopProduct.setQuantity(shopProduct.getQuantity() - productsAndQuantities.get(productName).getQuantity());
+		}
+	}
+
+	public void validateAvailability(ConcurrentHashMap<String, ShopBagItem> productsAndQuantities) throws Exception {
+		for(String productName : productsAndQuantities.keySet()){
+			int realQuantity = products.get(productName).getQuantity();
+			int desireQuantity = productsAndQuantities.get(productName).getQuantity();
+			if(realQuantity < desireQuantity)
+				throw new Exception(String.format("there is not enough quantity of product : %s at shop : %s. desire quantity : %d , real quantity: %d",productName,this.getName(),desireQuantity,realQuantity));
+		}
+	}
+
+	public void revertPurchase(String name, ConcurrentHashMap<String, ShopBagItem> productsAndQuantities) {
+		for(String productName : productsAndQuantities.keySet()){
+			products.get(productName).addQuantity(productsAndQuantities.get(productName).getQuantity());
+		}
+	}
+}
 

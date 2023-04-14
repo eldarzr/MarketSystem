@@ -2,6 +2,8 @@ package BusinessLayer.Users;
 
 import BusinessLayer.Enums.UserType;
 import BusinessLayer.MemberRoleInShop;
+import BusinessLayer.Purchases.Cart;
+import BusinessLayer.Shops.Product;
 import BusinessLayer.Shops.Shop;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,26 +16,26 @@ public class User {
     private String password;
     private ConcurrentLinkedQueue<String> shopsMessages = new ConcurrentLinkedQueue<>();
     private boolean twoFactorEnabled;
-//    private ConcurrentLinkedQueue<String> foundedShops;
-//    //map of shop name to role of this user in the shop
-//    private ConcurrentHashMap<String, MemberRoleInShop> roles;
+
+    Cart currentCart;
 
     public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
-//        this.foundedShops = new ConcurrentLinkedQueue<>();
-//        this.roles = new ConcurrentHashMap<>();
         userType = UserType.MEMBER;
+        currentCart = new Cart();
     }
 
-    public User() {
+    public User(String guestName) {
+        name = guestName;
         userType = UserType.GUEST;
     }
 
-    public void sendMessage(String message){
+    public void sendMessage(String message) {
         shopsMessages.add(message);
     }
+
     public String getName() {
         return name;
     }
@@ -70,17 +72,25 @@ public class User {
         this.userType = userType;
     }
 
+    //we really should create functions at the market that calls all of this functions
     public void setTwoFactorEnabled(boolean twoFactorEnabled) {
         this.twoFactorEnabled = twoFactorEnabled;
     }
 
-//    public void addFoundedShop(String shopName) throws Exception {
-//        if(foundedShops.contains(shopName))
-//            throw new Exception(String.format("the user %s already have shop named %s", name, shopName));
-//        foundedShops.add(shopName);
-//    }
+    public Cart getCart() {
+        return currentCart;
+    }
 
-//    public void addShopRole(String roleShop , MemberRoleInShop role) {
-//        roles.put(roleShop , role);
-//    }
+    public void addProductToCart(String shopName, Product product, int quantity) throws Exception {
+        getCart().addProduct(shopName, product, quantity);
+    }
+
+    public void updateProductsFromCart(String shopName, String productName, int newQuantity) throws Exception {
+        getCart().updateProductQuantity(shopName, productName, newQuantity);
+    }
+
+    public void removeProductFromCart(String shopName, String productName) throws Exception {
+        getCart().removeProduct(shopName,productName);
+    }
 }
+
