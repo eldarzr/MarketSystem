@@ -1,8 +1,9 @@
 package AcceptanceTests.Tests;
+
 import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
-import org.junit.jupiter.api.*;
 
+import org.junit.jupiter.api.*;
 import static org.junit.Assert.*;
 
 public class LoginTests {

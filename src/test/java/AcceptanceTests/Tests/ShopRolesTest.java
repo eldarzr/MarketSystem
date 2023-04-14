@@ -2,6 +2,7 @@ package AcceptanceTests.Tests;
 
 import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
+
 import org.junit.*;
 import org.junit.jupiter.api.BeforeEach;
 

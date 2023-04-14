@@ -3,16 +3,16 @@ package AcceptanceTests.Tests;
 import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
 import AcceptanceTests.ProductBridge;
-import org.junit.*;
-import org.junit.jupiter.api.BeforeEach;
+
+import org.junit.jupiter.api.*;
+import static org.junit.Assert.*;
 
 import java.util.Collection;
 
-import static org.junit.Assert.*;
 
 public class ShopClosureTest {
 
-    private static MarketSystemBridge marketSystem;
+    private static MarketSystemBridge marketSystem = new MarketSystemRealBridge();
     private static String shopOwner;
     private static String shopManager;
     private static String shopName;
@@ -20,10 +20,10 @@ public class ShopClosureTest {
     private static double productPrice;
     private String category = "category";
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
+
+    @BeforeEach
+    public void setUp() throws Exception {
         // Set up market system
-        marketSystem = new MarketSystemRealBridge();
         marketSystem.init();
 
         // Register users
@@ -57,30 +57,24 @@ public class ShopClosureTest {
         productName = "TestProduct";
         productPrice = 10;
         try {
-            marketSystem.addNewProduct(shopOwner, shopName, productName, "catergory","desc", productPrice, 1);
+            marketSystem.addNewProduct(shopOwner, shopName, productName, "catergory","desc123", productPrice, 1);
         } catch (Exception e) {
             fail("Failed to set up test: " + e.getMessage());
         }
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-        // Unregister users and clear data
-        marketSystem.unregister("shopOwner");
-        marketSystem.unregister("shopManager");
-        marketSystem.clearData();
-    }
-
-    @BeforeEach
-    public void setUp() throws Exception {
         // Open shop
         marketSystem.openShop(shopOwner, shopName);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         // Close shop
         marketSystem.closeShop(shopOwner, shopName);
+        // Unregister users and clear data
+        //todo: uncomment this lines
+//        marketSystem.unregister("shopOwner");
+//        marketSystem.unregister("shopManager");
+
+        marketSystem.clearData();
     }
 
     @Test
