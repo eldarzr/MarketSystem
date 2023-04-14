@@ -45,7 +45,7 @@ public class Purchase {
 
     }
 
-    private void revertPay() {
+    private void revertPay() throws InterruptedException {
         paymentDetails.acceptRevert(this);
     }
 
@@ -98,7 +98,7 @@ public class Purchase {
                 return p1.getName().compareTo(p2.getName());
             }});
         for(int i = 0; i < products.size(); i++){
-            products.get(i).getProductLock().lock();
+            products.get(i).lockProduct();
         }
     }
 
@@ -110,7 +110,7 @@ public class Purchase {
                 return p1.getName().compareTo(p2.getName());
             }});
         for(int i = 0; i < products.size(); i++){
-            products.get(i).getProductLock().unlock();
+            products.get(i).unlockProduct();
         }
     }
 

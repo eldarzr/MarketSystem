@@ -78,6 +78,32 @@ class MarketPurchsae {
     }
 
     @org.junit.jupiter.api.Test
+    void purchaseByGuest() throws Exception {
+        String guestName = market.startSession();
+        market.addProductToCart(guestName,shopNames[0],prodNames[0],quantity[0]-1);
+        market.purchaseCart(guestName,paymentDetails,supplyDetails);
+    }
+
+    @org.junit.jupiter.api.Test
+    void purchaseByGuestFail() throws Exception {
+        String guestName = market.startSession();
+        assertThrows(Exception.class, () -> {
+            market.addProductToCart(guestName,shopNames[0],prodNames[0],quantity[0]+1);
+        },"able to add product with not enough quantity");
+    }
+
+    @org.junit.jupiter.api.Test
+    void purchaseByGuestFail_quantityChanged() throws Exception {
+        String guestName = market.startSession();
+        market.addProductToCart(guestName,shopNames[0],prodNames[0],quantity[0]);
+        market.updateProductQuantity(usersName[0],shopNames[0],prodNames[0],quantity[0]-1);
+        assertThrows(Exception.class, () -> {
+            market.purchaseCart(guestName,paymentDetails,supplyDetails);
+        },"able to purchase product with not enough quantity");
+
+    }
+
+    @org.junit.jupiter.api.Test
     void startSessionRegisterAndLogin() throws Exception {
         String guestName = market.startSession();
         market.register("nivuzan","nivu@gmail.com","Nn123456");
@@ -87,6 +113,5 @@ class MarketPurchsae {
         },String.format("successful get cart for guest after login. guestName : %s",guestName));
         market.getCart("nivuzan");
     }
-
 
 }
