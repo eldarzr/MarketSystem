@@ -172,7 +172,7 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
 
 
     @Override
-    public Collection<PurchaseBridge> getShopPurchaseHistory(String userName, String shopName) {
+    public Collection<PurchaseBridge> getShopPurchaseHistory(String userName, String shopName) throws Exception {
         nullCheck();
         return realBridge.getShopPurchaseHistory(userName, shopName);
     }
@@ -190,13 +190,13 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
     }
 
     @Override
-    public Collection<PurchaseBridge> getShopPurchaseHistoryByAdmin(String adminName, String shopName) {
+    public Collection<PurchaseBridge> getShopPurchaseHistoryByAdmin(String adminName, String shopName) throws Exception {
         nullCheck();
         return realBridge.getShopPurchaseHistoryByAdmin(adminName, shopName);
     }
 
     @Override
-    public Collection<PurchaseBridge> getUserPurchaseHistoryByAdmin(String adminName, String memberName) {
+    public Collection<PurchaseBridge> getUserPurchaseHistoryByAdmin(String adminName, String memberName) throws Exception {
         nullCheck();
         return realBridge.getUserPurchaseHistoryByAdmin(adminName, memberName);
     }

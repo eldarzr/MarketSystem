@@ -1,6 +1,6 @@
 package BusinessLayer.Users;
 
-import BusinessLayer.Enums.UserType;
+import BusinessLayer.Purchases.UserInvoice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -8,7 +8,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
@@ -199,4 +201,11 @@ public class UsersHandler {
     }
 
 
+    public Collection<UserInvoice> getUserPurchaseHistory(String userName) {
+        return findLoginUser(userName).getInvoices();
+    }
+
+    public Collection<UserInvoice> getUserPurchaseHistoryByAdmin(String memberName) {
+        return findMemberByName(memberName).getInvoices();
+    }
 }

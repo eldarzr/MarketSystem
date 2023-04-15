@@ -5,6 +5,7 @@ import BusinessLayer.Enums.ManageType;
 import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.MessageObserver;
 import BusinessLayer.Purchases.ShopBagItem;
+import BusinessLayer.Purchases.ShopInvoice;
 
 import java.util.Collection;
 import java.util.List;
@@ -25,6 +26,7 @@ public class Shop implements ShopIntr {
 	private ConcurrentHashMap<String, MemberRoleInShop> roles;
 	private ConcurrentHashMap<String, ShopProduct> products;
 	private ConcurrentLinkedQueue<MessageObserver> observers;
+	private ConcurrentLinkedQueue<ShopInvoice> invoices;
 
 	public Shop(String name, String founderUserName) {
 		this.name = name;
@@ -34,6 +36,7 @@ public class Shop implements ShopIntr {
 		this.products = new ConcurrentHashMap<>();
 		this.active = true;
 		this.observers = new ConcurrentLinkedQueue<>();
+		this.invoices = new ConcurrentLinkedQueue<>();
 	}
 
 	public String getName() {
@@ -267,6 +270,18 @@ public class Shop implements ShopIntr {
 			products.get(productName).addQuantity(productsAndQuantities.get(productName).getQuantity());
 		}
 	}
-	
+
+	public void addInvoice(ShopInvoice shopInvoice) {
+		invoices.add(shopInvoice);
+	}
+
+	public Collection<ShopInvoice> getInvoices(String userName) throws Exception {
+		validatePermissionsException(userName, WATCH_HISTORY);
+		return this.invoices;
+	}
+
+	public Collection<ShopInvoice> getInvoicesByAdmin() {
+		return this.invoices;
+	}
 }
 

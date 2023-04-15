@@ -3,6 +3,7 @@ package BusinessLayer.Users;
 import BusinessLayer.Enums.UserType;
 import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.Purchases.Cart;
+import BusinessLayer.Purchases.UserInvoice;
 import BusinessLayer.Shops.Product;
 import BusinessLayer.Shops.Shop;
 
@@ -15,6 +16,7 @@ public class User {
     private String email;
     private String password;
     private ConcurrentLinkedQueue<String> shopsMessages = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<UserInvoice> invoices = new ConcurrentLinkedQueue<>();
     private boolean twoFactorEnabled;
 
     Cart currentCart;
@@ -95,6 +97,18 @@ public class User {
 
     public void removeProductFromCart(String shopName, String productName) throws Exception {
         getCart().removeProduct(shopName,productName);
+    }
+
+    public void addInvoice(UserInvoice userInvoice) {
+        invoices.add(userInvoice);
+    }
+
+    public ConcurrentLinkedQueue<UserInvoice> getInvoices() {
+        return invoices;
+    }
+
+    public void clearCart() {
+        currentCart = new Cart();
     }
 }
 
