@@ -59,4 +59,16 @@ public abstract class Invoice {
 	public abstract Collection<String> getProducts();
 
 	public abstract int getQuantityOfProduct(String productName) throws Exception;
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public String getPaymentMethod() {
+		return paymentMethod;
+	}
+
+	public String getDeliveryMethod() {
+		return deliveryMethod;
+	}
 }

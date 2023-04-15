@@ -1,5 +1,12 @@
 package ServiceLayer.DataObjects;
 
-  public class CartDataObj {
+import BusinessLayer.Purchases.Cart;
 
-}
+public class CartDataObj {
+
+    public CartDataObj() {
+    }
+
+    public CartDataObj(Cart cart) {
+    }
+  }

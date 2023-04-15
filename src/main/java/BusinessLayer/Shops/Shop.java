@@ -176,6 +176,8 @@ public class Shop implements ShopIntr {
 	public void updateProductName(String userName, String productOldName, String productNewName) throws Exception {
 		validateProductExists(productOldName);
 		validatePermissionsException(userName, MANAGE_STOCK);
+		if (products.containsKey(productNewName))
+			throw new Exception(String.format("there is no product %s in the shop %s", productNewName, name));
 		synchronized (products) {
 			ShopProduct product = products.remove(productOldName);
 			product.setName(productNewName);

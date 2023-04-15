@@ -115,7 +115,7 @@ public class Market implements MarketIntr{
     public void createShop(String userName, String shopName) throws Exception {
       if(!isLoggedIn(userName))
           throw new Exception(String.format("the user %s is not login", userName));
-      //shopHandler.shopExists(shopName);
+//      shopHandler.shopExists(shopName);
       User user = usersHandler.findMemberByName(userName);
       Shop shop = new Shop(shopName, userName);
       //user.addFoundedShop(shopName);

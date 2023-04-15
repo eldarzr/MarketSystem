@@ -1,5 +1,6 @@
 package ServiceLayer.DataObjects;
 
+import BusinessLayer.Shops.ProductIntr;
 import BusinessLayer.Shops.ShopProduct;
 
 public class ProductDataObj {
@@ -18,12 +19,12 @@ public class ProductDataObj {
 		this.quantity = 0;
 	}
 
-	public ProductDataObj(ShopProduct product) {
+	public ProductDataObj(ProductIntr product) {
 		this.name = product.getName();
 		this.category = product.getCategory();
 		this.description = product.getDescription();
 		this.price = product.getPrice();
-		this.quantity = product.getQuantity();
+		this.quantity = product instanceof ShopProduct ? ((ShopProduct) product).getQuantity() : 0;
 	}
 
 	public String getName() {

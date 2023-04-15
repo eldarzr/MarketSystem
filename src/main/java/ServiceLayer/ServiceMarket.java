@@ -1,15 +1,13 @@
 package ServiceLayer;
 
+import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
+import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Market;
-import BusinessLayer.MemberRoleInShop;
-import BusinessLayer.Purchases.Cart;
-import BusinessLayer.Purchases.PurchaseIntr;
-import BusinessLayer.Purchases.ShopBag;
-import BusinessLayer.Shops.ProductIntr;
-import BusinessLayer.Shops.Shop;
+import ServiceLayer.DataObjects.*;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ServiceMarket {
 
@@ -68,9 +66,9 @@ public class ServiceMarket {
 		return new Response();
 	}
 
-	public Response login(String userName, String password) {
+	public Response login(String guestName, String userName, String password) {
 		try {
-			market.login(userName, password);
+			market.login(guestName, userName, password);
 		} catch (Exception exception) {
 			return new Response(exception.getMessage());
 		}
@@ -86,8 +84,14 @@ public class ServiceMarket {
 		return new Response();
 	}
 
-	public Collection<PurchaseIntr> getUserPurchaseHistory(String userName) {
-		return market.getUserPurchaseHistory(userName);
+	public ResponseT<Collection<UserInvoiceDataObj>> getUserPurchaseHistory(String userName) {
+		try {
+			return new ResponseT<Collection<UserInvoiceDataObj>>(market.getUserPurchaseHistory(userName).stream().
+					map(UserInvoiceDataObj::new).collect(Collectors.toList()));
+
+		} catch (Exception exception) {
+			return new ResponseT(exception.getMessage(), false);
+		}
 	}
 
 	public Response createShop(String userName, String shopName) throws Exception {
@@ -180,9 +184,9 @@ public class ServiceMarket {
 		return new Response();
 	}
 
-	public ResponseT<Shop> searchShop(String userName, String shopName) throws Exception {
+	public ResponseT<ShopDataObj> searchShop(String userName, String shopName) throws Exception {
 		try {
-		return new ResponseT<>(market.searchShop(userName, shopName));
+		return new ResponseT<ShopDataObj>(new ShopDataObj(market.searchShop(userName, shopName)));
 
 		} catch (Exception exception) {
 			return new ResponseT(exception.getMessage(), false);
@@ -190,37 +194,38 @@ public class ServiceMarket {
 	}
 
 
-	public ResponseT<ProductIntr> getProduct(String userName, String shopName, String productName) throws Exception {
+	public ResponseT<ProductDataObj> getProduct(String userName, String shopName, String productName) throws Exception {
 		try {
-		return null;
+			return new ResponseT<ProductDataObj>(new ProductDataObj(market.getProduct(userName, shopName, productName)));
+		} catch (Exception exception) {
+			return new ResponseT(exception.getMessage(), false);
+		}
+	}
+
+	public ResponseT<List<ShopDataObj>> getShops(String userName, String shopName) throws Exception {
+		try {
+		return new ResponseT<List<ShopDataObj>>(market.getShops(userName, shopName).stream().map(ShopDataObj::new)
+				.collect(Collectors.toList()));
 
 		} catch (Exception exception) {
 			return new ResponseT(exception.getMessage(), false);
 		}
 	}
 
-	public ResponseT<List<Shop>> getShops(String userName, String shopName) throws Exception {
+	public ResponseT<List<ProductDataObj>> basicSearch(String userName, String productName) throws Exception {
 		try {
-		return new ResponseT<>(market.getShops(userName, shopName));
+		return new ResponseT<List<ProductDataObj>>(market.basicSearch(userName, productName).stream()
+				.map(ProductDataObj::new).collect(Collectors.toList()));
 
 		} catch (Exception exception) {
 			return new ResponseT(exception.getMessage(), false);
 		}
 	}
 
-	public ResponseT<List<ProductIntr>> basicSearch(String userName, String productName) throws Exception {
+	public ResponseT<List<ProductDataObj>> extendedSearch(String userName, String productName, double minPrice, double maxPrice, String category) throws Exception {
 		try {
-		return new ResponseT<>(market.basicSearch(userName, productName));
-
-		} catch (Exception exception) {
-			return new ResponseT(exception.getMessage(), false);
-		}
-	}
-
-	public ResponseT<List<ProductIntr>> extendedSearch(String userName, String productName, double minPrice, double maxPrice, String category) throws Exception {
-		try {
-		return new ResponseT<>(market.extendedSearch(userName, productName, minPrice, maxPrice, category));
-
+		return new ResponseT<List<ProductDataObj>>(market.extendedSearch(userName, productName, minPrice, maxPrice, category).stream()
+				.map(ProductDataObj::new).collect(Collectors.toList()));
 		} catch (Exception exception) {
 			return new ResponseT(exception.getMessage(), false);
 		}
@@ -256,9 +261,9 @@ public class ServiceMarket {
 	}
 
 
-	public ResponseT<MemberRoleInShop> changeManagerPermissions(String actor, String actOn, String shopName, List<Integer> permission) throws Exception {
+	public ResponseT<MemberRoleInShopDataObj> changeManagerPermissions(String actor, String actOn, String shopName, List<Integer> permission) throws Exception {
 		try {
-		return new ResponseT<>(market.changeManagerPermissions(actor, actOn, shopName, permission));
+		return new ResponseT<MemberRoleInShopDataObj>(new MemberRoleInShopDataObj(market.changeManagerPermissions(actor, actOn, shopName, permission)));
 
 		} catch (Exception exception) {
 			return new ResponseT(exception.getMessage(), false);
@@ -276,9 +281,10 @@ public class ServiceMarket {
 	}
 
 
-	public ResponseT<Collection<MemberRoleInShop>> getShopManagersAndPermissions(String userName, String shopName) throws Exception {
+	public ResponseT<Collection<MemberRoleInShopDataObj>> getShopManagersAndPermissions(String userName, String shopName) throws Exception {
 		try {
-		return new ResponseT<>(market.getShopManagersAndPermissions(userName, shopName));
+		return new ResponseT<>(market.getShopManagersAndPermissions(userName, shopName).stream()
+				.map(MemberRoleInShopDataObj::new).collect(Collectors.toList()));
 
 		} catch (Exception exception) {
 			return new ResponseT(exception.getMessage(), false);
@@ -286,10 +292,10 @@ public class ServiceMarket {
 	}
 
 
-	public ResponseT<Collection<PurchaseIntr>> getShopPurchaseHistory(String userName, String shopName) {
+	public ResponseT<Collection<ShopInvoiceDataObj>> getShopPurchaseHistory(String userName, String shopName) {
 		try {
-		return new ResponseT<>(market.getShopPurchaseHistory(userName, shopName));
-
+		return new ResponseT<>(market.getShopPurchaseHistory(userName, shopName).stream()
+				.map(ShopInvoiceDataObj::new).collect(Collectors.toList()));
 		} catch (Exception exception) {
 			return new ResponseT(exception.getMessage(), false);
 		}
@@ -316,9 +322,29 @@ public class ServiceMarket {
 	}
 
 
-	public ResponseT<Collection<PurchaseIntr>> getShopPurchaseHistoryByAdmin(String adminName, String shopName) {
+	public ResponseT<Collection<ShopInvoiceDataObj>> getShopPurchaseHistoryByAdmin(String adminName, String shopName) {
 		try {
-		return new ResponseT<>(market.getShopPurchaseHistoryByAdmin(adminName, shopName));
+		return new ResponseT<>(market.getShopPurchaseHistoryByAdmin(adminName, shopName).stream()
+				.map(ShopInvoiceDataObj::new).collect(Collectors.toList()));
+		} catch (Exception exception) {
+			return new ResponseT(exception.getMessage(), false);
+		}
+	}
+
+
+	public ResponseT<Collection<UserInvoiceDataObj>> getUserPurchaseHistoryByAdmin(String adminName, String memberName) {
+		try {
+		return new ResponseT<>(market.getUserPurchaseHistoryByAdmin(adminName, memberName).stream()
+				.map(UserInvoiceDataObj::new).collect(Collectors.toList()));
+		} catch (Exception exception) {
+			return new ResponseT(exception.getMessage(), false);
+		}
+	}
+
+
+	public ResponseT<CartDataObj> getCart(String userName) {
+		try {
+		return new ResponseT<CartDataObj>(new CartDataObj(market.getCart(userName)));
 
 		} catch (Exception exception) {
 			return new ResponseT(exception.getMessage(), false);
@@ -326,29 +352,9 @@ public class ServiceMarket {
 	}
 
 
-	public ResponseT<Collection<PurchaseIntr>> getUserPurchaseHistoryByAdmin(String adminName, String memberName) {
+	public ResponseT<ShopBagDataObj> getShopBag(String userName, String shopName) {
 		try {
-		return new ResponseT<>(market.getUserPurchaseHistoryByAdmin(adminName, memberName));
-
-		} catch (Exception exception) {
-			return new ResponseT(exception.getMessage(), false);
-		}
-	}
-
-
-	public ResponseT<Cart> getCart(String userName) {
-		try {
-		return new ResponseT<>(market.getCart(userName));
-
-		} catch (Exception exception) {
-			return new ResponseT(exception.getMessage(), false);
-		}
-	}
-
-
-	public ResponseT<ShopBag> getShopBag(String userName, String shopName) {
-		try {
-		return new ResponseT<>(market.getShopBag(userName, shopName));
+		return new ResponseT<ShopBagDataObj>(new ShopBagDataObj(market.getShopBag(userName, shopName)));
 
 		} catch (Exception exception) {
 			return new ResponseT(exception.getMessage(), false);
@@ -368,7 +374,7 @@ public class ServiceMarket {
 
 	public Response updateProductsFromCart(String userName, String shopName, String productName, int newQuantity) {
 		try {
-			market.updateProductsFromCart(userName, shopName, productName, newQuantity);
+			market.updateCartProductQuantity(userName, shopName, productName, newQuantity);
 		} catch (Exception exception) {
 			return new Response(exception.getMessage());
 		}
@@ -376,9 +382,9 @@ public class ServiceMarket {
 	}
 
 
-	public Response purchaseCart(String userName) {
+	public Response purchaseCart(String userName, PaymentDetails paymentDetails, SupplyDetails supplyDetails) {
 		try {
-			market.purchaseCart(userName);
+			market.purchaseCart(userName, paymentDetails, supplyDetails);
 		} catch (Exception exception) {
 			return new Response(exception.getMessage());
 		}

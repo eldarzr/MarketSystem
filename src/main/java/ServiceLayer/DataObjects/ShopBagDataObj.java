@@ -1,6 +1,14 @@
 package ServiceLayer.DataObjects;
 
-   public class ShopBagDataObj {
+import BusinessLayer.Purchases.ShopBag;
+
+public class ShopBagDataObj {
+
+      public ShopBagDataObj() {
+      }
+
+      public ShopBagDataObj(ShopBag shopBag) {
+      }
 
 
-}
+   }
