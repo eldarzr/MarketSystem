@@ -45,7 +45,7 @@ public class ServiceMarket {
 		return new ResponseT<String>(market.startSession());
 
 		} catch (Exception exception) {
-			return new ResponseT(exception.getMessage());
+			return new ResponseT(exception.getMessage(), false);
 		}
 	}
 
@@ -185,7 +185,7 @@ public class ServiceMarket {
 		return new ResponseT<>(market.searchShop(userName, shopName));
 
 		} catch (Exception exception) {
-			return new ResponseT(exception.getMessage());
+			return new ResponseT(exception.getMessage(), false);
 		}
 	}
 
@@ -195,7 +195,7 @@ public class ServiceMarket {
 		return null;
 
 		} catch (Exception exception) {
-			return new ResponseT(exception.getMessage());
+			return new ResponseT(exception.getMessage(), false);
 		}
 	}
 
@@ -204,7 +204,7 @@ public class ServiceMarket {
 		return new ResponseT<>(market.getShops(userName, shopName));
 
 		} catch (Exception exception) {
-			return new ResponseT(exception.getMessage());
+			return new ResponseT(exception.getMessage(), false);
 		}
 	}
 
@@ -213,7 +213,7 @@ public class ServiceMarket {
 		return new ResponseT<>(market.basicSearch(userName, productName));
 
 		} catch (Exception exception) {
-			return new ResponseT(exception.getMessage());
+			return new ResponseT(exception.getMessage(), false);
 		}
 	}
 
@@ -222,7 +222,7 @@ public class ServiceMarket {
 		return new ResponseT<>(market.extendedSearch(userName, productName, minPrice, maxPrice, category));
 
 		} catch (Exception exception) {
-			return new ResponseT(exception.getMessage());
+			return new ResponseT(exception.getMessage(), false);
 		}
 	}
 
@@ -261,7 +261,7 @@ public class ServiceMarket {
 		return new ResponseT<>(market.changeManagerPermissions(actor, actOn, shopName, permission));
 
 		} catch (Exception exception) {
-			return new ResponseT(exception.getMessage());
+			return new ResponseT(exception.getMessage(), false);
 		}
 	}
 
@@ -281,7 +281,7 @@ public class ServiceMarket {
 		return new ResponseT<>(market.getShopManagersAndPermissions(userName, shopName));
 
 		} catch (Exception exception) {
-			return new ResponseT(exception.getMessage());
+			return new ResponseT(exception.getMessage(), false);
 		}
 	}
 
@@ -291,7 +291,7 @@ public class ServiceMarket {
 		return new ResponseT<>(market.getShopPurchaseHistory(userName, shopName));
 
 		} catch (Exception exception) {
-			return new ResponseT(exception.getMessage());
+			return new ResponseT(exception.getMessage(), false);
 		}
 	}
 
@@ -321,7 +321,7 @@ public class ServiceMarket {
 		return new ResponseT<>(market.getShopPurchaseHistoryByAdmin(adminName, shopName));
 
 		} catch (Exception exception) {
-			return new ResponseT(exception.getMessage());
+			return new ResponseT(exception.getMessage(), false);
 		}
 	}
 
@@ -331,7 +331,7 @@ public class ServiceMarket {
 		return new ResponseT<>(market.getUserPurchaseHistoryByAdmin(adminName, memberName));
 
 		} catch (Exception exception) {
-			return new ResponseT(exception.getMessage());
+			return new ResponseT(exception.getMessage(), false);
 		}
 	}
 
@@ -341,7 +341,7 @@ public class ServiceMarket {
 		return new ResponseT<>(market.getCart(userName));
 
 		} catch (Exception exception) {
-			return new ResponseT(exception.getMessage());
+			return new ResponseT(exception.getMessage(), false);
 		}
 	}
 
@@ -351,7 +351,7 @@ public class ServiceMarket {
 		return new ResponseT<>(market.getShopBag(userName, shopName));
 
 		} catch (Exception exception) {
-			return new ResponseT(exception.getMessage());
+			return new ResponseT(exception.getMessage(), false);
 		}
 	}
 

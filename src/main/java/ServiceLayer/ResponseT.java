@@ -12,9 +12,9 @@ public class ResponseT<T> {
 		this.message = "";
 	}
 
-	public ResponseT(T data, String message) {
+	public ResponseT(String message, boolean success) {
 		this.data = null;
-		this.success = false;
+		this.success = success;
 		this.message = message;
 	}
 
