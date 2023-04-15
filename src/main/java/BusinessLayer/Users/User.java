@@ -96,5 +96,9 @@ public class User {
     public void removeProductFromCart(String shopName, String productName) throws Exception {
         getCart().removeProduct(shopName,productName);
     }
+
+    public boolean isAdmin() {
+        return userType == UserType.ADMIN;
+    }
 }
 

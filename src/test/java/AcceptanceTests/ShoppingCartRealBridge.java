@@ -1,8 +1,15 @@
 package AcceptanceTests;
 
 import BusinessLayer.Purchases.Cart;
+import BusinessLayer.Purchases.ShopBag;
+import BusinessLayer.Purchases.ShopBagItem;
+import BusinessLayer.Shops.Product;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class ShoppingCartRealBridge implements ShoppingCartBridge{
 
@@ -14,7 +21,15 @@ public class ShoppingCartRealBridge implements ShoppingCartBridge{
 
     @Override
     public int getQuantityOfProduct(String productName) {
-        return 0;
+        ConcurrentHashMap<String, ShopBag> productList = cart.getShopsAndProducts();
+        for(ShopBag shopBag : productList.values()){
+            ConcurrentHashMap<String, ShopBagItem> productAndQuan = shopBag.getProductsAndQuantities();
+            for(String product : productAndQuan.keySet()){
+                if(product.equals(productName))
+                    return productAndQuan.get(product).getQuantity();
+            }
+        }
+        return -1;
     }
 
     @Override
@@ -24,12 +39,12 @@ public class ShoppingCartRealBridge implements ShoppingCartBridge{
 
     @Override
     public Collection<String> getProductNames() {
-        return null;
+        return cart.getAllProducts().stream().map(Product::getName).collect(Collectors.toList());
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return cart.getAllProducts().isEmpty();
     }
     //not in ver 1
     @Override
@@ -39,6 +54,10 @@ public class ShoppingCartRealBridge implements ShoppingCartBridge{
 
     @Override
     public Collection<ProductBridge> getProducts() {
-        return null;
+        List<ProductBridge> products = new LinkedList<>();
+        for(Product product : cart.getAllProducts()){
+            products.add(new ProductRealBridge(product));
+        }
+        return products;
     }
 }

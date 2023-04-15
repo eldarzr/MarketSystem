@@ -32,9 +32,11 @@ public class ShopRolesTest {
             shopOwner = "shopOwner";
 
             marketSystem.register("shopManager1", "shopManager1@gmail.com", "Passw0rd!!!");
+            marketSystem.login("shopManager1", "Passw0rd!!!");
             shopManager1 = "shopManager1";
 
             marketSystem.register("shopManager2", "shopManager2@gmail.com", "Passw0rd!!!");
+            marketSystem.login("shopManager2", "Passw0rd!!!");
             shopManager2 = "shopManager2";
         } catch (Exception e) {
             fail("Failed to set up test: " + e.getMessage());

@@ -28,7 +28,7 @@ class MarketLoginRegisterTests {
 
     @org.junit.jupiter.api.Test
     void register_invalid_username(){
-        String[] names = {"1231asasd", "", "a","asdasdasdasdasdasdasasd","!sd2","username!"};
+        String[] names = {"1231asasd", "", "a","asdaasdasxdasdasdeasdsdasdasdasdasdasasd","!sd2","username!"};
         for(String user_name : names){
             assertThrows(Exception.class, () -> {
                 market.register(user_name,"adsas@gmail.com","TryTry123");

@@ -5,6 +5,7 @@ import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -69,7 +70,7 @@ public class DeliverySystemTests {
         deliveryDetails = "123 Main St., Anytown, USA";
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         // Log out user and clear market data
         market.logout(userName);

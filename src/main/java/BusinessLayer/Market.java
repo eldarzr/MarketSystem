@@ -1,7 +1,6 @@
 package BusinessLayer;
 
 import BusinessLayer.Enums.UserType;
-import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Shops.*;
@@ -85,6 +84,12 @@ public class Market implements MarketIntr{
     @Override
     public void register(String userName, String email, String password) throws Exception {
         usersHandler.register(userName, email, password);
+    }
+
+    @Override
+    public String unregister(String userName) {
+        usersHandler.unregister(userName);
+        return logout(userName);
     }
 
     @Override
@@ -260,8 +265,8 @@ public class Market implements MarketIntr{
     //todo: naor - talk with eldar
     @Override
     public Collection<MemberRoleInShop> getShopManagersAndPermissions(String userName, String shopName) throws Exception {
-        isLoggedIn(userName);
-        return shopHandler.getShopManagementPermissions(userName,shopName);
+        User user = usersHandler.findLoginUser(userName);
+        return shopHandler.getShopManagementPermissions(user,shopName);
     }
 
     public String getRolesInformation(String userName, String shopName) throws Exception {
@@ -344,6 +349,8 @@ public class Market implements MarketIntr{
         purchase.process();
         //return invoice or order number or order summary something like this need to decide
     }
+
+
 
     //this function reset everything on the system, for now only use is for testing
     //need to add logic to reset all shops, but since we dont have a controller yet and I'm not sure what we want

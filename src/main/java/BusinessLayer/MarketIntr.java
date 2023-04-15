@@ -118,4 +118,5 @@ public interface MarketIntr {
     //connect to payment adapter and delivery adapter
     void purchaseCart(String userName, PaymentDetails paymentDetails, SupplyDetails supplyDetails) throws Exception;
 
+    String unregister(String userName);
 }

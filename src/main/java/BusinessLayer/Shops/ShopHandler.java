@@ -4,6 +4,7 @@ import BusinessLayer.MemberRoleInShop;
 
 import java.util.Collection;
 import BusinessLayer.Search;
+import BusinessLayer.Users.User;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 
 import java.util.*;
@@ -25,9 +26,9 @@ public class ShopHandler {
     }
 
 
-    public Collection<MemberRoleInShop> getShopManagementPermissions(String userName, String shopName) throws Exception {
+    public Collection<MemberRoleInShop> getShopManagementPermissions(User user, String shopName) throws Exception {
         Shop shop = getShop(shopName);
-        return shop.getManagementPermissions(userName);
+        return shop.getManagementPermissions(user);
     }
 
     public void addShop(String shopName, Shop shop) throws Exception {

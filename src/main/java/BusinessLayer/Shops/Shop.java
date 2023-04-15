@@ -5,6 +5,7 @@ import BusinessLayer.Enums.ManageType;
 import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.MessageObserver;
 import BusinessLayer.Purchases.ShopBagItem;
+import BusinessLayer.Users.User;
 
 import java.util.Collection;
 import java.util.List;
@@ -228,11 +229,13 @@ public class Shop implements ShopIntr {
 		return shopProduct;
 	}
 	
-	public Collection<MemberRoleInShop> getManagementPermissions(String userName) throws Exception {
-		validateUserHasRole(userName);
-		MemberRoleInShop actorMRIS = roles.get(userName);
-		if (actorMRIS.getType() != ManageType.OWNER) {
-			throw new Exception("only owners can get the Management information");
+	public Collection<MemberRoleInShop> getManagementPermissions(User user) throws Exception {
+		if(!user.isAdmin()){
+			validateUserHasRole(user.getName());
+			MemberRoleInShop actorMRIS = roles.get(user.getName());
+			if (actorMRIS.getType() != ManageType.OWNER) {
+				throw new Exception("only owners can get the Management information");
+			}
 		}
 		return this.roles.values();
 	}

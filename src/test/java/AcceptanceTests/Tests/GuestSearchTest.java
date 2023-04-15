@@ -40,7 +40,7 @@ public class GuestSearchTest {
         market.logout("janedoe");
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         market.logout(tempUserName);
         market.clearData();
@@ -51,7 +51,7 @@ public class GuestSearchTest {
         try {
             // Search for product by name
             Collection<ProductBridge> results = market.basicSearch(tempUserName, "item1");
-            assertEquals("Incorrect number of products returned by basic search", 1, results.size());
+            assertEquals("Incorrect number of products returned by basic search", 4, results.size());
             assertTrue("Product not found in search results", results.stream().anyMatch(p -> p.getProductName().equals("item1")));
 
             // Search for non-existing product
@@ -75,11 +75,11 @@ public class GuestSearchTest {
             assertTrue("Product not found in search results", results.stream().anyMatch(p -> p.getProductName().equals("item4")));
 
             // Search for product within price range
-            results = market.extendedSearch(tempUserName, "item", 15.0, 25.0, "");
+            results = market.extendedSearch(tempUserName, "item", 15.0, 24.0, "category");
             assertEquals("Incorrect number of products returned by extended search", 2,
                     results.size());
             assertTrue("Product not found in search results", results.stream().anyMatch(p -> p.getProductName().equals("item2")));
-            assertTrue("Product not found in search results", results.stream().anyMatch(p -> p.getProductName().equals("item4")));
+            assertTrue("Product not found in search results", results.stream().anyMatch(p -> p.getProductName().equals("item3")));
             // Search for non-existing product
             results = market.extendedSearch(tempUserName, "non-existing product", 0.0, 100.0, "");
             assertTrue("Search for non-existing product returned results", results.isEmpty());

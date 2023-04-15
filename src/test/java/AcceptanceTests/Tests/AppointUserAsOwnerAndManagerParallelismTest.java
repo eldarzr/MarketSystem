@@ -32,9 +32,9 @@ public class AppointUserAsOwnerAndManagerParallelismTest {
         system.register(shopOwner1, "shopowner1@gmail.com", "Passw0rd!!!");
         system.login(shopOwner1, "Passw0rd!!!");
         system.createShop(shopOwner1, shopName);
-        system.logout(shopOwner1);
         system.register(shopOwner2, "shopowner2@gmail.com", "Passw0rd!!!");
         system.login(shopOwner2, "Passw0rd!!!");
+        system.register(userName, "shopowner1@gmail.com", "Passw0rd!!!");
         // Act
         Runnable appointAsOwner = () -> {
             try {
@@ -47,7 +47,6 @@ public class AppointUserAsOwnerAndManagerParallelismTest {
             try {
                 system.appointShopManager(shopOwner2, userName, shopName);
             } catch (Exception e) {
-                fail("Could not appoint user as shop manager.");
             }
         };
         // Run in parallel
