@@ -27,19 +27,12 @@ public class Cart {
     public void addProduct(String shopName, Product product, int quantity) throws Exception {
         if(!cart.containsKey(shopName))
             cart.put(shopName,new ShopBag());
-        ShopBag shopBag = getShopBag(shopName);
+        ShopBag shopBag = getShoppingBag(shopName);
         shopBag.addProduct(product,quantity);
     }
 
-    private ShopBag getShopBag(String shopName) throws Exception {
-        ShopBag shopBag = cart.get(shopName);
-        if(shopBag == null)
-            throw new Exception(String.format("there is no shopping bag for this shop. shop name: %s",shopName));
-        return shopBag;
-    }
-
     public void updateProductQuantity(String shopName, String productName, int newQuantity) throws Exception {
-        ShopBag shopBag = getShopBag(shopName);
+        ShopBag shopBag = getShoppingBag(shopName);
         shopBag.updateProductQuantity(productName,newQuantity);
     }
 
@@ -48,7 +41,7 @@ public class Cart {
     }
 
     public void removeProduct(String shopName, String productName) throws Exception {
-        ShopBag shopBag = getShopBag(shopName);
+        ShopBag shopBag = getShoppingBag(shopName);
         shopBag.removeProduct(productName);
     }
 
