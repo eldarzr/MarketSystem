@@ -74,7 +74,7 @@ public interface MarketSystemBridge {
 
 
     //4.13
-    Collection<PurchaseBridge> getShopPurchaseHistory(String userName, String shopName);
+    Collection<PurchaseBridge> getShopPurchaseHistory(String userName, String shopName) throws Exception;
 
     //admin functions
 
@@ -83,10 +83,10 @@ public interface MarketSystemBridge {
     void blockUser(String adminName, String UserName);
 
     //6.1
-    Collection<PurchaseBridge> getShopPurchaseHistoryByAdmin(String adminName, String shopName);
+    Collection<PurchaseBridge> getShopPurchaseHistoryByAdmin(String adminName, String shopName) throws Exception;
 
     //6.2
-    Collection<PurchaseBridge> getUserPurchaseHistoryByAdmin(String adminName, String memberName);
+    Collection<PurchaseBridge> getUserPurchaseHistoryByAdmin(String adminName, String memberName) throws Exception;
 
 
     //cart function

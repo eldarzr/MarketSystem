@@ -1,13 +1,14 @@
 package AcceptanceTests;
 
 import BusinessLayer.Purchases.PurchaseIntr;
+import BusinessLayer.Purchases.UserInvoice;
 
 import java.util.Collection;
 
-public class PurchaseRealBridge implements PurchaseBridge{
-    private PurchaseIntr purchaseIntr;
-    public PurchaseRealBridge(PurchaseIntr purchaseIntr){
-        this.purchaseIntr = purchaseIntr;
+public class UserInvoceRealBridge implements PurchaseBridge{
+    private UserInvoice userInvoice;
+    public UserInvoceRealBridge(UserInvoice userInvoice){
+        this.userInvoice = userInvoice;
     }
     @Override
     public Collection<String> getProducts() {
