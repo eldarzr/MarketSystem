@@ -5,6 +5,7 @@ import AcceptanceTests.MarketSystemRealBridge;
 import AcceptanceTests.ProductBridge;
 import AcceptanceTests.ShoppingCartBridge;
 import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,11 +29,11 @@ public class ShoppingCartActionsTest {
         market.register("testUser", "testUser@example.com", "Passw0rd!!!");
         market.login("testUser", "Passw0rd!!!");
         market.createShop("testUser", "My Shop");
-        market.addNewProduct("testUser", "My Shop", "item1", category, "Item 1 description", 10.0);
+        market.addNewProduct("testUser", "My Shop", "item1", category, "Item 1 description", 10.0,10);
         market.logout("testUser");
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         market.logout(tempUserName);
         market.clearData();
@@ -64,6 +65,7 @@ public class ShoppingCartActionsTest {
 
             assertTrue("Product not in cart", cart.getProductNames().contains(product.getProductName()));
             assertEquals("Incorrect quantity of product in cart", 1, cart.getQuantityOfProduct(product.getProductName()));
+            //todo: this assert is not true , again you have a different cart object
 
         } catch (Exception e) {
             fail("Exception thrown while testing add product to cart: " + e.getMessage());
@@ -80,8 +82,8 @@ public class ShoppingCartActionsTest {
 
             market.addProductsToCart(tempUserName, shopName, product.getProductName(), 1);
 
+            //todo: product doesn't suppose to be in cart
             assertTrue("Product not in cart", cart.getProductNames().contains(product.getProductName()));
-
             market.removeProductsFromCart(tempUserName, shopName, product.getProductName());
 
             assertFalse("Product still in cart", cart.getProductNames().contains(product.getProductName()));
@@ -95,7 +97,6 @@ public class ShoppingCartActionsTest {
     @Test
     public void testUpdateProductQuantityInCart() {
         try {
-            ShoppingCartBridge cart = market.getCart(tempUserName);
 
             Collection<ProductBridge> products = market.basicSearch(tempUserName, "item1");
             ProductBridge product = products.iterator().next();
@@ -107,8 +108,9 @@ public class ShoppingCartActionsTest {
             market.updateProductQuantityInCart(tempUserName, shopName, product.getProductName(), 2);
 
             // check that the product is in the cart and has the correct quantity
-            assertTrue("Product not in cart", cart.getProductNames().contains(product.getProductName()));
-            assertEquals("Incorrect quantity of product in cart", 2, cart.getQuantityOfProduct(product.getProductName()));
+            assertTrue("Product not in cart", market.getCart(tempUserName).getProductNames().contains(product.getProductName()));
+            assertEquals("Incorrect quantity of product in cart", 2, market.getCart(tempUserName).getQuantityOfProduct(product.getProductName()));
+            //todo: again cart not the same object
 
         } catch (Exception e) {
             fail("Exception thrown while testing update product quantity in cart: " + e.getMessage());

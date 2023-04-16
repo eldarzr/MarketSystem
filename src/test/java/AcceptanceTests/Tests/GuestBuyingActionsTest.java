@@ -4,6 +4,7 @@ import AcceptanceTests.MarketSystemRealBridge;
 import AcceptanceTests.ProductBridge;
 import AcceptanceTests.ShopBridge;
 import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -32,7 +33,7 @@ public class GuestBuyingActionsTest {
         market.logout("johndoe");
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         market.logout(tempUserName);
         market.clearData();

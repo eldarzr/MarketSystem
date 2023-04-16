@@ -99,6 +99,10 @@ public class User {
         getCart().removeProduct(shopName,productName);
     }
 
+    public boolean isAdmin() {
+        return userType == UserType.ADMIN;
+    }
+    
     public void addInvoice(UserInvoice userInvoice) {
         invoices.add(userInvoice);
     }

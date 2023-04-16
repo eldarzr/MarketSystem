@@ -34,9 +34,8 @@ public class ExitTests {
         market.register("johndoe", "johndoe@example.com", "Passw0rd!!!");
         market.login("johndoe", "Passw0rd!!!");
         market.createShop("johndoe", shopName);
-        market.addNewProduct("johndoe", shopName, "item1", category, "Item 1 description", 10.0);
-        market.addNewProduct("johndoe", shopName, "item2", category, "Item 2 description", 15.0);
-        market.logout("johndoe");
+        market.addNewProduct("johndoe", shopName, "item1", category, "Item 1 description", 10.0,5);
+        market.addNewProduct("johndoe", shopName, "item2", category, "Item 2 description", 15.0,5);
     }
 
     @AfterEach
@@ -55,7 +54,7 @@ public class ExitTests {
 
 
             // Leave the market as guest
-            //market.logout(tempUserName);
+            market.logout(tempUserName);
             ShoppingCartBridge cart = market.getCart(tempUserName);
             fail("Excpetion shouldv'e been thrown because the guest's cart no longer exists.");
 
@@ -72,16 +71,13 @@ public class ExitTests {
             String shopName = "My Shop";
 
             // Add items to cart as registered user
-            market.login(userName, "Passw0rd!!!");
             market.addProductsToCart(userName, shopName, "item1", 1);
             market.addProductsToCart(userName, shopName, "item2", 1);
             assertNotNull("Shopping cart is null after adding items", market.getCart(userName));
 
 
             // Leave the market as registered user
-            market.logout(userName);
             assertNotNull("Shopping cart is not null after registered user exits the market", market.getCart(userName));
-
 
         } catch (Exception e) {
             fail("Exception thrown while testing exit as registered user: " + e.getMessage());

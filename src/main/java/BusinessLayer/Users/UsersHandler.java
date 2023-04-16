@@ -117,10 +117,13 @@ public class UsersHandler {
     }
 
     public User findUserByName(String userName) {
-        User user = loginUsers.get(userName);
-        if(user == null)
-            throwIllegalArgumentException(String.format("User %s is unknown",userName));
-        return user;
+        User userLogin = loginUsers.get(userName);
+        User member = members.get(userName);
+        if(userLogin != null)
+            return userLogin;
+        else if(member != null)
+            return member;
+        else throwIllegalArgumentException(String.format("User %s is unknown",userName));
     }
 
     public boolean isLoggedIn(String userName){
@@ -177,7 +180,7 @@ public class UsersHandler {
 
     private void checkValidUserName(String username) {
         int lower_bound = 4;
-        int upper_bound = 16;
+        int upper_bound = 32;
         // Check if username is between lower_bound and upper_bound characters long
         if (username.length() < lower_bound || username.length() > upper_bound) {
             throwIllegalArgumentException(String.format("User name length need to be bigger than %d and lower than %d.",lower_bound,upper_bound));
@@ -207,7 +210,7 @@ public class UsersHandler {
     }
 
 	public boolean isAdmin(String userName) {
-        return findMemberByName(userName).getUserType() == ADMIN;
+        return findUserByName(userName).getUserType() == ADMIN;
 	}
 
     public void addAdmin(String adminName) throws Exception {
@@ -219,6 +222,11 @@ public class UsersHandler {
 
     public Collection<UserInvoice> getUserPurchaseHistory(String userName) {
         return findLoginUser(userName).getInvoices();
+    }
+
+    public void unregister(String userName) {
+        findMemberByName(userName);
+        members.remove(userName);
     }
 
     public Collection<UserInvoice> getUserPurchaseHistoryByAdmin(String memberName) {

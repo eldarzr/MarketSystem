@@ -29,6 +29,7 @@ public class ChangeManagerPermissionsTest {
             shopOwner = "shopOwner";
 
             marketSystem.register("shopManager", "shopManager@gmail.com", "Passw0rd!!!");
+            marketSystem.login("shopManager", "Passw0rd!!!");
             shopManager = "shopManager";
         } catch (Exception e) {
             fail("Failed to set up test: " + e.getMessage());

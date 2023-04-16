@@ -43,7 +43,7 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
 
     @Override
     public void unregister(String userName) {
-        throw new UnsupportedOperationException();
+        market.unregister(userName);
     }
 
     public void login(String userName, String password) {
@@ -218,7 +218,7 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
         market.logout(adminUserName);
         for(ShopProduct p : shop.getProducts())
             if(p.getName().equals(productName)) return p.getQuantity();
-        return 0;
+        return -1;
     }
 
     public String getProductDescription(String shopName, String productName) throws Exception {
@@ -282,9 +282,7 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     public void updateProductQuantityInCart(String UserName, String shopName, String productName, int newQuantity) throws Exception {
         Cart cart = market.getCart(UserName);
         ShoppingCartBridge shoppingCartBridge = new ShoppingCartRealBridge(cart);
-        int currentQuantity = shoppingCartBridge.getQuantityOfProduct(productName);
-        int diff = newQuantity - currentQuantity;
-        market.addProductsToCart(UserName, shopName, productName, diff);
+        market.updateCartProductQuantity(UserName, shopName, productName, newQuantity);
     }
 
     @Override
@@ -292,7 +290,7 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
         Cart cart = market.getCart(UserName);
         ShoppingCartBridge shoppingCartBridge = new ShoppingCartRealBridge(cart);
         int currentQuantity = shoppingCartBridge.getQuantityOfProduct(productName);
-        market.addProductsToCart(UserName, shopName, productName, (-1*currentQuantity));
+        market.updateProductQuantity(UserName, shopName, productName, (-1*currentQuantity));
     }
 
     @Override

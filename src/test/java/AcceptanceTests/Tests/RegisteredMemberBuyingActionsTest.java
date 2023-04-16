@@ -2,6 +2,7 @@ package AcceptanceTests.Tests;
 
 import AcceptanceTests.*;
 import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,9 +29,8 @@ public class RegisteredMemberBuyingActionsTest {
         market.login("testUser", "Passw0rd!!!");
         market.createShop("testUser", "My Shop");
         market.addNewProduct("testUser", "My Shop", "item1", "item 1 category","Item 1 description", 10.0, 100);
-        market.logout("testUser");
-
         cart = market.getCart(tempUserName);
+
 
         // search for the product and get a reference to it
         Collection<ProductBridge> products = market.basicSearch(tempUserName, "item1");
@@ -40,12 +40,12 @@ public class RegisteredMemberBuyingActionsTest {
 
         // add the product to the cart
         market.addProductsToCart(tempUserName, "My Shop", product.getProductName(), 1);
+        market.logout("testUser");
     }
 
     // clean up after each test by logging out the user and nullifying objects
-    @After
+    @AfterEach
     public void tearDown() {
-        market.logout(tempUserName);
         market.clearData();
         cart = null;
         shop = null;
@@ -59,12 +59,16 @@ public class RegisteredMemberBuyingActionsTest {
             // log in as registered user
             market.login("testUser", "Passw0rd!!!");
 
+            //add product to cart
+            market.addProductsToCart("testUser","My Shop","item1",10);
+
             // log out and verify that the cart is saved
             market.logout("testUser");
 
+            market.login("testUser", "Passw0rd!!!");
 
             // verify that the cart is not empty
-            assertFalse("Cart is empty after logout", cart.isEmpty());
+            assertFalse("Cart is empty after logout", market.getCart("testUser").isEmpty());
 
             // verify that the product is still in the cart
             Collection<ProductBridge> cartProducts = cart.getProducts();
@@ -82,9 +86,9 @@ public class RegisteredMemberBuyingActionsTest {
     public void testCartDeletedOnGuestLogout() {
         try {
             // log out as guest and verify that the cart is emptied
-            market.logout(tempUserName);
+            market.closeSession(tempUserName);
 
-            assertTrue("Cart not emptied after guest logout", cart.isEmpty());
+            assertThrows(Exception.class,()-> market.getCart(tempUserName));
         } catch (Exception e) {
             fail("Exception thrown while testing cart deleted on guest logout: " + e.getMessage());
         }

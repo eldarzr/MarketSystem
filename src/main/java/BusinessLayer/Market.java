@@ -108,6 +108,12 @@ public class Market implements MarketIntr{
     }
 
     @Override
+    public String unregister(String userName) {
+        usersHandler.unregister(userName);
+        return logout(userName);
+    }
+
+    @Override
     public void login(String guestName, String userName, String password) {
         logger.info(String.format("Attempt to login user %s.", userName));
         usersHandler.login(guestName, userName, password);
@@ -324,8 +330,8 @@ public class Market implements MarketIntr{
     @Override
     public Collection<MemberRoleInShop> getShopManagersAndPermissions(String userName, String shopName) throws Exception {
         logger.info(String.format("Attempt by user %s to get management of shop %s.", userName, shopName));
-        isLoggedIn(userName);
-        return shopHandler.getShopManagementPermissions(userName,shopName);
+        User user = usersHandler.findLoginUser(userName);
+        return shopHandler.getShopManagementPermissions(user,shopName);
     }
 
     public String getRolesInformation(String userName, String shopName) throws Exception {
@@ -423,6 +429,8 @@ public class Market implements MarketIntr{
         //return invoice or order number or order summary something like this need to decide
         logger.info(String.format("User %s purchase cart successfully.", userName));
     }
+
+
 
     //this function reset everything on the system, for now only use is for testing
     //need to add logic to reset all shops, but since we dont have a controller yet and I'm not sure what we want

@@ -28,8 +28,8 @@ public class ShopAndProductCreationAndManipulationTests {
             if (i<5)
                 bridge.login("gabi"+index,pass);
         }
-//        setUpComplete = true;
 
+//        setUpComplete = true;
     }
 
     @AfterClass
@@ -41,7 +41,10 @@ public class ShopAndProductCreationAndManipulationTests {
                 bridge.logout("gabi"+index);
             bridge.unregister("gabi"+index);
         }
+
     }
+
+
     //successful Shop create
     @Test
     public void test01createShopTest(){
@@ -50,7 +53,7 @@ public class ShopAndProductCreationAndManipulationTests {
             String shopName = "Gabi's Goods";
             bridge.createShop(userName,shopName);
         }catch (Exception e){
-            Assert.fail(e.getMessage());
+            fail(e.getMessage());
         }
     }
     //unsuccessful shop create because shop already exists
@@ -59,9 +62,9 @@ public class ShopAndProductCreationAndManipulationTests {
         try{
             String shopName = "Gabi's Goods";
             bridge.createShop("gabi0",shopName);
-            Assert.fail("shop should not be opened with the same name\n");
+            fail("shop should not be opened with the same name\n");
         }catch (Exception e){
-            Assert.assertTrue(true);
+            assertTrue(true);
         }
     }
     //unsuccessful shop create because user doesn't exist
@@ -70,9 +73,9 @@ public class ShopAndProductCreationAndManipulationTests {
         try{
             String shopName = "Gabi's Goods2";
             bridge.createShop("non_existing_user",shopName);
-            Assert.fail("shop should not be opened if the user not exists\n");
+            fail("shop should not be opened if the user not exists\n");
         }catch (Exception e){
-            Assert.assertTrue(true);
+            assertTrue(true);
         }
     }
     //unsuccessful shop create because user isn't logged in
@@ -81,9 +84,9 @@ public class ShopAndProductCreationAndManipulationTests {
         try{
             String shopName = "Gabi's Goods2";
             bridge.createShop("gabi5",shopName);
-            Assert.fail("shop should not be opened if the user not logged in\n");
+            fail("shop should not be opened if the user not logged in\n");
         }catch (Exception e){
-            Assert.assertTrue(true);
+            assertTrue(true);
         }
     }
     //successful add product by founder
@@ -97,7 +100,7 @@ public class ShopAndProductCreationAndManipulationTests {
             String desc = "Nike basketball size 7";
             bridge.addNewProduct(userName,shopName,productName,category,desc,price);
         }catch (Exception e){
-            Assert.fail();
+            fail();
         }
     }
     //unsuccessful add product with the same name
@@ -112,7 +115,7 @@ public class ShopAndProductCreationAndManipulationTests {
             bridge.addNewProduct(userName,shopName,productName,category,desc,price);
             Assert.fail("shouldn't be able to add a product with the same name");
         }catch (Exception e){
-            Assert.assertTrue(true);
+            assertTrue(true);
         }
     }
     //unsuccessful add product by a non appointed user
@@ -127,7 +130,7 @@ public class ShopAndProductCreationAndManipulationTests {
             bridge.addNewProduct(userName,shopName,productName,category,desc,price);
             Assert.fail("shouldn't be able to add a product as a non-appointed user");
         }catch (Exception e){
-            Assert.assertTrue(true);
+            assertTrue(true);
         }
     }
     //unsuccessful add product by a non logged in owner
@@ -144,7 +147,7 @@ public class ShopAndProductCreationAndManipulationTests {
             bridge.addNewProduct(userName,shopName,productName,category,desc,price);
             Assert.fail("non-logged in owner should not be able to add product");
         } catch (Exception e){
-            Assert.assertTrue(true);
+            assertTrue(true);
         }
     }
     //successful add product by appointed owner
@@ -160,7 +163,7 @@ public class ShopAndProductCreationAndManipulationTests {
             String desc = "Nike NFL football";
             bridge.addNewProduct(userName,shopName,productName,category,desc,price);
         }catch (Exception e){
-            Assert.fail(e.getMessage());
+            fail(e.getMessage());
         }
     }
 //Update product tests:
@@ -177,9 +180,9 @@ public class ShopAndProductCreationAndManipulationTests {
             String newProductName = "Football"; // Also was added in earlier tests
             String shopName = "Gabi's Goods";
             bridge.updateProductName(userName,shopName,oldProductName,newProductName);
-            Assert.fail("Should not be able to update a product's name to an already existing product's name in the same shop");
+            fail("Should not be able to update a product's name to an already existing product's name in the same shop");
         }catch (Exception e){
-            Assert.assertTrue(true);
+            assertTrue(true);
         }
     }
 
@@ -192,9 +195,9 @@ public class ShopAndProductCreationAndManipulationTests {
             String newProductName = "Football";
             String shopName = "Gabi's Goods";
             bridge.updateProductName(userName,shopName,oldProductName,newProductName);
-            Assert.fail("Should not be able to update a product's name if user is not authorized");
+            fail("Should not be able to update a product's name if user is not authorized");
         }catch (Exception e){
-            Assert.assertTrue(true);
+            assertTrue(true);
         }
     }
 
@@ -207,9 +210,9 @@ public class ShopAndProductCreationAndManipulationTests {
             String newProductName = "Football";
             String shopName = "Gabi's Goods";
             bridge.updateProductName(userName,shopName,oldProductName,newProductName);
-            Assert.fail("Should not be able to update a product's name if user is not logged in");
+            fail("Should not be able to update a product's name if user is not logged in");
         }catch (Exception e){
-            Assert.assertTrue(true);
+            assertTrue(true);
         }
     }
 
@@ -222,9 +225,9 @@ public class ShopAndProductCreationAndManipulationTests {
             String newProductName = "Electric Guitar";
             String shopName = "Gabi's Goods";
             bridge.updateProductName(userName,shopName,oldProductName,newProductName);
-            Assert.fail("Should not be able to update a product's name if the product does not exist in the shop");
+            fail("Should not be able to update a product's name if the product does not exist in the shop");
         }catch (Exception e){
-            Assert.assertTrue(true);
+            assertTrue(true);
         }
     }
 
@@ -237,9 +240,9 @@ public class ShopAndProductCreationAndManipulationTests {
             String newProductName = "Soccer";
             String shopName = "Gabi's Goods";
             bridge.updateProductName(userName,shopName,oldProductName,newProductName);
-            Assert.assertTrue(true);
+            assertTrue(true);
         }catch (Exception e){
-            Assert.fail("Should be able to update a product's name as a founder");
+            fail("Should be able to update a product's name as a founder");
         }
     }
     //successful update product's name by appointed owner who is logged in
@@ -252,7 +255,7 @@ public class ShopAndProductCreationAndManipulationTests {
             String shopName = "Gabi's Goods";
             bridge.updateProductName(userName,shopName,oldProductName,newProductName);
         }catch (Exception e){
-            Assert.fail("Should be able to update a product's name by an appointed owner who is logged in");
+            fail("Should be able to update a product's name by an appointed owner who is logged in");
         }
     }
     //Update product's description tests:
@@ -269,9 +272,9 @@ public class ShopAndProductCreationAndManipulationTests {
             String productName = "Football"; // existing product
             String newDescription = "Brown NFL football with white stitches";
             bridge.updateProductDesc(userName,shopName,productName,newDescription);
-            Assert.fail("user should not be able to update product's description if they aren't authorized");
+            fail("user should not be able to update product's description if they aren't authorized");
         }catch (Exception e){
-            Assert.assertTrue(true);
+            assertTrue(true);
         }
     }
     //unsuccessful update product's description test because the user trying to do it is an owner, but isn't logged in
@@ -283,9 +286,9 @@ public class ShopAndProductCreationAndManipulationTests {
             String productName = "Football"; // existing product
             String newDescription = "Brown NFL football with white stitches";
             bridge.updateProductDesc(userName,shopName,productName,newDescription);
-            Assert.fail("user should not be able to update product's description if they are not logged in");
+            fail("user should not be able to update product's description if they are not logged in");
         }catch (Exception e){
-            Assert.assertTrue(true);
+            assertTrue(true);
         }
     }
 
@@ -298,9 +301,9 @@ public class ShopAndProductCreationAndManipulationTests {
             String productName = "Football"; // non-existent product
             String newDescription = "Adidas Football ball";
             bridge.updateProductDesc(userName,shopName,productName,newDescription);
-            Assert.fail("user should not be able to update a product's description that does not exist in the shop");
+            fail("user should not be able to update a product's description that does not exist in the shop");
         }catch (Exception e){
-            Assert.assertTrue(true);
+            assertTrue(true);
         }
     }
 
@@ -313,9 +316,9 @@ public class ShopAndProductCreationAndManipulationTests {
             String productName = "Soccer"; // existing product
             String newDescription = "Brown NFL football with white stitches";
             bridge.updateProductDesc(userName,shopName,productName,newDescription);
-            Assert.assertEquals(newDescription, bridge.getProductDescription(shopName, productName));
+            assertEquals(newDescription, bridge.getProductDescription(shopName, productName));
         }catch (Exception e){
-            Assert.fail("founder should be able to update product's description");
+            fail("founder should be able to update product's description");
         }
     }
 
@@ -328,9 +331,9 @@ public class ShopAndProductCreationAndManipulationTests {
             String productName = "Tennis ball"; // existing product
             String newDescription = "Wilson US Open Tennis ball";
             bridge.updateProductDesc(userName,shopName,productName,newDescription);
-            Assert.assertEquals(newDescription, bridge.getProductDescription(shopName, productName));
+            assertEquals(newDescription, bridge.getProductDescription(shopName, productName));
         }catch (Exception e){
-            Assert.fail("appointed owner should be able to update product's description");
+            fail("appointed owner should be able to update product's description");
         }
     }
     //Update product's price tests:
@@ -348,9 +351,9 @@ public class ShopAndProductCreationAndManipulationTests {
             String productName = "Football"; // existing product
             double newPrice = 320;
             bridge.updateProductPrice(userName,shopName,productName,newPrice);
-            Assert.fail("user should not be able to update product's price if they aren't authorized");
+            fail("user should not be able to update product's price if they aren't authorized");
         }catch (Exception e){
-            Assert.assertTrue(true);
+            assertTrue(true);
         }
     }
 
@@ -363,9 +366,9 @@ public class ShopAndProductCreationAndManipulationTests {
             String productName = "Football"; // existing product
             double newPrice = 320;
             bridge.updateProductPrice(userName,shopName,productName,newPrice);
-            Assert.fail("non-logged in owner should not be able to update product's price");
+            fail("non-logged in owner should not be able to update product's price");
         }catch (Exception e){
-            Assert.assertTrue(true);
+            assertTrue(true);
         }
     }
 
@@ -378,9 +381,9 @@ public class ShopAndProductCreationAndManipulationTests {
             String productName = "Baseball"; // product doesn't exist in the shop
             double newPrice = 20;
             bridge.updateProductPrice(userName,shopName,productName,newPrice);
-            Assert.fail("should not be able to update price of product that doesn't exist in the shop");
+            fail("should not be able to update price of product that doesn't exist in the shop");
         }catch (Exception e){
-            Assert.assertTrue(true);
+            assertTrue(true);
         }
     }
 
@@ -393,9 +396,9 @@ public class ShopAndProductCreationAndManipulationTests {
             String productName = "Tennis ball"; // existing product
             double newPrice = -1;
             bridge.updateProductPrice(userName,shopName,productName,newPrice);
-            Assert.fail("should not be able to update product's price to a negative number");
+            fail("should not be able to update product's price to a negative number");
         }catch (Exception e){
-            Assert.assertTrue(true);
+            assertTrue(true);
         }
     }
 
@@ -408,9 +411,9 @@ public class ShopAndProductCreationAndManipulationTests {
             String productName = "Soccer"; // existing product
             double newPrice = 320;
             bridge.updateProductPrice(userName,shopName,productName,newPrice);
-            Assert.assertEquals(newPrice, bridge.getProductPrice(shopName, productName), 0.01);
+            assertEquals(newPrice, bridge.getProductPrice(shopName, productName), 0.01);
         }catch (Exception e){
-            Assert.fail("should be able to update product's price as logged in founder");
+            fail("should be able to update product's price as logged in founder");
         }
     }
 
@@ -423,9 +426,9 @@ public class ShopAndProductCreationAndManipulationTests {
             String productName = "Soccer"; // existing product
             double newPrice = 300;
             bridge.updateProductPrice(userName,shopName,productName,newPrice);
-            Assert.assertEquals(newPrice, bridge.getProductPrice(shopName, productName), 0.01);
+            assertEquals(newPrice, bridge.getProductPrice(shopName, productName), 0.01);
         }catch (Exception e){
-            Assert.fail("should be able to update product's price as logged in founder");
+            fail("should be able to update product's price as logged in founder");
         }
     }
 
@@ -459,9 +462,9 @@ public class ShopAndProductCreationAndManipulationTests {
             int quantity = 1;
             String shopName = "Gabi's Goods";
             bridge.addProductsToCart(userName,shopName,productName,quantity);
-            Assert.fail("Should not be able to add a product to a non existing user");
+            fail("Should not be able to add a product to a non existing user");
         }catch (Exception e){
-            Assert.assertTrue(true);
+            assertTrue(true);
         }
     }
     //unsuccessful addition to cart because the shop not exists
@@ -473,9 +476,9 @@ public class ShopAndProductCreationAndManipulationTests {
             int quantity = 1;
             String shopName = "Shop 1"; // Non existing shop
             bridge.addProductsToCart(userName, shopName, productName, quantity);
-            Assert.fail("Should not be able to add a product to a non-existing shop");
+            fail("Should not be able to add a product to a non-existing shop");
         } catch (Exception e) {
-            Assert.assertTrue(true);
+            assertTrue(true);
         }
     }
 
@@ -488,9 +491,9 @@ public class ShopAndProductCreationAndManipulationTests {
             int quantity = 1;
             String shopName = "Gabi's Goods";
             bridge.addProductsToCart(userName, shopName, productName, quantity);
-            Assert.fail("Should not be able to add a product to a shop with non authorized user");
+            fail("Should not be able to add a product to a shop with non authorized user");
         } catch (Exception e) {
-            Assert.assertTrue(true);
+            assertTrue(true);
         }
     }
 
@@ -503,9 +506,9 @@ public class ShopAndProductCreationAndManipulationTests {
             int quantity = 1;
             String shopName = "Gabi's Goods";
             bridge.addProductsToCart(userName, shopName, productName, quantity);
-            Assert.fail("Should not be able to add a non existing product to a shop");
+            fail("Should not be able to add a non existing product to a shop");
         } catch (Exception e) {
-            Assert.assertTrue(true);
+            assertTrue(true);
         }
     }
 
@@ -518,9 +521,9 @@ public class ShopAndProductCreationAndManipulationTests {
             int quantity = 1;
             String shopName = "Gabi's Goods";
             bridge.addProductsToCart(userName, shopName, productName, quantity);
-            Assert.fail("Should not be able to add a product to a shop with a non logged-in user");
+            fail("Should not be able to add a product to a shop with a non logged-in user");
         } catch (Exception e) {
-            Assert.assertTrue(true);
+            assertTrue(true);
         }
     }
 
@@ -534,12 +537,10 @@ public class ShopAndProductCreationAndManipulationTests {
             int quantity = 3;
             String shopName = "Gabi's Goods";
             bridge.addProductsToCart(userName, shopName, productName, quantity);
-            Assert.assertTrue(bridge.getCart(userName).getQuantityOfProduct(productName) == quantity);
+            assertTrue(bridge.getCart(userName).getQuantityOfProduct(productName) == quantity);
         } catch (Exception e) {
-            Assert.fail("Addition to cart should've succeeded");
+            fail("Addition to cart should've succeeded");
         }
     }
-
-
 
 }
