@@ -3,6 +3,8 @@ package BusinessLayer.Shops;
 import BusinessLayer.MemberRoleInShop;
 
 import java.util.Collection;
+
+import BusinessLayer.Purchases.ShopInvoice;
 import BusinessLayer.Search;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 
@@ -20,7 +22,7 @@ public class ShopHandler {
     private final int PRODUCT_DISTANCE_MAX_LIMIT = 2;
     private LevenshteinDistance distance = new LevenshteinDistance();
 
-    private static class  ShopHolder {
+	private static class  ShopHolder {
         private static ShopHandler  instance = new ShopHandler() ;
     }
     private ShopHandler()  {
@@ -157,6 +159,15 @@ public class ShopHandler {
 
     public void reset() {
         shops.clear();
+    }
+
+    public Collection<ShopInvoice> getShopPurchaseHistory(String shopName, String userName) throws Exception {
+	    validateShopExistsOpenedException(shopName);
+	    return getShop(shopName).getInvoices(userName);
+    }
+
+    public Collection<ShopInvoice> getShopPurchaseHistoryByAdmin(String shopName) throws Exception {
+        return getShop(shopName).getInvoicesByAdmin();
     }
 
     private void throwException(String errorMsg)  throws IllegalArgumentException{

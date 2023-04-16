@@ -5,6 +5,7 @@ import BusinessLayer.Enums.ManageType;
 import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.MessageObserver;
 import BusinessLayer.Purchases.ShopBagItem;
+import BusinessLayer.Purchases.ShopInvoice;
 
 import java.util.Collection;
 import java.util.List;
@@ -28,6 +29,7 @@ public class Shop implements ShopIntr {
 	private ConcurrentHashMap<String, MemberRoleInShop> roles;
 	private ConcurrentHashMap<String, ShopProduct> products;
 	private ConcurrentLinkedQueue<MessageObserver> observers;
+	private ConcurrentLinkedQueue<ShopInvoice> invoices;
 
 	public Shop(String name, String founderUserName) {
 		this.name = name;
@@ -37,6 +39,7 @@ public class Shop implements ShopIntr {
 		this.products = new ConcurrentHashMap<>();
 		this.active = true;
 		this.observers = new ConcurrentLinkedQueue<>();
+		this.invoices = new ConcurrentLinkedQueue<>();
 	}
 
 	public String getName() {
@@ -176,6 +179,8 @@ public class Shop implements ShopIntr {
 	public void updateProductName(String userName, String productOldName, String productNewName) throws Exception {
 		validateProductExists(productOldName);
 		validatePermissionsException(userName, MANAGE_STOCK);
+		if (products.containsKey(productNewName))
+			throw new Exception(String.format("there is no product %s in the shop %s", productNewName, name));
 		synchronized (products) {
 			ShopProduct product = products.remove(productOldName);
 			product.setName(productNewName);
@@ -272,6 +277,20 @@ public class Shop implements ShopIntr {
 		}
 	}
 
+
+	public void addInvoice(ShopInvoice shopInvoice) {
+		invoices.add(shopInvoice);
+	}
+
+	public Collection<ShopInvoice> getInvoices(String userName) throws Exception {
+		validatePermissionsException(userName, WATCH_HISTORY);
+		return this.invoices;
+	}
+
+	public Collection<ShopInvoice> getInvoicesByAdmin() {
+		return this.invoices;
+  }
+  
 	private void throwException(String errorMsg) throws Exception {
 		logger.severe(errorMsg);
 		throw new Exception(errorMsg);

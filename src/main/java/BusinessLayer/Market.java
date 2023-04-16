@@ -132,8 +132,8 @@ public class Market implements MarketIntr{
 
     //next version
     @Override
-    public Collection<PurchaseIntr> getUserPurchaseHistory(String userName) {
-        throw new NotImplementedException();
+    public Collection<UserInvoice> getUserPurchaseHistory(String userName) {
+        return usersHandler.getUserPurchaseHistory(userName);
     }
 
     @Override
@@ -335,8 +335,9 @@ public class Market implements MarketIntr{
 
     //todo: naor
     @Override
-    public Collection<PurchaseIntr> getShopPurchaseHistory(String userName, String shopName) {
-        return null;
+    public Collection<ShopInvoice> getShopPurchaseHistory(String userName, String shopName) throws Exception {
+        validateLoggedInException(userName);
+        return shopHandler.getShopPurchaseHistory(shopName, userName);
     }
 
     @Override
@@ -357,13 +358,15 @@ public class Market implements MarketIntr{
 
     //todo : niv
     @Override
-    public Collection<PurchaseIntr> getShopPurchaseHistoryByAdmin(String adminName, String shopName) {
-        throw new NotImplementedException();
+    public Collection<ShopInvoice> getShopPurchaseHistoryByAdmin(String adminName, String shopName) throws Exception {
+        validateLoggedInAdminException(adminName);
+        return shopHandler.getShopPurchaseHistoryByAdmin(shopName);
     }
 
     @Override
-    public Collection<PurchaseIntr> getUserPurchaseHistoryByAdmin(String adminName, String memberName) {
-        throw new NotImplementedException();
+    public Collection<UserInvoice> getUserPurchaseHistoryByAdmin(String adminName, String memberName) throws Exception {
+        validateLoggedInAdminException(adminName);
+        return usersHandler.getUserPurchaseHistoryByAdmin(memberName);
     }
 
 
@@ -459,6 +462,12 @@ public class Market implements MarketIntr{
             logger.severe(errorMsg);
             throw new Exception(errorMsg);
         }
+    }
+
+    private void validateLoggedInAdminException(String userName) throws Exception {
+        validateLoggedInException(userName);
+        if(!isAdmin(userName))
+            throw new Exception(String.format("the user %s is not admin", userName));
     }
 
     private boolean isAdmin(String userName) {
