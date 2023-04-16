@@ -67,13 +67,14 @@ public class Market implements MarketIntr{
             if (!file.exists()) {
                 file.mkdir();
             }
+            if (logger.getHandlers().length == 0) {
+                FileHandler fileHandler = new FileHandler(logDirectory + "/MarketLog.log");
+                SimpleFormatter formatter = new SimpleFormatter();
+                fileHandler.setFormatter(formatter);
 
-            FileHandler fileHandler = new FileHandler(logDirectory + "/MarketLog.log");
-            SimpleFormatter formatter = new SimpleFormatter();
-            fileHandler.setFormatter(formatter);
-
-            // Add the file handler to the logger
-            logger.addHandler(fileHandler);
+                // Add the file handler to the logger
+                logger.addHandler(fileHandler);
+            }
 
             // Set the logging level to INFO
             logger.setLevel(Level.INFO);
