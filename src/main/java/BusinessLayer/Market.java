@@ -3,9 +3,7 @@ package BusinessLayer;
 import BusinessLayer.Enums.UserType;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
-import BusinessLayer.Purchases.Cart;
-import BusinessLayer.Purchases.Purchase;
-import BusinessLayer.Purchases.ShopBag;
+import BusinessLayer.Purchases.*;
 import BusinessLayer.Shops.Product;
 import BusinessLayer.Shops.ProductIntr;
 import BusinessLayer.Shops.Shop;
@@ -70,7 +68,7 @@ public class Market implements MarketIntr{
                 file.mkdir();
             }
 
-            FileHandler fileHandler = new FileHandler(logDirectory + "/Market.%u.%g.log");
+            FileHandler fileHandler = new FileHandler(logDirectory + "/MarketLog.log");
             SimpleFormatter formatter = new SimpleFormatter();
             fileHandler.setFormatter(formatter);
 
@@ -390,7 +388,7 @@ public class Market implements MarketIntr{
     }
 
     @Override
-    public void addProductToCart(String userName, String shopName, String productName, int quantity) throws Exception {
+    public void addProductsToCart(String userName, String shopName, String productName, int quantity) throws Exception {
         logger.info(String.format("Attempt by user %s to add %d %s from shop %s.", userName,quantity,productName,shopName));
         User user = usersHandler.findLoginUser(userName);
         Shop shop = shopHandler.getShop(shopName);
