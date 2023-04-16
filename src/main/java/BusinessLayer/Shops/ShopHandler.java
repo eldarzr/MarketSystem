@@ -10,10 +10,13 @@ import org.apache.commons.text.similarity.LevenshteinDistance;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ShopHandler {
+
+    private static final Logger logger = Logger.getLogger("Market");
     ConcurrentHashMap<String,Shop> shops;
     private final int SHOP_DISTANCE_MAX_LIMIT = 2;
     private final int PRODUCT_DISTANCE_MAX_LIMIT = 2;
@@ -34,7 +37,7 @@ public class ShopHandler {
 
     public void addShop(String shopName, Shop shop) throws Exception {
         if(shops.containsKey(shopName))
-            throw new Exception("there is already shop with that name");
+            throwException("There is already shop with that name");
         shops.put(shopName, shop);
     }
 
@@ -50,12 +53,12 @@ public class ShopHandler {
 
     private void validateShopExistsOpenedException(String shopName) throws Exception {
         if (!getShop(shopName).isActive())
-            throw new Exception(String.format("the shop %s is closed", shopName));
+            throwException(String.format("the shop %s is closed", shopName));
     }
 
     private void validateShopExistsException(String shopName) throws Exception {
         if(!shops.containsKey(shopName))
-            throw new Exception("there is no such shop named :" +shopName);
+            throwException("there is no such shop named :" +shopName);
     }
 
     public void addNewProduct(String userName, String shopName, String productName, String category, String desc, double price) throws Exception {
@@ -165,5 +168,10 @@ public class ShopHandler {
 
     public Collection<ShopInvoice> getShopPurchaseHistoryByAdmin(String shopName) throws Exception {
         return getShop(shopName).getInvoicesByAdmin();
+    }
+
+    private void throwException(String errorMsg)  throws IllegalArgumentException{
+        logger.severe(errorMsg);
+        throw new IllegalArgumentException(errorMsg);
     }
 }

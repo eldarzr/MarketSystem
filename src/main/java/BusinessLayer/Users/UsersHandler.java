@@ -59,11 +59,24 @@ public class UsersHandler {
     }
 
     public void register(String userName, String email, String password) throws Exception{
+        logger.info(String.format("Attempt to validate %s is valid username.",userName));
         checkValidUserName(userName);
+        logger.info(String.format("%s is valid username.",userName));
+
+        logger.info("Attempt to validate password.");
         checkValidPassword(password);
+        logger.info("Password is valid.");
+
+        logger.info(String.format("Attempt to validate %s is valid email.",email));
         checkValidEmail(email);
+        logger.info(String.format("%s is valid email.",email));
+
         String encodedPassword = passwordEncoder.encode(password);
+
+        logger.info(String.format("Attempt to create user %s.", userName));
         User nuser = new User(userName,email,encodedPassword);
+        logger.info(String.format("User %s created.", userName));
+
         members.put(userName,nuser);
     }
 
@@ -75,15 +88,15 @@ public class UsersHandler {
     public void login(String userName, String password) {
         User user = findMemberByName(userName);
         if(isLoggedIn(user.getName()))
-            throw new IllegalArgumentException(String.format("User: %s already logged in",userName));
+            throwIllegalArgumentException(String.format("User %s already logged in",userName));
         if(!passwordEncoder.matches(password,user.getPassword()))
-            throw new IllegalArgumentException("incorrect password");
+            throwIllegalArgumentException("Incorrect password");
         loginUsers.put(user.getName(),user);
     }
 
     public void disconnect(String userName){
         if(!isLoggedIn(userName))
-            throw new IllegalArgumentException(String.format("user: %s is not logged in", userName));
+            throwIllegalArgumentException(String.format("User %s is not logged in", userName));
         loginUsers.remove(userName);
     }
 
@@ -92,21 +105,21 @@ public class UsersHandler {
         //this get method returns null if the key doesn't exist
         User user = loginUsers.get(targetName);
         if(user == null)
-            throw new IllegalArgumentException(String.format("User name:%s doesn't exist or is not currently logged in",targetName));
+            throwIllegalArgumentException(String.format("User %s doesn't exist or is not currently logged in",targetName));
         return user;
     }
 
     public User findMemberByName(String targetName) {
         User user = members.get(targetName);
         if(user == null)
-            throw new IllegalArgumentException(String.format("user name: %s is unknown",targetName));
+            throwIllegalArgumentException(String.format("User %s is unknown",targetName));
         return user;
     }
 
     public User findUserByName(String userName) {
         User user = loginUsers.get(userName);
         if(user == null)
-            throw new IllegalArgumentException(String.format("user name: %s is unknown",userName));
+            throwIllegalArgumentException(String.format("User %s is unknown",userName));
         return user;
     }
 
@@ -117,7 +130,7 @@ public class UsersHandler {
     public void checkValidPassword(String password) {
         // Check if password is at least 8 characters long
         if (password.length() < 8) {
-            throw new IllegalArgumentException("Password must be at least of length 8");
+            throwIllegalArgumentException("Password must be at least of length 8.");
         }
 
         // Check if password contains at least one uppercase letter, one lowercase letter, and one digit
@@ -133,12 +146,15 @@ public class UsersHandler {
                 hasDigit = true;
             }
         }
-        if(!hasUpperCase)
-            throw new IllegalArgumentException("Password must contain at least one upper case letter");
-        if(!hasLowerCase)
-            throw new IllegalArgumentException("Password must contain at least one lower case letter");
-        if(!hasDigit)
-            throw new IllegalArgumentException("password must contain at lesat one number");
+        if(!hasUpperCase) {
+            throwIllegalArgumentException("Password must contain at least one upper case letter.");
+        }
+        if(!hasLowerCase) {
+            throwIllegalArgumentException("Password must contain at least one lower case letter.");
+        }
+        if(!hasDigit) {
+            throwIllegalArgumentException("Password must contain at least one number.");
+        }
     }
 
     public String createGuest() {
@@ -146,6 +162,7 @@ public class UsersHandler {
         User user = new User(nextGuestName);
         //guest is added only to login users, the reason is that as long as he is connected to the system we want to threat him as a login user
         loginUsers.put(nextGuestName,user);
+        logger.info(String.format("Session of guest %s started.",nextGuestName));
         return nextGuestName;
     }
 
@@ -163,19 +180,19 @@ public class UsersHandler {
         int upper_bound = 16;
         // Check if username is between lower_bound and upper_bound characters long
         if (username.length() < lower_bound || username.length() > upper_bound) {
-            throw new IllegalArgumentException(String.format("user name length need to be bigger than %d and lower than %d",lower_bound,upper_bound));
+            throwIllegalArgumentException(String.format("User name length need to be bigger than %d and lower than %d.",lower_bound,upper_bound));
         }
 
         // Check if username only contains alphanumeric characters or underscores
         Pattern pattern = Pattern.compile("^[a-zA-Z0-9_]*$");
         if (!pattern.matcher(username).matches()) {
-            throw new IllegalArgumentException("password can contain only alphanumeric characters or underscores");
+            throwIllegalArgumentException("Username can contain only alphanumeric characters or underscores.");
         }
 
         // Check if username starts with a letter
         char firstChar = username.charAt(0);
         if (!Character.isLetter(firstChar)) {
-            throw new IllegalArgumentException("password must start with a letter");
+            throwIllegalArgumentException("Username must start with a letter.");
         }
     }
 
@@ -200,12 +217,16 @@ public class UsersHandler {
         admin.setUserType(ADMIN);
     }
 
-
     public Collection<UserInvoice> getUserPurchaseHistory(String userName) {
         return findLoginUser(userName).getInvoices();
     }
 
     public Collection<UserInvoice> getUserPurchaseHistoryByAdmin(String memberName) {
         return findMemberByName(memberName).getInvoices();
+    }
+    
+    private void throwIllegalArgumentException(String errorMsg)  throws IllegalArgumentException{
+        logger.severe(errorMsg);
+        throw new IllegalArgumentException(errorMsg);
     }
 }

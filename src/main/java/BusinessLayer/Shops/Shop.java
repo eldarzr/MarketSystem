@@ -11,12 +11,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static BusinessLayer.Enums.ManagePermissionsEnum.*;
 
 public class Shop implements ShopIntr {
 	private final static int PRODUCT_MIN_QUANTITY = 0;
+
+	private static final Logger logger = Logger.getLogger("Market");
 
 	private String name;
 	private boolean open;
@@ -68,13 +71,13 @@ public class Shop implements ShopIntr {
 		validateUserHasRole(actor);
 		MemberRoleInShop actorMRIS = roles.get(actor);
 		if (actorMRIS.getType() != ManageType.OWNER)
-			throw new Exception("only owners can set new owners to a store");
+			throwException("only owners can set new owners to a store");
 
 		// if the appointee is manager than:
 		if (roles.containsKey(actOn)) {
 			MemberRoleInShop actOnMRIS = roles.get(actOn);
 			if (actOnMRIS.getType() == ManageType.OWNER)
-				throw new Exception(actOn + " is already an owner");
+				throwException(actOn + " is already an owner");
 			actOnMRIS.setType(ManageType.OWNER);
 			actOnMRIS.setGrantor(actor);
 			return;
@@ -87,9 +90,9 @@ public class Shop implements ShopIntr {
 		validateUserHasRole(actor);
 		MemberRoleInShop actorMRIS = roles.get(actor);
 		if (actorMRIS.getType() != ManageType.OWNER)
-			throw new Exception("only owners can set new managers to a store");
+			throwException("only owners can set new managers to a store");
 		if (roles.containsKey(actOn)) {
-			throw new Exception("the user :" + actOn + "is already have a role in the store");
+			throwException("the user :" + actOn + "is already have a role in the store");
 		}
 		MemberRoleInShop.createManager(actOn, this, actor, sendMessage);
 
@@ -97,14 +100,16 @@ public class Shop implements ShopIntr {
 
 	public MemberRoleInShop validateUserHasRole(String actorUserName) throws Exception {
 		if (!roles.containsKey(actorUserName)) {
-			throw new Exception("the user :" + actorUserName + " isnt belong to the shop:" + this.name + "at all");
+			throwException("the user :" + actorUserName + " isnt belong to the shop:" + this.name + "at all");
 		}
 		return roles.get(actorUserName);
 	}
 
 	public void addRole(String name, MemberRoleInShop role) throws Exception {
 		if (roles.containsKey(name))
-			throw new Exception("the user : " + name + " already have a role");
+		{
+			throwException(String.format("user %s already has role in shop, can't have another.",name));
+		}
 		roles.put(name, role);
 	}
 
@@ -112,14 +117,14 @@ public class Shop implements ShopIntr {
 		validateUserHasRole(actor);
 		MemberRoleInShop actorMRIS = roles.get(actor);
 		if (actorMRIS.getType() != ManageType.OWNER)
-			throw new Exception("only owners can set permissions");
+			throwException("only owners can set permissions");
 		if (!roles.containsKey(actOn)) {
-			throw new Exception("you cannot set permissions to user that dosent already have a role in the shop. User :" + actOn);
+			throwException("you cannot set permissions to user that dosent already have a role in the shop. User :" + actOn);
 		}
 		MemberRoleInShop reqRole = roles.get(actOn);
 		String roleGrantor = reqRole.getGrantor();
 		if (!roleGrantor.equals(actor) || !actor.equals(founderUserName))
-			throw new Exception("only the grantor or the shop founder can set manager permissions");
+			throwException("only the grantor or the shop founder can set manager permissions");
 		return reqRole;
 	}
 
@@ -137,15 +142,13 @@ public class Shop implements ShopIntr {
 
 	public void closeShop(String userName) throws Exception {
 		if (!this.founderUserName.equals(userName))
-			throw new Exception("only the founder can close a store");
+			throwException("Only the founder can close a store.");
 		this.active = false;
 		for (MessageObserver observer : this.observers) {
-			observer.update("the shop named : " + this.name + " is closed");
+			observer.update(String.format("Shop %s is closed.",name));
 		}
 		//TODO : Only owners & Admins can acheive information on the shop.
 		//TODO : products of the store should be unavilable now when a member looking for them.
-
-
 	}
 
 	public List<ShopProduct> getProducts() {
@@ -154,16 +157,16 @@ public class Shop implements ShopIntr {
 
 	public void addNewProduct(String userName, String productName, String category, String desc, double price) throws Exception {
 		if (products.containsKey(productName))
-			throw new Exception(String.format("there is already product %s in the shop %s", productName, name));
+			throwException(String.format("there is already product %s in the shop %s", productName, name));
 		validatePermissionsException(userName, MANAGE_STOCK);
 		products.put(productName, ShopProduct.createProduct(productName, category, desc, price));
 	}
 
 	private void validatePermissionsException(String userName, ManagePermissionsEnum permissionsEnum) throws Exception {
 		if (!roles.containsKey(userName))
-			throw new Exception(String.format("the user %s is not manager or owner of the shop %s", userName, name));
+			throwException(String.format("the user %s is not manager or owner of the shop %s", userName, name));
 		if (!roles.get(userName).getPermissions().validatePermission(permissionsEnum))
-			throw new Exception(String.format("the user %s does not have the right permission for the shop %s",
+			throwException(String.format("the user %s does not have the right permission for the shop %s",
 					userName, name));
 	}
 
@@ -215,7 +218,7 @@ public class Shop implements ShopIntr {
 
 	private void validateProductExists(String productName) throws Exception {
 		if (!products.containsKey(productName))
-			throw new Exception(String.format("there is no product %s in the shop %s", productName, name));
+			throwException(String.format("there is no product %s in the shop %s", productName, name));
 	}
 
 	//there is a problem with our logic of having Product and shopProduct we need to think maybe just hold a product instead of both.
@@ -237,7 +240,7 @@ public class Shop implements ShopIntr {
 		validateUserHasRole(userName);
 		MemberRoleInShop actorMRIS = roles.get(userName);
 		if (actorMRIS.getType() != ManageType.OWNER) {
-			throw new Exception("only owners can get the Management information");
+			throwException("only owners can get the Management information");
 		}
 		return this.roles.values();
 	}
@@ -263,7 +266,8 @@ public class Shop implements ShopIntr {
 			int realQuantity = products.get(productName).getQuantity();
 			int desireQuantity = productsAndQuantities.get(productName).getQuantity();
 			if (realQuantity < desireQuantity)
-				throw new Exception(String.format("there is not enough quantity of product : %s at shop : %s. desire quantity : %d , real quantity: %d", productName, this.getName(), desireQuantity, realQuantity));
+				throwException(String.format("there is not enough quantity of product : %s at shop : %s. desire quantity : %d , real quantity: %d",
+						productName, this.getName(), desireQuantity, realQuantity));
 		}
 	}
 
@@ -272,6 +276,7 @@ public class Shop implements ShopIntr {
 			products.get(productName).addQuantity(productsAndQuantities.get(productName).getQuantity());
 		}
 	}
+
 
 	public void addInvoice(ShopInvoice shopInvoice) {
 		invoices.add(shopInvoice);
@@ -284,6 +289,11 @@ public class Shop implements ShopIntr {
 
 	public Collection<ShopInvoice> getInvoicesByAdmin() {
 		return this.invoices;
+  }
+  
+	private void throwException(String errorMsg) throws Exception {
+		logger.severe(errorMsg);
+		throw new Exception(errorMsg);
 	}
 }
 
