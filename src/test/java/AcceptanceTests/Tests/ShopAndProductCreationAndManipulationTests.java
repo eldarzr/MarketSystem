@@ -6,6 +6,8 @@ import AcceptanceTests.MarketSystemRealBridge;
 import org.junit.*;
 import org.junit.runners.MethodSorters;
 
+import static org.junit.Assert.*;
+
 //This test class assumes GuestBasicTests are all passed
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ShopAndProductCreationAndManipulationTests {
@@ -31,18 +33,18 @@ public class ShopAndProductCreationAndManipulationTests {
 
 //        setUpComplete = true;
     }
-
-    @AfterClass
-    public static void tearDown() throws Exception{
-        if(!testsComplete)return;
-        for(int i=0;i<10;i++){
-            String index = Integer.toString(i);
-            if(i<5)
-                bridge.logout("gabi"+index);
-            bridge.unregister("gabi"+index);
-        }
-
-    }
+//
+//    @AfterClass
+//    public static void tearDown() throws Exception{
+//        if(!testsComplete)return;
+//        for(int i=0;i<10;i++){
+//            String index = Integer.toString(i);
+//            if(i<5)
+//                bridge.logout("gabi"+index);
+//            bridge.unregister("gabi"+index);
+//        }
+//
+//    }
 
 
     //successful Shop create
@@ -113,7 +115,7 @@ public class ShopAndProductCreationAndManipulationTests {
             double price = 240;
             String desc = "Nike basketball size 7";
             bridge.addNewProduct(userName,shopName,productName,category,desc,price);
-            Assert.fail("shouldn't be able to add a product with the same name");
+            fail("shouldn't be able to add a product with the same name");
         }catch (Exception e){
             assertTrue(true);
         }
@@ -128,7 +130,7 @@ public class ShopAndProductCreationAndManipulationTests {
             double price = 150;
             String desc = "Adidas soccer ball size 5";
             bridge.addNewProduct(userName,shopName,productName,category,desc,price);
-            Assert.fail("shouldn't be able to add a product as a non-appointed user");
+            fail("shouldn't be able to add a product as a non-appointed user");
         }catch (Exception e){
             assertTrue(true);
         }
@@ -145,7 +147,7 @@ public class ShopAndProductCreationAndManipulationTests {
             double price = 100;
             String desc = "Adidas soccer ball size 5";
             bridge.addNewProduct(userName,shopName,productName,category,desc,price);
-            Assert.fail("non-logged in owner should not be able to add product");
+            fail("non-logged in owner should not be able to add product");
         } catch (Exception e){
             assertTrue(true);
         }
@@ -443,7 +445,7 @@ public class ShopAndProductCreationAndManipulationTests {
             bridge.updateProductQuantity(userName,shopName,productName,quantity);
             Assert.assertEquals(quantity, bridge.getProductQuantityInShop(shopName, productName), 0.01);
         }catch (Exception e){
-            Assert.fail("should be able to update product's price as logged in founder");
+            fail("should be able to update product's price as logged in founder");
         }
     }
     //add product to shopping cart test:

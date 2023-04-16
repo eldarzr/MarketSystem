@@ -123,7 +123,8 @@ public class UsersHandler {
             return userLogin;
         else if(member != null)
             return member;
-        else throwIllegalArgumentException(String.format("User %s is unknown",userName));
+        throwIllegalArgumentException(String.format("User %s is unknown",userName));
+        return null; //not suppose to get here
     }
 
     public boolean isLoggedIn(String userName){
