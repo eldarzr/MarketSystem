@@ -32,21 +32,22 @@ public class MemberRoleInShop {
 		this.lock = new ReentrantLock();
 	}
 
-	public static MemberRoleInShop createOwner(String user, Shop shop, MessageObserver observer) throws Exception {
+	public static MemberRoleInShop createFounder(String user, Shop shop, MessageObserver observer) throws Exception {
 		//TODO: add logic to add owner
-		return adjustRole(new MemberRoleInShop(shop ,user , null, OWNER, ManagePermissions.getFullAccessPermissions()),observer);
+		MemberRoleInShop founder= new MemberRoleInShop(shop ,user , null, OWNER, ManagePermissions.getFullAccessPermissions());
+		return adjustRole(founder,observer);
 	}
 
 	public static MemberRoleInShop createOwner(String roleUser , Shop roleShop , String grantor , MessageObserver observer) throws Exception {
 		//TODO: add logic to add owner
-		return adjustRole(new MemberRoleInShop(roleShop , roleUser , grantor , OWNER,
-				ManagePermissions.getFullAccessPermissions()) , observer);
+		MemberRoleInShop owner= new MemberRoleInShop(roleShop , roleUser , grantor , OWNER, ManagePermissions.getFullAccessPermissions());
+		return adjustRole(owner, observer);
 	}
 
 	public static MemberRoleInShop createManager(String roleUser , Shop roleShop , String grantor, MessageObserver observer) throws Exception {
 		//TODO: add logic to add manager
-		return adjustRole(new MemberRoleInShop(roleShop,roleUser,grantor, MANAGER,
-				ManagePermissions.getReadOnlyPermissions()), observer);
+		MemberRoleInShop manager= new MemberRoleInShop(roleShop,roleUser,grantor, MANAGER, ManagePermissions.getReadOnlyPermissions());
+		return adjustRole(manager, observer);
 	}
 
 	public void setGrantor(String grantor) {

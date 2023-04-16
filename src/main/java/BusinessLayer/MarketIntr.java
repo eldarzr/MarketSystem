@@ -2,9 +2,7 @@ package BusinessLayer;
 
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
-import BusinessLayer.Purchases.Cart;
-import BusinessLayer.Purchases.PurchaseIntr;
-import BusinessLayer.Purchases.ShopBag;
+import BusinessLayer.Purchases.*;
 import BusinessLayer.Shops.ProductIntr;
 import BusinessLayer.Shops.Shop;
 
@@ -33,7 +31,7 @@ public interface MarketIntr {
 
     String logout(String userName);
 
-    Collection<PurchaseIntr> getUserPurchaseHistory(String userName);
+    Collection<UserInvoice> getUserPurchaseHistory(String userName);
 
 
     //shop functions
@@ -85,7 +83,7 @@ public interface MarketIntr {
     Collection<MemberRoleInShop> getShopManagersAndPermissions(String userName, String shopName) throws Exception;
 
     //4.13
-    Collection<PurchaseIntr> getShopPurchaseHistory(String userName, String shopName);
+    Collection<ShopInvoice> getShopPurchaseHistory(String userName, String shopName) throws Exception;
 
     //admin functions
 
@@ -96,10 +94,10 @@ public interface MarketIntr {
     void blockUser(String adminName, String UserName);
 
     //6.1
-    Collection<PurchaseIntr> getShopPurchaseHistoryByAdmin(String adminName, String shopName);
+    Collection<ShopInvoice> getShopPurchaseHistoryByAdmin(String adminName, String shopName) throws Exception;
 
     //6.2
-    Collection<PurchaseIntr> getUserPurchaseHistoryByAdmin(String adminName, String memberName);
+    Collection<UserInvoice> getUserPurchaseHistoryByAdmin(String adminName, String memberName) throws Exception;
 
 
     //cart function

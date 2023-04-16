@@ -6,9 +6,7 @@ import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.Market;
 import BusinessLayer.MarketIntr;
 import BusinessLayer.MemberRoleInShop;
-import BusinessLayer.Purchases.Cart;
-import BusinessLayer.Purchases.PurchaseIntr;
-import BusinessLayer.Purchases.ShopBag;
+import BusinessLayer.Purchases.*;
 import BusinessLayer.Shops.ProductIntr;
 import BusinessLayer.Shops.Shop;
 import BusinessLayer.Shops.ShopProduct;
@@ -64,10 +62,10 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
 
     public Collection<PurchaseBridge> getUserPurchaseHistory(String userName) {
 
-        Collection<PurchaseIntr> purchases =  market.getUserPurchaseHistory(userName);
+        Collection<UserInvoice> purchases =  market.getUserPurchaseHistory(userName);
         Collection<PurchaseBridge> ret = new ArrayList<>();
-        for(PurchaseIntr p : purchases){
-            ret.add(new PurchaseRealBridge(p));
+        for(UserInvoice p : purchases){
+            ret.add(new UserInvoceRealBridge(p));
         }
         return ret;
     }
@@ -160,11 +158,11 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     }
 
 
-    public Collection<PurchaseBridge> getShopPurchaseHistory(String userName, String shopName) {
-        Collection<PurchaseIntr> purchaseIntrs =  market.getShopPurchaseHistory(userName, shopName);
+    public Collection<PurchaseBridge> getShopPurchaseHistory(String userName, String shopName) throws Exception {
+        Collection<ShopInvoice> shopInvoices =  market.getShopPurchaseHistory(userName, shopName);
         Collection<PurchaseBridge> ret = new ArrayList<>();
-        for (PurchaseIntr p : purchaseIntrs)
-            ret.add(new PurchaseRealBridge(p));
+        for (ShopInvoice p : shopInvoices)
+            ret.add(new ShopInvoceRealBridge(p));
         return ret;
     }
 
@@ -176,19 +174,19 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
         market.blockUser(adminName, userName);
     }
 
-    public Collection<PurchaseBridge> getShopPurchaseHistoryByAdmin(String adminName, String shopName) {
-        Collection<PurchaseIntr> purchaseIntrs =  market.getShopPurchaseHistoryByAdmin(adminName, shopName);
+    public Collection<PurchaseBridge> getShopPurchaseHistoryByAdmin(String adminName, String shopName) throws Exception {
+        Collection<ShopInvoice> shopInvoices =  market.getShopPurchaseHistoryByAdmin(adminName, shopName);
         Collection<PurchaseBridge> ret = new ArrayList<>();
-        for (PurchaseIntr p : purchaseIntrs)
-            ret.add(new PurchaseRealBridge(p));
+        for (ShopInvoice p : shopInvoices)
+            ret.add(new ShopInvoceRealBridge(p));
         return ret;
     }
 
-    public Collection<PurchaseBridge> getUserPurchaseHistoryByAdmin(String adminName, String memberName) {
-        Collection<PurchaseIntr> purchaseIntrs = market.getUserPurchaseHistoryByAdmin(adminName, memberName);
+    public Collection<PurchaseBridge> getUserPurchaseHistoryByAdmin(String adminName, String memberName) throws Exception {
+        Collection<UserInvoice> userInvoices = market.getUserPurchaseHistoryByAdmin(adminName, memberName);
         Collection<PurchaseBridge> ret = new ArrayList<>();
-        for (PurchaseIntr p : purchaseIntrs)
-            ret.add(new PurchaseRealBridge(p));
+        for (UserInvoice p : userInvoices)
+            ret.add(new UserInvoceRealBridge(p));
         return ret;
     }
 

@@ -7,7 +7,9 @@ import BusinessLayer.Shops.Product;
 import BusinessLayer.Shops.Shop;
 import BusinessLayer.Users.User;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -15,15 +17,18 @@ public class Purchase implements PurchaseIntr{
 
     List<Shop> shops;
     User user;
-
     PaymentDetails paymentDetails;
     SupplyDetails supplyDetails;
+    UserInvoice userInvoice;
+    List<ShopInvoice> shopInvoices;
 
     public Purchase(User user, List<Shop> shops, PaymentDetails paymentDetails, SupplyDetails supplyDetails) {
         this.user = user;
         this.shops = shops;
         this.paymentDetails = paymentDetails;
         this.supplyDetails = supplyDetails;
+        this.userInvoice = new UserInvoice(user.getName(), paymentDetails.toString(), paymentDetails.toString());
+        this.shopInvoices = new ArrayList<>();
     }
 
     @Override
@@ -42,7 +47,14 @@ public class Purchase implements PurchaseIntr{
             revert();
             throw new Exception(String.format("problem with shipment, error message: %s",e.getMessage()));
         }
+        addInvoicesToObjects();
+        user.clearCart();
+    }
 
+    private void addInvoicesToObjects() {
+        user.addInvoice(userInvoice);
+        for (ShopInvoice shopInvoice : shopInvoices)
+            getShopByName(shopInvoice.getShopName()).addInvoice(shopInvoice);
     }
 
     private void revertPay() throws InterruptedException {
@@ -56,6 +68,7 @@ public class Purchase implements PurchaseIntr{
         ConcurrentHashMap<String, ShopBag>  shopsAndProducts = cart.getShopsAndProducts();
         checkProductsAvailability(shopsAndProducts);
         reduceProductsQuantity(shopsAndProducts);
+        addProductsToInvoices(shopsAndProducts);
         releaseProductsLocks();
     }
 
@@ -148,5 +161,18 @@ public class Purchase implements PurchaseIntr{
     public void visitRevert(CreditCardPaymentDetails creditCardPaymentDetails) throws InterruptedException {
         //connect to credit card company for revert
         Thread.sleep(20);
+    }
+
+    public void addProductsToInvoices(ConcurrentHashMap<String, ShopBag> shopsAndProducts) {
+        for(String shopName : shopsAndProducts.keySet()){
+            ShopInvoice shopInvoice = new ShopInvoice
+                    (user.getName(), paymentDetails.toString(), supplyDetails.toString(), shopName);
+            ShopBag shopBag = shopsAndProducts.get(shopName);
+            for (ShopBagItem shopBagItem : shopBag.getProductsAndQuantities().values()){
+                userInvoice.addProduct(shopName, shopBagItem.product, shopBagItem.quantity);
+                shopInvoice.addProduct(shopName, shopBagItem.product, shopBagItem.quantity);
+            }
+            shopInvoices.add(shopInvoice);
+        }
     }
 }

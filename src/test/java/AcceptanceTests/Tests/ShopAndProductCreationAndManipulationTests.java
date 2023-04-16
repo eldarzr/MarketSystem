@@ -3,23 +3,22 @@ package AcceptanceTests.Tests;
 
 import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.Assert.*;
+import org.junit.*;
+import org.junit.runners.MethodSorters;
 
 //This test class assumes GuestBasicTests are all passed
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ShopAndProductCreationAndManipulationTests {
 
-    private MarketSystemBridge bridge;
-    private String setUpComplete;
-    private String testsComplete;
-    private String category = "category";
+    static MarketSystemBridge bridge;
+    static boolean setUpComplete = false;
+    static boolean testsComplete = false;
+    static String category = "category";
 
     //In set up we register 10 users (gabi0 - gabi9) and log in to the first 5 (gabi0 - gabi4)
-    @BeforeEach
-    public void setUp() throws Exception{
+    @BeforeClass
+    public static void setUp() throws Exception{
+//        if(setUpComplete)return;
         bridge = new MarketSystemRealBridge();
         bridge.init();
         String pass = "1234Gabi";
@@ -29,34 +28,37 @@ public class ShopAndProductCreationAndManipulationTests {
             if (i<5)
                 bridge.login("gabi"+index,pass);
         }
-        System.out.println("set up complete****************************************");
-        setUpComplete = "true";
+
+//        setUpComplete = true;
     }
 
-//    @AfterEach
-//    public void tearDown() throws Exception{
-//        if(testsComplete == null)return;
-//        for(int i=0;i<10;i++){
-//            String index = Integer.toString(i);
-//            if(i<5)
-//                bridge.logout("gabi"+index);
-//            bridge.unregister("gabi"+index);
-//        }
-//    }
+    @AfterClass
+    public static void tearDown() throws Exception{
+        if(!testsComplete)return;
+        for(int i=0;i<10;i++){
+            String index = Integer.toString(i);
+            if(i<5)
+                bridge.logout("gabi"+index);
+            bridge.unregister("gabi"+index);
+        }
+
+    }
+
+
     //successful Shop create
     @Test
-    public void createShopTest(){
+    public void test01createShopTest(){
         try{
             String userName = "gabi0";
             String shopName = "Gabi's Goods";
-            bridge.openShop(userName,shopName);
+            bridge.createShop(userName,shopName);
         }catch (Exception e){
             fail(e.getMessage());
         }
     }
     //unsuccessful shop create because shop already exists
     @Test
-    public void createShopTest2(){
+    public void test02createShopTest2(){
         try{
             String shopName = "Gabi's Goods";
             bridge.createShop("gabi0",shopName);
@@ -67,7 +69,7 @@ public class ShopAndProductCreationAndManipulationTests {
     }
     //unsuccessful shop create because user doesn't exist
     @Test
-    public void createShopTest3(){
+    public void test03createShopTest3(){
         try{
             String shopName = "Gabi's Goods2";
             bridge.createShop("non_existing_user",shopName);
@@ -78,7 +80,7 @@ public class ShopAndProductCreationAndManipulationTests {
     }
     //unsuccessful shop create because user isn't logged in
     @Test
-    public void createShopTest4(){
+    public void test04createShopTest4(){
         try{
             String shopName = "Gabi's Goods2";
             bridge.createShop("gabi5",shopName);
@@ -89,7 +91,7 @@ public class ShopAndProductCreationAndManipulationTests {
     }
     //successful add product by founder
     @Test
-    public void addProductTest1(){
+    public void test05addProductTest1(){
         try{
             String userName = "gabi0";
             String shopName = "Gabi's Goods";
@@ -103,37 +105,37 @@ public class ShopAndProductCreationAndManipulationTests {
     }
     //unsuccessful add product with the same name
     @Test
-    public void addProductTest2(){
+    public void test06addProductTest2(){
         try{
             String userName = "gabi0";
             String shopName = "Gabi's Goods";
             String productName = "Basketball";
             double price = 240;
             String desc = "Nike basketball size 7";
-            bridge.addNewProduct(userName,shopName,category,productName,desc,price);
-            fail("shouldn't be able to add a product with the same name");
+            bridge.addNewProduct(userName,shopName,productName,category,desc,price);
+            Assert.fail("shouldn't be able to add a product with the same name");
         }catch (Exception e){
             assertTrue(true);
         }
     }
     //unsuccessful add product by a non appointed user
     @Test
-    public void addProductTest3(){
+    public void test07addProductTest3(){
         try{
             String userName = "gabi5"; // a non-appointed user
             String shopName = "Gabi's Goods";
             String productName = "Soccer Ball";
             double price = 150;
             String desc = "Adidas soccer ball size 5";
-            bridge.addNewProduct(userName,shopName,category,productName,desc,price);
-            fail("shouldn't be able to add a product as a non-appointed user");
+            bridge.addNewProduct(userName,shopName,productName,category,desc,price);
+            Assert.fail("shouldn't be able to add a product as a non-appointed user");
         }catch (Exception e){
             assertTrue(true);
         }
     }
     //unsuccessful add product by a non logged in owner
     @Test
-    public void addProductTest4(){
+    public void test08addProductTest4(){
         try{
             String founderName = "gabi0";
             String userName = "gabi5";
@@ -142,15 +144,15 @@ public class ShopAndProductCreationAndManipulationTests {
             String productName = "Soccer Ball";
             double price = 100;
             String desc = "Adidas soccer ball size 5";
-            bridge.addNewProduct(userName,shopName,category,productName,desc,price);
-            fail("non-logged in owner should not be able to add product");
+            bridge.addNewProduct(userName,shopName,productName,category,desc,price);
+            Assert.fail("non-logged in owner should not be able to add product");
         } catch (Exception e){
             assertTrue(true);
         }
     }
     //successful add product by appointed owner
     @Test
-    public void addProductTest5(){
+    public void test09addProductTest5(){
         try{
             String founderName = "gabi0";
             String userName = "gabi1";
@@ -159,7 +161,7 @@ public class ShopAndProductCreationAndManipulationTests {
             String productName = "Football";
             double price = 210;
             String desc = "Nike NFL football";
-            bridge.addNewProduct(userName,shopName,category,productName,desc,price);
+            bridge.addNewProduct(userName,shopName,productName,category,desc,price);
         }catch (Exception e){
             fail(e.getMessage());
         }
@@ -171,11 +173,11 @@ public class ShopAndProductCreationAndManipulationTests {
 
     //unsuccessful update product's name test because the name is already used for a different product in the store
     @Test
-    public void updateProductNameTest1(){
+    public void test10updateProductNameTest1(){
         try{
             String userName = "gabi0"; // founder of Gabi's Goods
             String oldProductName = "Basketball"; // Was added in earlier tests
-            String newProductName = "Soccer"; // Also was added in earlier tests
+            String newProductName = "Football"; // Also was added in earlier tests
             String shopName = "Gabi's Goods";
             bridge.updateProductName(userName,shopName,oldProductName,newProductName);
             fail("Should not be able to update a product's name to an already existing product's name in the same shop");
@@ -186,7 +188,7 @@ public class ShopAndProductCreationAndManipulationTests {
 
     //unsuccessful update product's name test because the user trying to do it is not authorized to
     @Test
-    public void updateProductNameTest2(){
+    public void test11updateProductNameTest2(){
         try{
             String userName = "gabi5"; // Non-logged in owner of Gabi's Goods
             String oldProductName = "Soccer"; // Was added in earlier tests
@@ -201,7 +203,7 @@ public class ShopAndProductCreationAndManipulationTests {
 
     //unsuccessful update product's name test because the user trying to do it is an owner, but isn't logged in
     @Test
-    public void updateProductNameTest3(){
+    public void test12updateProductNameTest3(){
         try{
             String userName = "gabi5"; // Non-logged in owner of Gabi's Goods
             String oldProductName = "Soccer"; // Was added in earlier tests
@@ -216,7 +218,7 @@ public class ShopAndProductCreationAndManipulationTests {
 
     //unsuccessful update product's name because the product itself not exists in that shop
     @Test
-    public void updateProductNameTest4(){
+    public void test13updateProductNameTest4(){
         try{
             String userName = "gabi1"; // Logged in owner of Gabi's Goods
             String oldProductName = "Guitar"; // A non-existing product in Gabi's Goods
@@ -231,11 +233,11 @@ public class ShopAndProductCreationAndManipulationTests {
 
     //successful update product's name by founder
     @Test
-    public void updateProductNameTest5(){
+    public void test14updateProductNameTest5(){
         try{
             String userName = "gabi0"; // Founder of Gabi's Goods
-            String oldProductName = "Soccer"; // Was added in earlier tests
-            String newProductName = "Football";
+            String oldProductName = "Football"; // Was added in earlier tests
+            String newProductName = "Soccer";
             String shopName = "Gabi's Goods";
             bridge.updateProductName(userName,shopName,oldProductName,newProductName);
             assertTrue(true);
@@ -245,7 +247,7 @@ public class ShopAndProductCreationAndManipulationTests {
     }
     //successful update product's name by appointed owner who is logged in
     @Test
-    public void updateProductNameTest6(){
+    public void test15updateProductNameTest6(){
         try{
             String userName = "gabi1"; // appointed owner of Gabi's Goods and is logged in
             String oldProductName = "Basketball"; //Was added in earlier tests
@@ -263,7 +265,7 @@ public class ShopAndProductCreationAndManipulationTests {
 
     //unsuccessful update product's description test because the user trying to do it is not authorized to
     @Test
-    public void updateProductDescription1(){
+    public void test16updateProductDescription1(){
         try{
             String userName = "gabi3"; // non authorized user
             String shopName = "Gabi's Goods";
@@ -277,7 +279,7 @@ public class ShopAndProductCreationAndManipulationTests {
     }
     //unsuccessful update product's description test because the user trying to do it is an owner, but isn't logged in
     @Test
-    public void updateProductDescription2(){
+    public void test17updateProductDescription2(){
         try{
             String userName = "gabi5"; // non-logged in owner
             String shopName = "Gabi's Goods";
@@ -292,12 +294,12 @@ public class ShopAndProductCreationAndManipulationTests {
 
     //unsuccessful update product's description because the product itself not exists in that shop
     @Test
-    public void updateProductDescription3(){
+    public void test18updateProductDescription3(){
         try{
             String userName = "gabi0"; // founder of Gabi's Goods
             String shopName = "Gabi's Goods";
-            String productName = "Soccer"; // non-existent product
-            String newDescription = "Adidas Soccer ball";
+            String productName = "Football"; // non-existent product
+            String newDescription = "Adidas Football ball";
             bridge.updateProductDesc(userName,shopName,productName,newDescription);
             fail("user should not be able to update a product's description that does not exist in the shop");
         }catch (Exception e){
@@ -307,11 +309,11 @@ public class ShopAndProductCreationAndManipulationTests {
 
     //successful update product's description by logged in founder
     @Test
-    public void updateProductDescription4(){
+    public void test19updateProductDescription4(){
         try{
             String userName = "gabi0"; // founder of Gabi's Goods
             String shopName = "Gabi's Goods";
-            String productName = "Football"; // existing product
+            String productName = "Soccer"; // existing product
             String newDescription = "Brown NFL football with white stitches";
             bridge.updateProductDesc(userName,shopName,productName,newDescription);
             assertEquals(newDescription, bridge.getProductDescription(shopName, productName));
@@ -322,7 +324,7 @@ public class ShopAndProductCreationAndManipulationTests {
 
     //successful update product's name by appointed owner who is logged in
     @Test
-    public void updateProductDescription5(){
+    public void test20updateProductDescription5(){
         try{
             String userName = "gabi1"; // appointed owner of Gabi's Goods and is logged in
             String shopName = "Gabi's Goods";
@@ -342,7 +344,7 @@ public class ShopAndProductCreationAndManipulationTests {
 
 //unsuccessful update product's price test because the user trying to do it is not authorized to
     @Test
-    public void updateProductPrice1(){
+    public void test21updateProductPrice1(){
         try{
             String userName = "gabi3"; // non authorized user
             String shopName = "Gabi's Goods";
@@ -357,7 +359,7 @@ public class ShopAndProductCreationAndManipulationTests {
 
     //unsuccessful update product's price test because the user trying to do it is an owner, but isn't logged in
     @Test
-    public void updateProductPrice2(){
+    public void test22updateProductPrice2(){
         try{
             String userName = "gabi5"; // non-logged in owner
             String shopName = "Gabi's Goods";
@@ -372,7 +374,7 @@ public class ShopAndProductCreationAndManipulationTests {
 
     //unsuccessful update product's price because the product itself not exists in that shop
     @Test
-    public void updateProductPrice3(){
+    public void test23updateProductPrice3(){
         try{
             String userName = "gabi0"; // founder of the shop
             String shopName = "Gabi's Goods";
@@ -387,7 +389,7 @@ public class ShopAndProductCreationAndManipulationTests {
 
     //unsuccessful update product's price because the price is negative
     @Test
-    public void updateProductPrice4(){
+    public void test24updateProductPrice4(){
         try{
             String userName = "gabi1"; // appointed owner of the shop and is logged in
             String shopName = "Gabi's Goods";
@@ -402,11 +404,11 @@ public class ShopAndProductCreationAndManipulationTests {
 
     //successful update product's price by logged in founder
     @Test
-    public void updateProductPrice5(){
+    public void test25updateProductPrice5(){
         try{
             String userName = "gabi0"; // founder of the shop and is logged in
             String shopName = "Gabi's Goods";
-            String productName = "Football"; // existing product
+            String productName = "Soccer"; // existing product
             double newPrice = 320;
             bridge.updateProductPrice(userName,shopName,productName,newPrice);
             assertEquals(newPrice, bridge.getProductPrice(shopName, productName), 0.01);
@@ -417,16 +419,31 @@ public class ShopAndProductCreationAndManipulationTests {
 
     //successful update product's price by appointed owner who is logged in
     @Test
-    public void updateProductPrice6(){
+    public void test26updateProductPrice6(){
         try{
             String userName = "gabi1"; // Owner of the shop and is logged in
             String shopName = "Gabi's Goods";
-            String productName = "Football"; // existing product
+            String productName = "Soccer"; // existing product
             double newPrice = 300;
             bridge.updateProductPrice(userName,shopName,productName,newPrice);
             assertEquals(newPrice, bridge.getProductPrice(shopName, productName), 0.01);
         }catch (Exception e){
             fail("should be able to update product's price as logged in founder");
+        }
+    }
+
+    //successful update product's price by appointed owner who is logged in
+    @Test
+    public void test27updateProductQuantity(){
+        try{
+            String userName = "gabi1"; // Owner of the shop and is logged in
+            String shopName = "Gabi's Goods";
+            String productName = "Soccer"; // existing product
+            int quantity = 10;
+            bridge.updateProductQuantity(userName,shopName,productName,quantity);
+            Assert.assertEquals(quantity, bridge.getProductQuantityInShop(shopName, productName), 0.01);
+        }catch (Exception e){
+            Assert.fail("should be able to update product's price as logged in founder");
         }
     }
     //add product to shopping cart test:
@@ -438,7 +455,7 @@ public class ShopAndProductCreationAndManipulationTests {
 
     //unsuccessful addition to cart because the user not exists
     @Test
-    public void addProductToCart1(){
+    public void test28addProductToCart1(){
         try{
             String userName = "gabi10";  // Non existing user
             String productName = "Football";
@@ -452,7 +469,7 @@ public class ShopAndProductCreationAndManipulationTests {
     }
     //unsuccessful addition to cart because the shop not exists
     @Test
-    public void addProductToCart2(){
+    public void test29addProductToCart2(){
         try {
             String userName = "gabi0";
             String productName = "Football";
@@ -467,7 +484,7 @@ public class ShopAndProductCreationAndManipulationTests {
 
     //unsuccessful addition to cart because the shop exists but the user is not the owner
     @Test
-    public void addProductToCart3(){
+    public void test30addProductToCart3(){
         try {
             String userName = "gabi5"; //Non logged-in owner
             String productName = "Football";
@@ -482,7 +499,7 @@ public class ShopAndProductCreationAndManipulationTests {
 
     //unsuccessful addition to cart because the shop exists but the product does not exists
     @Test
-    public void addProductToCart4(){
+    public void test31addProductToCart4(){
         try {
             String userName = "gabi0";
             String productName = "Table"; // Non existing product
@@ -497,7 +514,7 @@ public class ShopAndProductCreationAndManipulationTests {
 
     //unsuccessful addition to cart because the user exists but isn't logged in
     @Test
-    public void addProductToCart5(){
+    public void test32addProductToCart5(){
         try {
             String userName = "gabi0";
             String productName = "Football";
@@ -512,11 +529,11 @@ public class ShopAndProductCreationAndManipulationTests {
 
     //successful addition to cart - the user is registered, logged in, and exists in the shop
     @Test
-    public void addProductToCart6() throws Exception {
-        testsComplete = "true";
+    public void test33addProductToCart6(){
+        testsComplete = true;
         try {
             String userName = "gabi1"; //logged-in appointed owner
-            String productName = "Football";
+            String productName = "Soccer";
             int quantity = 3;
             String shopName = "Gabi's Goods";
             bridge.addProductsToCart(userName, shopName, productName, quantity);
@@ -525,7 +542,5 @@ public class ShopAndProductCreationAndManipulationTests {
             fail("Addition to cart should've succeeded");
         }
     }
-
-
 
 }
