@@ -181,7 +181,7 @@ public class Shop implements ShopIntr {
 		validateProductExists(productOldName);
 		validatePermissionsException(userName, MANAGE_STOCK);
 		if (products.containsKey(productNewName))
-			throw new Exception(String.format("there is no product %s in the shop %s", productNewName, name));
+			throw new Exception(String.format("there is already product %s in the shop %s", productNewName, name));
 		synchronized (products) {
 			ShopProduct product = products.remove(productOldName);
 			product.setName(productNewName);
@@ -297,6 +297,11 @@ public class Shop implements ShopIntr {
 	private void throwException(String errorMsg) throws Exception {
 		logger.severe(errorMsg);
 		throw new Exception(errorMsg);
+	}
+
+	//this function is for Unit tests only to make mocks!
+	public void addNewProductTest(ShopProduct product) {
+		products.put(product.getName(), product);
 	}
 }
 

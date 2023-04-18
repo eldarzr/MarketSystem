@@ -1,36 +1,33 @@
-package BusinessLayer;
+package IntegrationTests;
 
-import BusinessLayer.Shops.Product;
+import BusinessLayer.Market;
 import BusinessLayer.Shops.ProductIntr;
 import BusinessLayer.Shops.Shop;
+import BusinessLayer.Shops.ShopIntr;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-class MarketGetProductTest {
+class MarketGetShopIntegrationTest {
 	Market market;
 	String[] usersName = {"eldar", "niv12"};
 	String[] passwords = {"Aa123456", "Aa123456"};
 	String[] emails = {"eldar@gmail.com", "niv@gmail.com"};
-	String[] shopNames = {"shop1", "shop2"};
-	String[] prodNames = {"prod1", "prod2"};
-	String[] descs = {"description1", "description2"};
-	String[] cat = {"cat1", "cat2"};
-	double[] prices = {5, 10};
+	String[] shopNames = {"shop1", "shop11", "shop111"};
 
 	@BeforeEach
 	void setUp() throws Exception {
 		market = new Market();
 		market.init();
-
 		for(int i = 0; i < usersName.length; i++) {
 			String guestName = market.startSession();
 			market.register(usersName[i], emails[i], passwords[i]);
 			market.login(guestName,usersName[i], passwords[i]);
 			market.createShop(usersName[i], shopNames[i]);
-			market.addNewProduct(usersName[i], shopNames[i], prodNames[i], cat[i], descs[i], prices[i]);
 		}
 	}
 
@@ -40,24 +37,33 @@ class MarketGetProductTest {
 	}
 
 	@Test
-	void getProdSuccess() throws Exception {
+	void getShopSuccess() throws Exception {
 		for(int i = 0; i < usersName.length; i++) {
-			ProductIntr product = market.getProduct(usersName[i], shopNames[i], prodNames[i]);
-			assertTrue(product.getName().equals(prodNames[i]));
+			Shop shop = market.searchShop(usersName[i], shopNames[i]);
+			assertTrue(shop.getName().equals(shopNames[i]));
 		}
 	}
 
 	@Test
-	void getProdSuccessDistance1() throws Exception {
+	void getShopSuccessDistance1() throws Exception {
 		for(int i = 0; i < usersName.length; i++) {
-			ProductIntr product = market.getProduct(usersName[i], shopNames[i], prodNames[(i + 1) % 2]);
-			assertNotNull(product);
+			Shop shop = market.searchShop(usersName[i], shopNames[(i + 1) % 2]);
+			assertNotNull(shop);
 		}
 	}
 
 	@Test
-	void getProdFail() throws Exception {
-		assertNull(market.getProduct(usersName[0], shopNames[0], "bla bla"));
+	void getShopFail() throws Exception {
+		assertNull(market.searchShop(usersName[0], "bla bla"));
+	}
+
+	@Test
+	void getShopSuccessDistance() throws Exception {
+		market.createShop(usersName[0], shopNames[2]);
+		List<Shop> shops = market.getShops(usersName[0], shopNames[0]);
+		for(int i = 0; i < shopNames.length; i++) {
+			assertEquals(shops.get(i).getName(), shopNames[i]);
+		}
 	}
 
 }

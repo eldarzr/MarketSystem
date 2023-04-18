@@ -1,5 +1,6 @@
-package BusinessLayer;
+package IntegrationTests;
 
+import BusinessLayer.Market;
 import BusinessLayer.Shops.ProductIntr;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +11,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static BusinessLayer.Search.*;
 
-class MarketSearchTest {
+class MarketSearchIntegrationTest {
 	Market market;
 	String[] usersName = {"eldar", "niv12"};
 	String[] passwords = {"Aa123456", "Aa123456"};

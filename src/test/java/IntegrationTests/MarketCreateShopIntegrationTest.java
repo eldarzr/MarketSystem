@@ -1,5 +1,6 @@
-package BusinessLayer;
+package IntegrationTests;
 
+import BusinessLayer.Market;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -8,7 +9,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MarketCreateShopTest {
+class MarketCreateShopIntegrationTest {
 	Market market;
 	String[] usersName = {"eldar", "niv12"};
 	String[] passwords = {"Aa123456", "Aa123456"};
