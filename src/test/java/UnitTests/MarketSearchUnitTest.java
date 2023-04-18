@@ -53,6 +53,7 @@ class MarketSearchUnitTest {
 			Mockito.when(product[i].getDescription()).thenReturn(descs[i]);
 			Mockito.when(product[i].getCategory()).thenReturn(cats[i]);
 			Mockito.when(product[i].getPrice()).thenReturn(prices[i]);
+			Mockito.when(product[i].isOnCategory(cats[0])).thenReturn(true);
 			shops[0].addNewProductTest(product[i]);
 		}
 	}
