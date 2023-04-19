@@ -22,7 +22,7 @@ class MarketCreateShopUnitTest {
 	void setUp() throws Exception {
 		shopHandler = ShopHandler.getInstance();
 		for (int i = 0; i < 2; i++) {
-			shops[0] = Mockito.mock(Shop.class);
+			shops[i] = Mockito.mock(Shop.class);
 		}
 	}
 
