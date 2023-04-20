@@ -57,13 +57,12 @@ public class ServiceMarket {
 		return new Response();
 	}
 
-	public Response register(String userName, String email, String password) throws Exception {
+	public ResponseT<UserDataObj> register(String userName, String email, String password) {
 		try {
-			market.register(userName, email, password);
+			return new ResponseT<>(new UserDataObj(market.register(userName, email, password)));
 		} catch (Exception exception) {
-			return new Response(exception.getMessage());
+			return new ResponseT<UserDataObj>(exception.getMessage(), false);
 		}
-		return new Response();
 	}
 
 	public Response login(String guestName, String userName, String password) {

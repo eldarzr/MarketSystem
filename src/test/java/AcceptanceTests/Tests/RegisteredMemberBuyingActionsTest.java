@@ -1,14 +1,17 @@
 package AcceptanceTests.Tests;
 
 import AcceptanceTests.*;
-import org.junit.After;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 
-import static org.junit.Assert.*;
+import static com.helger.commons.mock.CommonsAssert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
+
 
 public class RegisteredMemberBuyingActionsTest {
     private MarketSystemBridge market= new MarketSystemRealBridge();
@@ -68,7 +71,7 @@ public class RegisteredMemberBuyingActionsTest {
             market.login("testUser", "Passw0rd!!!");
 
             // verify that the cart is not empty
-            assertFalse("Cart is empty after logout", market.getCart("testUser").isEmpty());
+            assertFalse(market.getCart("testUser").isEmpty(), "Cart is empty after logout");
 
             // verify that the product is still in the cart
             Collection<ProductBridge> cartProducts = cart.getProducts();

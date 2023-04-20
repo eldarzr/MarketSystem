@@ -5,9 +5,11 @@ import AcceptanceTests.MarketSystemRealBridge;
 import AcceptanceTests.ProductBridge;
 
 import org.junit.jupiter.api.*;
-import static org.junit.Assert.*;
 
 import java.util.Collection;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 public class ShopClosureTest {

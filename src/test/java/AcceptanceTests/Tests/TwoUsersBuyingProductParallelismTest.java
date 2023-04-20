@@ -2,15 +2,12 @@ package AcceptanceTests.Tests;
 
 import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
-import AcceptanceTests.PurchaseBridge;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collection;
 import java.util.concurrent.*;
 
-import static org.junit.Assert.assertEquals;
 
 public class TwoUsersBuyingProductParallelismTest {
 
@@ -48,7 +45,7 @@ public class TwoUsersBuyingProductParallelismTest {
             marketSystem.addNewProduct(user1, shopName, productName, "category","description", 10.0,1);
         }
 
-        @After
+        @AfterEach
         public void tearDown() throws Exception {
             marketSystem = null;
         }

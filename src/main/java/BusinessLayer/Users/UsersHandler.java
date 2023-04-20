@@ -58,7 +58,7 @@ public class UsersHandler {
         }
     }
 
-    public void register(String userName, String email, String password) throws Exception{
+    public User register(String userName, String email, String password) throws Exception{
         logger.info(String.format("Attempt to validate %s is valid username.",userName));
         checkValidUserName(userName);
         logger.info(String.format("%s is valid username.",userName));
@@ -78,6 +78,7 @@ public class UsersHandler {
         logger.info(String.format("User %s created.", userName));
 
         members.put(userName,nuser);
+        return nuser;
     }
 
     public void login(String guestName, String userName, String password) {

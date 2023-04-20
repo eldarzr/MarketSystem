@@ -3,12 +3,12 @@ import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
 import AcceptanceTests.ProductBridge;
 import AcceptanceTests.ShopBridge;
-import org.junit.After;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class GuestBuyingActionsTest {
 
@@ -44,7 +44,7 @@ public class GuestBuyingActionsTest {
         try {
             // Guest can view existing shops
             ShopBridge shop = market.getShop(tempUserName,"My Shop");
-            assertNotNull("shop is null", shop);
+            assertNotNull(shop, "shop is null");
             assertEquals("Something went wrong with the shop's name", "My Shop", shop.getShopName());
 
         } catch (Exception e) {
@@ -57,7 +57,7 @@ public class GuestBuyingActionsTest {
         try {
             // Guest can view products in existing shops
             ProductBridge product = market.getProduct(tempUserName,"My Shop","item1");
-            assertNotNull("product is null", product);
+            assertNotNull(product, "product is null");
             assertEquals("Wrong product name", "item1", product.getProductName());
 
         } catch (Exception e) {

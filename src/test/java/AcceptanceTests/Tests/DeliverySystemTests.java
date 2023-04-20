@@ -3,16 +3,15 @@ package AcceptanceTests.Tests;
 import AcceptanceTests.DeliveryServiceProviderBridge;
 import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 
 
@@ -83,7 +82,7 @@ public class DeliverySystemTests {
             // Mock the delivery system to return true
             when(deliveryService.sendDeliveryRequest(userName, deliveryDetails)).thenReturn(true);
             boolean deliveryConfirmation = deliveryService.sendDeliveryRequest(userName, deliveryDetails);
-            assertTrue("Failed to receive delivery confirmation", deliveryConfirmation);
+            assertTrue(deliveryConfirmation, "Failed to receive delivery confirmation");
         } catch (Exception e) {
             fail("Exception thrown while contacting delivery system: " + e.getMessage());
         }
