@@ -4,14 +4,17 @@ import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
 import AcceptanceTests.ProductBridge;
 import AcceptanceTests.ShoppingCartBridge;
-import org.junit.After;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 
-import static org.junit.Assert.*;
+import static com.helger.commons.mock.CommonsAssert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 
 public class ShoppingCartActionsTest {
     private MarketSystemBridge market= new MarketSystemRealBridge();
@@ -44,7 +47,7 @@ public class ShoppingCartActionsTest {
         try {
             ShoppingCartBridge cart = market.getCart(tempUserName);
 
-            assertTrue("Cart is not empty", cart.isEmpty());
+            assertTrue(cart.isEmpty(), "Cart is not empty");
 
         } catch (Exception e) {
             fail("Exception thrown while testing empty cart: " + e.getMessage());
@@ -61,9 +64,9 @@ public class ShoppingCartActionsTest {
 
             market.addProductsToCart(tempUserName, shopName, product.getProductName(), 1);
 
-            assertFalse("Cart is empty", cart.isEmpty());
+            assertFalse(cart.isEmpty(), "Cart is empty");
 
-            assertTrue("Product not in cart", cart.getProductNames().contains(product.getProductName()));
+            assertTrue(cart.getProductNames().contains(product.getProductName()), "Product not in cart");
             assertEquals("Incorrect quantity of product in cart", 1, cart.getQuantityOfProduct(product.getProductName()));
             //todo: this assert is not true , again you have a different cart object
 
@@ -108,7 +111,7 @@ public class ShoppingCartActionsTest {
             market.updateProductQuantityInCart(tempUserName, shopName, product.getProductName(), 2);
 
             // check that the product is in the cart and has the correct quantity
-            assertTrue("Product not in cart", market.getCart(tempUserName).getProductNames().contains(product.getProductName()));
+            assertTrue(market.getCart(tempUserName).getProductNames().contains(product.getProductName()), "Product not in cart");
             assertEquals("Incorrect quantity of product in cart", 2, market.getCart(tempUserName).getQuantityOfProduct(product.getProductName()));
             //todo: again cart not the same object
 

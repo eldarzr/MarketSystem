@@ -5,6 +5,7 @@ import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Purchases.*;
 import BusinessLayer.Shops.ProductIntr;
 import BusinessLayer.Shops.Shop;
+import BusinessLayer.Users.User;
 
 import java.util.*;
 
@@ -22,7 +23,7 @@ public interface MarketIntr {
 
     void closeSession(String userName);
 
-    void register(String userName, String email, String password) throws Exception;
+    User register(String userName, String email, String password) throws Exception;
 
     void login(String guestName, String userName, String password);
 

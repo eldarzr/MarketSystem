@@ -2,12 +2,11 @@ package AcceptanceTests.Tests;
 
 import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
-import org.junit.*;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.*;
 
 import java.util.Collection;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ChangeManagerPermissionsTest {
 
@@ -16,7 +15,7 @@ public class ChangeManagerPermissionsTest {
     private static String shopManager;
     private static String shopName;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpClass() throws Exception {
         // Set up market system
         marketSystem = new MarketSystemRealBridge();
@@ -51,7 +50,7 @@ public class ChangeManagerPermissionsTest {
         }
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDownClass() {
         // Unregister users and clear data
         marketSystem.unregister("shopOwner");
@@ -65,7 +64,7 @@ public class ChangeManagerPermissionsTest {
         marketSystem.openShop(shopOwner, shopName);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         // Close shop
         marketSystem.closeShop(shopOwner, shopName);

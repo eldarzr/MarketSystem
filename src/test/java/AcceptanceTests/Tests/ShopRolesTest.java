@@ -3,13 +3,13 @@ package AcceptanceTests.Tests;
 import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
 
-import org.junit.*;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.*;
 
 import java.util.Collection;
 import java.util.HashSet;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class ShopRolesTest {
 
@@ -19,7 +19,7 @@ public class ShopRolesTest {
     private static String shopManager2;
     private static String shopName;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpClass() throws Exception {
         // Set up market system
         marketSystem = new MarketSystemRealBridge();
@@ -59,7 +59,7 @@ public class ShopRolesTest {
         }
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDownClass() {
         // Unregister users and clear data
         marketSystem.unregister("shopOwner");
@@ -74,7 +74,7 @@ public class ShopRolesTest {
         marketSystem.openShop(shopOwner, shopName);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         // Close shop
         marketSystem.closeShop(shopOwner, shopName);

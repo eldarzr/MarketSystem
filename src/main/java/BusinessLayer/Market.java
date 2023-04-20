@@ -100,10 +100,12 @@ public class Market implements MarketIntr{
     }
 
     @Override
-    public void register(String userName, String email, String password) throws Exception {
+    public User register(String userName, String email, String password) throws Exception {
         logger.info(String.format("Attempt to register user %s.", userName));
-        usersHandler.register(userName, email, password);
+        User user = usersHandler.register(userName, email, password);
         logger.info(String.format("User %s registered successfully.", userName));
+        return user;
+
     }
 
     @Override

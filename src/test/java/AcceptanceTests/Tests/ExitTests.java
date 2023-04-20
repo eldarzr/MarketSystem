@@ -10,7 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class ExitTests {
     @Mock
@@ -50,7 +52,7 @@ public class ExitTests {
             // Add items to cart as a guest
             market.addProductsToCart(tempUserName, "My Shop", "item1", 1);
             market.addProductsToCart(tempUserName, "My Shop", "item2", 1);
-            assertNotNull("Guest shopping cart is null after adding items", market.getCart(tempUserName));
+            assertNotNull(market.getCart(tempUserName), "Guest shopping cart is null after adding items");
 
 
             // Leave the market as guest
@@ -60,7 +62,7 @@ public class ExitTests {
 
         } catch (Exception e) {
             // We expect an exception to be thrown because the cart no longer exists
-            assertTrue(e.getMessage(),true);
+            assertTrue(true, e.getMessage());
         }
     }
 
@@ -73,11 +75,11 @@ public class ExitTests {
             // Add items to cart as registered user
             market.addProductsToCart(userName, shopName, "item1", 1);
             market.addProductsToCart(userName, shopName, "item2", 1);
-            assertNotNull("Shopping cart is null after adding items", market.getCart(userName));
+            assertNotNull(market.getCart(userName), "Shopping cart is null after adding items");
 
 
             // Leave the market as registered user
-            assertNotNull("Shopping cart is not null after registered user exits the market", market.getCart(userName));
+            assertNotNull(market.getCart(userName), "Shopping cart is not null after registered user exits the market");
 
         } catch (Exception e) {
             fail("Exception thrown while testing exit as registered user: " + e.getMessage());

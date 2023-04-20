@@ -4,14 +4,16 @@ import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
 import AcceptanceTests.ProductBridge;
 import AcceptanceTests.ShoppingCartBridge;
-import org.junit.After;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 
-import static org.junit.Assert.*;
+import static com.helger.commons.mock.CommonsAssert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 
 public class GuestShoppingActionsTest {
 
@@ -55,13 +57,13 @@ public class GuestShoppingActionsTest {
             ProductBridge product = products.iterator().next();
             market.addProductsToCart(tempUserName, shopName, product.getProductName(), 1);
             ShoppingCartBridge cart = market.getCart(tempUserName);
-            assertTrue("Product not added to cart", cart.getQuantityOfProduct(product.getProductName()) > 0);
+            assertTrue(cart.getQuantityOfProduct(product.getProductName()) > 0, "Product not added to cart");
 
             // Add another product to cart
             products = market.basicSearch(tempUserName, "item4");
             product = products.iterator().next();
             market.addProductsToCart(tempUserName, "Jane's Shop", product.getProductName(), 2);
-            assertTrue("Product not added to cart", market.getCart(tempUserName).getQuantityOfProduct(product.getProductName()) > 0);
+            assertTrue(market.getCart(tempUserName).getQuantityOfProduct(product.getProductName()) > 0, "Product not added to cart");
             assertEquals("Incorrect quantity of product in cart", 2, market.getCart(tempUserName).getQuantityOfProduct(product.getProductName()));
 
         } catch (Exception e) {
@@ -117,7 +119,7 @@ public class GuestShoppingActionsTest {
             Collection<ProductBridge> products = market.basicSearch(tempUserName, "item1");
             ProductBridge product = products.iterator().next();
             market.addProductsToCart(tempUserName, shopName, product.getProductName(), 0);
-            assertEquals("Cart is not empty", 0, cart.calculateTotalPrice(), 0.0);
+            assertEquals("Cart is not empty", cart.calculateTotalPrice(), 0.0);
         } catch (Exception e) {
             fail("Exception thrown while testing add product to cart with zero quantity: " + e.getMessage());
         }

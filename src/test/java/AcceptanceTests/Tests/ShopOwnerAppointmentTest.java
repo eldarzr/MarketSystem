@@ -3,12 +3,11 @@ package AcceptanceTests.Tests;
 import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
 import org.junit.jupiter.api.*;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-import static org.junit.Assert.*;
 
 public class ShopOwnerAppointmentTest {
     private MarketSystemBridge marketSystem;

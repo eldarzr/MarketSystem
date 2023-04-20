@@ -3,13 +3,16 @@ package AcceptanceTests.Tests;
 
 import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
-import org.junit.*;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 //This test class assumes GuestBasicTests are all passed
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@TestMethodOrder(MethodOrderer.DisplayName.class)
 public class ShopAndProductCreationAndManipulationTests {
 
     static MarketSystemBridge bridge;
@@ -18,7 +21,7 @@ public class ShopAndProductCreationAndManipulationTests {
     static String category = "category";
 
     //In set up we register 10 users (gabi0 - gabi9) and log in to the first 5 (gabi0 - gabi4)
-    @BeforeClass
+    @BeforeAll
     public static void setUp() throws Exception{
 //        if(setUpComplete)return;
         bridge = new MarketSystemRealBridge();
@@ -443,7 +446,7 @@ public class ShopAndProductCreationAndManipulationTests {
             String productName = "Soccer"; // existing product
             int quantity = 10;
             bridge.updateProductQuantity(userName,shopName,productName,quantity);
-            Assert.assertEquals(quantity, bridge.getProductQuantityInShop(shopName, productName), 0.01);
+            assertEquals(quantity, bridge.getProductQuantityInShop(shopName, productName), 0.01);
         }catch (Exception e){
             fail("should be able to update product's price as logged in founder");
         }

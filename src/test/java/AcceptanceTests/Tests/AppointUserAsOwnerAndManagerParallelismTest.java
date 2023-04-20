@@ -2,12 +2,13 @@ package AcceptanceTests.Tests;
 
 import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 
 public class AppointUserAsOwnerAndManagerParallelismTest {
     MarketSystemBridge system;
@@ -17,7 +18,7 @@ public class AppointUserAsOwnerAndManagerParallelismTest {
         system = new MarketSystemRealBridge();
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         system.clearData();
     }
