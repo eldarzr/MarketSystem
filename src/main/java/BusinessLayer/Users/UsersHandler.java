@@ -81,18 +81,20 @@ public class UsersHandler {
         return nuser;
     }
 
-    public void login(String guestName, String userName, String password) {
-        login(userName,password);
+    public User login(String guestName, String userName, String password) {
+        User user = login(userName,password);
         loginUsers.remove(guestName);
+        return user;
     }
 
-    public void login(String userName, String password) {
+    public User login(String userName, String password) {
         User user = findMemberByName(userName);
         if(isLoggedIn(user.getName()))
             throwIllegalArgumentException(String.format("User %s already logged in",userName));
         if(!passwordEncoder.matches(password,user.getPassword()))
             throwIllegalArgumentException("Incorrect password");
         loginUsers.put(user.getName(),user);
+        return user;
     }
 
     public void disconnect(String userName){
@@ -238,5 +240,13 @@ public class UsersHandler {
     private void throwIllegalArgumentException(String errorMsg)  throws IllegalArgumentException{
         logger.severe(errorMsg);
         throw new IllegalArgumentException(errorMsg);
+    }
+
+    public String createGuest(String sessionID) {
+        User user = new User(sessionID);
+        //guest is added only to login users, the reason is that as long as he is connected to the system we want to threat him as a login user
+        loginUsers.put(sessionID,user);
+        logger.info(String.format("Session of guest %s started.",sessionID));
+        return sessionID;
     }
 }

@@ -45,7 +45,7 @@ public class GuestBuyingActionsTest {
             // Guest can view existing shops
             ShopBridge shop = market.getShop(tempUserName,"My Shop");
             assertNotNull(shop, "shop is null");
-            assertEquals("Something went wrong with the shop's name", "My Shop", shop.getShopName());
+            assertEquals("My Shop", shop.getShopName(), "Something went wrong with the shop's name");
 
         } catch (Exception e) {
             fail("Exception thrown while testing guest can view shops: " + e.getMessage());
@@ -58,7 +58,7 @@ public class GuestBuyingActionsTest {
             // Guest can view products in existing shops
             ProductBridge product = market.getProduct(tempUserName,"My Shop","item1");
             assertNotNull(product, "product is null");
-            assertEquals("Wrong product name", "item1", product.getProductName());
+            assertEquals("item1", product.getProductName(), "Wrong product name");
 
         } catch (Exception e) {
             fail("Exception thrown while testing guest can view products: " + e.getMessage());

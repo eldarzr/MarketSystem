@@ -10,6 +10,7 @@ import BusinessLayer.Shops.Shop;
 import BusinessLayer.Shops.ShopHandler;
 import BusinessLayer.Users.User;
 import BusinessLayer.Users.UsersHandler;
+import com.vaadin.flow.server.VaadinService;
 import org.apache.commons.lang3.NotImplementedException;
 
 import java.io.File;
@@ -43,6 +44,12 @@ public class Market implements MarketIntr{
         logger.info("Starting market init.");
         loadAdmin();
         createLogger();
+        if (VaadinService.getCurrent() != null) {
+            VaadinService.getCurrent().addSessionInitListener(event ->
+                    startSession(event.getSession().getSession().getId()));
+            VaadinService.getCurrent().addSessionDestroyListener(event ->
+                    closeSession(event.getSession().getSession().getId()));
+        }
         logger.info("Market init Finished successfully.");
     }
 
@@ -92,6 +99,12 @@ public class Market implements MarketIntr{
         return usersHandler.createGuest();
     }
 
+    //return guest username
+    public String startSession(String sessionID) {
+        logger.info("Attempt to start new session.");
+        return usersHandler.createGuest(sessionID);
+    }
+
     @Override
     public void closeSession(String userName) {
         logger.info("Attempt to close current session.");
@@ -115,10 +128,11 @@ public class Market implements MarketIntr{
     }
 
     @Override
-    public void login(String guestName, String userName, String password) {
+    public User login(String guestName, String userName, String password) {
         logger.info(String.format("Attempt to login user %s.", userName));
-        usersHandler.login(guestName, userName, password);
+        User user = usersHandler.login(guestName, userName, password);
         logger.info(String.format("User %s logged in.", userName));
+        return user;
     }
 
     //this function logout a member and return a guest name

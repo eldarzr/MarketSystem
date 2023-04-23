@@ -18,6 +18,15 @@ public class ServiceMarket {
 	}
 
 
+	public Response addNewProduct(String userName, String shopName, String productName, String category, String desc, double price) throws Exception {
+		try {
+			market.addNewProduct(userName, shopName, productName, category, desc, price);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
+	}
+
 	public Response init() {
 		try {
 			market.init();
@@ -40,7 +49,7 @@ public class ServiceMarket {
 
 	public ResponseT<String> startSession() {
 		try {
-		return new ResponseT<String>(market.startSession());
+			return new ResponseT<String>(market.startSession());
 
 		} catch (Exception exception) {
 			return new ResponseT(exception.getMessage(), false);
@@ -65,13 +74,12 @@ public class ServiceMarket {
 		}
 	}
 
-	public Response login(String guestName, String userName, String password) {
+	public ResponseT<UserDataObj> login(String guestName, String userName, String password) {
 		try {
-			market.login(guestName, userName, password);
+			return new ResponseT<>(new UserDataObj(market.login(guestName, userName, password)));
 		} catch (Exception exception) {
-			return new Response(exception.getMessage());
+			return new ResponseT<UserDataObj>(exception.getMessage(), false);
 		}
-		return new Response();
 	}
 
 	public Response logout(String userName) {
@@ -114,15 +122,6 @@ public class ServiceMarket {
 	public Response closeShop(String userName, String shopName) throws Exception {
 		try {
 			market.closeShop(userName, shopName);
-		} catch (Exception exception) {
-			return new Response(exception.getMessage());
-		}
-		return new Response();
-	}
-
-	public Response addNewProduct(String userName, String shopName, String productName, String category, String desc, double price) throws Exception {
-		try {
-			market.addNewProduct(userName, shopName, productName, category, desc, price);
 		} catch (Exception exception) {
 			return new Response(exception.getMessage());
 		}
