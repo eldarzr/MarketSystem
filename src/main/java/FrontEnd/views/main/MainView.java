@@ -1,4 +1,4 @@
-package FrontEnd.views.main;
+package FrontEnd.Views.main;
 
 import BusinessLayer.Market;
 import ServiceLayer.Response;

@@ -17,7 +17,6 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
  *
  */
 @SpringBootApplication
-@Theme(value = "market")
 public class Application extends SpringBootServletInitializer implements AppShellConfigurator{
 
     public static void main(String[] args) {
