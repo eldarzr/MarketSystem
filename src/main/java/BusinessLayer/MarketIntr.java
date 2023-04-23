@@ -25,7 +25,7 @@ public interface MarketIntr {
 
     User register(String userName, String email, String password) throws Exception;
 
-    void login(String guestName, String userName, String password);
+    User login(String guestName, String userName, String password);
 
 
     //member function

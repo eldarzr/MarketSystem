@@ -5,7 +5,64 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b632bc94-40ae-4fc8-ad09-f0a6a998ea35" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/views/main/LoginView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MarketSystem.iml" beforeDir="false" afterPath="$PROJECT_DIR$/MarketSystem.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/Flow.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/Flow.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/Flow.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/Flow.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/FlowBootstrap.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/FlowBootstrap.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/FlowBootstrap.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/FlowBootstrap.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/FlowClient.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/FlowClient.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/FlowClient.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/FlowClient.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/comboBoxConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/comboBoxConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/contextMenuConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/contextMenuConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/contextMenuTargetConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/contextMenuTargetConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/cookieConsentConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/cookieConsentConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/datepickerConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/datepickerConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/dndConnector-es6.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/dndConnector-es6.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/dndConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/dndConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/flow-component-directive.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/flow-component-directive.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/flow-component-renderer.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/flow-component-renderer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/gridConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/gridConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/gridProConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/gridProConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/index.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/index.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/lit-renderer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/lit-renderer.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/lumo-includes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/lumo-includes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/material-includes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/material-includes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/menubarConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/menubarConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/messageListConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/messageListConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/selectConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/selectConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/tooltip.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/tooltip.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-big-decimal-field.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-big-decimal-field.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-dev-tools/License.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-dev-tools/component-picker.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-dev-tools/component-util.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-dev-tools/copy-to-clipboard.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-dev-tools/shim.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-dev-tools/vaadin-dev-tools.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-grid-flow-selection-column.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-grid-flow-selection-column.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/mapConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/mapConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/synchronization/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/synchronization/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/synchronization/layers.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/synchronization/layers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/synchronization/sources.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/synchronization/sources.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/synchronization/styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/synchronization/styles.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/synchronization/util.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/synchronization/util.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/util.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/util.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-time-picker/helpers.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-time-picker/helpers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-time-picker/timepickerConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-time-picker/timepickerConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/virtualListConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/virtualListConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/vaadin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/vaadin.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Market.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Market.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/MarketIntr.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/MarketIntr.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Users/UsersHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Users/UsersHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/FrontEnd/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/FrontEnd/MarketService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/MarketService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/FrontEnd/views/main/MainView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/views/main/MainView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ServiceLayer/ServiceMarket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ServiceLayer/ServiceMarket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/AcceptanceTests/Tests/GuestBuyingActionsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/AcceptanceTests/Tests/GuestBuyingActionsTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,6 +82,14 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -42,13 +107,17 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit5" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5" value="" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/javax.mail.jar" />
-    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/servlet-api-5.0.16.jar" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
-    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="project.structure.side.proportion" value="0.5693717" />
     <property name="settings.editor.selected.configurable" value="reference.settings.project.maven.repository.indices" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\אלדר זריהן\Documents\לימודים\סמסטר ו'\סדנא\MarketSystem\src\main\java\FrontEnd" />
+      <recent name="C:\Users\אלדר זריהן\Documents\לימודים\סמסטר ו'\סדנא\MarketSystem\src\main\java\ServiceLayer\DataObjects" />
+    </key>
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
     </key>
@@ -57,29 +126,42 @@
       <recent name="BusinessLayer.Shops" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="FrontEnd.views.main" />
       <recent name="BusinessLayer" />
+      <recent name="AcceptanceTests" />
+      <recent name="BusinessLayer.Purchases" />
     </key>
   </component>
   <component name="RunAnythingCache">
     <option name="myCommands">
       <command value="mvn exec:java" />
       <command value="mvn -Dtest=ShopTest test " />
-      <command value="mvn test" />
       <command value="mvn install" />
-      <command value="mvn clean" />
-      <command value="mvn clean test" />
       <command value="mvn clean compile" />
       <command value="mvn install:install-file -Dfile=commons-text-1.10.0.jar -DgroupId=org.apache.commons -DartifactId=commons-text -Dversion=1.10.0 -Dpackaging=jar" />
+      <command value="mvn clean compile test-jar" />
+      <command value="mvn clean compile " />
+      <command value="java -jar MarketSystem-1.0-SNAPSHOT-tests.jar" />
+      <command value="mvn test" />
+      <command value="jar tf MarketSystem-1.0-SNAPSHOT-tests.jar" />
+      <command value="mvn clean test" />
+      <command value="mvn package" />
+      <command value="mvn clean" />
+      <command value="mvn dependency:resolve " />
       <command value="mvn clean install" />
+      <command value="mvnw" />
+      <command value="mvn vaadin:build-frontend" />
+      <command value="mvn clean package" />
+      <command value="mvn clean package -P production" />
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.MarketgetShopTest">
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="BusinessLayer.Main" />
+  <component name="RunManager" selected="Application.Application">
+    <configuration name="Application" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="FrontEnd.Application" />
       <module name="MarketSystem" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="BusinessLayer.*" />
+          <option name="PATTERN" value="FrontEnd.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -87,38 +169,46 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MarketCreateShopTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="All in MarketSystem" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="MarketSystem" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GuestBuyingActionsTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="MarketSystem" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="BusinessLayer.*" />
+          <option name="PATTERN" value="AcceptanceTests.Tests.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="BusinessLayer" />
-      <option name="MAIN_CLASS_NAME" value="BusinessLayer.MarketCreateShopTest" />
+      <option name="PACKAGE_NAME" value="AcceptanceTests.Tests" />
+      <option name="MAIN_CLASS_NAME" value="AcceptanceTests.Tests.GuestBuyingActionsTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MarketCreateShopTest.createShopFailDoubleName" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="GuestBuyingActionsTest.testGuestCanViewProducts" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="MarketSystem" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="BusinessLayer.*" />
+          <option name="PATTERN" value="AcceptanceTests.Tests.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="BusinessLayer" />
-      <option name="MAIN_CLASS_NAME" value="BusinessLayer.MarketCreateShopTest" />
-      <option name="METHOD_NAME" value="createShopFailDoubleName" />
+      <option name="PACKAGE_NAME" value="AcceptanceTests.Tests" />
+      <option name="MAIN_CLASS_NAME" value="AcceptanceTests.Tests.GuestBuyingActionsTest" />
+      <option name="METHOD_NAME" value="testGuestCanViewProducts" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MarketCreateShopTest.createShopFailNotRegistered (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="MarketAppointManagerOwnerTests.appointShopManager_success2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="MarketSystem" />
       <extension name="coverage">
         <pattern>
@@ -127,24 +217,9 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="BusinessLayer" />
-      <option name="MAIN_CLASS_NAME" value="BusinessLayer.MarketCreateShopTest" />
-      <option name="METHOD_NAME" value="createShopFailNotRegistered" />
+      <option name="MAIN_CLASS_NAME" value="BusinessLayer.MarketAppointManagerOwnerTests" />
+      <option name="METHOD_NAME" value="appointShopManager_success2" />
       <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MarketgetShopTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="MarketSystem" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="BusinessLayer.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="BusinessLayer" />
-      <option name="MAIN_CLASS_NAME" value="BusinessLayer.MarketgetShopTest" />
-      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -176,20 +251,20 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="JUnit.MarketCreateShopTest" />
-      <item itemvalue="JUnit.MarketCreateShopTest.createShopFailDoubleName" />
-      <item itemvalue="JUnit.MarketCreateShopTest.createShopFailNotRegistered (1)" />
+      <item itemvalue="Application.Application" />
+      <item itemvalue="JUnit.All in MarketSystem" />
+      <item itemvalue="JUnit.GuestBuyingActionsTest.testGuestCanViewProducts" />
+      <item itemvalue="JUnit.GuestBuyingActionsTest" />
+      <item itemvalue="JUnit.MarketAppointManagerOwnerTests.appointShopManager_success2" />
       <item itemvalue="Maven.MarketSystem [mvn,exec:java]" />
-      <item itemvalue="Application.Main" />
-      <item itemvalue="JUnit.MarketgetShopTest" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.MarketgetShopTest" />
-        <item itemvalue="Application.Main" />
-        <item itemvalue="JUnit.MarketCreateShopTest" />
-        <item itemvalue="JUnit.MarketCreateShopTest.createShopFailNotRegistered (1)" />
-        <item itemvalue="JUnit.MarketCreateShopTest.createShopFailDoubleName" />
+        <item itemvalue="Application.Application" />
+        <item itemvalue="JUnit.MarketAppointManagerOwnerTests.appointShopManager_success2" />
+        <item itemvalue="JUnit.GuestBuyingActionsTest" />
+        <item itemvalue="JUnit.GuestBuyingActionsTest.testGuestCanViewProducts" />
+        <item itemvalue="JUnit.All in MarketSystem" />
       </list>
     </recent_temporary>
   </component>
@@ -215,5 +290,59 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/AcceptanceTests/Tests/ShopAndProductCreationAndManipulationTests.java</url>
+          <line>55</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/AcceptanceTests/Tests/ShopAndProductCreationAndManipulationTests.java</url>
+          <line>528</line>
+          <option name="timeStamp" value="33" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/IntegrationTests/MarketManageProductIntegrationTest.java</url>
+          <line>28</line>
+          <option name="timeStamp" value="34" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/UnitTests/MarketManageProductUnitTest.java</url>
+          <line>72</line>
+          <properties>
+            <option name="lambda-ordinal" value="0" />
+          </properties>
+          <option name="timeStamp" value="38" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/UnitTests/MarketManageProductUnitTest.java</url>
+          <line>59</line>
+          <option name="timeStamp" value="39" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/UnitTests/MarketSearchUnitTest.java</url>
+          <line>64</line>
+          <option name="timeStamp" value="41" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/AcceptanceTests/Tests/GuestBuyingActionsTest.java</url>
+          <line>60</line>
+          <option name="timeStamp" value="42" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/BusinessLayer/MarketAppointManagerOwnerTests.java</url>
+          <line>70</line>
+          <option name="timeStamp" value="43" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="AcceptanceTests.ProductRealBridge" memberName="productIntr" />
+      </pinned-members>
+    </pin-to-top-manager>
   </component>
 </project>

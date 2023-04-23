@@ -5,7 +5,7 @@
       <configuration />
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_X">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_16">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
@@ -292,5 +292,6 @@
     <orderEntry type="library" scope="TEST" name="Maven: com.vaadin:vaadin-text-field-testbench:24.0.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.vaadin:vaadin-time-picker-testbench:24.0.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.vaadin:vaadin-upload-testbench:24.0.4" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: javax.servlet:javax.servlet-api:3.1.0" level="project" />
   </component>
 </module>
