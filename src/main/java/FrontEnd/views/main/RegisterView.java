@@ -29,9 +29,7 @@ import com.vaadin.flow.router.RouterLink;
 import javax.activation.MailcapCommandMap;
 
 @Route("register")
-public class RegisterView extends VerticalLayout {
-
-	MarketService marketService = new MarketService();
+public class RegisterView extends BaseView {
 
 	public RegisterView() {
 		TextField username = new TextField("Username");
@@ -47,10 +45,11 @@ public class RegisterView extends VerticalLayout {
 			}
 		});
 		registerButton.addClickShortcut(Key.ENTER);
+		VerticalLayout verticalLayout = new VerticalLayout(emailField, username, password1, password2, registerButton);
+		verticalLayout.setWidthFull();
 		add(
 				new H1("Register"),
-				new VerticalLayout(
-						emailField, username, password1, password2, registerButton)
+				verticalLayout
 		);
 	}
 

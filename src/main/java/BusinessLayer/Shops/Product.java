@@ -9,6 +9,7 @@ public class Product implements ProductIntr{
 
 	Lock productLock = new ReentrantLock();
 
+	protected String shopName;
 	protected String name;
 	protected String category;
 	protected String description;
@@ -21,11 +22,12 @@ public class Product implements ProductIntr{
 	protected double MIN_NAME_LENGTH = 3;
 	protected double MAX_NAME_LENGTH = 300;
 
-	protected Product(String name, String category, String description, double price) {
+	protected Product(String name, String category, String description, double price, String shopName) {
 		this.name = name;
 		this.category = category;
 		this.description = description;
 		this.price = price;
+		this.shopName = shopName;
 	}
 
 	protected Product() { }
@@ -102,5 +104,11 @@ public class Product implements ProductIntr{
 		productLock.unlock();
 	}
 
+	public String getShopName() {
+		return shopName;
+	}
 
+	public void setShopName(String shopName) {
+		this.shopName = shopName;
+	}
 }

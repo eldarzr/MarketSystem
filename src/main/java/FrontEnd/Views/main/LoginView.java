@@ -14,9 +14,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 
 @Route("login")
-public class LoginView extends VerticalLayout {
-
-	MarketService marketService = new MarketService();
+public class LoginView extends BaseView {
 
 	public LoginView() {
 		TextField username = new TextField("Username");
@@ -29,23 +27,12 @@ public class LoginView extends VerticalLayout {
 			}
 		});
 		loginButton.addClickShortcut(Key.ENTER);
+		VerticalLayout verticalLayout = new VerticalLayout(username, password, loginButton);
+		verticalLayout.setWidthFull();
 		add(
-				new H1("Register"),
-				new VerticalLayout(username, password, loginButton)
+				new H1("Login"),
+				verticalLayout
 		);
-	}
-
-	private boolean login(String username, String password) {
-		if (username.trim().isEmpty()) {
-			Notification.show("Enter a username");
-		} else if (password.isEmpty()) {
-			Notification.show("Enter a password");
-		} else {
-			SResponseT <UserModel> res = marketService.login(username, password);
-			Notification.show( res.isSuccess() ? "Check your email." : res.getMessage());
-			return res.isSuccess();
-		}
-		return false;
 	}
 
 }

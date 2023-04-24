@@ -1,6 +1,8 @@
 package FrontEnd.Views.main;
 
 import BusinessLayer.Market;
+import FrontEnd.MarketService;
+import FrontEnd.Model.UserModel;
 import ServiceLayer.Response;
 import ServiceLayer.ServiceMarket;
 import com.vaadin.flow.component.Component;
@@ -23,17 +25,17 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.VaadinSession;
 
 import javax.activation.MailcapCommandMap;
 
 @Route("")
-public class MainView extends VerticalLayout {
-
-    ServiceMarket serviceMarket = new ServiceMarket();
+public class MainView extends BaseView {
 
     public MainView() {
-        Label sessionIdLabel = new Label("Session ID: " + VaadinSession.getCurrent().getSession().getId());
+//        Label sessionIdLabel = new Label("Session ID: " + userModel.getName());
+
         Button registerButton = new Button("Register");
         registerButton.addClickListener(e ->
                 registerButton.getUI().ifPresent(ui ->
@@ -44,7 +46,12 @@ public class MainView extends VerticalLayout {
                 loginButton.getUI().ifPresent(ui ->
                         ui.navigate("login"))
         );
-        add(sessionIdLabel, registerButton, loginButton);
+        Button searchButton = new Button("Search");
+        searchButton.addClickListener(e ->
+                searchButton.getUI().ifPresent(ui ->
+                        ui.navigate("search"))
+        );
+        add(registerButton, loginButton, searchButton);
     }
 
 }
