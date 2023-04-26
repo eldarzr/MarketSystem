@@ -4,7 +4,9 @@ import BusinessLayer.Shops.ProductIntr;
 import BusinessLayer.Shops.ShopProduct;
 import ServiceLayer.DataObjects.ProductDataObj;
 
-public class ProductModel {
+import java.io.Serializable;
+
+public class ProductModel implements Serializable {
 
 	public String name;
 	public String category;

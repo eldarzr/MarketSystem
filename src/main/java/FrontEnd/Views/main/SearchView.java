@@ -31,7 +31,6 @@ public class SearchView extends BaseView {
 	private TextField searchField;
 	private Label filterField;
 	private Button searchButton;
-	private Button goToCartButton;
 	private TextField minPriceField;
 	private TextField maxPriceField;
 	private TextField categoryField;
@@ -40,8 +39,6 @@ public class SearchView extends BaseView {
 	public SearchView() {
 		searchField = new TextField("Search");
 		filterField = new Label("Filter");
-		goToCartButton = new Button("Go To Cart", e -> getUI().ifPresent(ui ->
-				ui.navigate("cart")));
 		searchButton = new Button("Search", e -> search());
 		searchButton.addClickShortcut(Key.ENTER);
 		minPriceField = new TextField("Min Price");
@@ -108,7 +105,7 @@ public class SearchView extends BaseView {
 		contentLayout.setPadding(true);
 		contentLayout.setWidth("90%");
 		contentLayout.setHeight("100%");
-		contentLayout.add(searchField, searchButton, goToCartButton, productGrid);
+		contentLayout.add(searchField, searchButton, productGrid);
 		contentLayout.expand(productGrid);
 
 		// Add filter and content layouts to main layout
@@ -124,7 +121,7 @@ public class SearchView extends BaseView {
 
 	private void addToCart(ProductModel productModel, int quantity) {
 		SResponse res = marketService.addProductsToCart(
-				userModel.getName(),
+				getCurrentUser().getName(),
 				productModel.getShopName(), productModel.getName(),quantity);
 		Notification.show(res.isSuccess() ?
 				String.format("%d pieces from the product %s has been added to cart", quantity, productModel.getName())
@@ -139,10 +136,13 @@ public class SearchView extends BaseView {
 		int minPrice = minPriceField.getValue().length() == 0 ? -1 : Integer.parseInt(minPriceField.getValue());
 		int maxPrice = maxPriceField.getValue().length() == 0 ? -1 : Integer.parseInt(maxPriceField.getValue());
 		SResponseT<List<ProductModel>> res = marketService.extendedSearch(
-				userModel.getName(), productName, minPrice, maxPrice, category);
+				getCurrentUser().getName(), productName, minPrice, maxPrice, category);
 		if (res.isSuccess())
 			productGrid.setItems(res.getData());
 		else
 			Notification.show(res.getMessage());
 	}
+
+	@Override
+	protected void updateAfterUserNameChange(UserModel userModel) { }
 }

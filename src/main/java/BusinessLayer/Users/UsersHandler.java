@@ -8,11 +8,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static BusinessLayer.Enums.UserType.*;
 
@@ -83,6 +86,7 @@ public class UsersHandler {
 
     public User login(String guestName, String userName, String password) {
         User user = login(userName,password);
+        user.setSessionID(guestName);
         loginUsers.remove(guestName);
         return user;
     }
@@ -248,5 +252,28 @@ public class UsersHandler {
         loginUsers.put(sessionID,user);
         logger.info(String.format("Session of guest %s started.",sessionID));
         return sessionID;
+    }
+
+	public List<User> getAllUsers(String adminName) throws Exception {
+        User admin = findLoginUser(adminName);
+        if(!isAdmin(adminName)){
+            throw new Exception(String.format("the user %s is not admin!", adminName));
+        }
+        return Stream.concat(members.values().stream(), loginUsers.values().stream()).distinct()
+                .collect(Collectors.toList());
+	}
+
+    public String removeUser(String adminName, String userName) throws Exception {
+        User admin = findLoginUser(adminName);
+        User user = findMemberByName(userName);
+        if(!isAdmin(adminName)){
+            throw new Exception(String.format("the user %s is not admin!", adminName));
+        }
+        if(isAdmin(userName)){
+            throw new Exception(String.format("the user %s is admin! you cant remove them", userName));
+        }
+        loginUsers.remove(userName);
+        members.remove(userName);
+        return createGuest(user.getSessionID());
     }
 }

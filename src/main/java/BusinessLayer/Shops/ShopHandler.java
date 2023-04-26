@@ -23,7 +23,16 @@ public class ShopHandler {
     private final int PRODUCT_DISTANCE_MAX_LIMIT = 2;
     private LevenshteinDistance distance = new LevenshteinDistance();
 
-	private static class  ShopHolder {
+    public List<Shop> getAllShops() {
+        return shops.values().stream().toList();
+    }
+
+    public boolean isUserHasRoleInAnyShops(String userName) {
+        return shops.values().stream().map(shop -> shop.isUserHasRole(userName)).
+                reduce(false, (acc, cur) -> acc || cur);
+    }
+
+    private static class  ShopHolder {
         private static ShopHandler  instance = new ShopHandler() ;
     }
     private ShopHandler()  {

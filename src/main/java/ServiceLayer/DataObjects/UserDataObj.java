@@ -1,30 +1,36 @@
 package ServiceLayer.DataObjects;
 
 import BusinessLayer.Enums.UserType;
+import BusinessLayer.Purchases.UserInvoice;
 import BusinessLayer.Users.User;
 
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.stream.Collectors;
 
 public class UserDataObj {
     private UserType userType;
     private String name;
+    private String sessionID;
     private String email;
     private ConcurrentLinkedQueue<String> shopsMessages = new ConcurrentLinkedQueue<>();
-    private boolean twoFactorEnabled;
+    private ConcurrentLinkedQueue<UserInvoiceDataObj> invoices = new ConcurrentLinkedQueue<>();
 
-    public UserDataObj(String name, String email) {
+    public UserDataObj(String name, String email, String sessionID) {
         this.name = name;
         this.email = email;
-        userType = UserType.MEMBER;
+        this.sessionID = sessionID;
+        this.userType = UserType.MEMBER;
     }
 
     public UserDataObj(User user) {
         this.name = user.getName();
         this.email = user.getEmail();
         this.userType = user.getUserType();
-        this.twoFactorEnabled = user.isTwoFactorEnabled();
-        for (String msg : user.getShopsMessages())
-            shopsMessages.add(msg);
+        this.sessionID = user.getSessionID();
+        shopsMessages.addAll(user.getShopsMessages());
+        for (UserInvoice invoice : user.getInvoices())
+            invoices.add(new UserInvoiceDataObj(invoice));
     }
 
     public UserDataObj() {
@@ -43,11 +49,15 @@ public class UserDataObj {
         return email;
     }
 
+    public String getSessionID() {
+        return sessionID;
+    }
+
     public ConcurrentLinkedQueue<String> getShopsMessages() {
         return shopsMessages;
     }
 
-    public boolean isTwoFactorEnabled() {
-        return twoFactorEnabled;
+    public ConcurrentLinkedQueue<UserInvoiceDataObj> getInvoices() {
+        return invoices;
     }
 }

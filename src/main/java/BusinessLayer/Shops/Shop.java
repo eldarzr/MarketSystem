@@ -106,6 +106,10 @@ public class Shop implements ShopIntr {
 		return roles.get(actorUserName);
 	}
 
+	public boolean isUserHasRole(String actorUserName) {
+		return roles.containsKey(actorUserName);
+	}
+
 	public void addRole(String name, MemberRoleInShop role) throws Exception {
 		if (roles.containsKey(name))
 		{

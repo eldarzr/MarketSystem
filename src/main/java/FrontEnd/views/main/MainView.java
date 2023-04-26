@@ -1,5 +1,6 @@
 package FrontEnd.Views.main;
 
+import BusinessLayer.Enums.UserType;
 import BusinessLayer.Market;
 import FrontEnd.MarketService;
 import FrontEnd.Model.UserModel;
@@ -33,25 +34,41 @@ import javax.activation.MailcapCommandMap;
 @Route("")
 public class MainView extends BaseView {
 
+    Button registerButton;
+    Button loginButton;
+    Button searchButton;
+    Button adminButton;
+
     public MainView() {
 //        Label sessionIdLabel = new Label("Session ID: " + userModel.getName());
 
-        Button registerButton = new Button("Register");
+        registerButton = new Button("Register");
         registerButton.addClickListener(e ->
                 registerButton.getUI().ifPresent(ui ->
                         ui.navigate("register"))
         );
-        Button loginButton = new Button("Login");
+        loginButton = new Button("Login");
         loginButton.addClickListener(e ->
                 loginButton.getUI().ifPresent(ui ->
                         ui.navigate("login"))
         );
-        Button searchButton = new Button("Search");
+        searchButton = new Button("Search");
         searchButton.addClickListener(e ->
                 searchButton.getUI().ifPresent(ui ->
                         ui.navigate("search"))
         );
-        add(registerButton, loginButton, searchButton);
+        adminButton = new Button("Admin");
+        adminButton.setVisible(getCurrentUser().getUserType() == UserType.ADMIN);
+        adminButton.addClickListener(e ->
+                searchButton.getUI().ifPresent(ui ->
+                        ui.navigate("admin"))
+        );
+        add(registerButton, loginButton, searchButton, adminButton);
+    }
+
+    @Override
+    protected void updateAfterUserNameChange(UserModel userModel) {
+        adminButton.setVisible(userModel.getUserType() == UserType.ADMIN);
     }
 
 }

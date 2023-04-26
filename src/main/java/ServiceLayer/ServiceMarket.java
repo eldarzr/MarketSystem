@@ -57,6 +57,16 @@ public class ServiceMarket {
 	}
 
 
+	public ResponseT<String> startSession(String sessionID) {
+		try {
+			return new ResponseT<String>(market.startSession(sessionID));
+
+		} catch (Exception exception) {
+			return new ResponseT(exception.getMessage(), false);
+		}
+	}
+
+
 	public Response closeSession(String userName) {
 		try {
 			market.closeSession(userName);
@@ -82,13 +92,12 @@ public class ServiceMarket {
 		}
 	}
 
-	public Response logout(String userName) {
+	public ResponseT<String> logout(String userName) {
 		try {
-			market.logout(userName);
+			return new ResponseT<>(market.logout(userName));
 		} catch (Exception exception) {
-			return new Response(exception.getMessage());
+			return new ResponseT<>(exception.getMessage());
 		}
-		return new Response();
 	}
 
 	public ResponseT<Collection<UserInvoiceDataObj>> getUserPurchaseHistory(String userName) {
@@ -389,5 +398,32 @@ public class ServiceMarket {
 		return new Response();
 	}
 
+	public ResponseT<List<UserDataObj>> getAllUsers(String adminName) {
+		try {
+			return new ResponseT<List<UserDataObj>>(market.getAllUsers(adminName).stream().
+					map(UserDataObj::new).collect(Collectors.toList()));
+
+		} catch (Exception exception) {
+			return new ResponseT<>(exception.getMessage(), false);
+		}
+	}
+
+	public ResponseT<String> removeUser(String adminName, String userName) {
+		try {
+			return new ResponseT<>(market.removeUser(adminName, userName));
+		} catch (Exception exception) {
+			return new ResponseT<>(exception.getMessage());
+		}
+	}
+
+	public ResponseT<List<ShopDataObj>> getAllShops(String userName) {
+		try {
+			return new ResponseT<List<ShopDataObj>>(market.getAllShops(userName).stream().map(ShopDataObj::new)
+					.collect(Collectors.toList()));
+
+		} catch (Exception exception) {
+			return new ResponseT(exception.getMessage(), false);
+		}
+	}
 	// custom service methods for your application
 }

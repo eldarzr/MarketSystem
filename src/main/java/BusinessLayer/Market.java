@@ -44,14 +44,6 @@ public class Market implements MarketIntr{
     public void init() throws Exception {
         logger.info("Starting market init.");
         createLogger();
-        if (VaadinService.getCurrent() != null) {
-            VaadinService.getCurrent().addSessionInitListener(event ->
-                    startSession(event.getSession().getSession().getId()));
-            VaadinService.getCurrent().addSessionDestroyListener(event ->
-                    closeSession(event.getSession().getSession().getId()));
-            startSession(VaadinSession.getCurrent().getSession().getId());
-
-        }
         loadAdmin();
         loadProducts();
         logger.info("Market init Finished successfully.");
@@ -523,4 +515,20 @@ public class Market implements MarketIntr{
 
     }
 
+    public List<User> getAllUsers(String adminName) throws Exception {
+        return usersHandler.getAllUsers(adminName);
+    }
+
+    public String removeUser(String adminName, String userName) throws Exception {
+        //check if user- userName has roles in some shops
+        if(shopHandler.isUserHasRoleInAnyShops(userName))
+            throw new Exception(String.format("the user %s has role in some shops therefore he cannot" +
+                    "be removed", userName));
+        return usersHandler.removeUser(adminName, userName);
+    }
+
+    public List<Shop> getAllShops(String userName) throws Exception {
+        validateLoggedInAdminException(userName);
+        return shopHandler.getAllShops();
+    }
 }
