@@ -105,7 +105,6 @@ public class Market implements MarketIntr{
 
     //return guest username
     public String startSession(String sessionID) {
-        System.out.println("*************");
         logger.info("Attempt to start new session.");
         return usersHandler.createGuest(sessionID);
     }
