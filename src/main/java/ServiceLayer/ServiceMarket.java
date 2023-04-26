@@ -220,12 +220,12 @@ public class ServiceMarket {
 		}
 	}
 
-	public ResponseT<List<ProductDataObj>> extendedSearch(String userName, String productName, double minPrice, double maxPrice, String category) throws Exception {
+	public ResponseT<List<ProductDataObj>> extendedSearch(String userName, String productName, double minPrice, double maxPrice, String category){
 		try {
 		return new ResponseT<List<ProductDataObj>>(market.extendedSearch(userName, productName, minPrice, maxPrice, category).stream()
 				.map(ProductDataObj::new).collect(Collectors.toList()));
 		} catch (Exception exception) {
-			return new ResponseT(exception.getMessage(), false);
+			return new ResponseT<>(exception.getMessage(), false);
 		}
 	}
 

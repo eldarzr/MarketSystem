@@ -2,6 +2,8 @@ package FrontEnd;
 
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
+import BusinessLayer.Users.UsersHandler;
+import FrontEnd.Model.ProductModel;
 import FrontEnd.Model.UserModel;
 import ServiceLayer.DataObjects.*;
 import ServiceLayer.Response;
@@ -17,7 +19,21 @@ public class MarketService {
 
 	ServiceMarket serviceMarket;
 
-	public MarketService() {
+	private static volatile MarketService instance;
+
+	public static MarketService getInstance(){
+		if(instance == null){
+			synchronized ( (MarketService.class)){
+				if(instance == null){
+					instance =  new MarketService();
+					instance.init();
+				}
+			}
+		}
+		return instance;
+	}
+
+	private MarketService() {
 		serviceMarket = new ServiceMarket();
 	}
 
@@ -46,8 +62,8 @@ public class MarketService {
 		return new SResponseT<>(r.getMessage(), r.isSuccess());
 	}
 
-	public SResponseT<UserModel> login(String userName, String password) {
-		ResponseT<UserDataObj> r = serviceMarket.login("", userName, password);
+	public SResponseT<UserModel> login(String guestName, String userName, String password) {
+		ResponseT<UserDataObj> r = serviceMarket.login(guestName, userName, password);
 		if (r.isSuccess())
 			return new SResponseT<>(new UserModel(r.getData()));
 		return new SResponseT<>(r.getMessage(), r.isSuccess());
@@ -128,9 +144,12 @@ public class MarketService {
 		throw new NotImplementedException();
 	}
 
-	public ResponseT<List<ProductDataObj>> extendedSearch(String userName, String productName, double minPrice, double maxPrice, String category) throws Exception {
-		throw new NotImplementedException();
-	}
+	public SResponseT<List<ProductModel>> extendedSearch(String userName, String productName, double minPrice, double maxPrice, String category){
+		ResponseT<List<ProductDataObj>> r = serviceMarket.extendedSearch(userName, productName,
+				minPrice, maxPrice, category);
+		if (r.isSuccess())
+			return new SResponseT<>(r.getData().stream().map(ProductModel::new).collect(Collectors.toList()));
+		return new SResponseT<>(r.getMessage(), r.isSuccess());	}
 
 	public Response appointShopOwner(String appointedBy, String appointee, String shopName) throws Exception {
 		throw new NotImplementedException();
@@ -197,8 +216,11 @@ public class MarketService {
 	}
 
 
-	public Response addProductsToCart(String userName, String shopName, String productName, int quantity) {
-		throw new NotImplementedException();
+	public SResponse addProductsToCart(String userName, String shopName, String productName, int quantity) {
+		Response r = serviceMarket.addProductsToCart(userName, shopName, productName, quantity);
+		if (r.isSuccess())
+			return new SResponse();
+		return new SResponse(r.getMessage());
 	}
 
 

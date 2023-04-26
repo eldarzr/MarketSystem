@@ -11,6 +11,7 @@ import BusinessLayer.Shops.ShopHandler;
 import BusinessLayer.Users.User;
 import BusinessLayer.Users.UsersHandler;
 import com.vaadin.flow.server.VaadinService;
+import com.vaadin.flow.server.VaadinSession;
 import org.apache.commons.lang3.NotImplementedException;
 
 import java.io.File;
@@ -42,14 +43,17 @@ public class Market implements MarketIntr{
     @Override
     public void init() throws Exception {
         logger.info("Starting market init.");
-        loadAdmin();
         createLogger();
         if (VaadinService.getCurrent() != null) {
             VaadinService.getCurrent().addSessionInitListener(event ->
                     startSession(event.getSession().getSession().getId()));
             VaadinService.getCurrent().addSessionDestroyListener(event ->
                     closeSession(event.getSession().getSession().getId()));
+            startSession(VaadinSession.getCurrent().getSession().getId());
+
         }
+        loadAdmin();
+        loadProducts();
         logger.info("Market init Finished successfully.");
     }
 
@@ -496,6 +500,27 @@ public class Market implements MarketIntr{
     private boolean isAdmin(String userName) {
         logger.info(String.format("Attempt to check if user %s is admin.", userName));
         return usersHandler.isAdmin(userName);
+    }
+
+    private void loadProducts() throws Exception {
+        String[] usersName = {"eldar", "niv12"};
+        String[] passwords = {"Aa123456", "Aa123456"};
+        String[] emails = {"eldar@gmail.com", "niv@gmail.com"};
+        String[] shopNames = {"shop1", "shop2"};
+        String[] prodNames = {"prod1", "prod2"};
+        String[] descs = {"description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 ", "description2"};
+        String[] cat = {"cat1", "cat2"};
+        double[] prices = {5, 10};
+
+        for (int i = 0; i < usersName.length; i++) {
+            String guestName = startSession();
+            register(usersName[i], emails[i], passwords[i]);
+            login(guestName, usersName[i], passwords[i]);
+            createShop(usersName[i], shopNames[i]);
+            addNewProduct(usersName[i], shopNames[i], prodNames[i], cat[i], descs[i], prices[i]);
+            addProductItems(usersName[i], shopNames[i], prodNames[i], 3);
+        }
+
     }
 
 }

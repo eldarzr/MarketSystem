@@ -1,10 +1,10 @@
-package ServiceLayer.DataObjects;
+package FrontEnd.Model;
 
-import BusinessLayer.Shops.Product;
 import BusinessLayer.Shops.ProductIntr;
 import BusinessLayer.Shops.ShopProduct;
+import ServiceLayer.DataObjects.ProductDataObj;
 
-public class ProductDataObj {
+public class ProductModel {
 
 	public String name;
 	public String category;
@@ -13,7 +13,7 @@ public class ProductDataObj {
 	private int quantity;
 	private String shopName;
 
-	public ProductDataObj(String name, String category, String description, double price, String shopName) {
+	public ProductModel(String name, String category, String description, double price, String shopName) {
 		this.name = name;
 		this.category = category;
 		this.description = description;
@@ -22,13 +22,13 @@ public class ProductDataObj {
 		this.shopName = shopName;
 	}
 
-	public ProductDataObj(ProductIntr product) {
+	public ProductModel(ProductDataObj product) {
 		this.name = product.getName();
 		this.category = product.getCategory();
 		this.description = product.getDescription();
 		this.price = product.getPrice();
+		this.quantity = product.getQuantity();
 		this.shopName = product.getShopName();
-		this.quantity = product instanceof ShopProduct ? ((ShopProduct) product).getQuantity() : 0;
 	}
 
 	public String getName() {

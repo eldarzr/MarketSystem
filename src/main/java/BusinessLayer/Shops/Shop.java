@@ -160,7 +160,7 @@ public class Shop implements ShopIntr {
 		if (products.containsKey(productName))
 			throwException(String.format("there is already product %s in the shop %s", productName, name));
 		validatePermissionsException(userName, MANAGE_STOCK);
-		products.put(productName, ShopProduct.createProduct(productName, category, desc, price));
+		products.put(productName, ShopProduct.createProduct(productName, category, desc, price, this.name));
 	}
 
 	private void validatePermissionsException(String userName, ManagePermissionsEnum permissionsEnum) throws Exception {
