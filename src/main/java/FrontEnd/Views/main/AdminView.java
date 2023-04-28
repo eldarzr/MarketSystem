@@ -70,13 +70,17 @@ public class AdminView extends BaseView {
 		userGrid.setDataProvider(userDataProvider);
 		userGrid.addSelectionListener(event -> {
 			Optional<UserModel> selectedUser = event.getFirstSelectedItem();
-			if (selectedUser.isPresent() && selectedUser.get().getUserType() == UserType.MEMBER) {
-				removeButton.setEnabled(true);
-				userHistoryButton.setEnabled(true);
+			if (selectedUser.isPresent()) {
 				userProfileButton.setEnabled(true);
-			} else {
-				removeButton.setEnabled(false);
-				userHistoryButton.setEnabled(false);
+				if (selectedUser.get().getUserType() == UserType.MEMBER) {
+					removeButton.setEnabled(true);
+					userHistoryButton.setEnabled(true);
+				} else {
+					removeButton.setEnabled(false);
+					userHistoryButton.setEnabled(false);
+				}
+			}
+			else{
 				userProfileButton.setEnabled(false);
 			}
 		});
@@ -84,13 +88,21 @@ public class AdminView extends BaseView {
 		shopGrid.addColumn(ShopModel::getName).setHeader("Name");
 		shopGrid.setDataProvider(shopDataProvider);
 
+		shopGrid.addSelectionListener(event -> {
+			Optional<ShopModel> selectedShop = event.getFirstSelectedItem();
+			if (selectedShop.isPresent()) {
+				shopHistoryButton.setEnabled(true);
+			}
+			else{
+				shopHistoryButton.setEnabled(false);
+			}
+		});
 		removeButton = new Button("Remove user");
 		removeButton.setEnabled(false);
 		removeButton.addClickListener(event -> {
 			UserModel selectedUser = userGrid.asSingleSelect().getValue();
 			Notification.show(selectedUser == null ? "null" : selectedUser.getName());
 			if (selectedUser != null) {
-				Notification.show("&&&&&&&");
 				showDialog(selectedUser);
 			}
 		});
@@ -143,7 +155,12 @@ public class AdminView extends BaseView {
 		UserModel userModel = getCurrentUser();
 		SResponseT<String> res = marketService.removeUser(userModel.getName(), user.getName());
 		if (res.isSuccess()) {
-			users.remove(user);
+			SResponseT<List<UserModel>> userRes = marketService.getAllUsers(userModel.getName());
+			if(!userRes.isSuccess()){
+				Notification.show(userRes.getMessage());
+				getUI().ifPresent(ui -> ui.navigate(""));
+			}
+			users = userRes.getData();
 			userDataProvider.refreshAll();
 			Notification.show(user.getSessionID());
 			if(user.getSessionID() != null) {
@@ -162,7 +179,10 @@ public class AdminView extends BaseView {
 		confirmDialog = new Dialog();
 		confirmDialog.add(new Text(String.format("Are you sure you want to remove the user %s?",
 				user.getName())));
-		Button confirmButton = new Button("OK", event -> removeUser(user));
+		Button confirmButton = new Button("OK", event -> {
+			removeUser(user);
+			confirmDialog.close();
+		});
 		Button cancelButton = new Button("Cancel", event -> confirmDialog.close());
 		confirmDialog.add(confirmButton, cancelButton);
 		confirmDialog.open();
