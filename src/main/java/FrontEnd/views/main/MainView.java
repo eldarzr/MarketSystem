@@ -69,6 +69,7 @@ public class MainView extends BaseView {
     @Override
     protected void updateAfterUserNameChange(UserModel userModel) {
         adminButton.setVisible(userModel.getUserType() == UserType.ADMIN);
+        loginButton.setVisible(userModel.getUserType() != UserType.GUEST);
     }
 
 }
