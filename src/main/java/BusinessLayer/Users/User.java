@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class User {
     private UserType userType;
     private String name;
+    private String sessionID;
     private String email;
     private String password;
     private ConcurrentLinkedQueue<String> shopsMessages = new ConcurrentLinkedQueue<>();
@@ -25,12 +26,14 @@ public class User {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.sessionID = null;
         userType = UserType.MEMBER;
         currentCart = new Cart();
     }
 
     public User(String guestName) {
         name = guestName;
+        sessionID = guestName;
         userType = UserType.GUEST;
         currentCart = new Cart();
     }
@@ -113,6 +116,14 @@ public class User {
 
     public void clearCart() {
         currentCart = new Cart();
+    }
+
+    public String getSessionID() {
+        return sessionID;
+    }
+
+    public void setSessionID(String sessionID) {
+        this.sessionID = sessionID;
     }
 }
 
