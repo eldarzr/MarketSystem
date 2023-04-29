@@ -10,6 +10,7 @@ import BusinessLayer.Shops.Shop;
 import BusinessLayer.Shops.ShopHandler;
 import BusinessLayer.Users.User;
 import BusinessLayer.Users.UsersHandler;
+import ServiceLayer.DataObjects.UserDataObj;
 import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.VaadinSession;
 import org.apache.commons.lang3.NotImplementedException;
@@ -136,15 +137,15 @@ public class Market implements MarketIntr{
     @Override
     public String logout(String userName) {
         logger.info(String.format("Attempt to logout user %s.", userName));
-        disconnect(userName);
+        String newUserName = disconnect(userName);
         logger.info(String.format("User %s logged out.", userName));
-        return usersHandler.createGuest();
+        return newUserName;
     }
 
     //the logic behind this function is that a member can log out and still be connected to the system as a guest.
     //when a user closes is session the system will remove this guest from the login users list
-    private void disconnect(String userName){
-        usersHandler.disconnect(userName);
+    private String disconnect(String userName){
+        return usersHandler.disconnect(userName);
     }
 
     //next version
@@ -530,5 +531,9 @@ public class Market implements MarketIntr{
     public List<Shop> getAllShops(String userName) throws Exception {
         validateLoggedInAdminException(userName);
         return shopHandler.getAllShops();
+    }
+
+    public User getUser(String userName) {
+        return usersHandler.getUser(userName);
     }
 }

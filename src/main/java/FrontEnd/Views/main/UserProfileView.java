@@ -48,9 +48,14 @@ public class UserProfileView extends BaseView implements HasUrlParameter<String>
 	@Override
 	public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
 		if (parameter != null && !parameter.isEmpty()) {
-			userProfile = new Gson().fromJson(parameter, UserModel.class);
-			isSetAllow = userProfile.getName().equals(getCurrentUser().getName());
-			add(new Text(userProfile.getName()));
+//			userProfile = new Gson().fromJson(parameter, UserModel.class);
+			SResponseT<UserModel> res = marketService.getUser(parameter);
+			if (res.isSuccess()) {
+				userProfile = res.getData();
+				isSetAllow = userProfile.getName().equals(getCurrentUser().getName());
+				add(new Text(userProfile.getName()));
+			}
+			else Notification.show(res.getMessage());
 		}
 	}
 

@@ -425,5 +425,14 @@ public class ServiceMarket {
 			return new ResponseT(exception.getMessage(), false);
 		}
 	}
+
+	public ResponseT<UserDataObj> getUser(String userName) {
+		try {
+			return new ResponseT<UserDataObj>(new UserDataObj(market.getUser(userName)));
+
+		} catch (Exception exception) {
+			return new ResponseT<>(exception.getMessage(), false);
+		}
+	}
 	// custom service methods for your application
 }

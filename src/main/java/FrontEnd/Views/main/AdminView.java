@@ -72,16 +72,16 @@ public class AdminView extends BaseView {
 			Optional<UserModel> selectedUser = event.getFirstSelectedItem();
 			if (selectedUser.isPresent()) {
 				userProfileButton.setEnabled(true);
+				userHistoryButton.setEnabled(true);
 				if (selectedUser.get().getUserType() == UserType.MEMBER) {
 					removeButton.setEnabled(true);
-					userHistoryButton.setEnabled(true);
 				} else {
 					removeButton.setEnabled(false);
-					userHistoryButton.setEnabled(false);
 				}
 			}
 			else{
 				userProfileButton.setEnabled(false);
+				userHistoryButton.setEnabled(false);
 			}
 		});
 		shopGrid = new Grid<>();
@@ -115,17 +115,9 @@ public class AdminView extends BaseView {
 			if (selectedUser != null) {
 				getUI().ifPresent(ui -> {
 					String userModelJsonString = new Gson().toJson(selectedUser);
-				UI.getCurrent().navigate(UserProfileView.class, userModelJsonString);
+				UI.getCurrent().navigate(UserProfileView.class, selectedUser.getName());
 				});
 			}
-//			public <T extends Component> Optional<T> navigate(Class<T> navigationTarget) {
-//				return this.navigate(navigationTarget, RouteParameters.empty());
-//			}
-
-//			public <T, C extends Component & HasUrlParameter<T>> Optional<C> navigate(Class<? extends C> navigationTarget, T parameter) {
-//				this.navigate(navigationTarget, HasUrlParameterFormat.getParameters(parameter));
-//				return this.findCurrentNavigationTarget(navigationTarget);
-//			}
 		});
 
 		userHistoryButton = new Button("User Purchase History");

@@ -1,6 +1,7 @@
 package BusinessLayer.Users;
 
 import BusinessLayer.Purchases.UserInvoice;
+import ServiceLayer.DataObjects.UserDataObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -101,10 +102,12 @@ public class UsersHandler {
         return user;
     }
 
-    public void disconnect(String userName){
-        if(!isLoggedIn(userName))
-            throwIllegalArgumentException(String.format("User %s is not logged in", userName));
+    public String disconnect(String userName){
+//        if(!isLoggedIn(userName))
+//            throwIllegalArgumentException(String.format("User %s is not logged in", userName));
+        User user = findLoginUser(userName);
         loginUsers.remove(userName);
+        return createGuest(user.getSessionID());
     }
 
     //finds logged in members or guests
@@ -275,5 +278,10 @@ public class UsersHandler {
         loginUsers.remove(userName);
         members.remove(userName);
         return createGuest(user.getSessionID());
+    }
+
+    public User getUser(String userName) {
+        User user = findUserByName(userName);
+        return user;
     }
 }

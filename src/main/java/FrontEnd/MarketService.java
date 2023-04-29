@@ -281,4 +281,11 @@ public class MarketService {
 	public VaadinSession getSession(String sessionID) {
 		return sessions.get(sessionID);
 	}
+
+	public SResponseT<UserModel> getUser(String userName) {
+		ResponseT<UserDataObj> r = serviceMarket.getUser(userName);
+		if (r.isSuccess())
+			return new SResponseT<>(new UserModel(r.getData()));
+		return new SResponseT<>(r.getMessage(), r.isSuccess());
+	}
 }
