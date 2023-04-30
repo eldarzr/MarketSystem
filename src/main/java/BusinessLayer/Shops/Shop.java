@@ -307,5 +307,11 @@ public class Shop implements ShopIntr {
 	public void addNewProductTest(ShopProduct product) {
 		products.put(product.getName(), product);
 	}
+
+	public MemberRoleInShop getRoleIfExists(String userName) {
+		if(isUserHasRole(userName))
+			return roles.get(userName);
+		return null;
+	}
 }
 

@@ -1,4 +1,4 @@
-package FrontEnd.Views.main;
+package FrontEnd.views;
 
 import BusinessLayer.Enums.UserType;
 import FrontEnd.Model.ProductModel;
@@ -41,6 +41,7 @@ public class AdminView extends BaseView {
 	private Grid<ShopModel> shopGrid;
 	private List<ShopModel> shops;
 	private ListDataProvider<ShopModel> shopDataProvider;
+
 	private Dialog confirmDialog;
 	private Button removeButton;
 	private Button userHistoryButton;
