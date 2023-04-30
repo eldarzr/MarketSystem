@@ -11,9 +11,6 @@ import BusinessLayer.Shops.Shop;
 import BusinessLayer.Shops.ShopHandler;
 import BusinessLayer.Users.User;
 import BusinessLayer.Users.UsersHandler;
-import ServiceLayer.DataObjects.UserDataObj;
-import com.vaadin.flow.server.VaadinService;
-import com.vaadin.flow.server.VaadinSession;
 import org.apache.commons.lang3.NotImplementedException;
 
 import java.io.File;
@@ -156,7 +153,7 @@ public class Market implements MarketIntr{
     }
 
     @Override
-    public void createShop(String userName, String shopName) throws Exception {
+    public Shop createShop(String userName, String shopName) throws Exception {
         logger.info(String.format("Attempt by user %s to open store %s.", userName,shopName));
         if (!isLoggedIn(userName))
         {
@@ -176,6 +173,7 @@ public class Market implements MarketIntr{
         shopHandler.addShop(shopName, shop);
         MemberRoleInShop.createFounder(userName, shop, user::sendMessage);
         logger.info(String.format("User %s opened store %s and became it's founder.", userName,shopName));
+        return shop;
     }
 
     @Override
@@ -599,4 +597,9 @@ public class Market implements MarketIntr{
         return shopHandler.getUserRoles(userName);
 
     }
+
+    public Shop getShop(String name) throws Exception {
+        return shopHandler.getShop(name);
+    }
+
 }

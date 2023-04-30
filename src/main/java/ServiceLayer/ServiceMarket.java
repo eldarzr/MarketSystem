@@ -3,6 +3,7 @@ package ServiceLayer;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Market;
+import BusinessLayer.Shops.Shop;
 import ServiceLayer.DataObjects.*;
 
 import java.util.Collection;
@@ -110,13 +111,14 @@ public class ServiceMarket {
 		}
 	}
 
-	public Response createShop(String userName, String shopName) throws Exception {
+	public ResponseT<ShopDataObj> createShop(String userName, String shopName) throws Exception {
+
 		try {
-			market.createShop(userName, shopName);
+			return new ResponseT<>(new ShopDataObj(market.createShop(userName, shopName)));
 		} catch (Exception exception) {
-			return new Response(exception.getMessage());
+			return new ResponseT<ShopDataObj>(exception.getMessage(), false);
 		}
-		return new Response();
+
 	}
 
 	public Response openShop(String userName, String shopName) {
@@ -444,5 +446,13 @@ public class ServiceMarket {
 				return new ResponseT(exception.getMessage(), false);
 			}
 		}
-	// custom service methods for your application
-}
+
+	public ResponseT<ShopDataObj> getShop(String name) {
+		try {
+			return new ResponseT<ShopDataObj>(new ShopDataObj(market.getShop(name)));
+
+		} catch (Exception exception) {
+			return new ResponseT<>(exception.getMessage(), false);
+		}
+	}
+	}

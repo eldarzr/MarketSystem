@@ -2,8 +2,7 @@ package FrontEnd;
 
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
-import BusinessLayer.MemberRoleInShop;
-import BusinessLayer.Users.UsersHandler;
+import BusinessLayer.Shops.Shop;
 import FrontEnd.Model.MemberRoleInShopModel;
 import FrontEnd.Model.ProductModel;
 import FrontEnd.Model.ShopModel;
@@ -118,8 +117,16 @@ public class MarketService {
 		throw new NotImplementedException();
 	}
 
-	public Response createShop(String userName, String shopName) throws Exception {
-		throw new NotImplementedException();
+	public SResponseT<ShopModel> createShop(String userName, String shopName) {
+		ResponseT<ShopDataObj>res = null;
+		try {
+			res = serviceMarket.createShop(userName,shopName);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		if (res.isSuccess())
+			return new SResponseT<>(new ShopModel(res.getData()));
+		return new SResponseT<>(res.getMessage(), res.isSuccess());
 	}
 
 	public Response openShop(String userName, String shopName) {
@@ -297,4 +304,11 @@ public class MarketService {
 			return new SResponseT<>(r.getData().stream().map(MemberRoleInShopModel::new).collect(Collectors.toList()));
 		return new SResponseT<>(r.getMessage(), r.isSuccess());
 	}
+
+    public SResponseT<ShopModel> getShop(String name) {
+		ResponseT<ShopDataObj> r = serviceMarket.getShop(name);
+		if (r.isSuccess())
+			return new SResponseT<>(new ShopModel(r.getData()));
+		return new SResponseT<>(r.getMessage(), r.isSuccess());
+    }
 }
