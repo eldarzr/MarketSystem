@@ -2,7 +2,9 @@ package FrontEnd;
 
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
+import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.Users.UsersHandler;
+import FrontEnd.Model.MemberRoleInShopModel;
 import FrontEnd.Model.ProductModel;
 import FrontEnd.Model.ShopModel;
 import FrontEnd.Model.UserModel;
@@ -286,6 +288,13 @@ public class MarketService {
 		ResponseT<UserDataObj> r = serviceMarket.getUser(userName);
 		if (r.isSuccess())
 			return new SResponseT<>(new UserModel(r.getData()));
+		return new SResponseT<>(r.getMessage(), r.isSuccess());
+	}
+
+    public SResponseT<List<MemberRoleInShopModel>> getUserRoles(String userName) {
+		ResponseT<List<MemberRoleInShopDataObj>> r = serviceMarket.getUserRoles(userName);
+		if (r.isSuccess())
+			return new SResponseT<>(r.getData().stream().map(MemberRoleInShopModel::new).collect(Collectors.toList()));
 		return new SResponseT<>(r.getMessage(), r.isSuccess());
 	}
 }

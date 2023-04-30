@@ -1,4 +1,4 @@
-package FrontEnd.Views.main;
+package FrontEnd.views;
 
 import BusinessLayer.Enums.UserType;
 import FrontEnd.MarketService;
@@ -6,10 +6,11 @@ import FrontEnd.Model.UserModel;
 import FrontEnd.SResponseT;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
@@ -28,6 +29,7 @@ public abstract class BaseView extends VerticalLayout {
 	protected MarketService marketService = MarketService.getInstance();
 	private HorizontalLayout horizontalLayout;
 	private Button goToCartButton;
+	private Button profileButton;
 	private Label userNameLabel;
 	private HorizontalLayout loginLayout;
 	private HorizontalLayout logoutLayout;
@@ -39,15 +41,54 @@ public abstract class BaseView extends VerticalLayout {
 			userModel = new UserModel(sessionID, sessionID);
 			VaadinSession.getCurrent().setAttribute(UserModel.class, userModel);
 		}
-		goToCartButton = new Button("Go To Cart", e -> getUI().ifPresent(ui ->
-				ui.navigate("cart")));
-		userNameLabel = new Label("hello " + getCurrentUser().getName());
-		horizontalLayout = new HorizontalLayout(userNameLabel, goToCartButton);
+
+		// User menu
+		Icon userIcon = VaadinIcon.USER.create();
+		userIcon.getStyle().set("margin-right", "0.25rem");
+
+		goToCartButton = new Button(new Icon(VaadinIcon.CART));
+		goToCartButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
+		goToCartButton.getStyle().set("color", "white");
+
+		goToCartButton.addClickListener(e ->
+				goToCartButton.getUI().ifPresent(ui ->
+						ui.navigate("cart"))
+		);
+		userNameLabel = new Label("Hello, " + getCurrentUser().getName());
+		userNameLabel.getStyle().set("background-color", "white");
+		userNameLabel.getStyle().set("color", "black");
+		userNameLabel.getStyle().set("font-weight", "bold");
+		userNameLabel.getStyle().set("padding", "10px");
+		userNameLabel.getStyle().set("border", "2px solid #FF8C00");
+		userNameLabel.getStyle().set("border-radius", "10px");
+
+		Icon profileIcon = VaadinIcon.USER.create();
+		profileButton = new Button(profileIcon); // VaadinSession.getCurrent().getAttribute(UserModel.class).getUserType() == UserType.GUEST ?
+//				e -> Notification.show("Please login to access your profile") :
+//				e -> getUI().ifPresent(ui -> ui.navigate("profile")));
+		profileButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
+		profileButton.getStyle().set("color", "white");
+		profileButton.addClickListener(e ->
+				profileButton.getUI().ifPresent(ui ->
+						ui.navigate("profile"))
+		);
+
+		Div userMenu = new Div(userIcon, userNameLabel);
+		userMenu.getStyle().set("display", "flex");
+		userMenu.getStyle().set("align-items", "center");
+
+		horizontalLayout = new HorizontalLayout(userMenu,goToCartButton,profileButton);
+		horizontalLayout.getStyle().set("background-color", "#FFFFFF");
+		horizontalLayout.getStyle().set("padding", "1rem");
+		horizontalLayout.getStyle().set("border", "1px solid #ccc");
+		horizontalLayout.getStyle().set("border-radius", "5px");
 		add(horizontalLayout);
+
 		boolean isGuest = userModel.getUserType() == UserType.GUEST;
 		if (isGuest)
 			showLoginScreen();
-		else showLogoutScreen();
+		else
+			showLogoutScreen();
 	}
 
 	protected boolean login(String username, String password) {
@@ -74,6 +115,7 @@ public abstract class BaseView extends VerticalLayout {
 	}
 
 	protected boolean logout() {
+		UI.getCurrent().navigate("");
 		UserModel userModel = getCurrentUser();
 		SResponseT<String> res = marketService.logout(userModel.getName());
 		if (res.isSuccess()) {
@@ -93,6 +135,8 @@ public abstract class BaseView extends VerticalLayout {
 		PasswordField password = new PasswordField("Password");
 		Button loginButton = new Button("Login");
 		loginButton.addClickListener(click -> login(username.getValue(), password.getValue()));
+		loginButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
+		loginButton.getStyle().set("color", "white");
 		loginLayout = new HorizontalLayout(username, password, loginButton);
 		horizontalLayout.add(loginLayout);
 		setSizeFull();
@@ -101,6 +145,8 @@ public abstract class BaseView extends VerticalLayout {
 	private void showLogoutScreen(){
 		Button logoutButton = new Button("Logout");
 		logoutButton.addClickListener(click -> logout());
+		logoutButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
+		logoutButton.getStyle().set("color", "white");
 		logoutLayout = new HorizontalLayout(logoutButton);
 		horizontalLayout.add(logoutLayout);
 		setSizeFull();
@@ -117,7 +163,7 @@ public abstract class BaseView extends VerticalLayout {
 	}
 
 	private void updateUserNameOnScreen(UserModel user){
-		userNameLabel.setText("hello " + (user.getUserType() == UserType.GUEST ? "guest" : user.getName()));
+		userNameLabel.setText("Welcome \n" + (user.getUserType() == UserType.GUEST ? "guest" : user.getName() + "!"));
 	}
 
 	protected abstract void updateAfterUserNameChange(UserModel userModel);

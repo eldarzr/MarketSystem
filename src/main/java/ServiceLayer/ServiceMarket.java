@@ -434,5 +434,15 @@ public class ServiceMarket {
 			return new ResponseT<>(exception.getMessage(), false);
 		}
 	}
+
+	public ResponseT<List<MemberRoleInShopDataObj>> getUserRoles(String userName) {
+			try {
+				return new ResponseT<List<MemberRoleInShopDataObj>>(market.getUserRoles(userName).stream().map(MemberRoleInShopDataObj::new)
+						.collect(Collectors.toList()));
+
+			} catch (Exception exception) {
+				return new ResponseT(exception.getMessage(), false);
+			}
+		}
 	// custom service methods for your application
 }

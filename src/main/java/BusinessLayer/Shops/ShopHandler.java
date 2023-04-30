@@ -27,10 +27,27 @@ public class ShopHandler {
         return shops.values().stream().toList();
     }
 
+    public List<MemberRoleInShop> getUserRoles(String userName) {
+       return shops.values().stream()
+                .map(shop -> shop.getRoleIfExists(userName))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+//        List<MemberRoleInShop> myShops = new LinkedList<>();
+//        for(Shop shop : shops.values()){
+//           MemberRoleInShop role =  shop.getRoleIfExists(userName);
+//           if (role != null)
+//               myShops.add(role);
+//        }
+
+
+    }
+
     public boolean isUserHasRoleInAnyShops(String userName) {
         return shops.values().stream().map(shop -> shop.isUserHasRole(userName)).
                 reduce(false, (acc, cur) -> acc || cur);
     }
+
+
 
     private static class  ShopHolder {
         private static ShopHandler  instance = new ShopHandler() ;
