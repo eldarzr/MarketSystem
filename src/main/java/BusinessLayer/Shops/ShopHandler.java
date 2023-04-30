@@ -73,6 +73,11 @@ public class ShopHandler {
         reqShop.closeShop(userName);
     }
 
+    public void openShop(String userName, String shopName) throws Exception {
+        Shop reqShop = getShop(shopName);
+        reqShop.openShop(userName);
+    }
+
     public Shop getShop(String shopName) throws Exception {
         validateShopExistsException(shopName);
         return shops.get(shopName);

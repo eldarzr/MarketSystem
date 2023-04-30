@@ -8,6 +8,7 @@ import BusinessLayer.Purchases.ShopBagItem;
 import BusinessLayer.Users.User;
 import BusinessLayer.Purchases.ShopInvoice;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,7 +30,6 @@ public class Shop implements ShopIntr {
 	//map of user name to role in this shop
 	private ConcurrentHashMap<String, MemberRoleInShop> roles;
 	private ConcurrentHashMap<String, ShopProduct> products;
-	private ConcurrentLinkedQueue<MessageObserver> observers;
 	private ConcurrentLinkedQueue<ShopInvoice> invoices;
 
 	public Shop(String name, String founderUserName) {
@@ -39,7 +39,6 @@ public class Shop implements ShopIntr {
 		this.roles = new ConcurrentHashMap<>();
 		this.products = new ConcurrentHashMap<>();
 		this.active = true;
-		this.observers = new ConcurrentLinkedQueue<>();
 		this.invoices = new ConcurrentLinkedQueue<>();
 	}
 
@@ -149,11 +148,14 @@ public class Shop implements ShopIntr {
 		if (!this.founderUserName.equals(userName))
 			throwException("Only the founder can close a store.");
 		this.active = false;
-		for (MessageObserver observer : this.observers) {
-			observer.update(String.format("Shop %s is closed.",name));
-		}
 		//TODO : Only owners & Admins can acheive information on the shop.
 		//TODO : products of the store should be unavilable now when a member looking for them.
+	}
+
+	public void openShop(String userName) throws Exception {
+		if (!this.founderUserName.equals(userName))
+			throwException("Only the founder can open a store.");
+		this.active = true;
 	}
 
 	public List<ShopProduct> getProducts() {
@@ -191,10 +193,6 @@ public class Shop implements ShopIntr {
 			product.setName(productNewName);
 			products.put(productNewName, product);
 		}
-	}
-
-	public void addObserver(MessageObserver obs) {
-		this.observers.add(obs);
 	}
 
 	public void updateProductDesc(String userName, String productName, String productNewDesc) throws Exception {
@@ -308,6 +306,12 @@ public class Shop implements ShopIntr {
 		products.put(product.getName(), product);
 	}
 
+	public Collection<String> getManagementUserNames() throws Exception {
+		List<String> usernames=new ArrayList<>();
+		for(MemberRoleInShop role: roles.values()) usernames.add(role.getRoleUser());
+		return usernames;
+   }
+   
 	public MemberRoleInShop getRoleIfExists(String userName) {
 		if(isUserHasRole(userName))
 			return roles.get(userName);

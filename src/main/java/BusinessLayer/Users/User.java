@@ -1,16 +1,16 @@
 package BusinessLayer.Users;
 
 import BusinessLayer.Enums.UserType;
-import BusinessLayer.MemberRoleInShop;
+import BusinessLayer.Notifications.Notification;
+import BusinessLayer.Notifications.NotificationObserver;
 import BusinessLayer.Purchases.Cart;
 import BusinessLayer.Purchases.UserInvoice;
 import BusinessLayer.Shops.Product;
-import BusinessLayer.Shops.Shop;
 
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class User {
+public class User implements NotificationObserver {
     private UserType userType;
     private String name;
     private String sessionID;
@@ -21,6 +21,8 @@ public class User {
     private boolean twoFactorEnabled;
 
     Cart currentCart;
+
+    private ConcurrentLinkedQueue<Notification> pendingNotifications = new ConcurrentLinkedQueue<>();
 
     public User(String name, String email, String password) {
         this.name = name;
@@ -116,6 +118,11 @@ public class User {
 
     public void clearCart() {
         currentCart = new Cart();
+    }
+
+    @Override
+    public void notify(Notification notification) {
+        pendingNotifications.add(notification);
     }
 
     public String getSessionID() {

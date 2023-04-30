@@ -3,6 +3,7 @@ package BusinessLayer;
 import BusinessLayer.Enums.UserType;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
+import BusinessLayer.Notifications.Notification;
 import BusinessLayer.Purchases.*;
 import BusinessLayer.Shops.Product;
 import BusinessLayer.Shops.ProductIntr;
@@ -178,18 +179,39 @@ public class Market implements MarketIntr{
     }
 
     @Override
-    public void openShop(String userName, String shopName) {
-        throw new NotImplementedException();
+    public void openShop(String userName, String shopName) throws Exception {
+        logger.info(String.format("Attempt by user %s to open store %s.", userName,shopName));
+        User founder=usersHandler.findMemberByName(userName);
+        usersHandler.findLoginUser(userName);
+        shopHandler.openShop(userName, shopName);
+        // notify management on opening shop
+        String message=String.format("User %s opened shop %s.", userName, shopName);
+        Notification notification=new Notification(userName,message,java.time.LocalDate.now());
+        notifyShopManagement(userName, shopName,notification);
     }
 
     //todo: naor
     @Override
     public void closeShop(String userName, String shopName) throws Exception {
         logger.info(String.format("Attempt by user %s to close store %s.", userName,shopName));
-        usersHandler.findMemberByName(userName);
+        User founder=usersHandler.findMemberByName(userName);
         usersHandler.findLoginUser(userName);
         shopHandler.closeShop(userName, shopName);
-        logger.info(String.format("User %s closed store %s.", userName,shopName));
+        // notify management on closing shop
+        String message=String.format("User %s closed shop %s.", userName, shopName);
+        Notification notification=new Notification(userName,message,java.time.LocalDate.now());
+        notifyShopManagement(userName, shopName,notification);
+        logger.info(message);
+    }
+
+    private void notifyShopManagement(String userName, String shopName,Notification notification){
+        try {
+            for(String roleName: shopHandler.getShop(shopName).getManagementUserNames())
+            {
+                // no need to notify himself.
+                if (!roleName.equals(userName)) usersHandler.notify(roleName,notification);
+            }
+        } catch (Exception e) {}
     }
 
     @Override
@@ -197,7 +219,11 @@ public class Market implements MarketIntr{
         logger.info(String.format("Attempt by user %s to add new product %s to store %s.", userName,productName, shopName));
         validateLoggedInException(userName);
         shopHandler.addNewProduct(userName, shopName, productName, category, desc, price);
-        logger.info(String.format("User %s added new product %s to store %s.", userName,productName, shopName));
+        // notify management on new product
+        String message=String.format("User %s added new product %s to store %s.", userName,productName, shopName);
+        Notification notification=new Notification(userName,message,java.time.LocalDate.now());
+        notifyShopManagement(userName, shopName,notification);
+        logger.info(message);
     }
 
 
@@ -207,7 +233,11 @@ public class Market implements MarketIntr{
         logger.info(String.format("Attempt by user %s to remove product %s from store %s.", userName,productName, shopName));
         validateLoggedInException(userName);
         shopHandler.removeProduct(userName, shopName, productName);
-        logger.info(String.format("User %s removed product %s from store %s.", userName,productName, shopName));
+        // notify management on new product
+        String message=String.format("User %s removed product %s from store %s.", userName,productName, shopName);
+        Notification notification=new Notification(userName,message,java.time.LocalDate.now());
+        notifyShopManagement(userName, shopName,notification);
+        logger.info(message);
     }
 
     @Override
@@ -293,7 +323,11 @@ public class Market implements MarketIntr{
         User user = usersHandler.findMemberByName(appointee);
         Shop reqShop = checkForShop(shopName);
         reqShop.setShopOwner(appointedBy,appointee , user::sendMessage);
-        logger.info(String.format("User %s appointed %s as shop-owner of shop %s.", appointedBy,appointee, shopName));
+        //notify appointee
+        String message=String.format("User %s appointed %s as shop-owner of shop %s.", appointedBy,appointee, shopName);
+        Notification notification=new Notification(appointedBy,message,java.time.LocalDate.now());
+        usersHandler.notify(appointee,notification);
+        logger.info(message);
     }
 
     public Shop checkForShop(String shopName) throws Exception {
@@ -309,13 +343,22 @@ public class Market implements MarketIntr{
         User user = usersHandler.findMemberByName(appointee);
         Shop reqShop = checkForShop(shopName);
         reqShop.setShopManager(appointedBy,appointee ,user::sendMessage);
-        logger.info(String.format("User %s appointed %s as shop-manager of shop %s.", appointedBy,appointee, shopName));
+        //notify appointee
+        String message=String.format("User %s appointed %s as shop-manager of shop %s.", appointedBy,appointee, shopName);
+        Notification notification=new Notification(appointedBy,message,java.time.LocalDate.now());
+        usersHandler.notify(appointee,notification);
+        logger.info(message);
     }
 
     //next version
     @Override
     public void removeShopManager(String managerName, String userToRemove, String shopName) {
         throw new NotImplementedException();
+        //notify removed manager
+        //String message=String.format("Manager %s removed you as shop-manager of shop %s.", managerName, shopName);
+        //Notification notification=new Notification(managerName,message,java.time.LocalDate.now());
+        //usersHandler.notify(userToRemove,notification);
+        //logger.info(String.format("Manager %s removed %s as shop-manager of shop %s.", managerName,userToRemove, shopName));
     }
 
     @Override
@@ -325,6 +368,11 @@ public class Market implements MarketIntr{
         isLoggedIn(actor);
         validateUserIsntGuest(actOn);
         Shop reqShop = checkForShop(shopName);
+        //notify appointee
+        String message=String.format("User %s changed your permissions in shop %s.", actor, shopName);
+        Notification notification=new Notification(actor,message,java.time.LocalDate.now());
+        usersHandler.notify(actOn,notification);
+        logger.info(String.format("User %s changed %s permissions in shop %s.", actor,actOn, shopName));
        return reqShop.setManageOption(actor,actOn,permission);
     }
 
@@ -336,6 +384,11 @@ public class Market implements MarketIntr{
         validateUserIsntGuest(actOn);
         Shop reqShop = checkForShop(shopName);
         reqShop.addManageOption(actor,actOn,permission);
+        //notify appointee
+        String message=String.format("User %s added to your permissions in shop %s.", actor, shopName);
+        Notification notification=new Notification(actor,message,java.time.LocalDate.now());
+        usersHandler.notify(actOn,notification);
+        logger.info(String.format("User %s added to %s permissions in shop %s.", actor,actOn, shopName));
     }
 
     //todo: naor - talk with eldar
