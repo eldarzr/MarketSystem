@@ -1,5 +1,7 @@
 package BusinessLayer.Users;
 
+import BusinessLayer.Notifications.Notification;
+import BusinessLayer.Notifications.NotificationPublisher;
 import BusinessLayer.Purchases.UserInvoice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
@@ -16,7 +19,7 @@ import java.util.regex.Pattern;
 
 import static BusinessLayer.Enums.UserType.*;
 
-public class UsersHandler {
+public class UsersHandler implements NotificationPublisher {
     private static final Logger logger = Logger.getLogger("Market");
 
     @Autowired
@@ -248,5 +251,24 @@ public class UsersHandler {
         loginUsers.put(sessionID,user);
         logger.info(String.format("Session of guest %s started.",sessionID));
         return sessionID;
+    }
+
+    // Notify all users with notification (system notifications).
+    public void notifyAll(Notification notification)
+    {
+
+        for(User observer: members.values()) observer.notify(notification);
+    }
+
+    // Notify collection of users with notification (shop management notifications).
+    public void notifySome(Collection<String> userNames,Notification notification)
+    {
+        for(String userName: userNames) notify(userName,notification);
+    }
+
+    // Notify Specific user with notification(user/shop-user notifications).
+    public void notify(String userName,Notification notification)
+    {
+        members.get(userName).notify(notification);
     }
 }
