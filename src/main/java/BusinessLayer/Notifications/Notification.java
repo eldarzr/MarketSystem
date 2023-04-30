@@ -7,7 +7,7 @@ public class Notification {
 
     private String source;
     private String message;
-    private Date creationTime;
+    private LocalDate creationTime;
     private boolean read;
 
     public Notification(String source, String message, LocalDate creationTime) {
@@ -24,7 +24,7 @@ public class Notification {
         return message;
     }
 
-    public Date getCreationTime() {
+    public LocalDate getCreationTime() {
         return creationTime;
     }
 

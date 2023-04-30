@@ -96,7 +96,7 @@ public class MemberRoleInShop {
 		Shop roleShop = role.roleShop;
 //		roleUser.addShopRole(roleShop.getName() ,role);
 		roleShop.addRole(roleUser,role);
-		roleShop.addObserver(obs);
+//		roleShop.addObserver(obs);
 		return role;
 	}
 
