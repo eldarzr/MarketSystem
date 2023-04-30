@@ -566,6 +566,9 @@ public class Market implements MarketIntr{
             addNewProduct(usersName[i], shopNames[i], prodNames[i], cat[i], descs[i], prices[i]);
             addProductItems(usersName[i], shopNames[i], prodNames[i], 3);
         }
+        createShop(usersName[0],"The Shop");
+        createShop(usersName[0],"Super Shop");
+        logout("eldar");
 
     }
 
@@ -588,5 +591,12 @@ public class Market implements MarketIntr{
 
     public User getUser(String userName) {
         return usersHandler.getUser(userName);
+    }
+
+    public List<MemberRoleInShop> getUserRoles(String userName) throws Exception {
+        validateUserIsntGuest(userName);
+        isLoggedIn(userName);
+        return shopHandler.getUserRoles(userName);
+
     }
 }

@@ -310,6 +310,12 @@ public class Shop implements ShopIntr {
 		List<String> usernames=new ArrayList<>();
 		for(MemberRoleInShop role: roles.values()) usernames.add(role.getRoleUser());
 		return usernames;
+   }
+   
+	public MemberRoleInShop getRoleIfExists(String userName) {
+		if(isUserHasRole(userName))
+			return roles.get(userName);
+		return null;
 	}
 }
 
