@@ -70,4 +70,7 @@ public class RegisterView extends BaseView {
 		return false;
 	}
 
+	@Override
+	protected void updateAfterUserNameChange(UserModel userModel) { }
+
 }

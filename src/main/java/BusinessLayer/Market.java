@@ -11,6 +11,7 @@ import BusinessLayer.Shops.Shop;
 import BusinessLayer.Shops.ShopHandler;
 import BusinessLayer.Users.User;
 import BusinessLayer.Users.UsersHandler;
+import ServiceLayer.DataObjects.UserDataObj;
 import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.VaadinSession;
 import org.apache.commons.lang3.NotImplementedException;
@@ -24,7 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-public class Market implements MarketIntr {
+public class Market implements MarketIntr{
 
     private static final Logger logger = Logger.getLogger("Market");
 
@@ -45,14 +46,6 @@ public class Market implements MarketIntr {
     public void init() throws Exception {
         logger.info("Starting market init.");
         createLogger();
-        if (VaadinService.getCurrent() != null) {
-            VaadinService.getCurrent().addSessionInitListener(event ->
-                    startSession(event.getSession().getSession().getId()));
-            VaadinService.getCurrent().addSessionDestroyListener(event ->
-                    closeSession(event.getSession().getSession().getId()));
-            startSession(VaadinSession.getCurrent().getSession().getId());
-
-        }
         loadAdmin();
         loadProducts();
         logger.info("Market init Finished successfully.");
@@ -145,15 +138,15 @@ public class Market implements MarketIntr {
     @Override
     public String logout(String userName) {
         logger.info(String.format("Attempt to logout user %s.", userName));
-        disconnect(userName);
+        String newUserName = disconnect(userName);
         logger.info(String.format("User %s logged out.", userName));
-        return usersHandler.createGuest();
+        return newUserName;
     }
 
     //the logic behind this function is that a member can log out and still be connected to the system as a guest.
     //when a user closes is session the system will remove this guest from the login users list
-    private void disconnect(String userName){
-        usersHandler.disconnect(userName);
+    private String disconnect(String userName){
+        return usersHandler.disconnect(userName);
     }
 
     //next version
@@ -574,5 +567,26 @@ public class Market implements MarketIntr {
             addProductItems(usersName[i], shopNames[i], prodNames[i], 3);
         }
 
+    }
+
+    public List<User> getAllUsers(String adminName) throws Exception {
+        return usersHandler.getAllUsers(adminName);
+    }
+
+    public String removeUser(String adminName, String userName) throws Exception {
+        //check if user- userName has roles in some shops
+        if(shopHandler.isUserHasRoleInAnyShops(userName))
+            throw new Exception(String.format("the user %s has role in some shops therefore he cannot" +
+                    "be removed", userName));
+        return usersHandler.removeUser(adminName, userName);
+    }
+
+    public List<Shop> getAllShops(String userName) throws Exception {
+        validateLoggedInAdminException(userName);
+        return shopHandler.getAllShops();
+    }
+
+    public User getUser(String userName) {
+        return usersHandler.getUser(userName);
     }
 }

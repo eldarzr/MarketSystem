@@ -1,11 +1,10 @@
-package ServiceLayer.DataObjects;
+package FrontEnd.Model;
 
-import BusinessLayer.Purchases.Invoice;
-import BusinessLayer.Shops.Product;
+import ServiceLayer.DataObjects.InvoiceDataObj;
 
 import java.util.Collection;
 
-public abstract class InvoiceDataObj {
+public abstract class InvoiceModel {
 
 	private String userName;
 	private String paymentMethod;
@@ -16,13 +15,13 @@ public abstract class InvoiceDataObj {
 	protected final int PRODUCT_PRICE = 3;
 	protected final int PRODUCT_QUANTITY = 4;
 
-	public InvoiceDataObj(String userName, String paymentMethod, String deliveryMethod) {
+	public InvoiceModel(String userName, String paymentMethod, String deliveryMethod) {
 		this.userName = userName;
 		this.paymentMethod = paymentMethod;
 		this.deliveryMethod = deliveryMethod;
 	}
 
-	public InvoiceDataObj(Invoice invoice) {
+	public InvoiceModel(InvoiceDataObj invoice) {
 			this.userName = invoice.getUserName();
 			this.paymentMethod = invoice.getPaymentMethod();
 			this.deliveryMethod = invoice.getDeliveryMethod();
@@ -31,16 +30,4 @@ public abstract class InvoiceDataObj {
 	public abstract Collection<String> getProducts();
 
 	public abstract int getQuantityOfProduct(String productName) throws Exception;
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public String getPaymentMethod() {
-		return paymentMethod;
-	}
-
-	public String getDeliveryMethod() {
-		return deliveryMethod;
-	}
 }

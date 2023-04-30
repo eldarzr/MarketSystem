@@ -4,20 +4,25 @@ import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Users.UsersHandler;
 import FrontEnd.Model.ProductModel;
+import FrontEnd.Model.ShopModel;
 import FrontEnd.Model.UserModel;
 import ServiceLayer.DataObjects.*;
 import ServiceLayer.Response;
 import ServiceLayer.ResponseT;
 import ServiceLayer.ServiceMarket;
+import com.vaadin.flow.server.VaadinService;
+import com.vaadin.flow.server.VaadinSession;
 import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class MarketService {
 
 	ServiceMarket serviceMarket;
+	ConcurrentHashMap<String, VaadinSession> sessions = new ConcurrentHashMap<>();
 
 	private static volatile MarketService instance;
 
@@ -40,6 +45,13 @@ public class MarketService {
 	public Response init() {
 		try {
 			serviceMarket.init();
+			if (VaadinService.getCurrent() != null) {
+				VaadinService.getCurrent().addSessionInitListener(event ->
+						startSession(event.getSession().getSession().getId()));
+				VaadinService.getCurrent().addSessionDestroyListener(event ->
+						closeSession(event.getSession().getSession().getId()));
+				startSession(VaadinSession.getCurrent().getSession().getId());
+			}
 		} catch (Exception exception) {
 			return new Response(exception.getMessage());
 		}
@@ -55,6 +67,30 @@ public class MarketService {
 		}
 	}
 
+	public SResponseT<String> startSession() {
+		ResponseT<String> res = serviceMarket.startSession();
+		if (res.isSuccess())
+			return new SResponseT<String>(res.getData());
+		return new SResponseT<>(res.getMessage(), res.isSuccess());
+	}
+
+	public SResponseT<String> startSession(String sessionID) {
+		sessions.put(sessionID, VaadinSession.getCurrent());
+		ResponseT<String> res = serviceMarket.startSession(sessionID);
+		if (res.isSuccess())
+			return new SResponseT<String>(res.getData());
+		return new SResponseT<>(res.getMessage(), res.isSuccess());
+	}
+
+	public SResponse closeSession(String sessionID) {
+		sessions.remove(sessionID);
+		Response res = serviceMarket.closeSession(sessionID);
+		if (res.isSuccess())
+			return new SResponse();
+		return new SResponse(res.getMessage());
+	}
+
+
 	public SResponseT<UserModel> register(String userName, String email, String password) {
 		ResponseT<UserDataObj> r = serviceMarket.register(userName, email, password);
 		if (r.isSuccess())
@@ -69,22 +105,11 @@ public class MarketService {
 		return new SResponseT<>(r.getMessage(), r.isSuccess());
 	}
 
-	public ResponseT<String> startSession() {
-		throw new NotImplementedException();
-	}
-
-
-	public Response closeSession(String userName) {
-		try {
-			serviceMarket.closeSession(userName);
-		} catch (Exception exception) {
-			return new Response(exception.getMessage());
-		}
-		return new Response();
-	}
-
-	public Response logout(String userName) {
-		throw new NotImplementedException();
+	public SResponseT<String> logout(String userName) {
+		ResponseT<String> res = serviceMarket.logout(userName);
+		if (res.isSuccess())
+			return new SResponseT<>(res.getData());
+		return new SResponseT<>(res.getMessage(), res.isSuccess());
 	}
 
 	public ResponseT<Collection<UserInvoiceDataObj>> getUserPurchaseHistory(String userName) {
@@ -233,5 +258,34 @@ public class MarketService {
 		throw new NotImplementedException();
 	}
 
-	// custom service methods for your application
+	public SResponseT<List<UserModel>> getAllUsers(String adminName) {
+		ResponseT<List<UserDataObj>> r = serviceMarket.getAllUsers(adminName);
+		if (r.isSuccess())
+			return new SResponseT<>(r.getData().stream().map(UserModel::new).collect(Collectors.toList()));
+		return new SResponseT<>(r.getMessage(), r.isSuccess());
+	}
+
+	public SResponseT<String> removeUser(String adminName, String userName) {
+		ResponseT<String> r = serviceMarket.removeUser(adminName, userName);
+		if (r.isSuccess())
+			return new SResponseT<>(r.getData());
+		return new SResponseT<>(r.getMessage());
+	}
+
+	public SResponseT<List<ShopModel>> getAllShops(String userName) {
+		ResponseT<List<ShopDataObj>> r = serviceMarket.getAllShops(userName);
+		if (r.isSuccess())
+			return new SResponseT<>(r.getData().stream().map(ShopModel::new).collect(Collectors.toList()));
+		return new SResponseT<>(r.getMessage(), r.isSuccess());	}
+
+	public VaadinSession getSession(String sessionID) {
+		return sessions.get(sessionID);
+	}
+
+	public SResponseT<UserModel> getUser(String userName) {
+		ResponseT<UserDataObj> r = serviceMarket.getUser(userName);
+		if (r.isSuccess())
+			return new SResponseT<>(new UserModel(r.getData()));
+		return new SResponseT<>(r.getMessage(), r.isSuccess());
+	}
 }
