@@ -98,10 +98,9 @@ public class MyShopsView extends BaseView {
 
     private void createShop(String shopName) {
         SResponseT<ShopModel> res = marketService.createShop(getCurrentUser().getName(), shopName);
-        if(!res.isSuccess()){
+        if (!res.isSuccess()) {
             Notification.show(res.getMessage());
-        }
-        else{
+        } else {
 //            addShopView(res.getData().getName());
             SResponseT<List<MemberRoleInShopModel>> rolesRes = marketService.getUserRoles(getCurrentUser().getName());
             if (!rolesRes.isSuccess()) {
@@ -112,86 +111,9 @@ public class MyShopsView extends BaseView {
                 mainLayout.removeAll();
                 populateShopsList();
             }
-            }
+        }
 
 
-    }
-
-    private void addShopView(String shopName) {
-        String roleType = "OWNER";
-
-        HorizontalLayout shopLayout = new HorizontalLayout();
-        shopLayout.setWidth("100%");
-        shopLayout.getStyle().set("border-bottom", "1px solid #CCC");
-        shopLayout.setPadding(true);
-        shopLayout.setSpacing(true);
-
-        Label shopNameLabel = new Label("Shop Name: " + shopName);
-        shopNameLabel.getStyle().set("font-weight", "bold");
-        shopNameLabel.setWidth("100%");
-
-        Label roleLabel = new Label("Role: " + roleType);
-        roleLabel.setWidth("100%");
-
-        Button enterButton = new Button("Enter");
-        enterButton.addClickListener(e -> navigateToShop(shopName));
-
-        shopLayout.add(shopNameLabel, roleLabel, enterButton);
-        shopLayout.setFlexGrow(1, shopNameLabel, roleLabel);
-        mainLayout.add(shopLayout);
     }
 }
-//public class MyShopsView extends BaseView {
-//
-//    private ListDataProvider<MemberRoleInShopModel> rolesDataProvider;
-//    private ListDataProvider<ShopModel> shopDataProvider;
-//
-//
-//    public MyShopsView() {
-//        SResponseT<List<MemberRoleInShopModel>> rolesRes = marketService.getUserRoles(getCurrentUser().getName());
-//        if(!rolesRes.isSuccess()){
-//            Notification.show(
-//                    (rolesRes.isSuccess() ? "" : rolesRes.getMessage()));
-//            getUI().ifPresent(ui -> ui.navigate(""));
-//        }
-//        rolesDataProvider = new ListDataProvider<>(rolesRes.getData());
-//
-//
-//        H1 header = new H1("My Shops");
-//
-//        Grid<Shop> shopsGrid = new Grid<>(Shop.class);
-//        shopsGrid.setItems(userShops);
-//        shopsGrid.setColumns("name", "role");
-//        shopsGrid.addComponentColumn(shop -> {
-//            Button enterButton = new Button("Enter");
-//            enterButton.addClickListener(e -> {
-//                // Add logic to navigate to shop details screen
-//            });
-//            return enterButton;
-//        }).setHeader("Action");
-//
-//        TextField newShopNameField = new TextField();
-//        newShopNameField.setLabel("Shop Name");
-//
-//        Button createShopButton = new Button("Create Shop");
-//        createShopButton.addClickListener(e -> {
-//            String newShopName = newShopNameField.getValue();
-//            if (!newShopName.isEmpty()) {
-//                Shop newShop = new Shop(newShopName);
-//                getCurrentUser().addShop(newShop);
-//                userShops.add(newShop);
-//                shopsGrid.setItems(userShops);
-//                newShopNameField.clear();
-//            }
-//        });
-//
-//        HorizontalLayout newShopLayout = new HorizontalLayout(newShopNameField, createShopButton);
-//
-//        Div content = new Div(shopsGrid, newShopLayout);
-//        add(header, content);
-//    }
-//
-//    @Override
-//    protected void updateAfterUserNameChange(UserModel userModel) {
-//
-//    }
+
