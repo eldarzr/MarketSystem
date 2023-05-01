@@ -1,4 +1,4 @@
-package FrontEnd.views;
+package FrontEnd.Views;
 
 import BusinessLayer.Enums.UserType;
 import FrontEnd.Model.ShopModel;

@@ -110,7 +110,8 @@ public class UsersHandler implements NotificationPublisher {
 //            throwIllegalArgumentException(String.format("User %s is not logged in", userName));
         User user = findLoginUser(userName);
         loginUsers.remove(userName);
-        return createGuest(user.getSessionID());
+        user.setName(user.getSessionID());
+        return user.getSessionID();
     }
 
     //finds logged in members or guests

@@ -278,7 +278,7 @@ public class MarketService {
 		ResponseT<String> r = serviceMarket.removeUser(adminName, userName);
 		if (r.isSuccess())
 			return new SResponseT<>(r.getData());
-		return new SResponseT<>(r.getMessage());
+		return new SResponseT<>(r.getMessage(), r.isSuccess());
 	}
 
 	public SResponseT<List<ShopModel>> getAllShops(String userName) {

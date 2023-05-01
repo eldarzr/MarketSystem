@@ -1,4 +1,4 @@
-package FrontEnd.views;
+package FrontEnd.Views;
 
 import BusinessLayer.Enums.UserType;
 import FrontEnd.Model.ProductModel;
@@ -115,8 +115,7 @@ public class AdminView extends BaseView {
 			Notification.show(selectedUser == null ? "null" : selectedUser.getName());
 			if (selectedUser != null) {
 				getUI().ifPresent(ui -> {
-					String userModelJsonString = new Gson().toJson(selectedUser);
-				UI.getCurrent().navigate(UserProfileView.class, selectedUser.getName());
+				UI.getCurrent().navigate("admin_profile/" + selectedUser.getName());
 				});
 			}
 		});
@@ -154,12 +153,15 @@ public class AdminView extends BaseView {
 				getUI().ifPresent(ui -> ui.navigate(""));
 			}
 			users = userRes.getData();
-			userDataProvider.refreshAll();
-			Notification.show(user.getSessionID());
+			userDataProvider = new ListDataProvider<>(users);
+			userGrid.setDataProvider(userDataProvider);
+//			Notification.show(user.getSessionID());
 			if(user.getSessionID() != null) {
 				VaadinSession session = marketService.getSession(user.getSessionID());
-				UserModel userModelNew = new UserModel(res.getData(), res.getData());
-				session.setAttribute(UserModel.class, userModelNew);
+				if(session != null) {
+					UserModel userModelNew = new UserModel(res.getData(), res.getData());
+					session.setAttribute(UserModel.class, userModelNew);
+				}
 			}
 		}
 		else

@@ -1,4 +1,4 @@
-package FrontEnd.views;
+package FrontEnd.Views;
 
 import BusinessLayer.Enums.UserType;
 import FrontEnd.MarketService;
@@ -115,7 +115,6 @@ public abstract class BaseView extends VerticalLayout {
 	}
 
 	protected boolean logout() {
-		UI.getCurrent().navigate("");
 		UserModel userModel = getCurrentUser();
 		SResponseT<String> res = marketService.logout(userModel.getName());
 		if (res.isSuccess()) {
@@ -125,6 +124,7 @@ public abstract class BaseView extends VerticalLayout {
 			setCurrentUser(userModel);
 			horizontalLayout.remove(logoutLayout);
 			showLoginScreen();
+			getUI().ifPresent(ui -> ui.navigate(""));
 		} else
 			Notification.show(res.getMessage());
 		return res.isSuccess();
@@ -164,6 +164,7 @@ public abstract class BaseView extends VerticalLayout {
 
 	private void updateUserNameOnScreen(UserModel user){
 		userNameLabel.setText("Welcome \n" + (user.getUserType() == UserType.GUEST ? "guest" : user.getName() + "!"));
+		updateAfterUserNameChange(user);
 	}
 
 	protected abstract void updateAfterUserNameChange(UserModel userModel);

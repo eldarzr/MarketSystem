@@ -35,7 +35,7 @@ public class User implements NotificationObserver {
 
     public User(String guestName) {
         name = guestName;
-        sessionID = guestName;
+        sessionID = null;
         userType = UserType.GUEST;
         currentCart = new Cart();
     }
