@@ -1,20 +1,15 @@
 package FrontEnd.views;
 
-import BusinessLayer.Shops.Shop;
 import FrontEnd.Model.MemberRoleInShopModel;
 import FrontEnd.Model.ShopModel;
 import FrontEnd.Model.UserModel;
 import FrontEnd.SResponseT;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
@@ -28,11 +23,12 @@ import java.util.List;
 public class MyShopsView extends BaseView {
 
     private VerticalLayout mainLayout;
-    private List<MemberRoleInShopModel> myShops;
+    private List<MemberRoleInShopModel> myRoles;
+
 
     public MyShopsView() {
         mainLayout = new VerticalLayout();
-        myShops = new ArrayList<>();
+        myRoles = new ArrayList<>();
 
         // Get the user's roles and populate myShops
         SResponseT<List<MemberRoleInShopModel>> rolesRes = marketService.getUserRoles(getCurrentUser().getName());
@@ -40,7 +36,7 @@ public class MyShopsView extends BaseView {
             Notification.show(rolesRes.getMessage());
             getUI().ifPresent(ui -> ui.navigate(""));
         } else {
-            myShops.addAll(rolesRes.getData());
+            myRoles.addAll(rolesRes.getData());
             populateShopsList();
         }
 
@@ -53,7 +49,7 @@ public class MyShopsView extends BaseView {
     }
 
     private void populateShopsList() {
-        for (MemberRoleInShopModel role : myShops) {
+        for (MemberRoleInShopModel role : myRoles) {
             String shopName = role.getRoleShop().getName();
             String roleType = role.getType().toString();
 
@@ -101,60 +97,23 @@ public class MyShopsView extends BaseView {
     }
 
     private void createShop(String shopName) {
-        // Implement creating a new shop here
+        SResponseT<ShopModel> res = marketService.createShop(getCurrentUser().getName(), shopName);
+        if (!res.isSuccess()) {
+            Notification.show(res.getMessage());
+        } else {
+//            addShopView(res.getData().getName());
+            SResponseT<List<MemberRoleInShopModel>> rolesRes = marketService.getUserRoles(getCurrentUser().getName());
+            if (!rolesRes.isSuccess()) {
+                Notification.show(rolesRes.getMessage());
+            } else {
+                myRoles.clear();
+                myRoles.addAll(rolesRes.getData());
+                mainLayout.removeAll();
+                populateShopsList();
+            }
+        }
+
+
     }
 }
-//public class MyShopsView extends BaseView {
-//
-//    private ListDataProvider<MemberRoleInShopModel> rolesDataProvider;
-//    private ListDataProvider<ShopModel> shopDataProvider;
-//
-//
-//    public MyShopsView() {
-//        SResponseT<List<MemberRoleInShopModel>> rolesRes = marketService.getUserRoles(getCurrentUser().getName());
-//        if(!rolesRes.isSuccess()){
-//            Notification.show(
-//                    (rolesRes.isSuccess() ? "" : rolesRes.getMessage()));
-//            getUI().ifPresent(ui -> ui.navigate(""));
-//        }
-//        rolesDataProvider = new ListDataProvider<>(rolesRes.getData());
-//
-//
-//        H1 header = new H1("My Shops");
-//
-//        Grid<Shop> shopsGrid = new Grid<>(Shop.class);
-//        shopsGrid.setItems(userShops);
-//        shopsGrid.setColumns("name", "role");
-//        shopsGrid.addComponentColumn(shop -> {
-//            Button enterButton = new Button("Enter");
-//            enterButton.addClickListener(e -> {
-//                // Add logic to navigate to shop details screen
-//            });
-//            return enterButton;
-//        }).setHeader("Action");
-//
-//        TextField newShopNameField = new TextField();
-//        newShopNameField.setLabel("Shop Name");
-//
-//        Button createShopButton = new Button("Create Shop");
-//        createShopButton.addClickListener(e -> {
-//            String newShopName = newShopNameField.getValue();
-//            if (!newShopName.isEmpty()) {
-//                Shop newShop = new Shop(newShopName);
-//                getCurrentUser().addShop(newShop);
-//                userShops.add(newShop);
-//                shopsGrid.setItems(userShops);
-//                newShopNameField.clear();
-//            }
-//        });
-//
-//        HorizontalLayout newShopLayout = new HorizontalLayout(newShopNameField, createShopButton);
-//
-//        Div content = new Div(shopsGrid, newShopLayout);
-//        add(header, content);
-//    }
-//
-//    @Override
-//    protected void updateAfterUserNameChange(UserModel userModel) {
-//
-//    }
+
