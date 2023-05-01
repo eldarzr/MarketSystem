@@ -44,7 +44,7 @@ public class Market implements MarketIntr{
         logger.info("Starting market init.");
         createLogger();
         loadAdmin();
-        loadProducts();
+//        loadProducts();
         logger.info("Market init Finished successfully.");
     }
 
@@ -317,7 +317,7 @@ public class Market implements MarketIntr{
     public void appointShopOwner(String appointedBy, String appointee, String shopName) throws Exception {
         logger.info(String.format("Attempt by user %s to appoint %s as shop-owner of shop %s.", appointedBy,appointee, shopName));
         usersHandler.findMemberByName(appointedBy);
-        isLoggedIn(appointedBy);
+        validateLoggedInException(appointedBy);
         User user = usersHandler.findMemberByName(appointee);
         Shop reqShop = checkForShop(shopName);
         reqShop.setShopOwner(appointedBy,appointee , user::sendMessage);
@@ -337,7 +337,8 @@ public class Market implements MarketIntr{
     public void appointShopManager(String appointedBy, String appointee, String shopName) throws Exception {
         logger.info(String.format("Attempt by user %s to appoint %s as shop-manager of shop %s.", appointedBy,appointee, shopName));
         usersHandler.findMemberByName(appointedBy);
-        isLoggedIn(appointedBy);
+//        isLoggedIn(appointedBy);
+        validateLoggedInException(appointedBy);
         User user = usersHandler.findMemberByName(appointee);
         Shop reqShop = checkForShop(shopName);
         reqShop.setShopManager(appointedBy,appointee ,user::sendMessage);
@@ -348,15 +349,25 @@ public class Market implements MarketIntr{
         logger.info(message);
     }
 
+    @Override
+    public void removeShopManager(String managerName, String userToRemove, String shopName) throws Exception {
+        throw new NotImplementedException();
+    }
+
     //next version
     @Override
-    public void removeShopManager(String managerName, String userToRemove, String shopName) {
-        throw new NotImplementedException();
-        //notify removed manager
-        //String message=String.format("Manager %s removed you as shop-manager of shop %s.", managerName, shopName);
-        //Notification notification=new Notification(managerName,message,java.time.LocalDate.now());
-        //usersHandler.notify(userToRemove,notification);
-        //logger.info(String.format("Manager %s removed %s as shop-manager of shop %s.", managerName,userToRemove, shopName));
+    public void removeShopOwner(String managerName, String userToRemove, String shopName) throws Exception {
+        usersHandler.findMemberByName(managerName);
+        validateLoggedInException(managerName);
+        usersHandler.findMemberByName(userToRemove);
+        Shop reqShop = checkForShop(shopName);
+        reqShop.removeOwner(managerName,userToRemove);
+
+       //notify removed owner
+        String message=String.format("Manager %s removed you as shop-manager of shop %s.", managerName, shopName);
+        Notification notification=new Notification(managerName,message,java.time.LocalDate.now());
+        usersHandler.notify(userToRemove,notification);
+        logger.info(String.format("Manager %s removed %s as shop-manager of shop %s.", managerName,userToRemove, shopName));
     }
 
     @Override

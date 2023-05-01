@@ -160,7 +160,7 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
     }
 
     @Override
-    public void removeShopManager(String managerName, String userToRemove, String shopName) {
+    public void removeShopManager(String managerName, String userToRemove, String shopName) throws Exception {
         nullCheck();
         realBridge.removeShopManager(managerName, userToRemove, shopName);
     }

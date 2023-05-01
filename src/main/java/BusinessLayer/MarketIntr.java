@@ -72,9 +72,12 @@ public interface MarketIntr {
     //4.6
     void appointShopManager(String appointedBy, String appointee, String shopName) throws Exception;
 
-    void removeShopManager(String managerName, String userToRemove, String shopName);
+    void removeShopManager(String managerName, String userToRemove, String shopName) throws Exception;
 
     //4.7
+
+    //next version
+    void removeShopOwner(String managerName, String userToRemove, String shopName) throws Exception;
 
     MemberRoleInShop changeManagerPermissions(String actor, String actOn, String shopName, List<Integer> permission) throws Exception;
 

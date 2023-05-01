@@ -146,7 +146,7 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
         market.appointShopManager(appointedBy, appointee, shopName);
     }
 
-    public void removeShopManager(String managerName, String userToRemove, String shopName) {
+    public void removeShopManager(String managerName, String userToRemove, String shopName) throws Exception {
         market.removeShopManager(managerName, userToRemove, shopName);
     }
 
