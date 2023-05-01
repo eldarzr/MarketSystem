@@ -13,6 +13,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -26,6 +28,8 @@ public class Shop implements ShopIntr {
 	private String name;
 	private boolean open;
 	private boolean active;
+
+	private Lock remLock;
 	private final String founderUserName;
 	//map of user name to role in this shop
 	private ConcurrentHashMap<String, MemberRoleInShop> roles;
@@ -40,6 +44,7 @@ public class Shop implements ShopIntr {
 		this.products = new ConcurrentHashMap<>();
 		this.active = true;
 		this.invoices = new ConcurrentLinkedQueue<>();
+		this.remLock = new ReentrantLock();
 	}
 
 	public String getName() {
@@ -90,7 +95,7 @@ public class Shop implements ShopIntr {
 		validateUserHasRole(actor);
 		MemberRoleInShop actorMRIS = roles.get(actor);
 		if (actorMRIS.getType() != ManageType.OWNER)
-			throwException("only owners can set new managers to a store");
+			throw new Exception("only owners can set new managers to a store");
 		if (roles.containsKey(actOn)) {
 			throwException("the user :" + actOn + "is already have a role in the store");
 		}
@@ -316,6 +321,33 @@ public class Shop implements ShopIntr {
 		if(isUserHasRole(userName))
 			return roles.get(userName);
 		return null;
+	}
+
+	public void removeOwner(String grantorName, String ownerToRemove) throws Exception {
+		remLock.lock();
+		try {
+			MemberRoleInShop ownerToRemoveRole = validateUserHasRole(ownerToRemove);
+			if(ownerToRemoveRole.getGrantor() != null  && !ownerToRemoveRole.getGrantor().equals(grantorName)){
+				throw new Exception("only the grantor of an owner can remove him from his role");
+			}
+			if (ownerToRemoveRole.getGrantor() != null && ownerToRemoveRole.getType() != ManageType.OWNER) {
+				throw new Exception("You tried to remove an owner, but " + ownerToRemove + " is a manager");
+			}
+			removeSubordinates(ownerToRemove);
+			roles.remove(ownerToRemove);
+		} finally {
+			remLock.unlock();
+		}
+	}
+
+	private void removeSubordinates(String ownerToRemove) {
+		//ConcurrentHashMap<String , MemberRoleInShop> Subordinates = new ConcurrentHashMap<>();
+		for (MemberRoleInShop role : roles.values()){
+			if(role.getGrantor() != null && role.getGrantor().equals(ownerToRemove)){
+				removeSubordinates(role.getRoleUser());
+				roles.remove(role.getRoleUser());
+			}
+		}
 	}
 }
 

@@ -66,7 +66,7 @@ public interface MarketSystemBridge {
     //4.6
     void appointShopManager(String appointedBy, String appointee, String shopName) throws Exception;
 
-    void removeShopManager(String managerName, String userToRemove, String shopName);
+    void removeShopManager(String managerName, String userToRemove, String shopName) throws Exception;
 
     //4.7
 
