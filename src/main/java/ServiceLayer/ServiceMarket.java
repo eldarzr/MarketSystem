@@ -414,7 +414,7 @@ public class ServiceMarket {
 		try {
 			return new ResponseT<>(market.removeUser(adminName, userName));
 		} catch (Exception exception) {
-			return new ResponseT<>(exception.getMessage());
+			return new ResponseT<>(exception.getMessage(), false);
 		}
 	}
 

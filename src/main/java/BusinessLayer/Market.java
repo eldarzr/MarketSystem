@@ -137,6 +137,7 @@ public class Market implements MarketIntr{
         logger.info(String.format("Attempt to logout user %s.", userName));
         String newUserName = disconnect(userName);
         logger.info(String.format("User %s logged out.", userName));
+        logger.info(String.format("************************************************ %s", newUserName));
         return newUserName;
     }
 

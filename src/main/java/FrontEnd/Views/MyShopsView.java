@@ -1,9 +1,10 @@
-package FrontEnd.views;
+package FrontEnd.Views;
 
 import FrontEnd.Model.MemberRoleInShopModel;
 import FrontEnd.Model.ShopModel;
 import FrontEnd.Model.UserModel;
 import FrontEnd.SResponseT;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
@@ -18,29 +19,42 @@ import java.util.List;
 
 
 
-@Route("my-shops")
+@Route("my_shops")
 @PageTitle("My Shops")
 public class MyShopsView extends BaseView {
 
     private VerticalLayout mainLayout;
-    private List<MemberRoleInShopModel> myRoles;
-
+    private VerticalLayout myShopsLayout;
+    protected List<MemberRoleInShopModel> myRoles;
+    protected HorizontalLayout createShopLayout;
+    protected TextField shopNameField;
+    protected Button createShopButton;
 
     public MyShopsView() {
         mainLayout = new VerticalLayout();
         myRoles = new ArrayList<>();
+        myShopsLayout = new VerticalLayout();
 
         // Get the user's roles and populate myShops
-        SResponseT<List<MemberRoleInShopModel>> rolesRes = marketService.getUserRoles(getCurrentUser().getName());
-        if (!rolesRes.isSuccess()) {
+        importShops();
+
+        add(mainLayout);
+    }
+
+    protected void importShops() {
+        SResponseT<List<MemberRoleInShopModel>> rolesRes = getUserRolesRes();
+        if (rolesRes != null && !rolesRes.isSuccess()) {
             Notification.show(rolesRes.getMessage());
             getUI().ifPresent(ui -> ui.navigate(""));
         } else {
-            myRoles.addAll(rolesRes.getData());
+            if (rolesRes != null && rolesRes.isSuccess())
+                myRoles.addAll(rolesRes.getData());
             populateShopsList();
         }
+    }
 
-        add(mainLayout);
+    protected SResponseT<List<MemberRoleInShopModel>> getUserRolesRes() {
+        return marketService.getUserRoles(getCurrentUser().getName());
     }
 
     @Override
@@ -49,6 +63,28 @@ public class MyShopsView extends BaseView {
     }
 
     private void populateShopsList() {
+        addShopsToLayout();
+
+        // Add the create shop form at the end
+        createShopLayout = new HorizontalLayout();
+        createShopLayout.setWidth("100%");
+        createShopLayout.setPadding(true);
+        createShopLayout.setSpacing(true);
+
+        shopNameField = new TextField();
+        shopNameField.setWidth("100%");
+        shopNameField.setPlaceholder("Shop Name");
+
+        createShopButton = new Button("Create Shop");
+        createShopButton.addClickListener(e -> createShop(shopNameField.getValue()));
+
+        createShopLayout.add(new Label("Shop Name: "), shopNameField, createShopButton);
+        createShopLayout.setFlexGrow(1, shopNameField);
+        mainLayout.add(myShopsLayout, createShopLayout);
+    }
+
+    protected void addShopsToLayout() {
+        myShopsLayout.removeAll();
         for (MemberRoleInShopModel role : myRoles) {
             String shopName = role.getRoleShop().getName();
             String roleType = role.getType().toString();
@@ -71,28 +107,11 @@ public class MyShopsView extends BaseView {
 
             shopLayout.add(shopNameLabel, roleLabel, enterButton);
             shopLayout.setFlexGrow(1, shopNameLabel, roleLabel);
-            mainLayout.add(shopLayout);
+            myShopsLayout.add(shopLayout);
         }
-
-        // Add the create shop form at the end
-        HorizontalLayout createShopLayout = new HorizontalLayout();
-        createShopLayout.setWidth("100%");
-        createShopLayout.setPadding(true);
-        createShopLayout.setSpacing(true);
-
-        TextField shopNameField = new TextField();
-        shopNameField.setWidth("100%");
-        shopNameField.setPlaceholder("Shop Name");
-
-        Button createShopButton = new Button("Create Shop");
-        createShopButton.addClickListener(e -> createShop(shopNameField.getValue()));
-
-        createShopLayout.add(new Label("Shop Name: "), shopNameField, createShopButton);
-        createShopLayout.setFlexGrow(1, shopNameField);
-        mainLayout.add(createShopLayout);
     }
 
-    private void navigateToShop(String shopId) {
+    protected void navigateToShop(String shopId) {
         getUI().ifPresent(ui -> ui.navigate("shop/" + shopId));
     }
 

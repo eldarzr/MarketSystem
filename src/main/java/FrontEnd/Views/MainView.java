@@ -1,4 +1,4 @@
-package FrontEnd.views;
+package FrontEnd.Views;
 
 import BusinessLayer.Enums.UserType;
 import BusinessLayer.Market;
@@ -91,8 +91,10 @@ public class MainView extends BaseView {
 
     @Override
     protected void updateAfterUserNameChange(UserModel userModel) {
-        adminButton.setVisible(userModel.getUserType() == UserType.ADMIN);
-        loginButton.setVisible(userModel.getUserType() == UserType.GUEST);
+        if (adminButton != null)
+            adminButton.setVisible(userModel.getUserType() == UserType.ADMIN);
+        if (loginButton != null)
+            loginButton.setVisible(userModel.getUserType() == UserType.GUEST);
     }
 
 }
