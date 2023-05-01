@@ -324,17 +324,20 @@ public class Shop implements ShopIntr {
 	}
 
 	public void removeOwner(String grantorName, String ownerToRemove) throws Exception {
-	//MemberRoleInShop grantorRole = validateUserHasRole(grantorName);
-	MemberRoleInShop ownerToRemoveRole = validateUserHasRole(ownerToRemove);
-	if(ownerToRemoveRole.getGrantor() != null  && !ownerToRemoveRole.getGrantor().equals(grantorName)){
-		throw new Exception("only the grantor of an owner can remove him from his rule");
-	}
-		if (ownerToRemoveRole.getGrantor() != null && ownerToRemoveRole.getType() != ManageType.OWNER)
-			throwException("You tried to remove an owner , but" +ownerToRemove + "is a manager");
-	remLock.lock();
-	removeSubordinates(ownerToRemove);
-	roles.remove(ownerToRemove);
-	remLock.unlock();
+		remLock.lock();
+		try {
+			MemberRoleInShop ownerToRemoveRole = validateUserHasRole(ownerToRemove);
+			if(ownerToRemoveRole.getGrantor() != null  && !ownerToRemoveRole.getGrantor().equals(grantorName)){
+				throw new Exception("only the grantor of an owner can remove him from his role");
+			}
+			if (ownerToRemoveRole.getGrantor() != null && ownerToRemoveRole.getType() != ManageType.OWNER) {
+				throw new Exception("You tried to remove an owner, but " + ownerToRemove + " is a manager");
+			}
+			removeSubordinates(ownerToRemove);
+			roles.remove(ownerToRemove);
+		} finally {
+			remLock.unlock();
+		}
 	}
 
 	private void removeSubordinates(String ownerToRemove) {
