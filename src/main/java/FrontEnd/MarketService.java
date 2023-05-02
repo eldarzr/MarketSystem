@@ -240,8 +240,11 @@ public class MarketService {
 	}
 
 
-	public ResponseT<CartDataObj> getCart(String userName) {
-		throw new NotImplementedException();
+	public SResponseT<CartDataObj> getCart(String userName) {
+		ResponseT<CartDataObj> r = serviceMarket.getCart(userName);
+		if (r.isSuccess())
+			return new SResponseT<>(r.getData());
+		return new SResponseT<>(r.getMessage(),r.isSuccess());
 	}
 
 

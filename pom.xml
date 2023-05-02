@@ -10,7 +10,7 @@
     <packaging>war</packaging>
 
     <properties>
-        <java.version>18</java.version>
+        <java.version>19.0.2</java.version>
         <vaadin.version>24.0.4</vaadin.version>
         <selenium.version>4.8.3</selenium.version>
     </properties>

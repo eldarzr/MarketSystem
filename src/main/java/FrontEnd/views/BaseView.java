@@ -168,4 +168,5 @@ public abstract class BaseView extends VerticalLayout {
 
 	protected abstract void updateAfterUserNameChange(UserModel userModel);
 
+	protected HorizontalLayout getHorizontalLayout(){return horizontalLayout;}
 }
