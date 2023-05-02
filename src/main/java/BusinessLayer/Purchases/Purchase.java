@@ -3,13 +3,14 @@ package BusinessLayer.Purchases;
 import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
+import BusinessLayer.Shops.FinalBagPriceResult;
+import BusinessLayer.Shops.FinalCartPriceResult;
 import BusinessLayer.Shops.Product;
 import BusinessLayer.Shops.Shop;
 import BusinessLayer.Users.User;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -21,6 +22,8 @@ public class Purchase implements PurchaseIntr{
     SupplyDetails supplyDetails;
     UserInvoice userInvoice;
     List<ShopInvoice> shopInvoices;
+    double totalPrice;
+    double priceAfterDiscount;
 
     public Purchase(User user, List<Shop> shops, PaymentDetails paymentDetails, SupplyDetails supplyDetails) {
         this.user = user;
@@ -33,9 +36,10 @@ public class Purchase implements PurchaseIntr{
 
     @Override
     public void process() throws Exception {
-        handleStock();
+        acquireProductsLocks();
+        FinalCartPriceResult finalPrice = handleStock();
         try{
-            paymentDetails.accept(this);
+            paymentDetails.accept(this,finalPrice.getTotalPriceAfterDiscount());
         }catch (Exception e){
             revert();
             throw new Exception(String.format("problem with payment, error message: %s",e.getMessage()));
@@ -49,6 +53,7 @@ public class Purchase implements PurchaseIntr{
         }
         addInvoicesToObjects();
         user.clearCart();
+        releaseProductsLocks();
     }
 
     private void addInvoicesToObjects() {
@@ -62,14 +67,25 @@ public class Purchase implements PurchaseIntr{
     }
 
 
-    private void handleStock() throws Exception {
-        acquireProductsLocks();
+    private FinalCartPriceResult handleStock() throws Exception {
         Cart cart = user.getCart();
         ConcurrentHashMap<String, ShopBag>  shopsAndProducts = cart.getShopsAndProducts();
         checkProductsAvailability(shopsAndProducts);
+        FinalCartPriceResult finalPriceResultResult = computeCartPrice();
         reduceProductsQuantity(shopsAndProducts);
         addProductsToInvoices(shopsAndProducts);
-        releaseProductsLocks();
+        return finalPriceResultResult;
+    }
+
+    private FinalCartPriceResult computeCartPrice() {
+        Cart userCart = user.getCart();
+        FinalCartPriceResult finalCartPriceResult = new FinalCartPriceResult();
+        for(String shopName : userCart.getShopsNames()){
+            ShopBag shopBag = userCart.getShoppingBag(shopName);
+            FinalBagPriceResult finalBagPriceResult = getShopByName(shopName).computeShopBagPrice(shopBag);
+            finalCartPriceResult.addBagResults(shopName, finalBagPriceResult);
+        }
+        return finalCartPriceResult;
     }
 
     private void reduceProductsQuantity(ConcurrentHashMap<String, ShopBag> shopsAndProducts) throws Exception {
@@ -153,7 +169,7 @@ public class Purchase implements PurchaseIntr{
     }
 
 
-    public void visit(CreditCardPaymentDetails creditCardPaymentDetails) throws InterruptedException {
+    public void visit(CreditCardPaymentDetails creditCardPaymentDetails,double priceAfterDiscount) throws InterruptedException {
         //connect to credit Card Company
         Thread.sleep(20);
     }
@@ -169,8 +185,8 @@ public class Purchase implements PurchaseIntr{
                     (user.getName(), paymentDetails.toString(), supplyDetails.toString(), shopName);
             ShopBag shopBag = shopsAndProducts.get(shopName);
             for (ShopBagItem shopBagItem : shopBag.getProductsAndQuantities().values()){
-                userInvoice.addProduct(shopName, shopBagItem.product, shopBagItem.quantity);
-                shopInvoice.addProduct(shopName, shopBagItem.product, shopBagItem.quantity);
+                userInvoice.addProduct(shopName, shopBagItem.getProduct(), shopBagItem.getQuantity());
+                shopInvoice.addProduct(shopName, shopBagItem.getProduct(), shopBagItem.getQuantity());
             }
             shopInvoices.add(shopInvoice);
         }

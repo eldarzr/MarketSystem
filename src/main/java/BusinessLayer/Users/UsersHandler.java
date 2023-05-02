@@ -55,10 +55,15 @@ public class UsersHandler {
         User guestUser = loginUsers.remove(guestName);
         if(guestUser != null){
             //todo: find new User, and copy guest cart to new user
+            User newUser = members.get(userName);
+            newUser.setCart(guestUser.getCart());
         }
     }
 
     public User register(String userName, String email, String password) throws Exception{
+        if(members.containsKey(userName))
+            throw new Exception(String.format("User: %s already exists",userName));
+
         logger.info(String.format("Attempt to validate %s is valid username.",userName));
         checkValidUserName(userName);
         logger.info(String.format("%s is valid username.",userName));

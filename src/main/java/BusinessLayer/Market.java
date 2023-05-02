@@ -1,9 +1,14 @@
 package BusinessLayer;
 
+import BusinessLayer.Enums.ManageType;
 import BusinessLayer.Enums.UserType;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Purchases.*;
+import BusinessLayer.Shops.Discount.*;
+import BusinessLayer.Shops.Discount.DiscountRules.ActionWithOldRule;
+import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
+import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
 import BusinessLayer.Shops.Product;
 import BusinessLayer.Shops.ProductIntr;
 import BusinessLayer.Shops.Shop;
@@ -460,6 +465,55 @@ public class Market implements MarketIntr{
         shopHandler.reset();
     }
 
+    public CategoryDiscount addCategoryDiscount(String shopName, String userName, double discountPercentage, String category) throws Exception {
+        usersHandler.findMemberByName(userName);
+        usersHandler.findLoginUser(userName);
+        Shop shop = shopHandler.getShop(shopName);
+        return shop.addCategoryDiscount(userName,discountPercentage,category);
+    }
+
+    public ProductDiscount addProductDiscount(String shopName, String userName, double discountPercentage, String productName) throws Exception {
+        usersHandler.findMemberByName(userName);
+        usersHandler.findLoginUser(userName);
+        Shop shop = shopHandler.getShop(shopName);
+        return shop.addProductDiscount(userName,discountPercentage,productName);
+    }
+
+    public ShopDiscount addShopDiscount(String shopName, String userName, double discountPercentage) throws Exception {
+        usersHandler.findMemberByName(userName);
+        usersHandler.findLoginUser(userName);
+        Shop shop = shopHandler.getShop(shopName);
+        return shop.addShopDiscount(userName,discountPercentage);
+    }
+
+    public SumCompoundDiscount addSumDiscount(String shopName, String userName, List<Integer> discountsIds) throws Exception {
+        usersHandler.findMemberByName(userName);
+        usersHandler.findLoginUser(userName);
+        Shop shop = shopHandler.getShop(shopName);
+        return shop.addSumDiscount(userName,discountsIds);
+    }
+
+    public MaxCompoundDiscount addMaxDiscount(String shopName, String userName, List<Integer> discountsIds) throws Exception {
+        usersHandler.findMemberByName(userName);
+        usersHandler.findLoginUser(userName);
+        Shop shop = shopHandler.getShop(shopName);
+        return shop.addMaxDiscount(userName,discountsIds);
+    }
+
+    public XorCompoundDiscount addXorDiscount(String shopName, String userName, List<Integer> discountsIds, XorDecisionRule xorDiscountRule) throws Exception {
+        usersHandler.findMemberByName(userName);
+        usersHandler.findLoginUser(userName);
+        Shop shop = shopHandler.getShop(shopName);
+        return shop.addXorDiscount(userName,discountsIds,xorDiscountRule);
+    }
+
+    public void addDiscountRule(String shopName, String userName, DiscountRule discountRule, int discountId, ActionWithOldRule actionWithOldRule) throws Exception {
+        usersHandler.findMemberByName(userName);
+        usersHandler.findLoginUser(userName);
+        Shop shop = shopHandler.getShop(shopName);
+        shop.addDiscountRule(userName,discountRule,discountId,actionWithOldRule);
+    }
+
     private boolean isLoggedIn(String userName) {
         logger.info(String.format("Attempt to check if user %s is logged in.", userName));
         return usersHandler.isLoggedIn(userName);
@@ -473,7 +527,6 @@ public class Market implements MarketIntr{
     private User validateUserIsntGuest(String userName) throws Exception {
         logger.info(String.format("Attempt to check if user %s is member.", userName));
         User user = findUserByName(userName);
-//      User user = allUsers.get(appointedBy);
         if(user.getUserType() == UserType.GUEST) {
             String errorMsg=String.format("User %s is guest, guests cannot do it.", userName);
             logger.severe(errorMsg);
@@ -520,7 +573,6 @@ public class Market implements MarketIntr{
             addNewProduct(usersName[i], shopNames[i], prodNames[i], cat[i], descs[i], prices[i]);
             addProductItems(usersName[i], shopNames[i], prodNames[i], 3);
         }
-
     }
 
 }

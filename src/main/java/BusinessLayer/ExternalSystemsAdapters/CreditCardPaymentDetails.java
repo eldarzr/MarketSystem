@@ -45,8 +45,8 @@ public class CreditCardPaymentDetails implements PaymentDetails{
     }
 
     @Override
-    public void accept(Purchase purchase) throws InterruptedException {
-        purchase.visit(this);
+    public void accept(Purchase purchase, double priceAfterDiscount) throws InterruptedException {
+        purchase.visit(this, priceAfterDiscount);
     }
 
     @Override

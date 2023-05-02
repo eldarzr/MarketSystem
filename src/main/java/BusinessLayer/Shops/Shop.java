@@ -4,7 +4,12 @@ import BusinessLayer.Enums.ManagePermissionsEnum;
 import BusinessLayer.Enums.ManageType;
 import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.MessageObserver;
+import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Purchases.ShopBagItem;
+import BusinessLayer.Shops.Discount.*;
+import BusinessLayer.Shops.Discount.DiscountRules.ActionWithOldRule;
+import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
+import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
 import BusinessLayer.Users.User;
 import BusinessLayer.Purchases.ShopInvoice;
 
@@ -31,6 +36,7 @@ public class Shop implements ShopIntr {
 	private ConcurrentHashMap<String, ShopProduct> products;
 	private ConcurrentLinkedQueue<MessageObserver> observers;
 	private ConcurrentLinkedQueue<ShopInvoice> invoices;
+	private DiscountPolicy discountPolicy;
 
 	public Shop(String name, String founderUserName) {
 		this.name = name;
@@ -41,6 +47,7 @@ public class Shop implements ShopIntr {
 		this.active = true;
 		this.observers = new ConcurrentLinkedQueue<>();
 		this.invoices = new ConcurrentLinkedQueue<>();
+		this.discountPolicy = new DiscountPolicy();
 	}
 
 	public String getName() {
@@ -255,7 +262,7 @@ public class Shop implements ShopIntr {
 		}
 		return rolesInfo.toString();
 	}
-	
+
 	public void newPurchase(String userName, ConcurrentHashMap<String, ShopBagItem> productsAndQuantities) {
 		//username is for history purpose will do it in another commit
 		for(String productName : productsAndQuantities.keySet()){
@@ -302,6 +309,52 @@ public class Shop implements ShopIntr {
 	//this function is for Unit tests only to make mocks!
 	public void addNewProductTest(ShopProduct product) {
 		products.put(product.getName(), product);
+	}
+
+	public FinalBagPriceResult computeShopBagPrice(ShopBag shopBag) {
+		return discountPolicy.applyDiscount(shopBag);
+	}
+
+	public CategoryDiscount addCategoryDiscount(String userName, double discountPercentage, String category) throws Exception {
+		if(!(validateUserHasRole(userName).getType() == ManageType.OWNER))
+			throw new IllegalArgumentException("Only owners can change the discount policy");
+		return discountPolicy.addCategoryDiscount(discountPercentage,category);
+	}
+
+	public ProductDiscount addProductDiscount(String userName, double discountPercentage, String productName) throws Exception {
+		if(!(validateUserHasRole(userName).getType() == ManageType.OWNER))
+			throw new IllegalArgumentException("Only owners can change the discount policy");
+		return discountPolicy.addProductDiscount(discountPercentage,productName);
+	}
+
+	public ShopDiscount addShopDiscount(String userName,double discountPercentage) throws Exception {
+		if(!(validateUserHasRole(userName).getType() == ManageType.OWNER))
+			throw new IllegalArgumentException("Only owners can change the discount policy");
+		return discountPolicy.addShopDiscount(discountPercentage);
+	}
+
+	public SumCompoundDiscount addSumDiscount(String userName, List<Integer> discountsIds) throws Exception {
+		if(!(validateUserHasRole(userName).getType() == ManageType.OWNER))
+			throw new IllegalArgumentException("Only owners can change the discount policy");
+		return discountPolicy.addSumDiscount(discountsIds);
+	}
+
+	public MaxCompoundDiscount addMaxDiscount(String userName, List<Integer> discountsIds) throws Exception {
+		if(!(validateUserHasRole(userName).getType() == ManageType.OWNER))
+			throw new IllegalArgumentException("Only owners can change the discount policy");
+		return discountPolicy.addMaxDiscount(discountsIds);
+	}
+
+	public XorCompoundDiscount addXorDiscount(String userName, List<Integer> discountsIds, XorDecisionRule xorDiscountRule) throws Exception {
+		if(!(validateUserHasRole(userName).getType() == ManageType.OWNER))
+			throw new IllegalArgumentException("Only owners can change the discount policy");
+		return discountPolicy.addXorDiscount(discountsIds,xorDiscountRule);
+	}
+
+	public void addDiscountRule(String userName, DiscountRule discountRule, int discountId, ActionWithOldRule actionWithOldRule) throws Exception {
+		if(!(validateUserHasRole(userName).getType() == ManageType.OWNER))
+			throw new IllegalArgumentException("Only owners can change the discount policy");
+		discountPolicy.addDiscountRule(discountRule,discountId,actionWithOldRule);
 	}
 }
 

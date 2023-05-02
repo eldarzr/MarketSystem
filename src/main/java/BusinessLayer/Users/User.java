@@ -114,5 +114,9 @@ public class User {
     public void clearCart() {
         currentCart = new Cart();
     }
+
+    public void setCart(Cart currentCart) {
+        this.currentCart = currentCart;
+    }
 }
 

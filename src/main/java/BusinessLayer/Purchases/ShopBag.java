@@ -3,6 +3,7 @@ package BusinessLayer.Purchases;
 import BusinessLayer.Shops.Product;
 
 
+import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,8 +21,16 @@ public class ShopBag {
         this.productsAndQuantities = new ConcurrentHashMap<>();
     }
 
+    public ShopBag(ConcurrentHashMap<String, ShopBagItem> productsAndQuantities){
+        this.productsAndQuantities = productsAndQuantities;
+    }
+
     public void addProduct(Product product, int quantity) {
         ShopBagItem shopBagItem = new ShopBagItem(product,quantity);
+        if(productsAndQuantities.containsKey(product.getName())){
+            ShopBagItem ExistingShopBagItem = productsAndQuantities.get(product);
+            ExistingShopBagItem.setQuantity(ExistingShopBagItem.getQuantity()+quantity);
+        }
         productsAndQuantities.put(product.getName(),shopBagItem);
     }
 
@@ -41,5 +50,22 @@ public class ShopBag {
 
     public List<Product> getProducts() {
         return getProductsAndQuantities().values().stream().map(ShopBagItem::getProduct).collect(Collectors.toList());
+    }
+
+    public double calculatePrice() {
+        double price = 0.0;
+        for(ShopBagItem sbi : productsAndQuantities.values()){
+            double sbiPrice = sbi.getProduct().getPrice()*sbi.getQuantity();
+            price = price + sbiPrice;
+        }
+        return price;
+    }
+
+    public ShopBag deepClone() {
+        ConcurrentHashMap<String, ShopBagItem> productsAndQuantitiesClone = new ConcurrentHashMap<>();
+        for(String productName : productsAndQuantities.keySet()){
+            productsAndQuantitiesClone.put(productName,productsAndQuantities.get(productName).deepClone());
+        }
+        return new ShopBag(productsAndQuantitiesClone);
     }
 }
