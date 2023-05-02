@@ -1,4 +1,4 @@
-package FrontEnd.views;
+package FrontEnd.Views;
 
 import FrontEnd.MarketService;
 import FrontEnd.Model.UserModel;

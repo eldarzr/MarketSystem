@@ -1,4 +1,4 @@
-package FrontEnd.views;
+package FrontEnd.Views;
 
 import BusinessLayer.Enums.UserType;
 import FrontEnd.MarketService;
@@ -31,6 +31,7 @@ public abstract class BaseView extends VerticalLayout {
 	private Button goToCartButton;
 	private Button profileButton;
 	private Label userNameLabel;
+	private Label title;
 	private HorizontalLayout loginLayout;
 	private HorizontalLayout logoutLayout;
 
@@ -39,9 +40,8 @@ public abstract class BaseView extends VerticalLayout {
 		UserModel userModel = VaadinSession.getCurrent().getAttribute(UserModel.class);
 		if (userModel == null) {
 			userModel = new UserModel(sessionID, sessionID);
-			VaadinSession.getCurrent().setAttribute(UserModel.class, userModel);
+//			VaadinSession.getCurrent().setAttribute(UserModel.class, userModel);
 		}
-
 		// User menu
 		Icon userIcon = VaadinIcon.USER.create();
 		userIcon.getStyle().set("margin-right", "0.25rem");
@@ -54,13 +54,22 @@ public abstract class BaseView extends VerticalLayout {
 				goToCartButton.getUI().ifPresent(ui ->
 						ui.navigate("cart"))
 		);
-		userNameLabel = new Label("Hello, " + getCurrentUser().getName());
+		userNameLabel = new Label();
 		userNameLabel.getStyle().set("background-color", "white");
 		userNameLabel.getStyle().set("color", "black");
 		userNameLabel.getStyle().set("font-weight", "bold");
 		userNameLabel.getStyle().set("padding", "10px");
 		userNameLabel.getStyle().set("border", "2px solid #FF8C00");
 		userNameLabel.getStyle().set("border-radius", "10px");
+
+		title = new Label();
+		title.getStyle().set("background-color", "white");
+		title.getStyle().set("color", "black");
+		title.getStyle().set("font-weight", "bold");
+		title.getStyle().set("padding", "10px");
+		title.getStyle().set("border", "2px solid #FF8C00");
+		title.getStyle().set("border-radius", "10px");
+		title.setVisible(false);
 
 		Icon profileIcon = VaadinIcon.USER.create();
 		profileButton = new Button(profileIcon); // VaadinSession.getCurrent().getAttribute(UserModel.class).getUserType() == UserType.GUEST ?
@@ -82,8 +91,10 @@ public abstract class BaseView extends VerticalLayout {
 		horizontalLayout.getStyle().set("padding", "1rem");
 		horizontalLayout.getStyle().set("border", "1px solid #ccc");
 		horizontalLayout.getStyle().set("border-radius", "5px");
-		add(horizontalLayout);
+		add(horizontalLayout, title);
 
+//		updateUserNameOnScreen(userModel);
+		setCurrentUser(userModel);
 		boolean isGuest = userModel.getUserType() == UserType.GUEST;
 		if (isGuest)
 			showLoginScreen();
@@ -115,7 +126,6 @@ public abstract class BaseView extends VerticalLayout {
 	}
 
 	protected boolean logout() {
-		UI.getCurrent().navigate("");
 		UserModel userModel = getCurrentUser();
 		SResponseT<String> res = marketService.logout(userModel.getName());
 		if (res.isSuccess()) {
@@ -125,6 +135,7 @@ public abstract class BaseView extends VerticalLayout {
 			setCurrentUser(userModel);
 			horizontalLayout.remove(logoutLayout);
 			showLoginScreen();
+			getUI().ifPresent(ui -> ui.navigate(""));
 		} else
 			Notification.show(res.getMessage());
 		return res.isSuccess();
@@ -137,6 +148,7 @@ public abstract class BaseView extends VerticalLayout {
 		loginButton.addClickListener(click -> login(username.getValue(), password.getValue()));
 		loginButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
 		loginButton.getStyle().set("color", "white");
+		loginButton.addClickShortcut(Key.ENTER);
 		loginLayout = new HorizontalLayout(username, password, loginButton);
 		horizontalLayout.add(loginLayout);
 		setSizeFull();
@@ -163,9 +175,16 @@ public abstract class BaseView extends VerticalLayout {
 	}
 
 	private void updateUserNameOnScreen(UserModel user){
-		userNameLabel.setText("Welcome \n" + (user.getUserType() == UserType.GUEST ? "guest" : user.getName() + "!"));
+		userNameLabel.setText(String.format("Welcome %s !", (user.getUserType() == UserType.GUEST ?
+				"guest" + user.getName().substring(0, 6) :
+				user.getName())));
+		updateAfterUserNameChange(user);
 	}
 
 	protected abstract void updateAfterUserNameChange(UserModel userModel);
 
+	protected void setTitle(String title){
+		this.title.setText(title);
+		this.title.setVisible(title != null && !title.isEmpty());
+	}
 }
