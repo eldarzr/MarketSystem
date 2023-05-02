@@ -261,8 +261,14 @@ public class MarketService {
 	}
 
 
-	public Response updateProductsFromCart(String userName, String shopName, String productName, int newQuantity) {
-		throw new NotImplementedException();
+	public SResponse updateProductsFromCart(String userName, String shopName, String productName, int newQuantity) {
+		Response res = serviceMarket.updateProductsFromCart(userName, shopName, productName, newQuantity);
+		if(res.isSuccess()){
+			return new SResponse();
+		}
+		else{
+			return new SResponse(res.getMessage());
+		}
 	}
 
 

@@ -1,6 +1,8 @@
 package FrontEnd.views;
 
 
+import FrontEnd.SResponse;
+import ServiceLayer.Response;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 import FrontEnd.Model.ProductModel;
@@ -51,7 +53,7 @@ public class CartView extends BaseView {
 
         shopAccordion = new Accordion();
         add(shopAccordion);
-
+        double totalPurchasePrice = 0;
         // Fetch cart data
         SResponseT<CartDataObj> cart_res = marketService.getCart(userModel.getName());
         if(cart_res.isSuccess()) {
@@ -69,10 +71,25 @@ public class CartView extends BaseView {
                 AccordionPanel shopPanel = createShopPanel(shop, itemGrid);
                 shopAccordion.add(shopPanel);
             }
+
+            totalPurchasePrice = cart.entrySet().stream()
+                    .mapToDouble(entry -> {
+                        Map<String, ShopBagItemDataObj> productNameToItem = entry.getValue().getProductsAndQuantities();
+                        return productNameToItem.values().stream()
+                                .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
+                                .sum();
+                    })
+                    .sum();
         }
         else {
             Notification.show(cart_res.getMessage());
         }
+
+        // Display the total purchase price
+        Span totalPurchasePriceSpan = new Span("Total purchase price: $" + String.format("%.2f", totalPurchasePrice));
+        totalPurchasePriceSpan.getStyle().set("font-size", "18px");
+        totalPurchasePriceSpan.getStyle().set("font-weight", "bold");
+        totalPurchasePriceSpan.getStyle().set("margin-right", "1rem");
 
         Button checkoutButton = new Button("Checkout", e -> {
                 getUI().ifPresent(ui ->
@@ -83,6 +100,10 @@ public class CartView extends BaseView {
         checkoutButton.getStyle().set("margin-top", "1rem");
 
         add(checkoutButton);
+
+        HorizontalLayout buttonLayout = new HorizontalLayout(totalPurchasePriceSpan, checkoutButton);
+        buttonLayout.setAlignItems(Alignment.BASELINE);
+        add(buttonLayout);
     }
 
     private Grid<ShopBagItemDataObj> createCartItemGrid(List<ShopBagItemDataObj> items) {
@@ -109,9 +130,11 @@ public class CartView extends BaseView {
                 quantityField.setMin(1);
 
                 Button saveButton = new Button("Save", event -> {
+
                     int newQuantity = quantityField.getValue().intValue();
                     handleEditQuantity(cartItem, newQuantity);
                     editDialog.close();
+                    Notification.show("Save");
                 });
 
                 Button cancelButton = new Button("Cancel", event -> editDialog.close());
@@ -136,7 +159,7 @@ public class CartView extends BaseView {
 
         // Set grid height based on the number of items
         int numberOfRows = items.size();
-        int rowHeight = 100;
+        int rowHeight = 60;
         int gridHeight = (numberOfRows * rowHeight) + 60;
         grid.setHeight(gridHeight + "px");
 
@@ -144,11 +167,20 @@ public class CartView extends BaseView {
     }
 
     private void handleRemoveFromCart(ShopBagItemDataObj cartItem) {
-        Notification.show("Why would you do that");
+        handleEditQuantity(cartItem, 0);
     }
 
     private void handleEditQuantity(ShopBagItemDataObj cartItem, int newQuantity) {
-        Notification.show("A bit greedy ay?");
+        int toAdd = newQuantity - cartItem.getQuantity();
+        if(toAdd == 0) return;
+        SResponse res = marketService.updateProductsFromCart(getCurrentUser().getName(),cartItem.getProduct().getShopName(),cartItem.getProduct().getName(),newQuantity);
+        if (!res.isSuccess()){
+            Notification.show(res.getMessage());
+        }
+        else{
+            Notification.show("Successfully updated product's quantity");
+            updateAfterUserNameChange(getCurrentUser());
+        }
     }
 
     private AccordionPanel createShopPanel(String shopName, Grid<ShopBagItemDataObj> itemGrid) {
@@ -165,7 +197,7 @@ public class CartView extends BaseView {
 
 
         AccordionPanel shopPanel = new AccordionPanel(shopTitle, layout);
-        shopPanel.setWidth("800px");
+        shopPanel.setWidth("880px");
         return shopPanel;
     }
 
