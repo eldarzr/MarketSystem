@@ -187,4 +187,14 @@ public abstract class BaseView extends VerticalLayout {
 		this.title.setText(title);
 		this.title.setVisible(title != null && !title.isEmpty());
 	}
+
+	protected void enableButton(Button button){
+		button.setEnabled(true);
+		button.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
+	}
+
+	protected void disableButton(Button button){
+		button.setEnabled(false);
+		button.getStyle().set("background-image", "linear-gradient(to right,#ffd966 , #ffbf66)");
+	}
 }

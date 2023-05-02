@@ -46,6 +46,7 @@ public class AdminShopProfileView extends ShopProfileView {
 		userProfile = user_res.getData();
 		shopProfile = shop_res.getData();
 		add(new Text(shopProfile.getName()));
+		editProductButton.setVisible(false);
 		showShopProfileScreen();
 	}
 

@@ -1,21 +1,33 @@
 package FrontEnd.Views;
 
+import FrontEnd.Model.ProductModel;
 import FrontEnd.Model.ShopModel;
 import FrontEnd.Model.UserModel;
 import FrontEnd.SResponseT;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
+
+import java.util.List;
+import java.util.Optional;
 
 @Route(value = "shop")
 public class ShopProfileView extends BaseView implements HasUrlParameter<String> {
 
 	protected ShopModel shopProfile;
 	protected Button manageRolesButton;
+	protected Grid<ProductModel> productGrid;
+	protected List<ProductModel> products;
+	protected ListDataProvider<ProductModel> productDataProvider;
+	protected Button editProductButton;
 
 	public ShopProfileView() {
 		//todo: pay attention, userprofile is the one that this screen is all about,
@@ -51,9 +63,65 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 						ui.navigate("manage_roles"))
 		);
 
-		add(manageRolesButton);
+
+		editProductButton = new Button("Edit Product");
+		editProductButton.getStyle().set("color", "white");
+		disableButton(editProductButton);
+
+		//TODO: implement click listener that navigate to edit screen for selected products.
+		// for reference, take a look at AdminView.class
+
+		showProducts();
+
+		HorizontalLayout horizontalLayout = new HorizontalLayout(manageRolesButton, editProductButton);
+
+		add(horizontalLayout);
 
 
 	}
+
+	protected void showProducts() {
+		SResponseT<ShopModel> shopRes = marketService.getShop(shopProfile.getName());
+		if(!shopRes.isSuccess()){
+			Notification.show(shopRes.getMessage());
+			getUI().ifPresent(ui -> ui.navigate(""));
+		}
+
+
+
+		products = shopRes.getData().getProducts().values().stream().toList();
+//		productDataProvider = new ListDataProvider<>(products);
+
+		productGrid = new Grid<>(ProductModel.class);
+		productGrid.setItems(products);
+
+
+//		productGrid = new Grid<>();
+//		productGrid.addColumn(ProductModel::getName).setHeader("Product Name");
+//		productGrid.addColumn(ProductModel::getDescription).setHeader("Description");
+//		productGrid.addColumn(ProductModel::getCategory).setHeader("Category");
+//		productGrid.addColumn(ProductModel::getPrice).setHeader("Price");
+//		productGrid.addColumn(ProductModel::getQuantity).setHeader("Quantity");
+//
+//		productGrid.setDataProvider(productDataProvider);
+
+		productGrid.addSelectionListener(event -> {
+			Optional<ProductModel> selectedUser = event.getFirstSelectedItem();
+			if (selectedUser.isPresent()) {
+				enableButton(editProductButton);
+			}
+			else{
+				disableButton(editProductButton);
+			}
+		});
+
+
+		add(productGrid);
+
+
+	}
+
+
+
 
 }

@@ -3,10 +3,7 @@ package FrontEnd;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Shops.Shop;
-import FrontEnd.Model.MemberRoleInShopModel;
-import FrontEnd.Model.ProductModel;
-import FrontEnd.Model.ShopModel;
-import FrontEnd.Model.UserModel;
+import FrontEnd.Model.*;
 import ServiceLayer.DataObjects.*;
 import ServiceLayer.Response;
 import ServiceLayer.ResponseT;
@@ -311,4 +308,8 @@ public class MarketService {
 			return new SResponseT<>(new ShopModel(r.getData()));
 		return new SResponseT<>(r.getMessage(), r.isSuccess());
     }
+
+	public SResponseT<List<MessageModel>> getMessages(String userName) {
+		throw new NotImplementedException();
+	}
 }

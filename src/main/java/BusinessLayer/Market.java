@@ -44,7 +44,7 @@ public class Market implements MarketIntr{
         logger.info("Starting market init.");
         createLogger();
         loadAdmin();
-//        loadProducts();
+        loadProducts();
         logger.info("Market init Finished successfully.");
     }
 
@@ -578,6 +578,11 @@ public class Market implements MarketIntr{
         }
         createShop(usersName[0],"The Shop");
         createShop(usersName[0],"Super Shop");
+        for(int i = 0; i < 6; i++) {
+            addNewProduct(usersName[0], "Super Shop", "product" + i, cat[0], descs[0], prices[0]);
+            addProductItems(usersName[0], "Super Shop", "product" + i, 3);
+        }
+
         logout("eldar");
 
     }
