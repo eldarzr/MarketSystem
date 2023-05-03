@@ -22,7 +22,7 @@ public class ProfileView extends BaseView {
     protected Button searchButton;
     protected Button adminButton;
     protected String PURCHASE_HISTORY = "purchase_history";
-    protected String VIEW_MESSAGES_SCREEN = "view_messages";
+    protected String USER_MESSAGES_SCREEN = "user_messages";
     protected String MY_SHOPS_SCREEN = "my_shops";
     protected String SEARCH_SCREEN = "search";
     protected String ADMIN_SCREEN = "admin";
@@ -68,7 +68,7 @@ public class ProfileView extends BaseView {
         );
         viewMessagesButton.addClickListener(e ->
                 viewMessagesButton.getUI().ifPresent(ui ->
-                        ui.navigate(VIEW_MESSAGES_SCREEN))
+                        ui.navigate(USER_MESSAGES_SCREEN))
         );
         viewMyShopsButton.addClickListener(e ->
                 viewMyShopsButton.getUI().ifPresent(ui ->

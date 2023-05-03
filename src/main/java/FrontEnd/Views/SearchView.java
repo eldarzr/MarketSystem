@@ -8,6 +8,7 @@ import FrontEnd.SResponseT;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
@@ -49,6 +50,7 @@ public class SearchView extends BaseView {
 		// Configure searchField and searchButton
 		searchField.setWidth("30%");
 		searchButton.setWidth("30%");
+		enableButton(searchButton);
 
 		// Configure minPriceField and maxPriceField
 		minPriceField.setWidth("100%");
@@ -77,6 +79,7 @@ public class SearchView extends BaseView {
 			// Add a quantity field and a button for each product
 			TextField quantityField = new TextField("choose quantity");
 			Button addToCartButton = new Button("Add to Cart");
+			enableButton(addToCartButton);
 			addToCartButton.addClickListener(e -> addToCart(product, Integer.parseInt(quantityField.getValue())));
 			VerticalLayout layout = new VerticalLayout();
 			layout.setSpacing(true);

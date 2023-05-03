@@ -11,10 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Iterator;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -67,6 +64,7 @@ public class UsersHandler implements NotificationPublisher {
 
     public User register(String userName, String email, String password) throws Exception{
         logger.info(String.format("Attempt to validate %s is valid username.",userName));
+        userName = userName.toLowerCase();
         checkValidUserName(userName);
         logger.info(String.format("%s is valid username.",userName));
 
@@ -96,6 +94,7 @@ public class UsersHandler implements NotificationPublisher {
     }
 
     public User login(String userName, String password) {
+        userName = userName.toLowerCase();
         User user = findMemberByName(userName);
         if(isLoggedIn(user.getName()))
             throwIllegalArgumentException(String.format("User %s already logged in",userName));
@@ -195,7 +194,7 @@ public class UsersHandler implements NotificationPublisher {
         return guestName;
     }
 
-    private void checkValidUserName(String username) {
+    private void checkValidUserName(String username) throws Exception {
         int lower_bound = 4;
         int upper_bound = 32;
         // Check if username is between lower_bound and upper_bound characters long
@@ -214,6 +213,9 @@ public class UsersHandler implements NotificationPublisher {
         if (!Character.isLetter(firstChar)) {
             throwIllegalArgumentException("Username must start with a letter.");
         }
+
+        if (loginUsers.containsKey(username) || members.containsKey(username))
+            throw new Exception(String.format("there is already user with the name %s", username));
     }
 
     private static void checkValidEmail(String email) throws AddressException {

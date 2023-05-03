@@ -1,5 +1,6 @@
 package FrontEnd.Views.Admin;
 
+import BusinessLayer.Enums.UserType;
 import FrontEnd.Model.MessageModel;
 import FrontEnd.Model.UserModel;
 import FrontEnd.SResponseT;
@@ -25,7 +26,8 @@ public class AdminUserMessagesView extends UserMessagesView implements HasUrlPar
 
 	public AdminUserMessagesView() {
 		super();
-
+		if(getCurrentUser().getUserType() != UserType.ADMIN)
+			navigateToHome();
 	}
 
 	@Override

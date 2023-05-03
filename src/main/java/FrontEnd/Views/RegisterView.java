@@ -37,6 +37,7 @@ public class RegisterView extends BaseView {
 		PasswordField password1 = new PasswordField("Password");
 		PasswordField password2 = new PasswordField("Confirm password");
 		Button registerButton = new Button("Register");
+		enableButton(registerButton);
 		registerButton.addClickListener(click -> {
 			if (register(username.getValue(), password1.getValue(),
 					password2.getValue(), emailField.getValue())){

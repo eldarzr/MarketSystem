@@ -190,11 +190,17 @@ public abstract class BaseView extends VerticalLayout {
 
 	protected void enableButton(Button button){
 		button.setEnabled(true);
-		button.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
+		button.getStyle().set("background-color", "#FF8C00");
+		button.getStyle().set("color", "white");
 	}
 
 	protected void disableButton(Button button){
 		button.setEnabled(false);
-		button.getStyle().set("background-image", "linear-gradient(to right,#ffd966 , #ffbf66)");
+		button.getStyle().set("background-color", "#ffba66");
+		button.getStyle().set("color", "white");
+	}
+
+	protected void navigateToHome(){
+		getUI().ifPresent(ui -> ui.navigate(""));
 	}
 }
