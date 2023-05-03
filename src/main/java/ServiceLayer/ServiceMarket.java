@@ -240,7 +240,7 @@ public class ServiceMarket {
 		}
 	}
 
-	public Response appointShopOwner(String appointedBy, String appointee, String shopName) throws Exception {
+	public Response appointShopOwner(String appointedBy, String appointee, String shopName){
 		try {
 			market.appointShopOwner(appointedBy, appointee, shopName);
 		} catch (Exception exception) {
@@ -250,7 +250,7 @@ public class ServiceMarket {
 	}
 
 
-	public Response appointShopManager(String appointedBy, String appointee, String shopName) throws Exception {
+	public Response appointShopManager(String appointedBy, String appointee, String shopName) {
 		try {
 			market.appointShopManager(appointedBy, appointee, shopName);
 		} catch (Exception exception) {
@@ -260,9 +260,9 @@ public class ServiceMarket {
 	}
 
 
-	public Response removeShopManager(String managerName, String userToRemove, String shopName) {
+	public Response removeShopOwner(String managerName, String userToRemove, String shopName) {
 		try {
-			market.removeShopManager(managerName, userToRemove, shopName);
+			market.removeShopOwner(managerName, userToRemove, shopName);
 		} catch (Exception exception) {
 			return new Response(exception.getMessage());
 		}
@@ -270,7 +270,7 @@ public class ServiceMarket {
 	}
 
 
-	public ResponseT<MemberRoleInShopDataObj> changeManagerPermissions(String actor, String actOn, String shopName, List<Integer> permission) throws Exception {
+	public ResponseT<MemberRoleInShopDataObj> changeManagerPermissions(String actor, String actOn, String shopName, List<Integer> permission){
 		try {
 		return new ResponseT<MemberRoleInShopDataObj>(new MemberRoleInShopDataObj(market.changeManagerPermissions(actor, actOn, shopName, permission)));
 
@@ -290,9 +290,9 @@ public class ServiceMarket {
 	}
 
 
-	public ResponseT<Collection<MemberRoleInShopDataObj>> getShopManagersAndPermissions(String userName, String shopName) throws Exception {
+	public ResponseT<List<MemberRoleInShopDataObj>> getShopManagersAndPermissions(String userName, String shopName) throws Exception {
 		try {
-		return new ResponseT<>(market.getShopManagersAndPermissions(userName, shopName).stream()
+		return new ResponseT<>(market. getShopManagersAndPermissions(userName, shopName).stream()
 				.map(MemberRoleInShopDataObj::new).collect(Collectors.toList()));
 
 		} catch (Exception exception) {

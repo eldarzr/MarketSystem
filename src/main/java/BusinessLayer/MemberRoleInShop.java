@@ -20,6 +20,7 @@ public class MemberRoleInShop {
 	private String roleUser;
 	private ManageType type;
 	private ManagePermissions permissions;
+	private List<Integer> activatedPermissions;
 
 	private Lock lock;
 
@@ -30,6 +31,7 @@ public class MemberRoleInShop {
 		this.roleShop =  roleShop;
 		this.roleUser = roleUser;
 		this.lock = new ReentrantLock();
+		this.activatedPermissions =  this.permissions.getActivatedPermissions();
 	}
 
 	public static MemberRoleInShop createFounder(String user, Shop shop, MessageObserver observer) throws Exception {
@@ -84,11 +86,13 @@ public class MemberRoleInShop {
 
 	public void setPermissions(ManagePermissions permissions) {
 		this.permissions = permissions;
+		this.activatedPermissions = this.permissions.getActivatedPermissions();
 	}
 
 	public void setPermissions(List<Integer> permissions) throws Exception {
 		lock.lock();
-			this.permissions.setNewPermissions(permissions);
+		this.permissions.setNewPermissions(permissions);
+		this.activatedPermissions = this.permissions.getActivatedPermissions();
 		lock.unlock();
 	}
 	private static MemberRoleInShop adjustRole(MemberRoleInShop role , MessageObserver obs) throws Exception {
@@ -102,6 +106,7 @@ public class MemberRoleInShop {
 
 	public void addPermission(int permission) throws Exception {
 		this.permissions.addAnotherPermission(permission);
+		this.activatedPermissions = this.permissions.getActivatedPermissions();
 	}
 
 	public String getRoleInfo() {
