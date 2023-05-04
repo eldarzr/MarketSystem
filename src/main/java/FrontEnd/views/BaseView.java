@@ -187,4 +187,21 @@ public abstract class BaseView extends VerticalLayout {
 		this.title.setText(title);
 		this.title.setVisible(title != null && !title.isEmpty());
 	}
+
+	protected HorizontalLayout getHorizontalLayout(){return horizontalLayout;}
+	protected void enableButton(Button button){
+		button.setEnabled(true);
+		button.getStyle().set("background-color", "#FF8C00");
+		button.getStyle().set("color", "white");
+	}
+
+	protected void disableButton(Button button){
+		button.setEnabled(false);
+		button.getStyle().set("background-color", "#ffba66");
+		button.getStyle().set("color", "white");
+	}
+
+	protected void navigateToHome(){
+		getUI().ifPresent(ui -> ui.navigate(""));
+	}
 }

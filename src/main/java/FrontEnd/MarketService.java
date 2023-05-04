@@ -3,10 +3,7 @@ package FrontEnd;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Shops.Shop;
-import FrontEnd.Model.MemberRoleInShopModel;
-import FrontEnd.Model.ProductModel;
-import FrontEnd.Model.ShopModel;
-import FrontEnd.Model.UserModel;
+import FrontEnd.Model.*;
 import ServiceLayer.DataObjects.*;
 import ServiceLayer.Response;
 import ServiceLayer.ResponseT;
@@ -240,8 +237,11 @@ public class MarketService {
 	}
 
 
-	public ResponseT<CartDataObj> getCart(String userName) {
-		throw new NotImplementedException();
+	public SResponseT<CartDataObj> getCart(String userName) {
+		ResponseT<CartDataObj> r = serviceMarket.getCart(userName);
+		if (r.isSuccess())
+			return new SResponseT<>(r.getData());
+		return new SResponseT<>(r.getMessage(),r.isSuccess());
 	}
 
 
@@ -258,8 +258,14 @@ public class MarketService {
 	}
 
 
-	public Response updateProductsFromCart(String userName, String shopName, String productName, int newQuantity) {
-		throw new NotImplementedException();
+	public SResponse updateProductsFromCart(String userName, String shopName, String productName, int newQuantity) {
+		Response res = serviceMarket.updateProductsFromCart(userName, shopName, productName, newQuantity);
+		if(res.isSuccess()){
+			return new SResponse();
+		}
+		else{
+			return new SResponse(res.getMessage());
+		}
 	}
 
 
@@ -311,4 +317,8 @@ public class MarketService {
 			return new SResponseT<>(new ShopModel(r.getData()));
 		return new SResponseT<>(r.getMessage(), r.isSuccess());
     }
+
+	public SResponseT<List<MessageModel>> getMessages(String userName) {
+		throw new NotImplementedException();
+	}
 }

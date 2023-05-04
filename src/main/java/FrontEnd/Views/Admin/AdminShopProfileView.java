@@ -1,5 +1,6 @@
 package FrontEnd.Views.Admin;
 
+import BusinessLayer.Enums.UserType;
 import FrontEnd.Model.ShopModel;
 import FrontEnd.Model.UserModel;
 import FrontEnd.SResponseT;
@@ -19,6 +20,8 @@ public class AdminShopProfileView extends ShopProfileView {
 
 	public AdminShopProfileView() {
 		super();
+		if(getCurrentUser().getUserType() != UserType.ADMIN)
+			navigateToHome();
 		//todo: pay attention, userprofile is the one that this screen is all about,
 		// we can come to this page if the user himself called it, or if admin called it,
 		// in such case we can only *show* info and not set it.
@@ -46,6 +49,7 @@ public class AdminShopProfileView extends ShopProfileView {
 		userProfile = user_res.getData();
 		shopProfile = shop_res.getData();
 		add(new Text(shopProfile.getName()));
+		editProductButton.setVisible(false);
 		showShopProfileScreen();
 	}
 

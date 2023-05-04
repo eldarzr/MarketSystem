@@ -1,5 +1,6 @@
 package FrontEnd.Views.Admin;
 
+import BusinessLayer.Enums.UserType;
 import FrontEnd.Model.MemberRoleInShopModel;
 import FrontEnd.Model.ShopModel;
 import FrontEnd.Model.UserModel;
@@ -29,6 +30,8 @@ public class AdminMyShopsView extends MyShopsView implements HasUrlParameter<Str
 
     public AdminMyShopsView() {
         super();
+        if(getCurrentUser().getUserType() != UserType.ADMIN)
+            navigateToHome();
         createShopLayout.setVisible(false);
     }
 

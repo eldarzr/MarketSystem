@@ -44,7 +44,7 @@ public class Market implements MarketIntr{
         logger.info("Starting market init.");
         createLogger();
         loadAdmin();
-//        loadProducts();
+        loadProducts();
         logger.info("Market init Finished successfully.");
     }
 
@@ -578,7 +578,40 @@ public class Market implements MarketIntr{
         }
         createShop(usersName[0],"The Shop");
         createShop(usersName[0],"Super Shop");
+        for(int i = 0; i < 6; i++) {
+            addNewProduct(usersName[0], "Super Shop", "product" + i, cat[0], descs[0], prices[0]);
+            addProductItems(usersName[0], "Super Shop", "product" + i, 3);
+        }
+
         logout("eldar");
+
+        loadDataGabi();
+
+
+    }
+
+    private void loadDataGabi() throws Exception {
+        String userName = "gabi99";
+        String password = "Aa123456";
+        String email = "gabi@gmail.com";
+
+        String guestName = startSession();
+        register(userName,email,password);
+        login(guestName,userName,password);
+        for(int i = 1; i < 5; i++){
+            String shopName = "Gabi's Goods "+ i;
+            createShop(userName, shopName);
+            for( int j = 1; j < 5; j++) {
+                String prodName = "Item "+j;
+                double price = 4 + ((((i * j) % 7 ) + 5.5 * j) / (2 * j)) ;
+                String description = "Good product";
+                int quantity = (int) ((Math.round(price) % 10) + 3);
+                String category = "Category" + (j % 2);
+                addNewProduct(userName, shopName, prodName, category, description, price);
+                addProductItems(userName,shopName,prodName,quantity);
+            }
+        }
+        logout(userName);
 
     }
 

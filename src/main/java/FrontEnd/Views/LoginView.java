@@ -22,6 +22,7 @@ public class LoginView extends BaseView {
 		TextField username = new TextField("Username");
 		PasswordField password = new PasswordField("Password");
 		Button loginButton = new Button("Login");
+		enableButton(loginButton);
 		loginButton.addClickListener(click -> {
 			if (login(username.getValue(), password.getValue())){
 				getUI().ifPresent(ui ->

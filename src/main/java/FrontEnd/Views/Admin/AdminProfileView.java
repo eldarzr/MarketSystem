@@ -24,6 +24,8 @@ public class AdminProfileView extends ProfileView implements HasUrlParameter<Str
 
     public AdminProfileView() {
         super();
+        if(getCurrentUser().getUserType() != UserType.ADMIN)
+            navigateToHome();
     }
 
     @Override
@@ -35,7 +37,7 @@ public class AdminProfileView extends ProfileView implements HasUrlParameter<Str
 
         viewMessagesButton.addClickListener(e ->
                 getUI().ifPresent(ui -> ui.navigate(
-                        ADMIN_PREFIX + VIEW_MESSAGES_SCREEN + "/" + visitedUser.getName()))
+                        ADMIN_PREFIX + USER_MESSAGES_SCREEN + "/" + visitedUser.getName()))
         );
 
         viewMyShopsButton.addClickListener(e ->
@@ -71,5 +73,6 @@ public class AdminProfileView extends ProfileView implements HasUrlParameter<Str
             }
         }
         setTitle(String.format("Welcome to %s profile", visitedUser.getName()));
+        setButtonsNames();
     }
 }

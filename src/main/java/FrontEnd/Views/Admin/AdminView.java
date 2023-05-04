@@ -1,4 +1,4 @@
-package FrontEnd.Views;
+package FrontEnd.Views.Admin;
 
 import BusinessLayer.Enums.UserType;
 import FrontEnd.Model.ProductModel;
@@ -6,6 +6,7 @@ import FrontEnd.Model.ShopModel;
 import FrontEnd.Model.UserModel;
 import FrontEnd.SResponse;
 import FrontEnd.SResponseT;
+import FrontEnd.Views.BaseView;
 import com.nimbusds.jose.shaded.gson.Gson;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Key;
@@ -51,6 +52,8 @@ public class AdminView extends BaseView {
 	public AdminView() {
 		// Initialize the data provider for the grid
 		UserModel userModel = getCurrentUser();
+		if(getCurrentUser().getUserType() != UserType.ADMIN)
+			navigateToHome();
 		SResponseT<List<UserModel>> userRes = marketService.getAllUsers(userModel.getName());
 		SResponseT<List<ShopModel>> shopRes = marketService.getAllShops(userModel.getName());
 		if(!userRes.isSuccess() || !shopRes.isSuccess()){
@@ -72,17 +75,17 @@ public class AdminView extends BaseView {
 		userGrid.addSelectionListener(event -> {
 			Optional<UserModel> selectedUser = event.getFirstSelectedItem();
 			if (selectedUser.isPresent()) {
-				userProfileButton.setEnabled(true);
-				userHistoryButton.setEnabled(true);
+				enableButton(userProfileButton);
+				enableButton(userHistoryButton);
 				if (selectedUser.get().getUserType() == UserType.MEMBER) {
-					removeButton.setEnabled(true);
+					enableButton(removeButton);
 				} else {
-					removeButton.setEnabled(false);
+					disableButton(removeButton);
 				}
 			}
 			else{
-				userProfileButton.setEnabled(false);
-				userHistoryButton.setEnabled(false);
+				disableButton(userProfileButton);
+				disableButton(userHistoryButton);
 			}
 		});
 		shopGrid = new Grid<>();
@@ -92,14 +95,14 @@ public class AdminView extends BaseView {
 		shopGrid.addSelectionListener(event -> {
 			Optional<ShopModel> selectedShop = event.getFirstSelectedItem();
 			if (selectedShop.isPresent()) {
-				shopHistoryButton.setEnabled(true);
+				enableButton(shopHistoryButton);
 			}
 			else{
-				shopHistoryButton.setEnabled(false);
+				disableButton(shopHistoryButton);
 			}
 		});
 		removeButton = new Button("Remove user");
-		removeButton.setEnabled(false);
+		disableButton(removeButton);
 		removeButton.addClickListener(event -> {
 			UserModel selectedUser = userGrid.asSingleSelect().getValue();
 			Notification.show(selectedUser == null ? "null" : selectedUser.getName());
@@ -109,7 +112,7 @@ public class AdminView extends BaseView {
 		});
 
 		userProfileButton = new Button("User Profile");
-		userProfileButton.setEnabled(false);
+		disableButton(userProfileButton);
 		userProfileButton.addClickListener(event -> {
 			UserModel selectedUser = userGrid.asSingleSelect().getValue();
 			Notification.show(selectedUser == null ? "null" : selectedUser.getName());
@@ -121,7 +124,7 @@ public class AdminView extends BaseView {
 		});
 
 		userHistoryButton = new Button("User Purchase History");
-		userHistoryButton.setEnabled(false);
+		disableButton(userHistoryButton);
 		userHistoryButton.addClickListener(event -> {
 			UserModel selectedUser = userGrid.asSingleSelect().getValue();
 			if (selectedUser != null)
@@ -129,7 +132,7 @@ public class AdminView extends BaseView {
 		});
 
 		shopHistoryButton = new Button("Shop Purchase History");
-		shopHistoryButton.setEnabled(false);
+		disableButton(shopHistoryButton);
 		shopHistoryButton.addClickListener(event -> {
 			ShopModel selectedShop = shopGrid.asSingleSelect().getValue();
 			if (selectedShop != null)
