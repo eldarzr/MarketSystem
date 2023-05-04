@@ -1,4 +1,4 @@
-package FrontEnd.views;
+package FrontEnd.Views;
 
 import BusinessLayer.Enums.UserType;
 import FrontEnd.MarketService;
@@ -10,18 +10,12 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.*;
-import jakarta.servlet.http.HttpSession;
-
-import java.util.Collection;
-import java.util.stream.Collectors;
 
 @Route("base")
 public abstract class BaseView extends VerticalLayout {

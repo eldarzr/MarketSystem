@@ -1,24 +1,19 @@
-package FrontEnd.views;
+package FrontEnd.Views;
 
 
 import FrontEnd.SResponse;
-import ServiceLayer.Response;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
-import FrontEnd.Model.ProductModel;
 import FrontEnd.Model.UserModel;
 import FrontEnd.SResponseT;
 import ServiceLayer.DataObjects.CartDataObj;
 import ServiceLayer.DataObjects.ShopBagDataObj;
 import ServiceLayer.DataObjects.ShopBagItemDataObj;
-import ServiceLayer.DataObjects.ShopDataObj;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.accordion.AccordionPanel;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
@@ -32,7 +27,6 @@ import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Route("cart")
 @PageTitle("Cart")

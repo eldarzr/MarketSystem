@@ -1,16 +1,14 @@
-package FrontEnd.views;
+package FrontEnd.Views;
 
 import BusinessLayer.Enums.UserType;
 import FrontEnd.Model.UserModel;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouterLink;
 
 @Route("profile")
 @PageTitle("Profile")

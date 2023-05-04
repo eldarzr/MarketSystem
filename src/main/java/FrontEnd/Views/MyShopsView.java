@@ -1,4 +1,4 @@
-package FrontEnd.views;
+package FrontEnd.Views;
 
 import FrontEnd.Model.MemberRoleInShopModel;
 import FrontEnd.Model.ShopModel;
