@@ -1,4 +1,4 @@
-package FrontEnd.views;
+package FrontEnd.Views;
 
 import FrontEnd.Model.UserModel;
 import com.vaadin.flow.component.button.Button;
@@ -67,6 +67,7 @@ public class PaymentView extends BaseView {
         Button confirmButton = new Button("Confirm Purchase", VaadinIcon.CHECK_CIRCLE.create(), e -> {
             // Implement purchase confirmation logic here
             Notification.show("Payment confirmed!");
+            navigateToHome();
         });
         confirmButton.getStyle().set("background-image", "linear-gradient(to right, #4CAF50, #81C784)");
         confirmButton.getStyle().set("color", "white");
