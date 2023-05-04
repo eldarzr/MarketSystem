@@ -4,6 +4,7 @@ import BusinessLayer.Purchases.Purchase;
 
 public class CreditCardPaymentDetails implements PaymentDetails{
 
+
     private String card_number;
     private String month;
     private String year;
@@ -45,8 +46,8 @@ public class CreditCardPaymentDetails implements PaymentDetails{
     }
 
     @Override
-    public void accept(Purchase purchase) throws InterruptedException {
-        purchase.visit(this);
+    public void accept(Purchase purchase, double priceAfterDiscount) throws InterruptedException {
+        purchase.visit(this, priceAfterDiscount);
     }
 
     @Override
