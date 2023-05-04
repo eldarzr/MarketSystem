@@ -7,7 +7,7 @@ import BusinessLayer.MessageObserver;
 import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Purchases.ShopBagItem;
 import BusinessLayer.Shops.Discount.*;
-import BusinessLayer.Shops.Discount.DiscountRules.ActionWithOldRule;
+import BusinessLayer.Shops.Discount.DiscountRules.CompoundRuleType;
 import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
 import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
 import BusinessLayer.Users.User;
@@ -351,7 +351,7 @@ public class Shop implements ShopIntr {
 		return discountPolicy.addXorDiscount(discountsIds,xorDiscountRule);
 	}
 
-	public void addDiscountRule(String userName, DiscountRule discountRule, int discountId, ActionWithOldRule actionWithOldRule) throws Exception {
+	public void addDiscountRule(String userName, DiscountRule discountRule, int discountId, CompoundRuleType actionWithOldRule) throws Exception {
 		if(!(validateUserHasRole(userName).getType() == ManageType.OWNER))
 			throw new IllegalArgumentException("Only owners can change the discount policy");
 		discountPolicy.addDiscountRule(discountRule,discountId,actionWithOldRule);

@@ -1,8 +1,8 @@
-package ServiceLayer.DataObjects;
+package ServiceLayer.DataObjects.DiscountDataObjects;
 
 import BusinessLayer.Shops.Discount.SimpleDiscount;
 
-public class SimpleDiscountDataObj extends DiscountDataObj{
+public class SimpleDiscountDataObj extends DiscountDataObj {
 
     double percentage;
 

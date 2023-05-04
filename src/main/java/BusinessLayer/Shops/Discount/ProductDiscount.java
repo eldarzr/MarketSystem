@@ -21,4 +21,8 @@ public class ProductDiscount extends SimpleDiscount {
                 updateProductPriceAfterDiscount(sbi.getProduct());
         }
     }
+
+    public String getProductName() {
+        return productName;
+    }
 }

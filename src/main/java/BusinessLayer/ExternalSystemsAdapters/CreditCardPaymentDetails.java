@@ -4,6 +4,7 @@ import BusinessLayer.Purchases.Purchase;
 
 public class CreditCardPaymentDetails implements PaymentDetails{
 
+
     private String card_number;
     private String month;
     private String year;

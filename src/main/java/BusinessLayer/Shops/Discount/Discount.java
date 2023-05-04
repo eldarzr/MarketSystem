@@ -24,20 +24,20 @@ public abstract class Discount {
         return discountRule.evaluate(shopBag);
     }
 
-    public void addRule(DiscountRule newDiscountRule, ActionWithOldRule actionWithOldRule){
+    public void addRule(DiscountRule newDiscountRule, CompoundRuleType actionWithOldRule){
         if(discountRule == null){
             discountRule = newDiscountRule;
             return;
         }
         switch (actionWithOldRule) {
             case OR:
-                discountRule = new OrDiscountRule(Arrays.asList(newDiscountRule, discountRule));
+                discountRule = new CompoundDiscountRule(Arrays.asList(newDiscountRule, discountRule),CompoundRuleType.OR);
                 break;
             case XOR:
-                discountRule = new XorDiscountRule(Arrays.asList(newDiscountRule, discountRule));
+                discountRule = new CompoundDiscountRule(Arrays.asList(newDiscountRule, discountRule),CompoundRuleType.XOR);
                 break;
             case AND:
-                discountRule = new AndDiscountRule(Arrays.asList(newDiscountRule, discountRule));
+                discountRule = new CompoundDiscountRule(Arrays.asList(newDiscountRule, discountRule),CompoundRuleType.AND);
                 break;
             default:
                 discountRule = newDiscountRule;

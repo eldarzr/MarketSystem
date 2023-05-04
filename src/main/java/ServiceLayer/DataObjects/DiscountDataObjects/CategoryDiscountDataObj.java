@@ -1,8 +1,8 @@
-package ServiceLayer.DataObjects;
+package ServiceLayer.DataObjects.DiscountDataObjects;
 
 import BusinessLayer.Shops.Discount.CategoryDiscount;
 
-public class CategoryDiscountDataObj extends SimpleDiscountDataObj{
+public class CategoryDiscountDataObj extends SimpleDiscountDataObj {
 
     String category;
 

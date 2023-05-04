@@ -1,6 +1,6 @@
 package BusinessLayer.Shops.Discount.DiscountRules;
 
-public enum ActionWithOldRule {
+public enum CompoundRuleType {
     XOR,
     AND,
     OR,

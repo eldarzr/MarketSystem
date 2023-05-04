@@ -3,11 +3,11 @@ package ServiceLayer;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Market;
-import BusinessLayer.Shops.Discount.DiscountRules.ActionWithOldRule;
+import BusinessLayer.Shops.Discount.DiscountRules.CompoundRuleType;
 import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
-import BusinessLayer.Shops.Discount.XorDecisionRules.DataObjects.*;
 import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
 import ServiceLayer.DataObjects.*;
+import ServiceLayer.DataObjects.DiscountDataObjects.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -420,34 +420,34 @@ public class ServiceMarket {
 		}
 	}
 
-	public ResponseT<SumCompoundDiscountDataObj> addSumDiscount(String shopName, String userName, List<Integer> discountsIds) throws Exception {
+	public ResponseT<CompoundDiscountDataObj> addSumDiscount(String shopName, String userName, List<Integer> discountsIds) throws Exception {
 		try {
-			return new ResponseT<SumCompoundDiscountDataObj>(new SumCompoundDiscountDataObj(market.addSumDiscount(userName, shopName,discountsIds)));
+			return new ResponseT<CompoundDiscountDataObj>(new CompoundDiscountDataObj(market.addSumDiscount(userName, shopName,discountsIds)));
 
 		} catch (Exception exception) {
 			return new ResponseT(exception.getMessage(), false);
 		}
 	}
 
-	public ResponseT<MaxCompoundDiscountDataObj> addMaxDiscount(String shopName, String userName, List<Integer> discountsIds) throws Exception {
+	public ResponseT<CompoundDiscountDataObj> addMaxDiscount(String shopName, String userName, List<Integer> discountsIds) throws Exception {
 		try {
-			return new ResponseT<MaxCompoundDiscountDataObj>(new MaxCompoundDiscountDataObj(market.addMaxDiscount(userName, shopName,discountsIds)));
+			return new ResponseT<CompoundDiscountDataObj>(new CompoundDiscountDataObj(market.addMaxDiscount(userName, shopName,discountsIds)));
 
 		} catch (Exception exception) {
 			return new ResponseT(exception.getMessage(), false);
 		}
 	}
 
-	public ResponseT<XorCompoundDiscountDataObj> addXorDiscount(String shopName, String userName, List<Integer> discountsIds, XorDecisionRule xorDiscountRule) throws Exception {
+	public ResponseT<CompoundDiscountDataObj> addXorDiscount(String shopName, String userName, List<Integer> discountsIds, XorDecisionRule xorDiscountRule) throws Exception {
 		try {
-			return new ResponseT<XorCompoundDiscountDataObj>(new XorCompoundDiscountDataObj(market.addXorDiscount(userName, shopName,discountsIds,xorDiscountRule)));
+			return new ResponseT<CompoundDiscountDataObj>(new CompoundDiscountDataObj(market.addXorDiscount(userName, shopName,discountsIds,xorDiscountRule)));
 
 		} catch (Exception exception) {
 			return new ResponseT(exception.getMessage(), false);
 		}
 	}
 
-	public Response addDiscountRule(String shopName, String userName, DiscountRule discountRule, int discountId, ActionWithOldRule actionWithOldRule) throws Exception {
+	public Response addDiscountRule(String shopName, String userName, DiscountRule discountRule, int discountId, CompoundRuleType actionWithOldRule) throws Exception {
 		try {
 			market.addDiscountRule(shopName,userName, discountRule, discountId,actionWithOldRule);
 		} catch (Exception exception) {

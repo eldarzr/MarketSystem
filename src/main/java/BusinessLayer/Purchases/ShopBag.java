@@ -39,6 +39,9 @@ public class ShopBag {
         if(shopBagItem == null){
             throw new IllegalArgumentException(String.format("could not find %s in this shop bag",productName));
         }
+        if(newQuantity == 0){
+            productsAndQuantities.remove(productName);
+        }
         shopBagItem.setQuantity(newQuantity);
     }
 
@@ -67,5 +70,9 @@ public class ShopBag {
             productsAndQuantitiesClone.put(productName,productsAndQuantities.get(productName).deepClone());
         }
         return new ShopBag(productsAndQuantitiesClone);
+    }
+
+    public boolean isEmpty(){
+        return productsAndQuantities.isEmpty();
     }
 }

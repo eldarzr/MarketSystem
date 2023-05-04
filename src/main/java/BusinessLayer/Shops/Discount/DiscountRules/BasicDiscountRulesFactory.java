@@ -1,53 +1,39 @@
 package BusinessLayer.Shops.Discount.DiscountRules;
 
-import BusinessLayer.Purchases.ShopBagItem;
-
 public class BasicDiscountRulesFactory {
 
     public static DiscountRule makeBagPriceHigherThanRule(double price){
-        return shopBag -> shopBag.calculatePrice() >= price;
+        SimpleDiscountRule simpleDiscountRule = new SimpleDiscountRule(SimpleRuleType.BagPriceHigherThan);
+        simpleDiscountRule.setMinPrice(price);
+        return simpleDiscountRule;
     }
 
     public static DiscountRule makeMinProductQuantityRule(int minQuantity, String productName){
-        return shopBag -> {
-            for(ShopBagItem sbi : shopBag.getProductsAndQuantities().values()){
-                if(sbi.getProduct().getName().equals(productName))
-                    return sbi.getQuantity() >= minQuantity;
-            }
-            return false;
-        };
+        SimpleDiscountRule simpleDiscountRule = new SimpleDiscountRule(SimpleRuleType.MinProductQuantity);
+        simpleDiscountRule.setSubjectName(productName);
+        simpleDiscountRule.setMinQuantity(minQuantity);
+        return simpleDiscountRule;
     }
 
     public static DiscountRule makeMaxProductQuantityRule(int maxQuantity, String productName){
-        return shopBag -> {
-            for(ShopBagItem sbi : shopBag.getProductsAndQuantities().values()){
-                if(sbi.getProduct().getName().equals(productName))
-                    return sbi.getQuantity() <= maxQuantity;
-            }
-            return false;
-        };
+        SimpleDiscountRule simpleDiscountRule = new SimpleDiscountRule(SimpleRuleType.MaxProductQuantity);
+        simpleDiscountRule.setSubjectName(productName);
+        simpleDiscountRule.setMaxQuantity(maxQuantity);
+        return simpleDiscountRule;
     }
 
     public static DiscountRule makeMinFromCategoryRule(int minQuantity, String category){
-        return shopBag -> {
-            int amount = 0;
-            for(ShopBagItem sbi : shopBag.getProductsAndQuantities().values()){
-                if(sbi.getProduct().getCategory().equals(category))
-                    amount++;
-            }
-            return amount >= minQuantity;
-        };
+        SimpleDiscountRule simpleDiscountRule = new SimpleDiscountRule(SimpleRuleType.MinFromCategory);
+        simpleDiscountRule.setSubjectName(category);
+        simpleDiscountRule.setMinQuantity(minQuantity);
+        return simpleDiscountRule;
     }
 
     public static DiscountRule makeMaxFromCategoryRule(int maxQuantity, String category){
-        return shopBag -> {
-            int amount = 0;
-            for(ShopBagItem sbi : shopBag.getProductsAndQuantities().values()){
-                if(sbi.getProduct().getCategory().equals(category))
-                    amount++;
-            }
-            return amount <= maxQuantity;
-        };
+        SimpleDiscountRule simpleDiscountRule = new SimpleDiscountRule(SimpleRuleType.MaxFromCategory);
+        simpleDiscountRule.setSubjectName(category);
+        simpleDiscountRule.setMaxQuantity(maxQuantity);
+        return simpleDiscountRule;
     }
 
 }

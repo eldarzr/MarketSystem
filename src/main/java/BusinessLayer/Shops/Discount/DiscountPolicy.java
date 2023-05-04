@@ -1,7 +1,7 @@
 package BusinessLayer.Shops.Discount;
 
 import BusinessLayer.Purchases.ShopBag;
-import BusinessLayer.Shops.Discount.DiscountRules.ActionWithOldRule;
+import BusinessLayer.Shops.Discount.DiscountRules.CompoundRuleType;
 import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
 import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
 import BusinessLayer.Shops.FinalBagPriceResult;
@@ -74,7 +74,7 @@ public class DiscountPolicy {
         return xorCompoundDiscount;
     }
 
-    public void addDiscountRule(DiscountRule discountRule, int discountId, ActionWithOldRule actionWithOldRule){
+    public void addDiscountRule(DiscountRule discountRule, int discountId, CompoundRuleType actionWithOldRule){
         if(discountRule == null)
             throw new IllegalArgumentException("discount rule cannot be null");
         Discount discount = getDiscountById(discountId);
@@ -123,5 +123,9 @@ public class DiscountPolicy {
             }
         }
         return  discountsList;
+    }
+
+    public ConcurrentHashMap<Integer, Discount> getDiscountsById() {
+        return discountsById;
     }
 }

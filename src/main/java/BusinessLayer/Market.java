@@ -1,18 +1,14 @@
 package BusinessLayer;
 
-import BusinessLayer.Enums.ManageType;
 import BusinessLayer.Enums.UserType;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Purchases.*;
+import BusinessLayer.Shops.*;
 import BusinessLayer.Shops.Discount.*;
-import BusinessLayer.Shops.Discount.DiscountRules.ActionWithOldRule;
+import BusinessLayer.Shops.Discount.DiscountRules.CompoundRuleType;
 import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
 import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
-import BusinessLayer.Shops.Product;
-import BusinessLayer.Shops.ProductIntr;
-import BusinessLayer.Shops.Shop;
-import BusinessLayer.Shops.ShopHandler;
 import BusinessLayer.Users.User;
 import BusinessLayer.Users.UsersHandler;
 import com.vaadin.flow.server.VaadinService;
@@ -58,7 +54,7 @@ public class Market implements MarketIntr{
 
         }
         loadAdmin();
-        loadProducts();
+//        loadProducts();
         logger.info("Market init Finished successfully.");
     }
 
@@ -437,6 +433,17 @@ public class Market implements MarketIntr{
     public void updateCartProductQuantity(String userName, String shopName, String productName, int newQuantity) throws Exception {
         logger.info(String.format("Attempt by user %s to update product %s quantity to %d from shop %s in cart.", userName,productName,newQuantity,shopName));
         User user = usersHandler.findLoginUser(userName);
+        Shop shop = shopHandler.getShop(shopName);
+        boolean foundProduct = false;
+        for(ShopProduct product : shop.getProducts()){
+            if(product.getName().equals(productName)){
+                foundProduct = true;
+                if(!(product.getQuantity() > newQuantity))
+                    throw new IllegalArgumentException(String.format("there is not enough quantity from product : %s. available quantity : %d , desire quantity: %d",productName,product.getQuantity(),newQuantity));
+            }
+        }
+        if(!foundProduct)
+            throw new IllegalArgumentException(String.format("Product : %s does not belongs to shop: %s",productName,shopName));
         user.updateProductsFromCart(shopName,productName,newQuantity);
         logger.info(String.format("User %s to updated product %s quantity to %d from shop %s in cart.", userName,productName,newQuantity,shopName));
     }
@@ -507,7 +514,7 @@ public class Market implements MarketIntr{
         return shop.addXorDiscount(userName,discountsIds,xorDiscountRule);
     }
 
-    public void addDiscountRule(String shopName, String userName, DiscountRule discountRule, int discountId, ActionWithOldRule actionWithOldRule) throws Exception {
+    public void addDiscountRule(String shopName, String userName, DiscountRule discountRule, int discountId, CompoundRuleType actionWithOldRule) throws Exception {
         usersHandler.findMemberByName(userName);
         usersHandler.findLoginUser(userName);
         Shop shop = shopHandler.getShop(shopName);
@@ -556,7 +563,7 @@ public class Market implements MarketIntr{
     }
 
     private void loadProducts() throws Exception {
-        String[] usersName = {"eldar", "niv12"};
+        String[] usersName = {"eldar1", "niv1"};
         String[] passwords = {"Aa123456", "Aa123456"};
         String[] emails = {"eldar@gmail.com", "niv@gmail.com"};
         String[] shopNames = {"shop1", "shop2"};

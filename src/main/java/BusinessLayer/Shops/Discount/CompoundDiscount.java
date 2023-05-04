@@ -20,4 +20,8 @@ public abstract class CompoundDiscount extends Discount{
         }
         return null;
     }
+
+    public List<Discount> getDiscounts() {
+        return discounts;
+    }
 }

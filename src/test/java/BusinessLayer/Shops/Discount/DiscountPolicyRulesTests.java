@@ -47,7 +47,7 @@ public class DiscountPolicyRulesTests {
     @Test
     void addDiscountRule_shopBagPriceLowerThan() {
         ProductDiscount productDiscount = discountPolicy.addProductDiscount(10,"tomatoes");
-        discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeBagPriceHigherThanRule(200),productDiscount.discountId, ActionWithOldRule.REPLACE);
+        discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeBagPriceHigherThanRule(200),productDiscount.discountId, CompoundRuleType.REPLACE);
         double totalBagPriceBefore = shopBag.calculatePrice();
         discountPolicy.applyDiscount(shopBag);
         double totalBagPriceAfter = shopBag.calculatePrice();
@@ -59,7 +59,7 @@ public class DiscountPolicyRulesTests {
         Product product = new Product("dummyProduct", "dummy","desc",200,shopName);
         shopBag.addProduct(product,2);
         ProductDiscount productDiscount = discountPolicy.addProductDiscount(10,"tomatoes");
-        discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeBagPriceHigherThanRule(200),productDiscount.discountId, ActionWithOldRule.REPLACE);
+        discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeBagPriceHigherThanRule(200),productDiscount.discountId, CompoundRuleType.REPLACE);
         double totalBagPriceBefore = shopBag.calculatePrice();
         discountPolicy.applyDiscount(shopBag);
         double totalBagPriceAfter = shopBag.calculatePrice();
@@ -69,7 +69,7 @@ public class DiscountPolicyRulesTests {
     @Test
     void addDiscountRule_NotEnoughFromProduct() {
         ProductDiscount productDiscount = discountPolicy.addProductDiscount(10,"tomatoes");
-        discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeMinProductQuantityRule(quantities[0]+1,productsNames[0]),productDiscount.discountId, ActionWithOldRule.REPLACE);
+        discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeMinProductQuantityRule(quantities[0]+1,productsNames[0]),productDiscount.discountId, CompoundRuleType.REPLACE);
         double totalBagPriceBefore = shopBag.calculatePrice();
         discountPolicy.applyDiscount(shopBag);
         double totalBagPriceAfter = shopBag.calculatePrice();
@@ -79,7 +79,7 @@ public class DiscountPolicyRulesTests {
     @Test
     void addDiscountRule_EnoughFromProduct() {
         ProductDiscount productDiscount = discountPolicy.addProductDiscount(10,"tomatoes");
-        discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeMinProductQuantityRule(quantities[0]-1,productsNames[0]),productDiscount.discountId, ActionWithOldRule.REPLACE);
+        discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeMinProductQuantityRule(quantities[0]-1,productsNames[0]),productDiscount.discountId, CompoundRuleType.REPLACE);
         double totalBagPriceBefore = shopBag.calculatePrice();
         discountPolicy.applyDiscount(shopBag);
         double totalBagPriceAfter = shopBag.calculatePrice();
@@ -89,7 +89,7 @@ public class DiscountPolicyRulesTests {
     @Test
     void addDiscountRule_NotEnoughFromCategory() {
         ProductDiscount productDiscount = discountPolicy.addProductDiscount(10,"tomatoes");
-        discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeMinFromCategoryRule(quantities[0]+1,"dummyCategory"),productDiscount.discountId, ActionWithOldRule.REPLACE);
+        discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeMinFromCategoryRule(quantities[0]+1,"dummyCategory"),productDiscount.discountId, CompoundRuleType.REPLACE);
         double totalBagPriceBefore = shopBag.calculatePrice();
         discountPolicy.applyDiscount(shopBag);
         double totalBagPriceAfter = shopBag.calculatePrice();
@@ -99,7 +99,7 @@ public class DiscountPolicyRulesTests {
     @Test
     void addDiscountRule_EnoughFromCategory() {
         ProductDiscount productDiscount = discountPolicy.addProductDiscount(10,"tomatoes");
-        discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeMinFromCategoryRule(quantities[0]-1,categories[0]),productDiscount.discountId, ActionWithOldRule.REPLACE);
+        discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeMinFromCategoryRule(quantities[0]-1,categories[0]),productDiscount.discountId, CompoundRuleType.REPLACE);
         double totalBagPriceBefore = shopBag.calculatePrice();
         discountPolicy.applyDiscount(shopBag);
         double totalBagPriceAfter = shopBag.calculatePrice();
@@ -109,7 +109,7 @@ public class DiscountPolicyRulesTests {
     @Test
     void addDiscountRule_TooMuchFromCategory() {
         ProductDiscount productDiscount = discountPolicy.addProductDiscount(10,"tomatoes");
-        discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeMaxFromCategoryRule(quantities[0]-1,categories[0]),productDiscount.discountId, ActionWithOldRule.REPLACE);
+        discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeMaxFromCategoryRule(quantities[0]-1,categories[0]),productDiscount.discountId, CompoundRuleType.REPLACE);
         double totalBagPriceBefore = shopBag.calculatePrice();
         discountPolicy.applyDiscount(shopBag);
         double totalBagPriceAfter = shopBag.calculatePrice();
@@ -119,7 +119,7 @@ public class DiscountPolicyRulesTests {
     @Test
     void addDiscountRule_lessThanAtMostFromCategory() {
         ProductDiscount productDiscount = discountPolicy.addProductDiscount(10,"tomatoes");
-        discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeMaxFromCategoryRule(10000000,categories[0]),productDiscount.discountId, ActionWithOldRule.REPLACE);
+        discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeMaxFromCategoryRule(10000000,categories[0]),productDiscount.discountId, CompoundRuleType.REPLACE);
         double totalBagPriceBefore = shopBag.calculatePrice();
         discountPolicy.applyDiscount(shopBag);
         double totalBagPriceAfter = shopBag.calculatePrice();
@@ -129,7 +129,7 @@ public class DiscountPolicyRulesTests {
     @Test
     void addDiscountRule_TooMuchFromProduct() {
         ProductDiscount productDiscount = discountPolicy.addProductDiscount(10,"tomatoes");
-        discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeMaxProductQuantityRule(quantities[0]-1,productsNames[0]),productDiscount.discountId, ActionWithOldRule.REPLACE);
+        discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeMaxProductQuantityRule(quantities[0]-1,productsNames[0]),productDiscount.discountId, CompoundRuleType.REPLACE);
         double totalBagPriceBefore = shopBag.calculatePrice();
         discountPolicy.applyDiscount(shopBag);
         double totalBagPriceAfter = shopBag.calculatePrice();
@@ -139,7 +139,7 @@ public class DiscountPolicyRulesTests {
     @Test
     void addDiscountRule_lessThanAtMostFromProduct() {
         ProductDiscount productDiscount = discountPolicy.addProductDiscount(10,"tomatoes");
-        discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeMaxProductQuantityRule(quantities[0]+1,productsNames[0]),productDiscount.discountId, ActionWithOldRule.REPLACE);
+        discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeMaxProductQuantityRule(quantities[0]+1,productsNames[0]),productDiscount.discountId, CompoundRuleType.REPLACE);
         double totalBagPriceBefore = shopBag.calculatePrice();
         discountPolicy.applyDiscount(shopBag);
         double totalBagPriceAfter = shopBag.calculatePrice();
@@ -152,8 +152,8 @@ public class DiscountPolicyRulesTests {
         List<DiscountRule> discountRules = new LinkedList<>();
         discountRules.add(BasicDiscountRulesFactory.makeMinProductQuantityRule(5, "buns"));
         discountRules.add(BasicDiscountRulesFactory.makeMinProductQuantityRule(2, "bread"));
-        AndDiscountRule andDiscountRule = new AndDiscountRule(discountRules);
-        discountPolicy.addDiscountRule(andDiscountRule,categoryDiscount.discountId, ActionWithOldRule.REPLACE);
+        CompoundDiscountRule andDiscountRule = new CompoundDiscountRule(discountRules,CompoundRuleType.AND);
+        discountPolicy.addDiscountRule(andDiscountRule,categoryDiscount.discountId, CompoundRuleType.REPLACE);
         double totalBagPriceBefore = shopBag.calculatePrice();
         discountPolicy.applyDiscount(shopBag);
         double totalBagPriceAfter = shopBag.calculatePrice();
@@ -166,8 +166,8 @@ public class DiscountPolicyRulesTests {
         List<DiscountRule> discountRules = new LinkedList<>();
         discountRules.add(BasicDiscountRulesFactory.makeMinProductQuantityRule(5, "buns"));
         discountRules.add(BasicDiscountRulesFactory.makeMinProductQuantityRule(10, "bread"));
-        AndDiscountRule andDiscountRule = new AndDiscountRule(discountRules);
-        discountPolicy.addDiscountRule(andDiscountRule,categoryDiscount.discountId, ActionWithOldRule.REPLACE);
+        CompoundDiscountRule andDiscountRule = new CompoundDiscountRule(discountRules,CompoundRuleType.AND);
+        discountPolicy.addDiscountRule(andDiscountRule,categoryDiscount.discountId, CompoundRuleType.REPLACE);
         double totalBagPriceBefore = shopBag.calculatePrice();
         discountPolicy.applyDiscount(shopBag);
         double totalBagPriceAfter = shopBag.calculatePrice();
@@ -180,8 +180,8 @@ public class DiscountPolicyRulesTests {
         List<DiscountRule> discountRules = new LinkedList<>();
         discountRules.add(BasicDiscountRulesFactory.makeMinProductQuantityRule(3, "cottage"));
         discountRules.add(BasicDiscountRulesFactory.makeMinProductQuantityRule(2, "yogurt"));
-        OrDiscountRule andDiscountRule = new OrDiscountRule(discountRules);
-        discountPolicy.addDiscountRule(andDiscountRule,categoryDiscount.discountId, ActionWithOldRule.REPLACE);
+        CompoundDiscountRule orDiscountRule = new CompoundDiscountRule(discountRules,CompoundRuleType.OR);
+        discountPolicy.addDiscountRule(orDiscountRule,categoryDiscount.discountId, CompoundRuleType.REPLACE);
         double totalBagPriceBefore = shopBag.calculatePrice();
         discountPolicy.applyDiscount(shopBag);
         double totalBagPriceAfter = shopBag.calculatePrice();
@@ -194,8 +194,8 @@ public class DiscountPolicyRulesTests {
         List<DiscountRule> discountRules = new LinkedList<>();
         discountRules.add(BasicDiscountRulesFactory.makeMinProductQuantityRule(10, "cottage"));
         discountRules.add(BasicDiscountRulesFactory.makeMinProductQuantityRule(10, "yogurt"));
-        OrDiscountRule andDiscountRule = new OrDiscountRule(discountRules);
-        discountPolicy.addDiscountRule(andDiscountRule,categoryDiscount.discountId, ActionWithOldRule.REPLACE);
+        CompoundDiscountRule orDiscountRule = new CompoundDiscountRule(discountRules,CompoundRuleType.OR);
+        discountPolicy.addDiscountRule(orDiscountRule,categoryDiscount.discountId, CompoundRuleType.REPLACE);
         double totalBagPriceBefore = shopBag.calculatePrice();
         discountPolicy.applyDiscount(shopBag);
         double totalBagPriceAfter = shopBag.calculatePrice();
@@ -205,8 +205,8 @@ public class DiscountPolicyRulesTests {
     @Test
     void DiscountRuleComposition_fail() {
         CategoryDiscount categoryDiscount = discountPolicy.addCategoryDiscount(5,"Diary");
-        categoryDiscount.addRule(BasicDiscountRulesFactory.makeBagPriceHigherThanRule(100),ActionWithOldRule.REPLACE);
-        categoryDiscount.addRule(BasicDiscountRulesFactory.makeMinProductQuantityRule(3, "pasta"),ActionWithOldRule.AND);
+        categoryDiscount.addRule(BasicDiscountRulesFactory.makeBagPriceHigherThanRule(100), CompoundRuleType.REPLACE);
+        categoryDiscount.addRule(BasicDiscountRulesFactory.makeMinProductQuantityRule(3, "pasta"), CompoundRuleType.AND);
         double totalBagPriceBefore = shopBag.calculatePrice();
         discountPolicy.applyDiscount(shopBag);
         double totalBagPriceAfter = shopBag.calculatePrice();
@@ -216,8 +216,8 @@ public class DiscountPolicyRulesTests {
     @Test
     void DiscountRuleComposition() {
         CategoryDiscount categoryDiscount = discountPolicy.addCategoryDiscount(5,"Diary");
-        categoryDiscount.addRule(BasicDiscountRulesFactory.makeBagPriceHigherThanRule(10),ActionWithOldRule.REPLACE);
-        categoryDiscount.addRule(BasicDiscountRulesFactory.makeMinProductQuantityRule(1, "pasta"),ActionWithOldRule.AND);
+        categoryDiscount.addRule(BasicDiscountRulesFactory.makeBagPriceHigherThanRule(10), CompoundRuleType.REPLACE);
+        categoryDiscount.addRule(BasicDiscountRulesFactory.makeMinProductQuantityRule(1, "pasta"), CompoundRuleType.AND);
         double totalBagPriceBefore = shopBag.calculatePrice();
         discountPolicy.applyDiscount(shopBag);
         double totalBagPriceAfter = shopBag.calculatePrice();
@@ -227,8 +227,8 @@ public class DiscountPolicyRulesTests {
     @Test
     void DiscountRuleComposition2() {
         CategoryDiscount categoryDiscount = discountPolicy.addCategoryDiscount(5,"Diary");
-        categoryDiscount.addRule(BasicDiscountRulesFactory.makeBagPriceHigherThanRule(20000),ActionWithOldRule.REPLACE);
-        categoryDiscount.addRule(BasicDiscountRulesFactory.makeMinProductQuantityRule(1, "pasta"),ActionWithOldRule.AND);
+        categoryDiscount.addRule(BasicDiscountRulesFactory.makeBagPriceHigherThanRule(20000), CompoundRuleType.REPLACE);
+        categoryDiscount.addRule(BasicDiscountRulesFactory.makeMinProductQuantityRule(1, "pasta"), CompoundRuleType.AND);
         double totalBagPriceBefore = shopBag.calculatePrice();
         discountPolicy.applyDiscount(shopBag);
         double totalBagPriceAfter = shopBag.calculatePrice();
