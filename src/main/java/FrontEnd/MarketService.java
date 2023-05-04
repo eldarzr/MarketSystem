@@ -269,8 +269,12 @@ public class MarketService {
 	}
 
 
-	public Response purchaseCart(String userName, PaymentDetails paymentDetails, SupplyDetails supplyDetails) {
-		throw new NotImplementedException();
+	public SResponse purchaseCart(String userName, PaymentDetails paymentDetails, SupplyDetails supplyDetails) {
+		Response res = serviceMarket.purchaseCart(userName, paymentDetails, supplyDetails);
+		if(!res.isSuccess()){
+			return new SResponse(res.getMessage());
+		}
+		else return new SResponse();
 	}
 
 	public SResponseT<List<UserModel>> getAllUsers(String adminName) {
