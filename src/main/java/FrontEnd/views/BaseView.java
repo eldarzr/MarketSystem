@@ -188,6 +188,7 @@ public abstract class BaseView extends VerticalLayout {
 		this.title.setVisible(title != null && !title.isEmpty());
 	}
 
+	protected HorizontalLayout getHorizontalLayout(){return horizontalLayout;}
 	protected void enableButton(Button button){
 		button.setEnabled(true);
 		button.getStyle().set("background-color", "#FF8C00");
