@@ -17,6 +17,7 @@ import java.util.Map;
 public class AdminShopProfileView extends ShopProfileView {
 
 	protected UserModel userProfile;
+	private String ADMIN_PREFIX = "admin_";
 
 	public AdminShopProfileView() {
 		super();
@@ -49,9 +50,15 @@ public class AdminShopProfileView extends ShopProfileView {
 		userProfile = user_res.getData();
 		shopProfile = shop_res.getData();
 		add(new Text(shopProfile.getName()));
-		editProductButton.setVisible(false);
 		showShopProfileScreen();
+		editProductButton.setVisible(false);
 	}
 
+	@Override
+	protected void navigateToManageRoles(){
+		getUI().ifPresent(ui ->
+				ui.navigate(ADMIN_PREFIX + "manage_roles?userName=" + userProfile.getName()
+						+ "&shopName=" + shopProfile.getName()));
+	}
 
 }

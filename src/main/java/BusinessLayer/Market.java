@@ -414,6 +414,13 @@ public class Market implements MarketIntr{
         return shopHandler.getShopManagementPermissions(user,shopName);
     }
 
+    public Collection<MemberRoleInShop> getShopManagersAndPermissionsByAdmin(String admin, String userName, String shopName) throws Exception {
+        logger.info(String.format("Attempt by admin %s to get management of shop %s.", userName, shopName));
+        validateLoggedInAdminException(admin);
+        User user = usersHandler.getUser(userName);
+        return shopHandler.getShopManagementPermissions(user,shopName);
+    }
+
     public String getRolesInformation(String userName, String shopName) throws Exception {
         logger.info(String.format("Attempt by user %s to get roles information of shop %s.", userName, shopName));
         return searchShop(userName,shopName).getRolesInfo();
@@ -633,15 +640,23 @@ public class Market implements MarketIntr{
         double[] prices = {5, 10};
 
         for (int i = 0; i < usersName.length; i++) {
+            logger.info("STARTINGGGGGGGG  WITH :"+usersName[i]+"!!!!!!!!!!!!!!!!!!!!!!!!");
             String guestName = startSession();
+//            String guestName = "Guest"+i;
             register(usersName[i], emails[i], passwords[i]);
             login(guestName, usersName[i], passwords[i]);
             createShop(usersName[i], shopNames[i]);
             addNewProduct(usersName[i], shopNames[i], prodNames[i], cat[i], descs[i], prices[i]);
             addProductItems(usersName[i], shopNames[i], prodNames[i], 3);
+            logout(usersName[i]);
+            logger.info(usersName[i]+" FINISHED !!!!!!!!!!!!!!!!!!!!!!!!!");
         }
+        String guestName = startSession();
+        login(guestName, usersName[0], passwords[0]);
         createShop(usersName[0],"The Shop");
         createShop(usersName[0],"Super Shop");
+        appointShopOwner("eldar","niv12","shop1");
+        appointShopOwner("eldar","naor","shop1");
         for(int i = 0; i < 6; i++) {
             addNewProduct(usersName[0], "Super Shop", "product" + i, cat[0], descs[0], prices[0]);
             addProductItems(usersName[0], "Super Shop", "product" + i, 3);
@@ -677,7 +692,6 @@ public class Market implements MarketIntr{
             }
         }
         logout(userName);
-
     }
 
     public List<User> getAllUsers(String adminName) throws Exception {

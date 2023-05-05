@@ -133,6 +133,8 @@ public class Shop implements ShopIntr {
 	private MemberRoleInShop validatePermissionsChangeAllowed(String actor, String actOn) throws Exception {
 		validateUserHasRole(actor);
 		MemberRoleInShop actorMRIS = roles.get(actor);
+		if (actOn.equals(founderUserName))
+			throwException("the founder permissions cannot change");
 		if (actorMRIS.getType() != ManageType.OWNER)
 			throwException("only owners can set permissions");
 		if (!roles.containsKey(actOn)) {

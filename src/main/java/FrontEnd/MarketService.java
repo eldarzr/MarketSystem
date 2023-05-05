@@ -31,11 +31,11 @@ public class MarketService {
 
 	private static volatile MarketService instance;
 
-	public static MarketService getInstance(){
-		if(instance == null){
-			synchronized ( (MarketService.class)){
-				if(instance == null){
-					instance =  new MarketService();
+	public static MarketService getInstance() {
+		if (instance == null) {
+			synchronized ((MarketService.class)) {
+				if (instance == null) {
+					instance = new MarketService();
 					instance.init();
 				}
 			}
@@ -122,9 +122,9 @@ public class MarketService {
 	}
 
 	public SResponseT<ShopModel> createShop(String userName, String shopName) {
-		ResponseT<ShopDataObj>res = null;
+		ResponseT<ShopDataObj> res = null;
 		try {
-			res = serviceMarket.createShop(userName,shopName);
+			res = serviceMarket.createShop(userName, shopName);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -182,31 +182,43 @@ public class MarketService {
 		throw new NotImplementedException();
 	}
 
-	public SResponseT<List<ProductModel>> extendedSearch(String userName, String productName, double minPrice, double maxPrice, String category){
+	public SResponseT<List<ProductModel>> extendedSearch(String userName, String productName, double minPrice, double maxPrice, String category) {
 		ResponseT<List<ProductDataObj>> r = serviceMarket.extendedSearch(userName, productName,
 				minPrice, maxPrice, category);
 		if (r.isSuccess())
 			return new SResponseT<>(r.getData().stream().map(ProductModel::new).collect(Collectors.toList()));
+		return new SResponseT<>(r.getMessage(), r.isSuccess());
+	}
+
+	public SResponse appointShopOwner(String appointedBy, String appointee, String shopName) {
+		Response r = serviceMarket.appointShopOwner(appointedBy,appointee, shopName);
+		if (r.isSuccess())
+			return new SResponse();
+		return new SResponse(r.getMessage());
+	}
+
+
+	public SResponse appointShopManager(String appointedBy, String appointee, String shopName) {
+			Response r = serviceMarket.appointShopManager(appointedBy,appointee, shopName);
+			if (r.isSuccess())
+				return new SResponse();
+			return new SResponse(r.getMessage());
+		}
+
+
+	public SResponse removeShopOwner(String ownerName, String userToRemove, String shopName) {
+		Response r = serviceMarket.removeShopOwner(ownerName,userToRemove, shopName);
+		if (r.isSuccess())
+			return new SResponse();
+		return new SResponse(r.getMessage());
+	}
+
+
+	public SResponseT<MemberRoleInShopModel> changeManagerPermissions(String actor, String actOn, String shopName, List<Integer> permission) {
+		ResponseT<MemberRoleInShopDataObj> r = serviceMarket.changeManagerPermissions(actor,actOn,shopName,permission);
+		if (r.isSuccess())
+			return new SResponseT<>(new MemberRoleInShopModel(r.getData()));
 		return new SResponseT<>(r.getMessage(), r.isSuccess());	}
-
-	public Response appointShopOwner(String appointedBy, String appointee, String shopName) throws Exception {
-		throw new NotImplementedException();
-	}
-
-
-	public Response appointShopManager(String appointedBy, String appointee, String shopName) throws Exception {
-		throw new NotImplementedException();
-	}
-
-
-	public Response removeShopManager(String managerName, String userToRemove, String shopName) {
-		throw new NotImplementedException();
-	}
-
-
-	public ResponseT<MemberRoleInShopDataObj> changeManagerPermissions(String actor, String actOn, String shopName, List<Integer> permission) throws Exception {
-		throw new NotImplementedException();
-	}
 
 
 	public Response addManagerPermissions(String actor, String actOn, String shopName, int permission) throws Exception {
@@ -214,8 +226,29 @@ public class MarketService {
 	}
 
 
-	public ResponseT<Collection<MemberRoleInShopDataObj>> getShopManagersAndPermissions(String userName, String shopName) throws Exception {
-		throw new NotImplementedException();
+	public SResponseT<List<MemberRoleInShopModel>> getShopManagersAndPermissions(String userName, String shopName) {
+		ResponseT<List<MemberRoleInShopDataObj>> r = null;
+		try {
+			r = serviceMarket.getShopManagersAndPermissions(userName, shopName);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		if (r.isSuccess())
+			return new SResponseT<>(r.getData().stream().map(MemberRoleInShopModel::new).collect(Collectors.toList()));
+		return new SResponseT<>(r.getMessage(), r.isSuccess());
+	}
+
+
+	public SResponseT<List<MemberRoleInShopModel>> getShopManagersAndPermissionsByAdmin(String admin, String userName, String shopName) {
+		ResponseT<List<MemberRoleInShopDataObj>> r = null;
+		try {
+			r = serviceMarket.getShopManagersAndPermissionsByAdmin(admin, userName, shopName);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		if (r.isSuccess())
+			return new SResponseT<>(r.getData().stream().map(MemberRoleInShopModel::new).collect(Collectors.toList()));
+		return new SResponseT<>(r.getMessage(), r.isSuccess());
 	}
 
 
@@ -302,7 +335,8 @@ public class MarketService {
 		ResponseT<List<ShopDataObj>> r = serviceMarket.getAllShops(userName);
 		if (r.isSuccess())
 			return new SResponseT<>(r.getData().stream().map(ShopModel::new).collect(Collectors.toList()));
-		return new SResponseT<>(r.getMessage(), r.isSuccess());	}
+		return new SResponseT<>(r.getMessage(), r.isSuccess());
+	}
 
 	public VaadinSession getSession(String sessionID) {
 		return sessions.get(sessionID);
@@ -315,14 +349,14 @@ public class MarketService {
 		return new SResponseT<>(r.getMessage(), r.isSuccess());
 	}
 
-    public SResponseT<List<MemberRoleInShopModel>> getUserRoles(String userName) {
+	public SResponseT<List<MemberRoleInShopModel>> getUserRoles(String userName) {
 		ResponseT<List<MemberRoleInShopDataObj>> r = serviceMarket.getUserRoles(userName);
 		if (r.isSuccess())
 			return new SResponseT<>(r.getData().stream().map(MemberRoleInShopModel::new).collect(Collectors.toList()));
 		return new SResponseT<>(r.getMessage(), r.isSuccess());
 	}
 
-    public SResponseT<ShopModel> getShop(String name) {
+	public SResponseT<ShopModel> getShop(String name) {
 		ResponseT<ShopDataObj> r = serviceMarket.getShop(name);
 		if (r.isSuccess())
 			return new SResponseT<>(new ShopModel(r.getData()));

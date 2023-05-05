@@ -55,14 +55,16 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 		}
 	}
 
+	protected void navigateToManageRoles(){
+		getUI().ifPresent(ui ->
+				ui.navigate("manage_roles/" + shopProfile.getName()));
+	}
+
 	protected void showShopProfileScreen() {
 		manageRolesButton = new Button("Manage Shop Roles");
 		manageRolesButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
 		manageRolesButton.getStyle().set("color", "white");
-		manageRolesButton.addClickListener(e ->
-				manageRolesButton.getUI().ifPresent(ui ->
-						ui.navigate("manage_roles"))
-		);
+		manageRolesButton.addClickListener(e -> navigateToManageRoles());
 
 		addDiscountButton = new Button("Add Discount");
 		addDiscountButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");

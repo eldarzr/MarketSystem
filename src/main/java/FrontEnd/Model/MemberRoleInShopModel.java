@@ -4,6 +4,8 @@ import BusinessLayer.Enums.ManageType;
 import ServiceLayer.DataObjects.MemberRoleInShopDataObj;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MemberRoleInShopModel implements Serializable {
 
@@ -11,6 +13,8 @@ public class MemberRoleInShopModel implements Serializable {
     private String grantor;
     private String roleUser;
     private ManageType type;
+    private List<Integer> activatedPermissions = new ArrayList<>();
+
 //    private ManagePermissions permissions;
 
     private MemberRoleInShopModel(ShopModel roleShop , String roleUser , String grantor, ManageType type) {
@@ -27,6 +31,7 @@ public class MemberRoleInShopModel implements Serializable {
 //        this.permissions = memberRoleInShop.getPermissions();
         this.roleShop =  new ShopModel(memberRoleInShop.getRoleShop());
         this.roleUser = memberRoleInShop.getRoleUser();
+        this.activatedPermissions = memberRoleInShop.getPermissions().getActivatedPermissions();
     }
 
     public ShopModel getRoleShop() {
@@ -59,5 +64,9 @@ public class MemberRoleInShopModel implements Serializable {
 
     public void setType(ManageType type) {
         this.type = type;
+    }
+
+    public List<Integer> getActivatedPermissions() {
+        return activatedPermissions;
     }
 }
