@@ -559,25 +559,33 @@ public class Market implements MarketIntr{
     }
 
     private void loadProducts() throws Exception {
-        String[] usersName = {"eldar", "niv12"};
-        String[] passwords = {"Aa123456", "Aa123456"};
-        String[] emails = {"eldar@gmail.com", "niv@gmail.com"};
-        String[] shopNames = {"shop1", "shop2"};
-        String[] prodNames = {"prod1", "prod2"};
-        String[] descs = {"description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 ", "description2"};
-        String[] cat = {"cat1", "cat2"};
-        double[] prices = {5, 10};
+        String[] usersName = {"eldar", "niv12","naor","Gavriel","Idan","Moses"};
+        String[] passwords = {"Aa123456", "Aa123456","Aa123456","Aa123456", "Aa123456","Aa123456"};
+        String[] emails = {"eldar@gmail.com", "niv12@gmail.com","naor@gmail.com","Gavriel@gmail.com","Idan@gmail.com","moses@gmail.com"};
+        String[] shopNames = {"shop1", "shop2","shop3","TheCheapest" , "DMobile","AdiDog"};
+        String[] prodNames = {"prod1", "prod2","prod3","Cola","Beer","Bear"};
+        String[] descs = {"Item Desc","Catasd","PreDasdasd","Tentasdd","description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 ", "description2" , "Descript3SP"};
+        String[] cat = {"cat1","cat2","Category","Apple","Food","TVasdfasf"};
+        double[] prices = {5,10,15,80,999,2,20};
 
         for (int i = 0; i < usersName.length; i++) {
+            logger.info("STARTINGGGGGGGG  WITH :"+usersName[i]+"!!!!!!!!!!!!!!!!!!!!!!!!");
             String guestName = startSession();
+//            String guestName = "Guest"+i;
             register(usersName[i], emails[i], passwords[i]);
             login(guestName, usersName[i], passwords[i]);
             createShop(usersName[i], shopNames[i]);
             addNewProduct(usersName[i], shopNames[i], prodNames[i], cat[i], descs[i], prices[i]);
             addProductItems(usersName[i], shopNames[i], prodNames[i], 3);
+            logout(usersName[i]);
+            logger.info(usersName[i]+" FINISHED !!!!!!!!!!!!!!!!!!!!!!!!!");
         }
+        String guestName = startSession();
+        login(guestName, usersName[0], passwords[0]);
         createShop(usersName[0],"The Shop");
         createShop(usersName[0],"Super Shop");
+        appointShopOwner("eldar","niv12","shop1");
+        appointShopOwner("eldar","naor","shop1");
         for(int i = 0; i < 6; i++) {
             addNewProduct(usersName[0], "Super Shop", "product" + i, cat[0], descs[0], prices[0]);
             addProductItems(usersName[0], "Super Shop", "product" + i, 3);
@@ -612,7 +620,6 @@ public class Market implements MarketIntr{
             }
         }
         logout(userName);
-
     }
 
     public List<User> getAllUsers(String adminName) throws Exception {

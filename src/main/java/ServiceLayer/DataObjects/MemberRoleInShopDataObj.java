@@ -5,12 +5,16 @@ import BusinessLayer.Enums.ManageType;
 import BusinessLayer.ManagePermissions;
 import BusinessLayer.MemberRoleInShop;
 
+import java.util.List;
+
 public class MemberRoleInShopDataObj {
 	private ShopDataObj roleShop;
 	private String grantor;
 	private String roleUser;
 	private ManageType type;
 	private ManagePermissions permissions;
+	private List<Integer> activatedPermissions;
+
 
 	private MemberRoleInShopDataObj(ShopDataObj roleShop , String roleUser , String grantor, ManageType type, ManagePermissions permissions) {
 		this.grantor = grantor;
@@ -18,6 +22,7 @@ public class MemberRoleInShopDataObj {
 		this.permissions = permissions;
 		this.roleShop =  roleShop;
 		this.roleUser = roleUser;
+		this.activatedPermissions = this.permissions.getActivatedPermissions();
 	}
 
 	public MemberRoleInShopDataObj(MemberRoleInShop memberRoleInShop) {
@@ -26,6 +31,7 @@ public class MemberRoleInShopDataObj {
 		this.permissions = memberRoleInShop.getPermissions();
 		this.roleShop =  new ShopDataObj(memberRoleInShop.getRoleShop());
 		this.roleUser = memberRoleInShop.getRoleUser();
+		this.activatedPermissions = memberRoleInShop.getPermissions().getActivatedPermissions();
 	}
 
 	public ShopDataObj getRoleShop() {

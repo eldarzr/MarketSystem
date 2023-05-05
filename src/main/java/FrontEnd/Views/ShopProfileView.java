@@ -60,7 +60,7 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 		manageRolesButton.getStyle().set("color", "white");
 		manageRolesButton.addClickListener(e ->
 				manageRolesButton.getUI().ifPresent(ui ->
-						ui.navigate("manage_roles"))
+						ui.navigate("manage_roles/"+shopProfile.getName()))
 		);
 
 
