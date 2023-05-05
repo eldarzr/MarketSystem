@@ -3,11 +3,14 @@ package BusinessLayer.Users;
 import BusinessLayer.Enums.UserType;
 import BusinessLayer.Notifications.Notification;
 import BusinessLayer.Notifications.NotificationObserver;
+import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.Purchases.Cart;
 import BusinessLayer.Purchases.UserInvoice;
 import BusinessLayer.Shops.Product;
+import BusinessLayer.Shops.Shop;
 
 import java.util.Collection;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class User implements NotificationObserver {
@@ -131,6 +134,10 @@ public class User implements NotificationObserver {
 
     public void setSessionID(String sessionID) {
         this.sessionID = sessionID;
+    }
+	
+	public void setCart(Cart currentCart) {
+        this.currentCart = currentCart;
     }
 }
 

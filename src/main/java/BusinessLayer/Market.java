@@ -9,6 +9,11 @@ import BusinessLayer.Shops.Product;
 import BusinessLayer.Shops.ProductIntr;
 import BusinessLayer.Shops.Shop;
 import BusinessLayer.Shops.ShopHandler;
+import BusinessLayer.Shops.*;
+import BusinessLayer.Shops.Discount.*;
+import BusinessLayer.Shops.Discount.DiscountRules.CompoundRuleType;
+import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
+import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
 import BusinessLayer.Users.User;
 import BusinessLayer.Users.UsersHandler;
 import org.apache.commons.lang3.NotImplementedException;
@@ -495,6 +500,17 @@ public class Market implements MarketIntr{
     public void updateCartProductQuantity(String userName, String shopName, String productName, int newQuantity) throws Exception {
         logger.info(String.format("Attempt by user %s to update product %s quantity to %d from shop %s in cart.", userName,productName,newQuantity,shopName));
         User user = usersHandler.findLoginUser(userName);
+        Shop shop = shopHandler.getShop(shopName);
+        boolean foundProduct = false;
+        for(ShopProduct product : shop.getProducts()){
+            if(product.getName().equals(productName)){
+                foundProduct = true;
+                if(!(product.getQuantity() > newQuantity))
+                    throw new IllegalArgumentException(String.format("there is not enough quantity from product : %s. available quantity : %d , desire quantity: %d",productName,product.getQuantity(),newQuantity));
+            }
+        }
+        if(!foundProduct)
+            throw new IllegalArgumentException(String.format("Product : %s does not belongs to shop: %s",productName,shopName));
         user.updateProductsFromCart(shopName,productName,newQuantity);
         logger.info(String.format("User %s to updated product %s quantity to %d from shop %s in cart.", userName,productName,newQuantity,shopName));
     }
@@ -523,6 +539,55 @@ public class Market implements MarketIntr{
         shopHandler.reset();
     }
 
+    public CategoryDiscount addCategoryDiscount(String shopName, String userName, double discountPercentage, String category) throws Exception {
+        usersHandler.findMemberByName(userName);
+        usersHandler.findLoginUser(userName);
+        Shop shop = shopHandler.getShop(shopName);
+        return shop.addCategoryDiscount(userName,discountPercentage,category);
+    }
+
+    public ProductDiscount addProductDiscount(String shopName, String userName, double discountPercentage, String productName) throws Exception {
+        usersHandler.findMemberByName(userName);
+        usersHandler.findLoginUser(userName);
+        Shop shop = shopHandler.getShop(shopName);
+        return shop.addProductDiscount(userName,discountPercentage,productName);
+    }
+
+    public ShopDiscount addShopDiscount(String shopName, String userName, double discountPercentage) throws Exception {
+        usersHandler.findMemberByName(userName);
+        usersHandler.findLoginUser(userName);
+        Shop shop = shopHandler.getShop(shopName);
+        return shop.addShopDiscount(userName,discountPercentage);
+    }
+
+    public SumCompoundDiscount addSumDiscount(String shopName, String userName, List<Integer> discountsIds) throws Exception {
+        usersHandler.findMemberByName(userName);
+        usersHandler.findLoginUser(userName);
+        Shop shop = shopHandler.getShop(shopName);
+        return shop.addSumDiscount(userName,discountsIds);
+    }
+
+    public MaxCompoundDiscount addMaxDiscount(String shopName, String userName, List<Integer> discountsIds) throws Exception {
+        usersHandler.findMemberByName(userName);
+        usersHandler.findLoginUser(userName);
+        Shop shop = shopHandler.getShop(shopName);
+        return shop.addMaxDiscount(userName,discountsIds);
+    }
+
+    public XorCompoundDiscount addXorDiscount(String shopName, String userName, List<Integer> discountsIds, XorDecisionRule xorDiscountRule) throws Exception {
+        usersHandler.findMemberByName(userName);
+        usersHandler.findLoginUser(userName);
+        Shop shop = shopHandler.getShop(shopName);
+        return shop.addXorDiscount(userName,discountsIds,xorDiscountRule);
+    }
+
+    public void addDiscountRule(String shopName, String userName, DiscountRule discountRule, int discountId, CompoundRuleType actionWithOldRule) throws Exception {
+        usersHandler.findMemberByName(userName);
+        usersHandler.findLoginUser(userName);
+        Shop shop = shopHandler.getShop(shopName);
+        shop.addDiscountRule(userName,discountRule,discountId,actionWithOldRule);
+    }
+
     private boolean isLoggedIn(String userName) {
         logger.info(String.format("Attempt to check if user %s is logged in.", userName));
         return usersHandler.isLoggedIn(userName);
@@ -536,7 +601,6 @@ public class Market implements MarketIntr{
     private User validateUserIsntGuest(String userName) throws Exception {
         logger.info(String.format("Attempt to check if user %s is member.", userName));
         User user = findUserByName(userName);
-//      User user = allUsers.get(appointedBy);
         if(user.getUserType() == UserType.GUEST) {
             String errorMsg=String.format("User %s is guest, guests cannot do it.", userName);
             logger.severe(errorMsg);
@@ -566,14 +630,14 @@ public class Market implements MarketIntr{
     }
 
     private void loadProducts() throws Exception {
-        String[] usersName = {"eldar", "niv12","naor","Gavriel","Idan","Moses"};
-        String[] passwords = {"Aa123456", "Aa123456","Aa123456","Aa123456", "Aa123456","Aa123456"};
-        String[] emails = {"eldar@gmail.com", "niv12@gmail.com","naor@gmail.com","Gavriel@gmail.com","Idan@gmail.com","moses@gmail.com"};
-        String[] shopNames = {"shop1", "shop2","shop3","TheCheapest" , "DMobile","AdiDog"};
-        String[] prodNames = {"prod1", "prod2","prod3","Cola","Beer","Bear"};
-        String[] descs = {"Item Desc","Catasd","PreDasdasd","Tentasdd","description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 ", "description2" , "Descript3SP"};
-        String[] cat = {"cat1","cat2","Category","Apple","Food","TVasdfasf"};
-        double[] prices = {5,10,15,80,999,2,20};
+        String[] usersName = {"eldar1", "niv1"};
+        String[] passwords = {"Aa123456", "Aa123456"};
+        String[] emails = {"eldar@gmail.com", "niv@gmail.com"};
+        String[] shopNames = {"shop1", "shop2"};
+        String[] prodNames = {"prod1", "prod2"};
+        String[] descs = {"description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 ", "description2"};
+        String[] cat = {"cat1", "cat2"};
+        double[] prices = {5, 10};
 
         for (int i = 0; i < usersName.length; i++) {
             logger.info("STARTINGGGGGGGG  WITH :"+usersName[i]+"!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -598,7 +662,8 @@ public class Market implements MarketIntr{
             addProductItems(usersName[0], "Super Shop", "product" + i, 3);
         }
 
-        logout("eldar");
+        logout("eldar1");
+        logout("niv1");
 
         loadDataGabi();
 

@@ -34,6 +34,8 @@ public class Cart {
     public void updateProductQuantity(String shopName, String productName, int newQuantity) throws Exception {
         ShopBag shopBag = getShoppingBag(shopName);
         shopBag.updateProductQuantity(productName,newQuantity);
+        if(shopBag.isEmpty())
+            cart.remove(shopName);
     }
 
     public List<String> getShopsNames(){

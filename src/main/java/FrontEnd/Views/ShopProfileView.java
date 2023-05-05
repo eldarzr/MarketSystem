@@ -28,6 +28,7 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 	protected List<ProductModel> products;
 	protected ListDataProvider<ProductModel> productDataProvider;
 	protected Button editProductButton;
+	protected Button addDiscountButton;
 
 	public ShopProfileView() {
 		//todo: pay attention, userprofile is the one that this screen is all about,
@@ -65,6 +66,14 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 		manageRolesButton.getStyle().set("color", "white");
 		manageRolesButton.addClickListener(e -> navigateToManageRoles());
 
+		addDiscountButton = new Button("Add Discount");
+		addDiscountButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
+		addDiscountButton.getStyle().set("color", "white");
+		addDiscountButton.addClickListener(e ->
+				addDiscountButton.getUI().ifPresent(ui ->
+						ui.navigate("discount/"+shopProfile.getName()))
+		);
+
 
 		editProductButton = new Button("Edit Product");
 		editProductButton.getStyle().set("color", "white");
@@ -75,7 +84,7 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 
 		showProducts();
 
-		HorizontalLayout horizontalLayout = new HorizontalLayout(manageRolesButton, editProductButton);
+		HorizontalLayout horizontalLayout = new HorizontalLayout(manageRolesButton, editProductButton,addDiscountButton);
 
 		add(horizontalLayout);
 

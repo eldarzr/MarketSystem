@@ -22,7 +22,7 @@ public class Product implements ProductIntr{
 	protected double MIN_NAME_LENGTH = 3;
 	protected double MAX_NAME_LENGTH = 300;
 
-	protected Product(String name, String category, String description, double price, String shopName) {
+	public Product(String name, String category, String description, double price, String shopName) {
 		this.name = name;
 		this.category = category;
 		this.description = description;
@@ -31,6 +31,14 @@ public class Product implements ProductIntr{
 	}
 
 	protected Product() { }
+
+	private Product(Product product) {
+		this.name = product.getName();
+		this.category = product.getCategory();
+		this.description = product.getDescription();
+		this.price = product.getPrice();
+		this.shopName = product.getShopName();
+	}
 
 	public void setName(String name) throws Exception {
 		if(name.length() > MAX_NAME_LENGTH)
@@ -48,9 +56,9 @@ public class Product implements ProductIntr{
 		this.category = category;
 	}
 
-	public void setPrice(double price) throws Exception {
+	public void setPrice(double price) {
 		if(price < MIN_PRICE)
-			throw new Exception(String.format("product price must be bigger then %d", MIN_PRICE));
+			throw new IllegalArgumentException(String.format("product price must be bigger then %f", MIN_PRICE));
 		this.price = price;
 	}
 
@@ -110,5 +118,9 @@ public class Product implements ProductIntr{
 
 	public void setShopName(String shopName) {
 		this.shopName = shopName;
+	}
+
+	public Product deepClone() {
+		return new Product(this);
 	}
 }
