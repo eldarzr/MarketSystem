@@ -423,7 +423,7 @@ public class ServiceMarket {
 		}
 	}
 
-	public ResponseT<ShopDiscountDataObj> addShopDiscount(String shopName, String userName, double discountPercentage) throws Exception {
+	public ResponseT<ShopDiscountDataObj> addShopDiscount(String shopName, String userName, double discountPercentage) {
 		try {
 			return new ResponseT<ShopDiscountDataObj>(new ShopDiscountDataObj(market.addShopDiscount(userName, shopName,discountPercentage)));
 

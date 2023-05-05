@@ -49,7 +49,7 @@ public class Market implements MarketIntr{
         logger.info("Starting market init.");
         createLogger();
         loadAdmin();
-//        loadProducts();
+        loadProducts();
         logger.info("Market init Finished successfully.");
     }
 
@@ -647,7 +647,8 @@ public class Market implements MarketIntr{
             addProductItems(usersName[0], "Super Shop", "product" + i, 3);
         }
 
-        logout("eldar");
+        logout("eldar1");
+        logout("niv1");
 
         loadDataGabi();
 

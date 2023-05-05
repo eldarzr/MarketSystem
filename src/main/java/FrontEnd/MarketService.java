@@ -2,9 +2,16 @@ package FrontEnd;
 
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
+import BusinessLayer.Shops.Discount.DiscountRules.CompoundRuleType;
+import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
+import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
 import BusinessLayer.Shops.Shop;
 import FrontEnd.Model.*;
 import ServiceLayer.DataObjects.*;
+import ServiceLayer.DataObjects.DiscountDataObjects.CategoryDiscountDataObj;
+import ServiceLayer.DataObjects.DiscountDataObjects.CompoundDiscountDataObj;
+import ServiceLayer.DataObjects.DiscountDataObjects.ProductDiscountDataObj;
+import ServiceLayer.DataObjects.DiscountDataObjects.ShopDiscountDataObj;
 import ServiceLayer.Response;
 import ServiceLayer.ResponseT;
 import ServiceLayer.ServiceMarket;
@@ -269,7 +276,7 @@ public class MarketService {
 	}
 
 
-	public Response purchaseCart(String userName, PaymentDetails paymentDetails, SupplyDetails supplyDetails) {
+	public SResponse purchaseCart(String userName, PaymentDetails paymentDetails, SupplyDetails supplyDetails) {
 		throw new NotImplementedException();
 	}
 
@@ -320,5 +327,54 @@ public class MarketService {
 
 	public SResponseT<List<MessageModel>> getMessages(String userName) {
 		throw new NotImplementedException();
+	}
+
+	public SResponseT<CategoryDiscountDataObj> addCategoryDiscount(String shopName, String userName, double discountPercentage, String category) throws Exception {
+		ResponseT<CategoryDiscountDataObj> r = serviceMarket.addCategoryDiscount(userName, shopName,discountPercentage,category);
+		if (r.isSuccess())
+			return new SResponseT<>(r.getData());
+		return new SResponseT<>(r.getMessage(), r.isSuccess());
+	}
+
+	public SResponseT<ProductDiscountDataObj> addProductDiscount(String shopName, String userName, double discountPercentage, String productName) throws Exception {
+		ResponseT<ProductDiscountDataObj> r = serviceMarket.addProductDiscount(userName, shopName,discountPercentage,productName);
+		if (r.isSuccess())
+			return new SResponseT<>(r.getData());
+		return new SResponseT<>(r.getMessage(), r.isSuccess());
+	}
+
+	public SResponseT<ShopDiscountDataObj> addShopDiscount(String shopName, String userName, double discountPercentage) {
+		ResponseT<ShopDiscountDataObj> r = serviceMarket.addShopDiscount(userName, shopName,discountPercentage);
+		if (r.isSuccess())
+			return new SResponseT<>(r.getData());
+		return new SResponseT<>(r.getMessage(), r.isSuccess());
+	}
+
+	public SResponseT<CompoundDiscountDataObj> addSumDiscount(String shopName, String userName, List<Integer> discountsIds) throws Exception {
+		ResponseT<CompoundDiscountDataObj> r = serviceMarket.addSumDiscount(userName, shopName,discountsIds);
+		if (r.isSuccess())
+			return new SResponseT<>(r.getData());
+		return new SResponseT<>(r.getMessage(), r.isSuccess());
+	}
+
+	public SResponseT<CompoundDiscountDataObj> addMaxDiscount(String shopName, String userName, List<Integer> discountsIds) throws Exception {
+		ResponseT<CompoundDiscountDataObj> r = serviceMarket.addMaxDiscount(userName, shopName,discountsIds);
+		if (r.isSuccess())
+			return new SResponseT<>(r.getData());
+		return new SResponseT<>(r.getMessage(), r.isSuccess());
+	}
+
+	public SResponseT<CompoundDiscountDataObj> addXorDiscount(String shopName, String userName, List<Integer> discountsIds, XorDecisionRule xorDiscountRule) throws Exception {
+		ResponseT<CompoundDiscountDataObj> r = serviceMarket.addXorDiscount(userName, shopName,discountsIds,xorDiscountRule);
+		if (r.isSuccess())
+			return new SResponseT<>(r.getData());
+		return new SResponseT<>(r.getMessage(), r.isSuccess());
+	}
+
+	public SResponse addDiscountRule(String shopName, String userName, DiscountRule discountRule, int discountId, CompoundRuleType actionWithOldRule) throws Exception {
+		Response r = serviceMarket.addDiscountRule(userName, shopName,discountRule,discountId,actionWithOldRule);
+		if (r.isSuccess())
+			return new SResponse();
+		return new SResponse(r.getMessage());
 	}
 }

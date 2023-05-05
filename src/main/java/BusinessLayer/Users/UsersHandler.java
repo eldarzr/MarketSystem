@@ -55,17 +55,17 @@ public class UsersHandler implements NotificationPublisher {
     }
 
     public void register(String guestName,String userName, String email, String password) throws Exception{
-        register(userName,email,password);
-        User guestUser = loginUsers.remove(guestName);
+        register(userName.toLowerCase(),email,password);
+        User guestUser = loginUsers.remove(guestName.toLowerCase());
         if(guestUser != null){
             //todo: find new User, and copy guest cart to new user
-            User newUser = members.get(userName);
+            User newUser = members.get(userName.toLowerCase());
             newUser.setCart(guestUser.getCart());
         }
     }
 
     public User register(String userName, String email, String password) throws Exception{
-        if(members.containsKey(userName))
+        if(members.containsKey(userName.toLowerCase()))
             throw new Exception(String.format("User: %s already exists",userName));
 
         logger.info(String.format("Attempt to validate %s is valid username.",userName));
@@ -112,10 +112,10 @@ public class UsersHandler implements NotificationPublisher {
     public String disconnect(String userName){
 //        if(!isLoggedIn(userName))
 //            throwIllegalArgumentException(String.format("User %s is not logged in", userName));
-        User user = findLoginUser(userName);
-        loginUsers.remove(userName);
+        User user = findLoginUser(userName.toLowerCase());
+        loginUsers.remove(userName.toLowerCase());
         User newUser = new User(user.getSessionID());
-        loginUsers.put(newUser.getName(), newUser);
+        loginUsers.put(newUser.getName().toLowerCase(), newUser);
 //        user.setName(user.getSessionID());
         return user.getSessionID();
     }
@@ -123,14 +123,14 @@ public class UsersHandler implements NotificationPublisher {
     //finds logged in members or guests
     public User findLoginUser(String targetName) {
         //this get method returns null if the key doesn't exist
-        User user = loginUsers.get(targetName);
+        User user = loginUsers.get(targetName.toLowerCase());
         if(user == null)
             throwIllegalArgumentException(String.format("User %s doesn't exist or is not currently logged in",targetName));
         return user;
     }
 
     public User findMemberByName(String targetName) {
-        User user = members.get(targetName);
+        User user = members.get(targetName.toLowerCase());
         if(user == null)
             throwIllegalArgumentException(String.format("User %s is unknown",targetName));
         return user;
@@ -148,7 +148,7 @@ public class UsersHandler implements NotificationPublisher {
     }
 
     public boolean isLoggedIn(String userName){
-        return loginUsers.containsKey(userName);
+        return loginUsers.containsKey(userName.toLowerCase());
     }
 
     public void checkValidPassword(String password) {
@@ -238,23 +238,23 @@ public class UsersHandler implements NotificationPublisher {
 	}
 
     public void addAdmin(String adminName) throws Exception {
-        User admin = findMemberByName(adminName);
+        User admin = findMemberByName(adminName.toLowerCase());
         if(admin.getUserType() == ADMIN)
             throw new Exception(String.format("the user %s is already admin", adminName));
         admin.setUserType(ADMIN);
     }
 
     public Collection<UserInvoice> getUserPurchaseHistory(String userName) {
-        return findLoginUser(userName).getInvoices();
+        return findLoginUser(userName.toLowerCase()).getInvoices();
     }
 
     public void unregister(String userName) {
-        findMemberByName(userName);
-        members.remove(userName);
+        findMemberByName(userName.toLowerCase());
+        members.remove(userName.toLowerCase());
     }
 
     public Collection<UserInvoice> getUserPurchaseHistoryByAdmin(String memberName) {
-        return findMemberByName(memberName).getInvoices();
+        return findMemberByName(memberName.toLowerCase()).getInvoices();
     }
     
     private void throwIllegalArgumentException(String errorMsg)  throws IllegalArgumentException{
@@ -290,8 +290,8 @@ public class UsersHandler implements NotificationPublisher {
     }
 
 	public List<User> getAllUsers(String adminName) throws Exception {
-        User admin = findLoginUser(adminName);
-        if(!isAdmin(adminName)){
+        User admin = findLoginUser(adminName.toLowerCase());
+        if(!isAdmin(adminName.toLowerCase())){
             throw new Exception(String.format("the user %s is not admin!", adminName));
         }
         return Stream.concat(members.values().stream(), loginUsers.values().stream()).distinct()
@@ -299,21 +299,21 @@ public class UsersHandler implements NotificationPublisher {
 	}
 
     public String removeUser(String adminName, String userName) throws Exception {
-        User admin = findLoginUser(adminName);
-        User user = findMemberByName(userName);
-        if(!isAdmin(adminName)){
+        User admin = findLoginUser(adminName.toLowerCase());
+        User user = findMemberByName(userName.toLowerCase());
+        if(!isAdmin(adminName.toLowerCase())){
             throw new Exception(String.format("the user %s is not admin!", adminName));
         }
-        if(isAdmin(userName)){
+        if(isAdmin(userName.toLowerCase())){
             throw new Exception(String.format("the user %s is admin! you cant remove them", userName));
         }
-        loginUsers.remove(userName);
-        members.remove(userName);
+        loginUsers.remove(userName.toLowerCase());
+        members.remove(userName.toLowerCase());
         return createGuest(user.getSessionID());
     }
 
     public User getUser(String userName) {
-        User user = findUserByName(userName);
+        User user = findUserByName(userName.toLowerCase());
         return user;
     }
 }
