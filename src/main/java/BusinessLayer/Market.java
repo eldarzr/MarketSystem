@@ -652,18 +652,18 @@ public class Market implements MarketIntr{
             logger.info(usersName[i]+" FINISHED !!!!!!!!!!!!!!!!!!!!!!!!!");
         }
         String guestName = startSession();
-        login(guestName, usersName[0], passwords[0]);
+        login(guestName, usersName[0], passwords[0]); // login to eldar
         createShop(usersName[0],"The Shop");
         createShop(usersName[0],"Super Shop");
-        appointShopOwner("eldar","niv12","shop1");
-        appointShopOwner("eldar","naor","shop1");
+        appointShopOwner("eldar1","niv1","shop1");
+        //appointShopOwner("eldar","naor","shop1");
         for(int i = 0; i < 6; i++) {
             addNewProduct(usersName[0], "Super Shop", "product" + i, cat[0], descs[0], prices[0]);
             addProductItems(usersName[0], "Super Shop", "product" + i, 3);
         }
 
-        logout("eldar1");
-        logout("niv1");
+        logout("eldar1"); // logout from eldar
+       // logout("niv1");
 
         loadDataGabi();
 
