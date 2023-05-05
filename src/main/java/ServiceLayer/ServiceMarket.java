@@ -292,8 +292,19 @@ public class ServiceMarket {
 
 	public ResponseT<List<MemberRoleInShopDataObj>> getShopManagersAndPermissions(String userName, String shopName) throws Exception {
 		try {
-		return new ResponseT<>(market. getShopManagersAndPermissions(userName, shopName).stream()
-				.map(MemberRoleInShopDataObj::new).collect(Collectors.toList()));
+			return new ResponseT<>(market. getShopManagersAndPermissions(userName, shopName).stream()
+					.map(MemberRoleInShopDataObj::new).collect(Collectors.toList()));
+
+		} catch (Exception exception) {
+			return new ResponseT(exception.getMessage(), false);
+		}
+	}
+
+
+	public ResponseT<List<MemberRoleInShopDataObj>> getShopManagersAndPermissionsByAdmin(String admin, String userName, String shopName) throws Exception {
+		try {
+			return new ResponseT<>(market.getShopManagersAndPermissionsByAdmin(admin, userName, shopName).stream()
+					.map(MemberRoleInShopDataObj::new).collect(Collectors.toList()));
 
 		} catch (Exception exception) {
 			return new ResponseT(exception.getMessage(), false);

@@ -409,6 +409,13 @@ public class Market implements MarketIntr{
         return shopHandler.getShopManagementPermissions(user,shopName);
     }
 
+    public Collection<MemberRoleInShop> getShopManagersAndPermissionsByAdmin(String admin, String userName, String shopName) throws Exception {
+        logger.info(String.format("Attempt by admin %s to get management of shop %s.", userName, shopName));
+        validateLoggedInAdminException(admin);
+        User user = usersHandler.getUser(userName);
+        return shopHandler.getShopManagementPermissions(user,shopName);
+    }
+
     public String getRolesInformation(String userName, String shopName) throws Exception {
         logger.info(String.format("Attempt by user %s to get roles information of shop %s.", userName, shopName));
         return searchShop(userName,shopName).getRolesInfo();

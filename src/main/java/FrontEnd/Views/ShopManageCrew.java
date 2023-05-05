@@ -45,11 +45,11 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
     protected Button viewPermissionsButton;
 
     protected String currentUser;
-    Button setManagerButton;
+    protected Button setManagerButton;
     protected TextField newManagerTextField;
     protected MemberRoleInShopModel clickedRole;
 
-    private HorizontalLayout scrollView;
+    public HorizontalLayout scrollView;
 
     public ShopManageCrew() {
         // Your existing implementation
@@ -121,7 +121,7 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
         promoteButton.getStyle().set("color", "white");
     }
 
-    private void updateShopStaff() {
+    protected void updateShopStaff() {
         SResponseT<List<MemberRoleInShopModel>> res = marketService.getShopManagersAndPermissions(currentUser,shopProfile.getName());
         if (res.isSuccess()) {
             List<MemberRoleInShopModel> shopRoles = res.getData();
@@ -134,7 +134,7 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
         }
     }
 
-    private Component createRoleComponent(MemberRoleInShopModel role) {
+    protected Component createRoleComponent(MemberRoleInShopModel role) {
         VerticalLayout roleLayout = new VerticalLayout();
         roleLayout.setAlignItems(FlexComponent.Alignment.CENTER);
         roleLayout.setPadding(false);

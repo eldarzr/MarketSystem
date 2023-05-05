@@ -232,6 +232,19 @@ public class MarketService {
 	}
 
 
+	public SResponseT<List<MemberRoleInShopModel>> getShopManagersAndPermissionsByAdmin(String admin, String userName, String shopName) {
+		ResponseT<List<MemberRoleInShopDataObj>> r = null;
+		try {
+			r = serviceMarket.getShopManagersAndPermissionsByAdmin(admin, userName, shopName);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		if (r.isSuccess())
+			return new SResponseT<>(r.getData().stream().map(MemberRoleInShopModel::new).collect(Collectors.toList()));
+		return new SResponseT<>(r.getMessage(), r.isSuccess());
+	}
+
+
 	public ResponseT<Collection<ShopInvoiceDataObj>> getShopPurchaseHistory(String userName, String shopName) {
 		throw new NotImplementedException();
 	}
