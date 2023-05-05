@@ -4,8 +4,8 @@ import BusinessLayer.Shops.Product;
 
 public class ShopBagItem {
 
-    Product product;
-    int quantity;
+    private Product product;
+    private int quantity;
 
     public ShopBagItem(Product product, int quantity) {
         this.product = product;
@@ -26,5 +26,9 @@ public class ShopBagItem {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public ShopBagItem deepClone() {
+        return new ShopBagItem(product.deepClone(),quantity);
     }
 }
