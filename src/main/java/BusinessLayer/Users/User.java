@@ -28,7 +28,7 @@ public class User implements NotificationObserver {
     private ConcurrentLinkedQueue<Notification> pendingNotifications = new ConcurrentLinkedQueue<>();
 
     public User(String name, String email, String password) {
-        this.name = name;
+        this.name = name.toLowerCase();
         this.email = email;
         this.password = password;
         this.sessionID = null;
@@ -37,7 +37,7 @@ public class User implements NotificationObserver {
     }
 
     public User(String guestName) {
-        name = guestName;
+        name = guestName.toLowerCase();
         sessionID = null;
         userType = UserType.GUEST;
         currentCart = new Cart();
@@ -52,7 +52,7 @@ public class User implements NotificationObserver {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = name.toLowerCase();
     }
 
     public String getEmail() {
@@ -133,7 +133,7 @@ public class User implements NotificationObserver {
     }
 
     public void setSessionID(String sessionID) {
-        this.sessionID = sessionID;
+        this.sessionID = sessionID.toLowerCase();
     }
 	
 	public void setCart(Cart currentCart) {
