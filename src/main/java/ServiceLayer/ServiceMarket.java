@@ -3,10 +3,11 @@ package ServiceLayer;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Market;
-import BusinessLayer.Shops.Shop;
+import BusinessLayer.Notifications.Notification;
 import BusinessLayer.Shops.Discount.DiscountRules.CompoundRuleType;
 import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
 import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
+import BusinessLayer.Users.NotificationCallback;
 import ServiceLayer.DataObjects.*;
 import ServiceLayer.DataObjects.DiscountDataObjects.*;
 
@@ -534,4 +535,23 @@ public class ServiceMarket {
 			return new ResponseT<>(exception.getMessage(), false);
 		}
 	}
+
+	public void setNotificationCallback(String name, NotificationCallback callback) {
+		market.setNotificationCallback(name,callback);
 	}
+
+	public ResponseT<List<NotificationDataObj>> getUserNotifications(String userName) {
+		try {
+			return new ResponseT<List<NotificationDataObj>>(market.getUserNotifications(userName).stream().map(NotificationDataObj::new)
+					.collect(Collectors.toList()));
+
+		} catch (Exception exception) {
+			return new ResponseT(exception.getMessage(), false);
+		}
+	}
+
+	public void removeNotification(String username, NotificationDataObj notificationData) {
+		Notification notification=new Notification(notificationData);
+		market.removeNotification(username,notification);
+	}
+}

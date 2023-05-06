@@ -13,6 +13,8 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.AppShellConfigurator;
+import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.HasUrlParameter;
@@ -24,7 +26,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Route("base")
-public abstract class BaseView extends VerticalLayout {
+public abstract class BaseView extends VerticalLayout{
 
 	protected MarketService marketService = MarketService.getInstance();
 	private HorizontalLayout horizontalLayout;
@@ -36,6 +38,7 @@ public abstract class BaseView extends VerticalLayout {
 	private HorizontalLayout logoutLayout;
 
 	public BaseView() {
+
 		String sessionID = VaadinSession.getCurrent().getSession().getId();
 		UserModel userModel = VaadinSession.getCurrent().getAttribute(UserModel.class);
 		if (userModel == null) {
@@ -103,6 +106,7 @@ public abstract class BaseView extends VerticalLayout {
 	}
 
 	protected boolean login(String username, String password) {
+		var ui=UI.getCurrent();
 		UserModel userModel = getCurrentUser();
 		if (username.trim().isEmpty()) {
 			Notification.show("Enter a username");
@@ -113,6 +117,7 @@ public abstract class BaseView extends VerticalLayout {
 			if (res.isSuccess()){
 				Notification.show("login successfully");
 				userModel = res.getData();
+				marketService.setNotificationCallback(userModel.getName(),((String notification)->ui.access(()->Notification.show(notification))));
 				Notification.show(userModel.getName());
 				setCurrentUser(userModel);
 				horizontalLayout.remove(loginLayout);

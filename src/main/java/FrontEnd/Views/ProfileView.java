@@ -5,12 +5,10 @@ import FrontEnd.Model.UserModel;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouterLink;
 
 @Route("profile")
 @PageTitle("Profile")
@@ -22,7 +20,7 @@ public class ProfileView extends BaseView {
     protected Button searchButton;
     protected Button adminButton;
     protected String PURCHASE_HISTORY = "purchase_history";
-    protected String USER_MESSAGES_SCREEN = "user_messages";
+    protected String MY_NOTIFICATIONS = "user_notifications";
     protected String MY_SHOPS_SCREEN = "my_shops";
     protected String SEARCH_SCREEN = "search";
     protected String ADMIN_SCREEN = "admin";
@@ -68,7 +66,7 @@ public class ProfileView extends BaseView {
         );
         viewMessagesButton.addClickListener(e ->
                 viewMessagesButton.getUI().ifPresent(ui ->
-                        ui.navigate(USER_MESSAGES_SCREEN))
+                        ui.navigate(MY_NOTIFICATIONS))
         );
         viewMyShopsButton.addClickListener(e ->
                 viewMyShopsButton.getUI().ifPresent(ui ->

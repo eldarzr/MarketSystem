@@ -1,6 +1,7 @@
 package FrontEnd;
 
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.server.VaadinSession;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -16,6 +17,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
  * and some desktop browsers.
  *
  */
+@Push
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer implements AppShellConfigurator{
 

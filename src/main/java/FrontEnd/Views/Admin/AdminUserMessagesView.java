@@ -2,9 +2,11 @@ package FrontEnd.Views.Admin;
 
 import BusinessLayer.Enums.UserType;
 import FrontEnd.Model.MessageModel;
+import FrontEnd.Model.NotificationModel;
 import FrontEnd.Model.UserModel;
 import FrontEnd.SResponseT;
 import FrontEnd.Views.BaseView;
+import FrontEnd.Views.MyNotificationView;
 import FrontEnd.Views.UserMessagesView;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.grid.Grid;
@@ -19,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Route(value = "admin_user_messages")
-public class AdminUserMessagesView extends UserMessagesView implements HasUrlParameter<String> {
+public class AdminUserMessagesView extends MyNotificationView implements HasUrlParameter<String> {
 
 	UserModel visitedUser;
 	private final String ADMIN_PREFIX = "admin_";
@@ -35,8 +37,8 @@ public class AdminUserMessagesView extends UserMessagesView implements HasUrlPar
 
 	}
 
-	protected SResponseT<List<MessageModel>> getUserMessages() {
-		return visitedUser == null ? null : marketService.getMessages(visitedUser.getName());
+	protected SResponseT<List<NotificationModel>> getUserMessages() {
+		return visitedUser == null ? null : marketService.getUserNotifications(visitedUser.getName());
 	}
 
 	@Override
@@ -51,7 +53,7 @@ public class AdminUserMessagesView extends UserMessagesView implements HasUrlPar
 		}
 
 		setTitle(String.format("Welcome to %s messages", visitedUser.getName()));
-		showMessagesScreen();
+		//showNotificationsScreen();
 	}
 
 
