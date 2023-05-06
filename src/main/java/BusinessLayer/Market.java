@@ -5,6 +5,7 @@ import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Notifications.Notification;
 import BusinessLayer.Purchases.*;
+import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRuleName;
 import BusinessLayer.Shops.Product;
 import BusinessLayer.Shops.ProductIntr;
 import BusinessLayer.Shops.Shop;
@@ -161,6 +162,7 @@ public class Market implements MarketIntr{
     @Override
     public Shop createShop(String userName, String shopName) throws Exception {
         logger.info(String.format("Attempt by user %s to open store %s.", userName,shopName));
+        userName = userName.toLowerCase();
         if (!isLoggedIn(userName))
         {
             String errorMsg=String.format("User %s is not login, thus can't open store.", userName);
@@ -221,6 +223,7 @@ public class Market implements MarketIntr{
     @Override
     public void addNewProduct(String userName, String shopName, String productName, String category, String desc, double price) throws Exception {
         logger.info(String.format("Attempt by user %s to add new product %s to store %s.", userName,productName, shopName));
+        userName = userName.toLowerCase();
         validateLoggedInException(userName);
         shopHandler.addNewProduct(userName, shopName, productName, category, desc, price);
         // notify management on new product
@@ -567,19 +570,29 @@ public class Market implements MarketIntr{
         return shop.addMaxDiscount(userName,discountsIds);
     }
 
-    public XorCompoundDiscount addXorDiscount(String shopName, String userName, List<Integer> discountsIds, XorDecisionRule xorDiscountRule) throws Exception {
+    public XorCompoundDiscount addXorDiscount(String shopName, String userName, List<Integer> discountsIds, XorDecisionRuleName xorDiscountRule) throws Exception {
         usersHandler.findMemberByName(userName);
         usersHandler.findLoginUser(userName);
         Shop shop = shopHandler.getShop(shopName);
         return shop.addXorDiscount(userName,discountsIds,xorDiscountRule);
     }
 
-    public void addDiscountRule(String shopName, String userName, DiscountRule discountRule, int discountId, CompoundRuleType actionWithOldRule) throws Exception {
+    public void addDiscountRule(String shopName, String userName, DiscountRule discountRule, int discountId, String actionWithOldRule) throws Exception {
         usersHandler.findMemberByName(userName);
         usersHandler.findLoginUser(userName);
         Shop shop = shopHandler.getShop(shopName);
-        shop.addDiscountRule(userName,discountRule,discountId,actionWithOldRule);
+        CompoundRuleType actionWithOldRuleE = getEnumValue(actionWithOldRule);
+        shop.addDiscountRule(userName,discountRule,discountId,actionWithOldRuleE);
     }
+
+    public void resetDiscountRule(String shopName, String userName, int discountId) throws Exception {
+        usersHandler.findMemberByName(userName);
+        usersHandler.findLoginUser(userName);
+        Shop shop = shopHandler.getShop(shopName);
+        shop.resetDiscountRule(discountId);
+    }
+
+
 
     private boolean isLoggedIn(String userName) {
         logger.info(String.format("Attempt to check if user %s is logged in.", userName));
@@ -623,13 +636,13 @@ public class Market implements MarketIntr{
     }
 
     private void loadProducts() throws Exception {
-        String[] usersName = {"eldar1", "niv1"};
+        String[] usersName = {"eldar_first", "niv_first"};
         String[] passwords = {"Aa123456", "Aa123456"};
-        String[] emails = {"eldar@gmail.com", "niv@gmail.com"};
-        String[] shopNames = {"shop1", "shop2"};
-        String[] prodNames = {"prod1", "prod2"};
+        String[] emails = {"eldarFirst@gmail.com", "nivFirst@gmail.com"};
+        String[] shopNames = {"shopFirst1", "shopFirst2"};
+        String[] prodNames = {"prodFirst1", "prodFirst2"};
         String[] descs = {"description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 ", "description2"};
-        String[] cat = {"cat1", "cat2"};
+        String[] cat = {"catFirst1", "catFirst2"};
         double[] prices = {5, 10};
 
         for (int i = 0; i < usersName.length; i++) {
@@ -647,8 +660,8 @@ public class Market implements MarketIntr{
             addProductItems(usersName[0], "Super Shop", "product" + i, 3);
         }
 
-        logout("eldar1");
-        logout("niv1");
+        logout("eldar_first");
+        logout("niv_first");
 
         loadDataGabi();
 
@@ -711,5 +724,28 @@ public class Market implements MarketIntr{
     public Shop getShop(String name) throws Exception {
         return shopHandler.getShop(name);
     }
+
+    public DiscountPolicy getDiscountPolicy(String currentUser, String shopName) throws Exception {
+        usersHandler.findLoginUser(currentUser);
+        Shop shop = shopHandler.getShop(shopName);
+        return shop.getDiscountPolicy(currentUser);
+    }
+
+    public void removeDiscount(String shopName, String userName, int discountId) throws Exception {
+        usersHandler.findLoginUser(userName);
+        Shop shop = shopHandler.getShop(shopName);
+        shop.removeDiscount(discountId);
+    }
+
+    private CompoundRuleType getEnumValue(String actionWithOldRule) {
+        try{
+            return CompoundRuleType.valueOf(actionWithOldRule);
+        }catch (Exception e){
+            logger.warning(String.format("could not find action with old rule: %s. error message: %s, returning REPLACE instead",actionWithOldRule,e.getMessage()));
+            return CompoundRuleType.REPLACE;
+        }
+    }
+
+
 
 }

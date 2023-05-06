@@ -21,9 +21,9 @@ public class CompoundDiscountRuleDataObj implements DiscountRuleServiceInterface
     }
 
     private DiscountRuleServiceInterface makeDiscountRuleDataObj(DiscountRule discountRule) {
-        if(discountRule instanceof  CompoundDiscount)
+        if(discountRule instanceof  CompoundDiscountRule)
             return new CompoundDiscountRuleDataObj((CompoundDiscountRule) discountRule);
-        if(discountRule instanceof SimpleDiscount)
+        if(discountRule instanceof SimpleDiscountRule)
             return new SimpleDiscountRuleDataObj((SimpleDiscountRule) discountRule);
         throw new IllegalArgumentException(String.format("FATAL ERROR: could not figure out discount rule type. discount rule name: %s",discountRule.getRuleName()));
     }
@@ -39,5 +39,22 @@ public class CompoundDiscountRuleDataObj implements DiscountRuleServiceInterface
     @Override
     public String getRuleType() {
         return ruleMainType;
+    }
+
+    @Override
+    public String getDescription() {
+        String description = "(";
+        for(int i = 0; i < discountRules.size(); i++){
+            description += discountRules.get(i).getDescription();
+            if(i != discountRules.size()-1)
+                description += " " + ruleSubType + " ";
+        }
+        description += ")";
+        return description;
+    }
+
+    @Override
+    public String toString(){
+        return getDescription();
     }
 }
