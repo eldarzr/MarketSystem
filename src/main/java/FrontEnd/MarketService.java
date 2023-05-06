@@ -368,10 +368,6 @@ public class MarketService {
 
     }
 
-	public SResponseT<List<MessageModel>> getMessages(String userName) {
-		throw new NotImplementedException();
-	}
-
 	public SResponseT<CategoryDiscountDataObj> addCategoryDiscount(String shopName, String userName, double discountPercentage, String category) {
 		ResponseT<CategoryDiscountDataObj> r = serviceMarket.addCategoryDiscount(shopName, userName,discountPercentage,category);
 		if (r.isSuccess())
@@ -436,6 +432,7 @@ public class MarketService {
 	public SResponseT<List<MessageModel>> getMessages(String userName) {
 		throw new NotImplementedException();
 	}
+
 	public SResponseT<List<NotificationModel>> getUserNotifications(String userName) {
 		ResponseT<List<NotificationDataObj>> r = serviceMarket.getUserNotifications(userName);
 		if (r.isSuccess())

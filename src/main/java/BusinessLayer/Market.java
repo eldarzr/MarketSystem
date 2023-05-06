@@ -16,7 +16,6 @@ import BusinessLayer.Shops.*;
 import BusinessLayer.Shops.Discount.*;
 import BusinessLayer.Shops.Discount.DiscountRules.CompoundRuleType;
 import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
-import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
 import BusinessLayer.Users.NotificationCallback;
 import BusinessLayer.Users.User;
 import BusinessLayer.Users.UsersHandler;
@@ -55,7 +54,7 @@ public class Market implements MarketIntr{
         logger.info("Starting market init.");
         createLogger();
         loadAdmin();
-//        loadProducts();
+        loadProducts();
         logger.info("Market init Finished successfully.");
     }
 
@@ -738,6 +737,10 @@ public class Market implements MarketIntr{
         return shopHandler.getShop(name);
     }
 
+    public void setNotificationCallback(String name, NotificationCallback callback) {
+        usersHandler.setNotificationCallback(name,callback);
+    }
+
     public Collection<Notification> getUserNotifications(String userName) throws Exception {
         validateUserIsntGuest(userName);
         isLoggedIn(userName);
@@ -793,6 +796,12 @@ public class Market implements MarketIntr{
         validateUserIsntGuest(userName);
         isLoggedIn(userName);
         getShop(shopName).getPurchasePolicyManager(userName).addComplexConstraint(pid1,pid2, ComplexPolicyType.AND);
+    }
+
+    public void addIfPurchasePolicy(String userName, String shopName,int pid1, int pid2)throws Exception{
+        validateUserIsntGuest(userName);
+        isLoggedIn(userName);
+        getShop(shopName).getPurchasePolicyManager(userName).addComplexConstraint(pid1,pid2, ComplexPolicyType.IF);
     }
 
     private CompoundRuleType getEnumValue(String actionWithOldRule) {

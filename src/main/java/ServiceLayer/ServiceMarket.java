@@ -558,7 +558,17 @@ public class ServiceMarket {
 			} catch (Exception exception) {
 				return new ResponseT(exception.getMessage(), false);
 			}
+	}
+
+	public ResponseT<List<NotificationDataObj>> getUserNotifications(String userName) {
+		try {
+			return new ResponseT<List<NotificationDataObj>>(market.getUserNotifications(userName).stream().map(NotificationDataObj::new)
+					.collect(Collectors.toList()));
+
+		} catch (Exception exception) {
+			return new ResponseT(exception.getMessage(), false);
 		}
+	}
 
 	public ResponseT<ShopDataObj> getShop(String name) {
 		try {
@@ -568,6 +578,8 @@ public class ServiceMarket {
 			return new ResponseT<>(exception.getMessage(), false);
 		}
 	}
+
+
 
 	public void setNotificationCallback(String name, NotificationCallback callback) {
 		market.setNotificationCallback(name,callback);
@@ -640,6 +652,7 @@ public class ServiceMarket {
 			return new Response(e.getMessage());
 		}
 	}
+
 	public Response addIfPurchasePolicy(String userName, String shopName,int pid1, int pid2){
 		try{
 			market.addIfPurchasePolicy(userName, shopName, pid1, pid2);

@@ -10,6 +10,7 @@ import BusinessLayer.Shops.Discount.*;
 import BusinessLayer.Shops.Discount.DiscountRules.CompoundRuleType;
 import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
 import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
+import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRuleName;
 import BusinessLayer.Shops.PurchasePolicies.PurchasePolicyManager;
 import BusinessLayer.Users.User;
 import BusinessLayer.Purchases.ShopInvoice;
