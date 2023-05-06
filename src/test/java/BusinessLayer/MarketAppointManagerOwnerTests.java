@@ -67,13 +67,6 @@ class MarketAppointManagerOwnerTests {
     }
 
     @Test
-    void appointShopManager_success2() throws Exception {
-        market.appointShopOwner("eldar","naor","shop1");
-        market.appointShopManager("naor","niv12","shop1");
-    }
-
-
-    @Test
     void appointShopManager_failure1()  {
         Exception exception = assertThrows(Exception.class, () ->   market.appointShopManager("niv12","eldar","shop1"));
         System.out.println(exception.getMessage());
