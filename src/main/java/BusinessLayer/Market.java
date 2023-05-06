@@ -54,7 +54,7 @@ public class Market implements MarketIntr{
         logger.info("Starting market init.");
         createLogger();
         loadAdmin();
-        loadProducts();
+//        loadProducts();
         logger.info("Market init Finished successfully.");
     }
 
@@ -326,6 +326,8 @@ public class Market implements MarketIntr{
 
     @Override
     public void appointShopOwner(String appointedBy, String appointee, String shopName) throws Exception {
+        appointee = appointee.toLowerCase();
+        appointedBy = appointedBy.toLowerCase();
         logger.info(String.format("Attempt by user %s to appoint %s as shop-owner of shop %s.", appointedBy,appointee, shopName));
         usersHandler.findMemberByName(appointedBy);
         validateLoggedInException(appointedBy);

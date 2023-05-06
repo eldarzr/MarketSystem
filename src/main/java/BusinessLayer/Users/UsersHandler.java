@@ -118,6 +118,8 @@ public class UsersHandler implements NotificationPublisher {
 //            throwIllegalArgumentException(String.format("User %s is not logged in", userName));
         User user = findLoginUser(userName.toLowerCase());
         loginUsers.remove(userName.toLowerCase());
+        if (user.getSessionID() == null)
+            return null;
         User newUser = new User(user.getSessionID());
         loginUsers.put(newUser.getName().toLowerCase(), newUser);
 //        user.setName(user.getSessionID());
@@ -141,6 +143,7 @@ public class UsersHandler implements NotificationPublisher {
     }
 
     public User findUserByName(String userName) {
+        userName = userName.toLowerCase();
         User userLogin = loginUsers.get(userName);
         User member = members.get(userName);
         if(userLogin != null)
@@ -186,7 +189,7 @@ public class UsersHandler implements NotificationPublisher {
     }
 
     public String createGuest() {
-        String nextGuestName = getNextGuestName();
+        String nextGuestName = getNextGuestName().toLowerCase();
         User user = new User(nextGuestName);
         //guest is added only to login users, the reason is that as long as he is connected to the system we want to threat him as a login user
         loginUsers.put(nextGuestName,user);
