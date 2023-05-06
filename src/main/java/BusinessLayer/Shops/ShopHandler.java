@@ -49,6 +49,7 @@ public class ShopHandler {
 
 
 
+
     private static class  ShopHolder {
         private static ShopHandler  instance = new ShopHandler() ;
     }
@@ -121,6 +122,11 @@ public class ShopHandler {
     public void updateProductQuantity(String userName, String shopName, String productName, int quantity) throws Exception {
         validateShopExistsOpenedException(shopName);
         shops.get(shopName).updateProductQuantity(userName, productName, quantity);
+    }
+
+    public void updateProductCategory(String userName, String shopName, String productName, String category) throws Exception {
+        validateShopExistsOpenedException(shopName);
+        shops.get(shopName).updateProductCategory(userName, productName, category);
     }
 
     public void addProductItems(String userName, String shopName, String productName, int quantity) throws Exception {

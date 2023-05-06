@@ -2,10 +2,6 @@ package FrontEnd;
 
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
-import BusinessLayer.Shops.Discount.DiscountRules.CompoundRuleType;
-import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
-import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
-import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRuleName;
 import BusinessLayer.Users.NotificationCallback;
 import FrontEnd.Model.*;
 import ServiceLayer.DataObjects.*;
@@ -145,24 +141,46 @@ public class MarketService {
 		throw new NotImplementedException();
 	}
 
-	public Response removeProduct(String userName, String shopName, String productName) throws Exception {
-		throw new NotImplementedException();
+	public SResponse removeProduct(String userName, String shopName, String productName){
+		Response r = serviceMarket.removeProduct(userName,shopName,productName);
+		if (r.isSuccess())
+			return new SResponse();
+		return new SResponse(r.getMessage());
 	}
 
-	public Response updateProductName(String userName, String shopName, String productOldName, String productNewName) throws Exception {
-		throw new NotImplementedException();
+	public SResponse updateProductName(String userName, String shopName, String productOldName, String productNewName) {
+		Response r = serviceMarket.updateProductName(userName,shopName, productOldName,productNewName);
+		if (r.isSuccess())
+			return new SResponse();
+		return new SResponse(r.getMessage());
 	}
 
-	public Response updateProductDesc(String userName, String shopName, String productName, String productNewDesc) throws Exception {
-		throw new NotImplementedException();
+	public SResponse updateProductDesc(String userName, String shopName, String productName, String productNewDesc){
+		Response r = serviceMarket.updateProductDesc(userName,shopName, productName,productNewDesc);
+		if (r.isSuccess())
+			return new SResponse();
+		return new SResponse(r.getMessage());
 	}
 
-	public Response updateProductPrice(String userName, String shopName, String productName, double price) throws Exception {
-		throw new NotImplementedException();
+	public SResponse updateProductPrice(String userName, String shopName, String productName, double price) {
+		Response r = serviceMarket.updateProductPrice(userName,shopName, productName,price);
+		if (r.isSuccess())
+			return new SResponse();
+		return new SResponse(r.getMessage());
 	}
 
-	public Response updateProductQuantity(String userName, String shopName, String productName, int quantity) throws Exception {
-		throw new NotImplementedException();
+	public SResponse updateProductQuantity(String userName, String shopName, String productName, int quantity) {
+		Response r = serviceMarket.updateProductQuantity(userName,shopName, productName,quantity);
+		if (r.isSuccess())
+			return new SResponse();
+		return new SResponse(r.getMessage());
+	}
+
+	public SResponse updateProductCategory(String userName, String shopName, String productName, String category) {
+		Response r = serviceMarket.updateProductCategory(userName,shopName, productName,category);
+		if (r.isSuccess())
+			return new SResponse();
+		return new SResponse(r.getMessage());
 	}
 
 	public Response addProductItems(String userName, String shopName, String productName, int quantity) throws Exception {
@@ -368,6 +386,14 @@ public class MarketService {
 
     }
 
+	public SResponse addProduct(String userName, String shopName,String productName, String productCategory, String productDescription, Double productPrice, Integer productQuantity) {
+		Response res = serviceMarket.addNewProduct(userName, shopName, productName, productCategory, productDescription, productPrice, productQuantity);
+		if (!res.isSuccess()) {
+			return new SResponse(res.getMessage());
+		}
+		return new SResponse();
+	}
+
 	public SResponseT<CategoryDiscountDataObj> addCategoryDiscount(String shopName, String userName, double discountPercentage, String category) {
 		ResponseT<CategoryDiscountDataObj> r = serviceMarket.addCategoryDiscount(shopName, userName,discountPercentage,category);
 		if (r.isSuccess())
@@ -383,14 +409,6 @@ public class MarketService {
 	}
 
 	public SResponseT<ShopDiscountDataObj> addShopDiscount(String shopName, String userName, double discountPercentage) {
-
-
-
-
-
-
-
-
 		ResponseT<ShopDiscountDataObj> r = serviceMarket.addShopDiscount(shopName, userName,discountPercentage);
 		if (r.isSuccess())
 			return new SResponseT<>(r.getData());
@@ -531,4 +549,7 @@ public class MarketService {
 			return new SResponse();
 		return new SResponse(r.getMessage());
 	}
+
+
+
 }

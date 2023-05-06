@@ -55,6 +55,8 @@ public interface MarketIntr {
 
     void updateProductQuantity(String userName, String shopName, String productName, int quantity) throws Exception;
 
+    void updateProductCategory(String userName, String shopName, String productName, String category) throws Exception;
+
     void addProductItems(String userName, String shopName, String productName, int quantity) throws Exception;
 
 	Shop searchShop(String userName, String shopName) throws Exception;

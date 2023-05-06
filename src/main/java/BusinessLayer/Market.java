@@ -237,7 +237,10 @@ public class Market implements MarketIntr{
         logger.info(message);
     }
 
-
+    public void addNewProduct(String userName, String shopName, String productName, String productCategory, String productDescription, Double productPrice, Integer productQuantity) throws Exception {
+        addNewProduct(userName,shopName,productName,productCategory,productDescription,productPrice);
+        updateProductQuantity(userName,shopName,productName,productQuantity);
+    }
 
     @Override
     public void removeProduct(String userName, String shopName, String productName) throws Exception {
@@ -281,6 +284,14 @@ public class Market implements MarketIntr{
         validateLoggedInException(userName);
         shopHandler.updateProductQuantity(userName, shopName, productName, quantity);
         logger.info(String.format("User %s updated product %s quantity to %d in store %s.", userName,productName,quantity, shopName));
+    }
+
+    @Override
+    public void updateProductCategory(String userName, String shopName, String productName, String category) throws Exception {
+        logger.info(String.format("Attempt by user %s to update product %s category in store %s.", userName,productName, shopName));
+        validateLoggedInException(userName);
+        shopHandler.updateProductCategory(userName, shopName, productName, category);
+        logger.info(String.format("User %s updated product %s category to %s in store %s.", userName,productName,category, shopName));
     }
 
     @Override
@@ -831,4 +842,7 @@ public class Market implements MarketIntr{
         isLoggedIn(userName);
         return getShop(shopName).getPurchasePolicyManager(userName).getActivePolicyId();
     }
+
+
+
 }

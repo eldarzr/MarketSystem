@@ -27,16 +27,13 @@ public class ProfileView extends BaseView {
 
     public ProfileView() {
         purchaseHistoryButton = new Button("Purchase History");
-        purchaseHistoryButton.getStyle().set("background-color", "#FF8C00");
-        purchaseHistoryButton.getStyle().set("color", "white");
+        enableButton(purchaseHistoryButton);
 
         viewMessagesButton = new Button("View Messages");
-        viewMessagesButton.getStyle().set("background-color", "#FF8C00");
-        viewMessagesButton.getStyle().set("color", "white");
+        enableButton(viewMessagesButton);
 
         viewMyShopsButton = new Button("View My Shops");
-        viewMyShopsButton.getStyle().set("background-color", "#FF8C00");
-        viewMyShopsButton.getStyle().set("color", "white");
+        enableButton(viewMyShopsButton);
 
         Icon searchIcon = VaadinIcon.SEARCH.create();
         searchButton = new Button(searchIcon);
