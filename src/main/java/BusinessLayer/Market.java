@@ -405,6 +405,11 @@ public class Market implements MarketIntr{
        return reqShop.setManageOption(actor,actOn,permission);
     }
 
+    public void notifyUser( String actOn,Notification notification)
+    {
+        usersHandler.notify(actOn,notification);
+    }
+
     @Override
     public void addManagerPermissions(String actor, String actOn, String shopName,int permission) throws Exception {
         logger.info(String.format("Attempt by user %s to add manager permissions of %s as shop-manager of shop %s.", actor,actOn, shopName));
