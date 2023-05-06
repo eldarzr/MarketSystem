@@ -69,11 +69,13 @@ public class ShopHandler {
     }
 
     public void closeShop(String userName, String shopName) throws Exception {
+        userName = userName.toLowerCase();
         Shop reqShop = getShop(shopName);
         reqShop.closeShop(userName);
     }
 
     public void openShop(String userName, String shopName) throws Exception {
+        userName = userName.toLowerCase();
         Shop reqShop = getShop(shopName);
         reqShop.openShop(userName);
     }
@@ -94,36 +96,43 @@ public class ShopHandler {
     }
 
     public void addNewProduct(String userName, String shopName, String productName, String category, String desc, double price) throws Exception {
+        userName = userName.toLowerCase();
         validateShopExistsOpenedException(shopName);
         shops.get(shopName).addNewProduct(userName, productName, category, desc, price);
     }
 
     public void removeProduct(String userName, String shopName, String productName) throws Exception {
+        userName = userName.toLowerCase();
         validateShopExistsOpenedException(shopName);
         shops.get(shopName).removeProduct(userName, productName);
     }
 
     public void updateProductName(String userName, String shopName, String productOldName, String productNewName) throws Exception {
+        userName = userName.toLowerCase();
         validateShopExistsOpenedException(shopName);
         shops.get(shopName).updateProductName(userName, productOldName, productNewName);
     }
 
     public void updateProductDesc(String userName, String shopName, String productName, String productNewDesc) throws Exception {
+        userName = userName.toLowerCase();
         validateShopExistsOpenedException(shopName);
         shops.get(shopName).updateProductDesc(userName, productName, productNewDesc);
     }
 
     public void updateProductPrice(String userName, String shopName, String productName, double price) throws Exception {
+        userName = userName.toLowerCase();
         validateShopExistsOpenedException(shopName);
         shops.get(shopName).updateProductPrice(userName, productName, price);
     }
 
     public void updateProductQuantity(String userName, String shopName, String productName, int quantity) throws Exception {
+        userName = userName.toLowerCase();
         validateShopExistsOpenedException(shopName);
         shops.get(shopName).updateProductQuantity(userName, productName, quantity);
     }
 
     public void addProductItems(String userName, String shopName, String productName, int quantity) throws Exception {
+        userName = userName.toLowerCase();
         validateShopExistsOpenedException(shopName);
         shops.get(shopName).addProductQuantity(userName, productName, quantity);
     }

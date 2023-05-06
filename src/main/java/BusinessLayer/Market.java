@@ -178,6 +178,7 @@ public class Market implements MarketIntr{
         }
 
         //shopHandler.shopExists(shopName);
+        userName = userName.toLowerCase();
         User user = usersHandler.findMemberByName(userName);
         Shop shop = new Shop(shopName, userName);
         //user.addFoundedShop(shopName);
@@ -226,6 +227,7 @@ public class Market implements MarketIntr{
     @Override
     public void addNewProduct(String userName, String shopName, String productName, String category, String desc, double price) throws Exception {
         logger.info(String.format("Attempt by user %s to add new product %s to store %s.", userName,productName, shopName));
+        userName = userName.toLowerCase();
         validateLoggedInException(userName);
         shopHandler.addNewProduct(userName, shopName, productName, category, desc, price);
         // notify management on new product
@@ -352,6 +354,8 @@ public class Market implements MarketIntr{
         usersHandler.findMemberByName(appointedBy);
 //        isLoggedIn(appointedBy);
         validateLoggedInException(appointedBy);
+        appointedBy = appointedBy.toLowerCase();
+        appointee = appointee.toLowerCase();
         User user = usersHandler.findMemberByName(appointee);
         Shop reqShop = checkForShop(shopName);
         reqShop.setShopManager(appointedBy,appointee ,user::sendMessage);
@@ -370,6 +374,8 @@ public class Market implements MarketIntr{
     //next version
     @Override
     public void removeShopOwner(String managerName, String userToRemove, String shopName) throws Exception {
+        managerName = managerName.toLowerCase();
+        userToRemove = userToRemove.toLowerCase();
         usersHandler.findMemberByName(managerName);
         validateLoggedInException(managerName);
         usersHandler.findMemberByName(userToRemove);

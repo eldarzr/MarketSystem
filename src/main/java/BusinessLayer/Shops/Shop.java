@@ -56,6 +56,7 @@ public class Shop implements ShopIntr {
 		this.invoices = new ConcurrentLinkedQueue<>();
 		this.discountPolicy = new DiscountPolicy();
 		this.purchasePolicyManager = new PurchasePolicyManager();
+		this.remLock = new ReentrantLock();
 	}
 
 	public String getName() {

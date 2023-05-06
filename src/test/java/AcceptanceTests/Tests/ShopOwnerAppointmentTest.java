@@ -43,6 +43,7 @@ public class ShopOwnerAppointmentTest {
 
     @Test
     public void testShopOwnerAppointment() throws Exception {
+        marketSystem.login(founderUserName, founderPassword);
         marketSystem.appointShopOwner(founderUserName, ownerUserName, shopName);
         assertTrue(marketSystem.isShopOwner(ownerUserName, shopName));
         marketSystem.logout(ownerUserName);
@@ -55,6 +56,7 @@ public class ShopOwnerAppointmentTest {
 
     @Test
     public void testNonOwnerAppointment() throws Exception {
+        marketSystem.login(founderUserName, founderPassword);
         marketSystem.appointShopOwner(founderUserName, ownerUserName, shopName);
         marketSystem.logout(ownerUserName);
 
@@ -72,6 +74,7 @@ public class ShopOwnerAppointmentTest {
         marketSystem.appointShopOwner(founderUserName, ownerUserName, shopName);
         marketSystem.logout(ownerUserName);
 
+        marketSystem.login(ownerUserName, ownerPassword);
         marketSystem.appointShopOwner(ownerUserName, appointeeUserName, shopName);
     }
 
