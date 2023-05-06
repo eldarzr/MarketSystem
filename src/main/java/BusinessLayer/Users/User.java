@@ -156,16 +156,15 @@ public class User implements NotificationObserver {
     }
 
     public void removeNotification(Notification notification) {
-        for(Notification noti: pendingNotifications)
-        {
-            if(noti.getMessage().equals(notification.getMessage())
-            && noti.getSource().equals(notification.getSource())
-            && noti.getCreationTime().equals(notification.getCreationTime()))
-            {
+        for (Notification noti : pendingNotifications) {
+            if (noti.getMessage().equals(notification.getMessage())
+                    && noti.getSource().equals(notification.getSource())
+                    && noti.getCreationTime().equals(notification.getCreationTime())) {
                 pendingNotifications.remove(noti);
                 break;
             }
         }
+    }
 
     public LocalDate getBirthDay() {
         return LocalDate.of(1999,9,4);

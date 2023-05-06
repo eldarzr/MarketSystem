@@ -557,8 +557,9 @@ public class ServiceMarket {
 	}
 
 	public void removeNotification(String username, NotificationDataObj notificationData) {
-		Notification notification=new Notification(notificationData);
-		market.removeNotification(username,notification);
+		Notification notification = new Notification(notificationData);
+		market.removeNotification(username, notification);
+	}
 
 	public Response addAgePurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int startAge, int endAge){
 		try{
