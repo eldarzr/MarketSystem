@@ -117,6 +117,7 @@ public class Shop implements ShopIntr {
 	}
 
 	public MemberRoleInShop validateUserHasRole(String actorUserName) throws Exception {
+		actorUserName=actorUserName.toLowerCase();
 		if (!roles.containsKey(actorUserName)) {
 			throwException("the user :" + actorUserName + " isnt belong to the shop:" + this.name + "at all");
 		}
@@ -137,6 +138,7 @@ public class Shop implements ShopIntr {
 
 	private MemberRoleInShop validatePermissionsChangeAllowed(String actor, String actOn) throws Exception {
 		validateUserHasRole(actor);
+		actor=actor.toLowerCase();
 		MemberRoleInShop actorMRIS = roles.get(actor);
 		if (actOn.equals(founderUserName))
 			throwException("the founder permissions cannot change");
@@ -145,6 +147,7 @@ public class Shop implements ShopIntr {
 		if (!roles.containsKey(actOn)) {
 			throwException("you cannot set permissions to user that dosent already have a role in the shop. User :" + actOn);
 		}
+		actOn=actOn.toLowerCase();
 		MemberRoleInShop reqRole = roles.get(actOn);
 		String roleGrantor = reqRole.getGrantor();
 		if (!roleGrantor.equals(actor) || !actor.equals(founderUserName))
@@ -261,8 +264,9 @@ public class Shop implements ShopIntr {
 	
 	public Collection<MemberRoleInShop> getManagementPermissions(User user) throws Exception {
 		if(!user.isAdmin()){
-			validateUserHasRole(user.getName());
-			MemberRoleInShop actorMRIS = roles.get(user.getName());
+			String username=user.getName();
+			validateUserHasRole(username);
+			MemberRoleInShop actorMRIS = roles.get(username);
 			if (actorMRIS.getType() != ManageType.OWNER) {
 				throw new Exception("only owners can get the Management information");
 			}

@@ -2,6 +2,8 @@ package AcceptanceTests.Tests;
 
 import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
+import AcceptanceTests.ShopBridge;
+import BusinessLayer.Shops.Shop;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,6 +59,7 @@ public class AppointUserAsOwnerAndManagerParallelismTest {
         t2.start();
         t1.join();
         t2.join();
+        ShopBridge s=system.getShop(shopOwner1,shopName);
         // Assert
         assertTrue(system.isShopOwner(userName, shopName));
         //assertTrue(system.isShopManager(userName, shopName));

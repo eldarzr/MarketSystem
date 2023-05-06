@@ -318,12 +318,14 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
 
     @Override
     public boolean isShopOwner(String ownerUserName, String shopName) throws Exception {
+        ownerUserName=ownerUserName.toLowerCase();
         return getShopOwners(shopName).contains(ownerUserName);
     }
 
     @Override
-    public boolean isShopManager(String ownerUserName, String shopName) throws Exception {
-        return getShopManagers(shopName).contains(ownerUserName);
+    public boolean isShopManager(String managerUserName, String shopName) throws Exception {
+        managerUserName=managerUserName.toLowerCase();
+        return getShopManagers(shopName).contains(managerUserName);
     }
 
     @Override
@@ -331,6 +333,7 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
         login(adminUserName,ADMIN_PASSWORD);
         Collection<MemberRoleInShop>  memberRoleInShops = market.getShopManagersAndPermissions(adminUserName,shopName);
         market.logout(adminUserName);
+        shopManager=shopManager.toLowerCase();
         for ( MemberRoleInShop m : memberRoleInShops){
             if(m.getRoleUser().equals(shopManager)){
                 return m.getPermissions().getActivatedPermissions();

@@ -329,9 +329,9 @@ public class Market implements MarketIntr{
 
     @Override
     public void appointShopOwner(String appointedBy, String appointee, String shopName) throws Exception {
+        logger.info(String.format("Attempt by user %s to appoint %s as shop-owner of shop %s.", appointedBy,appointee, shopName));
         appointee = appointee.toLowerCase();
         appointedBy = appointedBy.toLowerCase();
-        logger.info(String.format("Attempt by user %s to appoint %s as shop-owner of shop %s.", appointedBy,appointee, shopName));
         usersHandler.findMemberByName(appointedBy);
         validateLoggedInException(appointedBy);
         User user = usersHandler.findMemberByName(appointee);
@@ -352,11 +352,10 @@ public class Market implements MarketIntr{
     @Override
     public void appointShopManager(String appointedBy, String appointee, String shopName) throws Exception {
         logger.info(String.format("Attempt by user %s to appoint %s as shop-manager of shop %s.", appointedBy,appointee, shopName));
-        usersHandler.findMemberByName(appointedBy);
-//        isLoggedIn(appointedBy);
-        validateLoggedInException(appointedBy);
         appointedBy = appointedBy.toLowerCase();
         appointee = appointee.toLowerCase();
+        usersHandler.findMemberByName(appointedBy);
+        validateLoggedInException(appointedBy);
         User user = usersHandler.findMemberByName(appointee);
         Shop reqShop = checkForShop(shopName);
         reqShop.setShopManager(appointedBy,appointee ,user::sendMessage);
@@ -400,6 +399,7 @@ public class Market implements MarketIntr{
         //notify appointee
         String message=String.format("User %s changed your permissions in shop %s.", actor, shopName);
         Notification notification=new Notification(actor,message);
+        actOn=actOn.toLowerCase();
         usersHandler.notify(actOn,notification);
         logger.info(String.format("User %s changed %s permissions in shop %s.", actor,actOn, shopName));
        return reqShop.setManageOption(actor,actOn,permission);

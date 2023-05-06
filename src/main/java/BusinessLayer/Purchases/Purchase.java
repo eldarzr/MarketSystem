@@ -99,7 +99,8 @@ public class Purchase implements PurchaseIntr{
         FinalCartPriceResult finalCartPriceResult = new FinalCartPriceResult();
         for(String shopName : userCart.getShopsNames()){
             ShopBag shopBag = userCart.getShoppingBag(shopName);
-            FinalBagPriceResult finalBagPriceResult = getShopByName(shopName).computeShopBagPrice(shopBag);
+            Shop shop=getShopByName(shopName);
+            FinalBagPriceResult finalBagPriceResult = shop.computeShopBagPrice(shopBag);
             finalCartPriceResult.addBagResults(shopName, finalBagPriceResult);
         }
         return finalCartPriceResult;
