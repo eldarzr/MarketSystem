@@ -8,7 +8,9 @@ import ServiceLayer.DataObjects.DiscountDataObjects.DiscountRulesDataObjects.Com
 import ServiceLayer.DataObjects.DiscountDataObjects.DiscountRulesDataObjects.DiscountRuleServiceInterface;
 import ServiceLayer.DataObjects.DiscountDataObjects.DiscountRulesDataObjects.SimpleDiscountRuleDataObj;
 
-public class DiscountDataObj {
+import java.io.Serializable;
+
+public abstract class DiscountDataObj implements Serializable {
 
     protected int discountId;
     protected DiscountRuleServiceInterface discountRule;
@@ -19,13 +21,30 @@ public class DiscountDataObj {
     }
 
     private DiscountRuleServiceInterface makeDiscountRuleDataObj(DiscountRule discountRule) {
+        if(discountRule == null)
+            return null;
         if(discountRule.getRuleMainType().equalsIgnoreCase("Simple")){
             return new SimpleDiscountRuleDataObj((SimpleDiscountRule) discountRule);
         }
         if(discountRule.getRuleMainType().equalsIgnoreCase("Compound")){
             return new CompoundDiscountRuleDataObj((CompoundDiscountRule) discountRule);
         }
-        throw new IllegalArgumentException(String.format("FATAL ERROR: COULD NOT FIND RULE MAIN TYPE: ",discountRule.getRuleMainType()));
+        return null;
     }
 
+    public int getDiscountId() {
+        return discountId;
+    }
+
+    public DiscountRuleServiceInterface getDiscountRule() {
+        return discountRule;
+    }
+
+    public abstract int getPercentage();
+
+    public abstract String getType();
+
+    public abstract String getSubtype();
+
+    public abstract String getDescription();
 }

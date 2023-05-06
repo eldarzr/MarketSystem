@@ -4,6 +4,8 @@ import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Shops.Discount.DiscountRules.CompoundRuleType;
 import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
 import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
+import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRuleName;
+import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRulesFactory;
 import BusinessLayer.Shops.FinalBagPriceResult;
 
 import java.util.LinkedList;
@@ -66,10 +68,10 @@ public class DiscountPolicy {
         return maxCompoundDiscount;
     }
 
-    public XorCompoundDiscount addXorDiscount(List<Integer> discountsIds, XorDecisionRule xorDiscountRule){
+    public XorCompoundDiscount addXorDiscount(List<Integer> discountsIds, XorDecisionRuleName xorDiscountRuleName){
         List<Discount> discounts = getMatchingDiscountAndRemove(discountsIds);
         int id = discountIdIndexer.addAndGet(1);
-        XorCompoundDiscount xorCompoundDiscount = new XorCompoundDiscount(discounts,id,xorDiscountRule);
+        XorCompoundDiscount xorCompoundDiscount = new XorCompoundDiscount(discounts,id, XorDecisionRulesFactory.makeRule(xorDiscountRuleName));
         discountsById.put(id, xorCompoundDiscount);
         return xorCompoundDiscount;
     }
@@ -127,5 +129,18 @@ public class DiscountPolicy {
 
     public ConcurrentHashMap<Integer, Discount> getDiscountsById() {
         return discountsById;
+    }
+
+    public void resetDiscountRule(int discountId) {
+        Discount discount = discountsById.get(discountId);
+        if(discount == null)
+            throw new IllegalArgumentException(String.format("could not find discount with discount id: %d",discountId));
+        discount.resetRule();
+    }
+
+    public void removeDiscount(int discountId) {
+        Discount discount = discountsById.remove(discountId);
+        if(discount == null)
+            throw new IllegalArgumentException(String.format("could not find discount with discount id: %d",discountId));
     }
 }

@@ -3,4 +3,4 @@ target/
 logs/
 node_modules/
 Tomcat 10.1/
-frontend/
+frontend/generated/

@@ -5,6 +5,7 @@ import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Shops.Discount.DiscountRules.CompoundRuleType;
 import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
 import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
+import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRuleName;
 import BusinessLayer.Users.NotificationCallback;
 import FrontEnd.Model.*;
 import ServiceLayer.DataObjects.*;
@@ -12,6 +13,8 @@ import ServiceLayer.DataObjects.DiscountDataObjects.CategoryDiscountDataObj;
 import ServiceLayer.DataObjects.DiscountDataObjects.CompoundDiscountDataObj;
 import ServiceLayer.DataObjects.DiscountDataObjects.ProductDiscountDataObj;
 import ServiceLayer.DataObjects.DiscountDataObjects.ShopDiscountDataObj;
+import ServiceLayer.DataObjects.DiscountDataObjects.*;
+import ServiceLayer.DataObjects.DiscountDataObjects.DiscountRulesDataObjects.SimpleDiscountRuleDataObj;
 import ServiceLayer.Response;
 import ServiceLayer.ResponseT;
 import ServiceLayer.ServiceMarket;
@@ -32,11 +35,11 @@ public class MarketService {
 
 	private static volatile MarketService instance;
 
-	public static MarketService getInstance() {
-		if (instance == null) {
-			synchronized ((MarketService.class)) {
-				if (instance == null) {
-					instance = new MarketService();
+	public static MarketService getInstance(){
+		if(instance == null){
+			synchronized ( (MarketService.class)){
+				if(instance == null){
+					instance =  new MarketService();
 					instance.init();
 				}
 			}
@@ -362,52 +365,61 @@ public class MarketService {
 		if (r.isSuccess())
 			return new SResponseT<>(new ShopModel(r.getData()));
 		return new SResponseT<>(r.getMessage(), r.isSuccess());
+
     }
 
-	public SResponseT<CategoryDiscountDataObj> addCategoryDiscount(String shopName, String userName, double discountPercentage, String category) throws Exception {
-		ResponseT<CategoryDiscountDataObj> r = serviceMarket.addCategoryDiscount(userName, shopName,discountPercentage,category);
+	public SResponseT<CategoryDiscountDataObj> addCategoryDiscount(String shopName, String userName, double discountPercentage, String category) {
+		ResponseT<CategoryDiscountDataObj> r = serviceMarket.addCategoryDiscount(shopName, userName,discountPercentage,category);
 		if (r.isSuccess())
 			return new SResponseT<>(r.getData());
 		return new SResponseT<>(r.getMessage(), r.isSuccess());
 	}
 
-	public SResponseT<ProductDiscountDataObj> addProductDiscount(String shopName, String userName, double discountPercentage, String productName) throws Exception {
-		ResponseT<ProductDiscountDataObj> r = serviceMarket.addProductDiscount(userName, shopName,discountPercentage,productName);
+	public SResponseT<ProductDiscountDataObj> addProductDiscount(String shopName, String userName, double discountPercentage, String productName){
+		ResponseT<ProductDiscountDataObj> r = serviceMarket.addProductDiscount(shopName, userName,discountPercentage,productName);
 		if (r.isSuccess())
 			return new SResponseT<>(r.getData());
 		return new SResponseT<>(r.getMessage(), r.isSuccess());
 	}
 
 	public SResponseT<ShopDiscountDataObj> addShopDiscount(String shopName, String userName, double discountPercentage) {
-		ResponseT<ShopDiscountDataObj> r = serviceMarket.addShopDiscount(userName, shopName,discountPercentage);
+
+
+
+
+
+
+
+
+		ResponseT<ShopDiscountDataObj> r = serviceMarket.addShopDiscount(shopName, userName,discountPercentage);
 		if (r.isSuccess())
 			return new SResponseT<>(r.getData());
 		return new SResponseT<>(r.getMessage(), r.isSuccess());
 	}
 
-	public SResponseT<CompoundDiscountDataObj> addSumDiscount(String shopName, String userName, List<Integer> discountsIds) throws Exception {
-		ResponseT<CompoundDiscountDataObj> r = serviceMarket.addSumDiscount(userName, shopName,discountsIds);
+	public SResponseT<CompoundDiscountDataObj> addSumDiscount(String shopName, String userName, List<Integer> discountsIds) {
+		ResponseT<CompoundDiscountDataObj> r = serviceMarket.addSumDiscount(shopName, userName,discountsIds);
 		if (r.isSuccess())
 			return new SResponseT<>(r.getData());
 		return new SResponseT<>(r.getMessage(), r.isSuccess());
 	}
 
-	public SResponseT<CompoundDiscountDataObj> addMaxDiscount(String shopName, String userName, List<Integer> discountsIds) throws Exception {
-		ResponseT<CompoundDiscountDataObj> r = serviceMarket.addMaxDiscount(userName, shopName,discountsIds);
+	public SResponseT<CompoundDiscountDataObj> addMaxDiscount(String shopName, String userName, List<Integer> discountsIds) {
+		ResponseT<CompoundDiscountDataObj> r = serviceMarket.addMaxDiscount(shopName, userName,discountsIds);
 		if (r.isSuccess())
 			return new SResponseT<>(r.getData());
 		return new SResponseT<>(r.getMessage(), r.isSuccess());
 	}
 
-	public SResponseT<CompoundDiscountDataObj> addXorDiscount(String shopName, String userName, List<Integer> discountsIds, XorDecisionRule xorDiscountRule) throws Exception {
-		ResponseT<CompoundDiscountDataObj> r = serviceMarket.addXorDiscount(userName, shopName,discountsIds,xorDiscountRule);
+	public SResponseT<CompoundDiscountDataObj> addXorDiscount(String shopName, String userName, List<Integer> discountsIds, String xorDecisionRule) {
+		ResponseT<CompoundDiscountDataObj> r = serviceMarket.addXorDiscount(shopName, userName,discountsIds, xorDecisionRule);
 		if (r.isSuccess())
 			return new SResponseT<>(r.getData());
 		return new SResponseT<>(r.getMessage(), r.isSuccess());
 	}
 
-	public SResponse addDiscountRule(String shopName, String userName, DiscountRule discountRule, int discountId, CompoundRuleType actionWithOldRule) throws Exception {
-		Response r = serviceMarket.addDiscountRule(userName, shopName,discountRule,discountId,actionWithOldRule);
+	public SResponse addDiscountRule(String shopName, String userName, SimpleDiscountRuleDataObj discountRule, int discountId, String actionWithOldRule){
+		Response r = serviceMarket.addDiscountRule(shopName, userName,discountRule,discountId,actionWithOldRule);
 		if (r.isSuccess())
 			return new SResponse();
 		return new SResponse(r.getMessage());
@@ -420,10 +432,19 @@ public class MarketService {
 	public SResponseT<List<MessageModel>> getMessages(String userName) {
 		throw new NotImplementedException();
 	}
+
 	public SResponseT<List<NotificationModel>> getUserNotifications(String userName) {
 		ResponseT<List<NotificationDataObj>> r = serviceMarket.getUserNotifications(userName);
 		if (r.isSuccess())
 			return new SResponseT<>(r.getData().stream().map(NotificationModel::new).collect(Collectors.toList()));
+		return new SResponseT<>(r.getMessage(), r.isSuccess());
+	}
+	
+	public SResponseT<DiscountPolicyDataObj> getShopDiscountPolicy(String currentUser, String shopName) {
+		ResponseT<DiscountPolicyDataObj> r = serviceMarket.getShopDiscountPolicy(currentUser,shopName);
+		if (r.isSuccess()){
+			return new SResponseT<>(r.getData());
+		}
 		return new SResponseT<>(r.getMessage(), r.isSuccess());
 	}
 
@@ -432,6 +453,7 @@ public class MarketService {
 		serviceMarket.removeNotification(username, notificationData);
 	}
 // Purchase policy
+
 
 	public SResponse addAgePurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int startAge, int endAge){
 
@@ -494,5 +516,19 @@ public class MarketService {
 		ResponseT<Integer> res = serviceMarket.getActivePurchasePolicyId(userName,shopName);
 		if(res.isSuccess())return new SResponseT<Integer>(res.getData());
 		else return new SResponseT<>(res.getMessage(),false);
+	}
+	
+	public SResponse resetDiscountRule(String shopName, String userName, DiscountDataObj discountDataObj) {
+		Response r = serviceMarket.resetDiscountRule(shopName,userName,discountDataObj.getDiscountId());
+		if (r.isSuccess())
+			return new SResponse();
+		return new SResponse(r.getMessage());
+	}
+
+	public SResponse removeDiscount(String shopName, String userName, int discountId) {
+		Response r = serviceMarket.removeDiscount(shopName,userName,discountId);
+		if(r.isSuccess())
+			return new SResponse();
+		return new SResponse(r.getMessage());
 	}
 }

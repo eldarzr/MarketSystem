@@ -121,7 +121,7 @@ class DiscountPolicyTest {
         ProductDiscount shopDiscount2 = discountPolicy.addProductDiscount(17,"milk carton");
         Integer[] ids = {shopDiscount.getDiscountId(),shopDiscount2.getDiscountId()};
         List<Integer> discountsIds = Arrays.stream(ids).collect(Collectors.toList());
-        XorCompoundDiscount xorCompoundDiscount = discountPolicy.addXorDiscount(discountsIds, XorDecisionRulesFactory.makeRule(XorDecisionRuleName.SMALLER_ID));
+        XorCompoundDiscount xorCompoundDiscount = discountPolicy.addXorDiscount(discountsIds, XorDecisionRuleName.SMALLER_ID);
         double milkCartonPriceBeforeDiscount = shopBag.getProductsAndQuantities().get("milk carton").getProduct().getPrice();
         double pastaPriceBeforeDiscount = shopBag.getProductsAndQuantities().get("pasta").getProduct().getPrice();
         FinalBagPriceResult discountResult = discountPolicy.applyDiscount(shopBag);
@@ -136,7 +136,7 @@ class DiscountPolicyTest {
         ProductDiscount shopDiscount2 = discountPolicy.addProductDiscount(17,"milk carton");
         Integer[] ids = {shopDiscount.getDiscountId(),shopDiscount2.getDiscountId()};
         List<Integer> discountsIds = Arrays.stream(ids).collect(Collectors.toList());
-        XorCompoundDiscount xorCompoundDiscount = discountPolicy.addXorDiscount(discountsIds, XorDecisionRulesFactory.makeRule(XorDecisionRuleName.BIGGER_DISCOUNT));
+        XorCompoundDiscount xorCompoundDiscount = discountPolicy.addXorDiscount(discountsIds, XorDecisionRuleName.BIGGER_DISCOUNT);
         double milkCartonPriceBeforeDiscount = shopBag.getProductsAndQuantities().get("milk carton").getProduct().getPrice();
         double pastaPriceBeforeDiscount = shopBag.getProductsAndQuantities().get("pasta").getProduct().getPrice();
         FinalBagPriceResult discountResult = discountPolicy.applyDiscount(shopBag);
@@ -151,7 +151,7 @@ class DiscountPolicyTest {
         ProductDiscount shopDiscount2 = discountPolicy.addProductDiscount(17,"milk carton");
         Integer[] ids = {shopDiscount.getDiscountId(),shopDiscount2.getDiscountId()};
         List<Integer> discountsIds = Arrays.stream(ids).collect(Collectors.toList());
-        XorCompoundDiscount xorCompoundDiscount = discountPolicy.addXorDiscount(discountsIds, XorDecisionRulesFactory.makeRule(XorDecisionRuleName.SMALLER_DISCOUNT));
+        XorCompoundDiscount xorCompoundDiscount = discountPolicy.addXorDiscount(discountsIds, XorDecisionRuleName.SMALLER_DISCOUNT);
         double milkCartonPriceBeforeDiscount = shopBag.getProductsAndQuantities().get("milk carton").getProduct().getPrice();
         double pastaPriceBeforeDiscount = shopBag.getProductsAndQuantities().get("pasta").getProduct().getPrice();
         FinalBagPriceResult discountResult = discountPolicy.applyDiscount(shopBag);

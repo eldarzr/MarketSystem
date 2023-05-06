@@ -10,4 +10,14 @@ public class CategoryDiscountDataObj extends SimpleDiscountDataObj {
         super(categoryDiscount);
         this.category = categoryDiscount.getCategory();
     }
+
+    @Override
+    public String getSubtype() {
+        return "Category";
+    }
+
+    @Override
+    public String getDescription() {
+        return String.format("( %d %% discount on %s category )",getPercentage(),category);
+    }
 }
