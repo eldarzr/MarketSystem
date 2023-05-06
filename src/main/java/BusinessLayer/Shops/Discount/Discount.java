@@ -51,4 +51,8 @@ public abstract class Discount {
     public DiscountRule getDiscountRule() {
         return discountRule;
     }
+
+    public void resetRule() {
+        this.discountRule = null;
+    }
 }

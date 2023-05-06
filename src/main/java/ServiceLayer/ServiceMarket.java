@@ -11,8 +11,14 @@ import BusinessLayer.Shops.Discount.DiscountRules.CompoundRuleType;
 import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
 import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
 import BusinessLayer.Users.NotificationCallback;
+import BusinessLayer.Shops.Discount.DiscountRules.*;
+import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
+import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRuleName;
+
 import ServiceLayer.DataObjects.*;
 import ServiceLayer.DataObjects.DiscountDataObjects.*;
+import ServiceLayer.DataObjects.DiscountDataObjects.DiscountRulesDataObjects.DiscountRuleServiceInterface;
+import ServiceLayer.DataObjects.DiscountDataObjects.DiscountRulesDataObjects.SimpleDiscountRuleDataObj;
 
 
 import java.time.LocalDate;
@@ -423,18 +429,18 @@ public class ServiceMarket {
 		return new Response();
 	}
 
-	public ResponseT<CategoryDiscountDataObj> addCategoryDiscount(String shopName, String userName, double discountPercentage, String category) throws Exception {
+	public ResponseT<CategoryDiscountDataObj> addCategoryDiscount(String shopName, String userName, double discountPercentage, String category) {
 		try {
-			return new ResponseT<CategoryDiscountDataObj>(new CategoryDiscountDataObj(market.addCategoryDiscount(userName, shopName,discountPercentage,category)));
+			return new ResponseT<CategoryDiscountDataObj>(new CategoryDiscountDataObj(market.addCategoryDiscount(shopName, userName,discountPercentage,category)));
 
 		} catch (Exception exception) {
 			return new ResponseT(exception.getMessage(), false);
 		}
 	}
 
-	public ResponseT<ProductDiscountDataObj> addProductDiscount(String shopName, String userName, double discountPercentage, String productName) throws Exception {
+	public ResponseT<ProductDiscountDataObj> addProductDiscount(String shopName, String userName, double discountPercentage, String productName){
 		try {
-			return new ResponseT<ProductDiscountDataObj>(new ProductDiscountDataObj(market.addProductDiscount(userName, shopName,discountPercentage,productName)));
+			return new ResponseT<ProductDiscountDataObj>(new ProductDiscountDataObj(market.addProductDiscount(shopName, userName,discountPercentage,productName)));
 
 		} catch (Exception exception) {
 			return new ResponseT(exception.getMessage(), false);
@@ -443,48 +449,69 @@ public class ServiceMarket {
 
 	public ResponseT<ShopDiscountDataObj> addShopDiscount(String shopName, String userName, double discountPercentage) {
 		try {
-			return new ResponseT<ShopDiscountDataObj>(new ShopDiscountDataObj(market.addShopDiscount(userName, shopName,discountPercentage)));
+			return new ResponseT<ShopDiscountDataObj>(new ShopDiscountDataObj(market.addShopDiscount(shopName, userName,discountPercentage)));
 
 		} catch (Exception exception) {
 			return new ResponseT(exception.getMessage(), false);
 		}
 	}
 
-	public ResponseT<CompoundDiscountDataObj> addSumDiscount(String shopName, String userName, List<Integer> discountsIds) throws Exception {
+	public ResponseT<CompoundDiscountDataObj> addSumDiscount(String shopName, String userName, List<Integer> discountsIds) {
 		try {
-			return new ResponseT<CompoundDiscountDataObj>(new CompoundDiscountDataObj(market.addSumDiscount(userName, shopName,discountsIds)));
+			return new ResponseT<CompoundDiscountDataObj>(new SumCompoundDiscountDataObj(market.addSumDiscount(shopName, userName,discountsIds)));
 
 		} catch (Exception exception) {
 			return new ResponseT(exception.getMessage(), false);
 		}
 	}
 
-	public ResponseT<CompoundDiscountDataObj> addMaxDiscount(String shopName, String userName, List<Integer> discountsIds) throws Exception {
+	public ResponseT<CompoundDiscountDataObj> addMaxDiscount(String shopName, String userName, List<Integer> discountsIds) {
 		try {
-			return new ResponseT<CompoundDiscountDataObj>(new CompoundDiscountDataObj(market.addMaxDiscount(userName, shopName,discountsIds)));
+			return new ResponseT<CompoundDiscountDataObj>(new MaxCompoundDiscountDataObj(market.addMaxDiscount(shopName, userName,discountsIds)));
 
 		} catch (Exception exception) {
 			return new ResponseT(exception.getMessage(), false);
 		}
 	}
 
-	public ResponseT<CompoundDiscountDataObj> addXorDiscount(String shopName, String userName, List<Integer> discountsIds, XorDecisionRule xorDiscountRule) throws Exception {
+	public ResponseT<CompoundDiscountDataObj> addXorDiscount(String shopName, String userName, List<Integer> discountsIds, String xorDecisionRule) {
 		try {
-			return new ResponseT<CompoundDiscountDataObj>(new CompoundDiscountDataObj(market.addXorDiscount(userName, shopName,discountsIds,xorDiscountRule)));
+			return new ResponseT<CompoundDiscountDataObj>(new XorCompoundDiscountDataObj(market.addXorDiscount(shopName, userName,discountsIds,XorDecisionRuleName.valueOf(xorDecisionRule))));
 
 		} catch (Exception exception) {
 			return new ResponseT(exception.getMessage(), false);
 		}
 	}
 
-	public Response addDiscountRule(String shopName, String userName, DiscountRule discountRule, int discountId, CompoundRuleType actionWithOldRule) throws Exception {
+	public Response addDiscountRule(String shopName, String userName, SimpleDiscountRuleDataObj discountRule, int discountId, String actionWithOldRule) {
 		try {
-			market.addDiscountRule(shopName,userName, discountRule, discountId,actionWithOldRule);
+			DiscountRule BDiscountRule = makeBDiscountRule(discountRule);
+			market.addDiscountRule(shopName,userName, BDiscountRule, discountId,actionWithOldRule);
 		} catch (Exception exception) {
 			return new Response(exception.getMessage());
 		}
 		return new Response();
 	}
+
+
+	public Response resetDiscountRule(String shopName, String userName, int discountId) {
+		try {
+			market.resetDiscountRule(shopName,userName, discountId);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
+	}
+
+	public Response removeDiscount(String shopName, String userName, int discountId) {
+		try{
+			market.removeDiscount(shopName,userName,discountId);
+		}catch (Exception e){
+			return new Response(e.getMessage());
+		}
+		return new Response();
+	}
+
 
 	public ResponseT<List<UserDataObj>> getAllUsers(String adminName) {
 		try {
@@ -545,16 +572,16 @@ public class ServiceMarket {
 	public void setNotificationCallback(String name, NotificationCallback callback) {
 		market.setNotificationCallback(name,callback);
 	}
+	
 
-	public ResponseT<List<NotificationDataObj>> getUserNotifications(String userName) {
-		try {
-			return new ResponseT<List<NotificationDataObj>>(market.getUserNotifications(userName).stream().map(NotificationDataObj::new)
-					.collect(Collectors.toList()));
-
-		} catch (Exception exception) {
-			return new ResponseT(exception.getMessage(), false);
+	public ResponseT<DiscountPolicyDataObj> getShopDiscountPolicy(String currentUser, String shopName) {
+		try{
+			return new ResponseT<DiscountPolicyDataObj>(new DiscountPolicyDataObj(market.getDiscountPolicy(currentUser,shopName)));
+		}catch (Exception e){
+			return new ResponseT<>(e.getMessage(),false);
 		}
 	}
+
 
 	public void removeNotification(String username, NotificationDataObj notificationData) {
 		Notification notification = new Notification(notificationData);
@@ -642,6 +669,25 @@ public class ServiceMarket {
 		}catch (Exception e){
 			return new Response(e.getMessage());
 		}
+	}
+	
+	private DiscountRule makeBDiscountRule(SimpleDiscountRuleDataObj discountRule) {
+		if(discountRule.getRuleSubType().equalsIgnoreCase(SimpleRuleType.MinProductQuantity.toString())){
+			return BasicDiscountRulesFactory.makeMinProductQuantityRule(discountRule.getMinQuantity(),discountRule.getSubjectName());
+		}
+		if(discountRule.getRuleSubType().equalsIgnoreCase(SimpleRuleType.MaxProductQuantity.toString())){
+			return BasicDiscountRulesFactory.makeMaxProductQuantityRule(discountRule.getMaxQuantity(),discountRule.getSubjectName());
+		}
+		if(discountRule.getRuleSubType().equalsIgnoreCase(SimpleRuleType.MinFromCategory.toString())){
+			return BasicDiscountRulesFactory.makeMinFromCategoryRule(discountRule.getMinQuantity(),discountRule.getSubjectName());
+		}
+		if(discountRule.getRuleSubType().equalsIgnoreCase(SimpleRuleType.MaxFromCategory.toString())){
+			return BasicDiscountRulesFactory.makeMinFromCategoryRule(discountRule.getMaxQuantity(),discountRule.getSubjectName());
+		}
+		if(discountRule.getRuleSubType().equalsIgnoreCase(SimpleRuleType.BagPriceHigherThan.toString())){
+			return BasicDiscountRulesFactory.makeBagPriceHigherThanRule(discountRule.getMinPrice());
+		}
+		return null;
 	}
 
 	public ResponseT<Integer> getActivePurchasePolicyId(String userName, String shopName) {

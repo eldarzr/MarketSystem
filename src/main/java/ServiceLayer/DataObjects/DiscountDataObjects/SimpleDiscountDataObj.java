@@ -2,12 +2,24 @@ package ServiceLayer.DataObjects.DiscountDataObjects;
 
 import BusinessLayer.Shops.Discount.SimpleDiscount;
 
-public class SimpleDiscountDataObj extends DiscountDataObj {
+public abstract class SimpleDiscountDataObj extends DiscountDataObj {
 
-    double percentage;
+    int percentage;
 
     public SimpleDiscountDataObj(SimpleDiscount discount) {
         super(discount);
-        percentage = discount.getPercentage();
+        percentage = (int)(100*discount.getPercentage());
     }
+
+
+    @Override
+    public int getPercentage() {
+        return percentage;
+    }
+
+    @Override
+    public String getType() {
+        return "Simple";
+    }
+
 }

@@ -77,6 +77,7 @@ public class MyShopsView extends BaseView {
 
         createShopButton = new Button("Create Shop");
         createShopButton.addClickListener(e -> createShop(shopNameField.getValue()));
+        enableButton(createShopButton);
 
         createShopLayout.add(new Label("Shop Name: "), shopNameField, createShopButton);
         createShopLayout.setFlexGrow(1, shopNameField);
@@ -104,6 +105,7 @@ public class MyShopsView extends BaseView {
 
             Button enterButton = new Button("Enter");
             enterButton.addClickListener(e -> navigateToShop(role.getRoleShop().getName()));
+            enableButton(enterButton);
 
             shopLayout.add(shopNameLabel, roleLabel, enterButton);
             shopLayout.setFlexGrow(1, shopNameLabel, roleLabel);

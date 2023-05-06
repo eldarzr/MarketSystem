@@ -114,14 +114,13 @@ public class UsersHandler implements NotificationPublisher {
     }
 
     public String disconnect(String userName){
-//        if(!isLoggedIn(userName))
-//            throwIllegalArgumentException(String.format("User %s is not logged in", userName));
-        User user = findLoginUser(userName.toLowerCase());
-        loginUsers.remove(userName.toLowerCase());
+        userName = userName.toLowerCase();
+        User user = findLoginUser(userName);
+        loginUsers.remove(userName);
         if (user.getSessionID() == null)
             return null;
         User newUser = new User(user.getSessionID());
-        loginUsers.put(newUser.getName().toLowerCase(), newUser);
+        loginUsers.put(newUser.getName(), newUser);
 //        user.setName(user.getSessionID());
         return user.getSessionID();
     }

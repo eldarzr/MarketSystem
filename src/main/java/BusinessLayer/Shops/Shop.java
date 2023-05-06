@@ -398,7 +398,7 @@ public class Shop implements ShopIntr {
 		return discountPolicy.addMaxDiscount(discountsIds);
 	}
 
-	public XorCompoundDiscount addXorDiscount(String userName, List<Integer> discountsIds, XorDecisionRule xorDiscountRule) throws Exception {
+	public XorCompoundDiscount addXorDiscount(String userName, List<Integer> discountsIds, XorDecisionRuleName xorDiscountRule) throws Exception {
 		if(!(validateUserHasRole(userName).getType() == ManageType.OWNER))
 			throw new IllegalArgumentException("Only owners can change the discount policy");
 		return discountPolicy.addXorDiscount(discountsIds,xorDiscountRule);
@@ -410,12 +410,28 @@ public class Shop implements ShopIntr {
 		discountPolicy.addDiscountRule(discountRule,discountId,actionWithOldRule);
 	}
 
+	public DiscountPolicy getDiscountPolicy(String currentUser) throws Exception {
+		if(!(validateUserHasRole(currentUser).getType() == ManageType.OWNER)){
+			throw new IllegalArgumentException("Only owners can get the discount policy");
+		}
+		validatePermissionsException(currentUser,MANAGE_DISCOUNT_POLICY);
+		return discountPolicy;
+	}
+	
 	public PurchasePolicyManager getPurchasePolicyManager(String userName) throws Exception {
 		if(!(validateUserHasRole(userName).getType() == ManageType.OWNER))
 			throw new IllegalArgumentException("Only owners can change the discount policy");
 		return purchasePolicyManager;
 	}
 
+	public void resetDiscountRule(int discountId) {
+		discountPolicy.resetDiscountRule(discountId);
+	}
+
+	public void removeDiscount(int discountId) {
+		discountPolicy.removeDiscount(discountId);
+	}
+	
 	public void evaluatePurchasePolicy(ShopBag shopBag, User user) throws Exception {
 		purchasePolicyManager.evaluate(shopBag, user);
 	}
