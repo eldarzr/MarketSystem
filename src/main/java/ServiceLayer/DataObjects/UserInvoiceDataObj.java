@@ -21,14 +21,17 @@ public class UserInvoiceDataObj extends InvoiceDataObj {
 
 	public UserInvoiceDataObj(UserInvoice userInvoice) {
 		super(userInvoice);
-		HashMap<String, HashMap<String, List<String>>> productInfoInShop = userInvoice.getProductInfoInShop();
-		for (String shopName : productInfoInShop.keySet()){
+		productInfoInShop = new HashMap<>();
+		HashMap<String, HashMap<String, List<String>>> productInfoInShopB = userInvoice.getProductInfoInShop();
+		for (String shopName : productInfoInShopB.keySet()){
 			productInfoInShop.put(shopName, new HashMap<>());
-			HashMap<String, List<String>> productInfo = productInfoInShop.get(shopName);
+			HashMap<String, List<String>> productInfo = productInfoInShopB.get(shopName);
 			for (String productName : productInfo.keySet()){
 				productInfoInShop.get(shopName).put(productName, new ArrayList<>());
-				for (String s : productInfo.get(productName))
+				for (String s : productInfo.get(productName)) {
 					productInfoInShop.get(shopName).get(productName).add(s);
+					System.out.println("################## " + productInfoInShop.get(shopName).get(productName));
+				}
 			}
 		}
 	}

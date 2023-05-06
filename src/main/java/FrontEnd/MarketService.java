@@ -118,8 +118,14 @@ public class MarketService {
 		return new SResponseT<>(res.getMessage(), res.isSuccess());
 	}
 
-	public ResponseT<Collection<UserInvoiceDataObj>> getUserPurchaseHistory(String userName) {
-		throw new NotImplementedException();
+	public SResponseT<List<UserInvoiceModel>> getUserPurchaseHistory(String userName) {
+		try {
+			return new SResponseT<List<UserInvoiceModel>>(serviceMarket.getUserPurchaseHistory(userName).getData().stream().
+					map(UserInvoiceModel::new).collect(Collectors.toList()));
+
+		} catch (Exception exception) {
+			return new SResponseT(exception.getMessage(), false);
+		}
 	}
 
 	public SResponseT<ShopModel> createShop(String userName, String shopName) {
@@ -273,8 +279,14 @@ public class MarketService {
 	}
 
 
-	public ResponseT<Collection<UserInvoiceDataObj>> getUserPurchaseHistoryByAdmin(String adminName, String memberName) {
-		throw new NotImplementedException();
+	public SResponseT<List<UserInvoiceModel>> getUserPurchaseHistoryByAdmin(String adminName, String memberName) {
+		try {
+			return new SResponseT<List<UserInvoiceModel>>(serviceMarket.getUserPurchaseHistoryByAdmin(adminName, memberName).getData().stream().
+					map(UserInvoiceModel::new).collect(Collectors.toList()));
+
+		} catch (Exception exception) {
+			return new SResponseT(exception.getMessage(), false);
+		}
 	}
 
 

@@ -19,7 +19,7 @@ public class ProfileView extends BaseView {
     protected Button viewMyShopsButton;
     protected Button searchButton;
     protected Button adminButton;
-    protected String PURCHASE_HISTORY = "purchase_history";
+    protected String PURCHASE_HISTORY = "user_history";
     protected String MY_NOTIFICATIONS = "user_notifications";
     protected String MY_SHOPS_SCREEN = "my_shops";
     protected String SEARCH_SCREEN = "search";

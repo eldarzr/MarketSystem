@@ -202,6 +202,7 @@ public class Purchase implements PurchaseIntr{
                     (user.getName(), paymentDetails.toString(), supplyDetails.toString(), shopName);
             ShopBag shopBag = shopsAndProducts.get(shopName);
             for (ShopBagItem shopBagItem : shopBag.getProductsAndQuantities().values()){
+                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + shopBagItem.getProduct());
                 userInvoice.addProduct(shopName, shopBagItem.getProduct(), shopBagItem.getQuantity());
                 shopInvoice.addProduct(shopName, shopBagItem.getProduct(), shopBagItem.getQuantity());
             }

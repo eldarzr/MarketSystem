@@ -20,10 +20,11 @@ public class UserInvoiceModel extends InvoiceModel implements Serializable {
 
 	public UserInvoiceModel(UserInvoiceDataObj userInvoice) {
 		super(userInvoice);
-		HashMap<String, HashMap<String, List<String>>> productInfoInShop = userInvoice.getProductInfoInShop();
-		for (String shopName : productInfoInShop.keySet()){
+		productInfoInShop = new HashMap<>();
+		HashMap<String, HashMap<String, List<String>>> productInfoInShopS = userInvoice.getProductInfoInShop();
+		for (String shopName : productInfoInShopS.keySet()){
 			productInfoInShop.put(shopName, new HashMap<>());
-			HashMap<String, List<String>> productInfo = productInfoInShop.get(shopName);
+			HashMap<String, List<String>> productInfo = productInfoInShopS.get(shopName);
 			for (String productName : productInfo.keySet()){
 				productInfoInShop.get(shopName).put(productName, new ArrayList<>());
 				for (String s : productInfo.get(productName))
