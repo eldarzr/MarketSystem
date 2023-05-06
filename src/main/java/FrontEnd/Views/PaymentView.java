@@ -4,6 +4,7 @@ package FrontEnd.Views;
 import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import FrontEnd.Model.UserModel;
+import FrontEnd.SResponse;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
@@ -80,8 +81,12 @@ public class PaymentView extends BaseView {
                 CreditCardPaymentDetails paymentDetails = createCreditCardPaymentDetails(cardNumber, expirationDate, securityCode, idNumber, firstName, lastName);
                 SupplyDetails supplyDetails = createSupplyDetails(firstName, lastName, streetAddress, city, country, zipcode);
 
-                marketService.purchaseCart(getCurrentUser().getName(),paymentDetails,supplyDetails);
-                Notification.show("Payment confirmed!");
+                SResponse res = marketService.purchaseCart(getCurrentUser().getName(),paymentDetails,supplyDetails);
+                if(res.isSuccess())
+                    Notification.show("Payment confirmed!");
+                else {
+                    Notification.show("Purchase error: "+res.getMessage());
+                }
                 navigateToHome();
             }
         });

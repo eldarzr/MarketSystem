@@ -4,6 +4,9 @@ import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Market;
 import BusinessLayer.Notifications.Notification;
+import BusinessLayer.Shops.PurchasePolicies.ComplexPolicyType;
+import BusinessLayer.Shops.PurchasePolicies.PurchasePolicy;
+import BusinessLayer.Shops.Shop;
 import BusinessLayer.Shops.Discount.DiscountRules.CompoundRuleType;
 import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
 import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
@@ -12,8 +15,11 @@ import ServiceLayer.DataObjects.*;
 import ServiceLayer.DataObjects.DiscountDataObjects.*;
 
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ServiceMarket {
@@ -553,5 +559,96 @@ public class ServiceMarket {
 	public void removeNotification(String username, NotificationDataObj notificationData) {
 		Notification notification=new Notification(notificationData);
 		market.removeNotification(username,notification);
+
+	public Response addAgePurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int startAge, int endAge){
+		try{
+			market.addAgePurchasePolicy(userName, shopName, isProduct, toConstraint, positive, startAge, endAge);
+			return new Response();
+		}catch (Exception e){
+			return new Response(e.getMessage());
+		}
+	}
+
+	public Response addQuantityPurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int minQuantity, int maxQuantity){
+		try{
+			market.addQuantityPurchasePolicy(userName, shopName, isProduct, toConstraint, positive, minQuantity, maxQuantity);
+			return new Response();
+		}catch (Exception e){
+			return new Response(e.getMessage());
+		}
+	}
+
+	public Response addDatePurchasePolicy(String userName, String shopName, boolean isProduct, String toConstraint, boolean positive, LocalDate startDate, LocalDate endDate) {
+		try{
+			market.addDatePurchasePolicy(userName, shopName, isProduct, toConstraint, positive, startDate, endDate);
+			return new Response();
+		}catch (Exception e){
+			return new Response(e.getMessage());
+		}
+	}
+
+	public Response addTimePurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int startHour, int endHour) {
+		try{
+			market.addTimePurchasePolicy(userName, shopName, isProduct, toConstraint, positive, startHour, endHour);
+			return new Response();
+		}catch (Exception e){
+			return new Response(e.getMessage());
+		}
+	}
+
+	public Response addOrPurchasePolicy(String userName, String shopName,int pid1, int pid2){
+		try{
+			market.addOrPurchasePolicy(userName, shopName, pid1, pid2);
+			return new Response();
+		}catch (Exception e){
+			return new Response(e.getMessage());
+		}
+	}
+	public Response addAndPurchasePolicy(String userName, String shopName,int pid1, int pid2){
+		try{
+			market.addAndPurchasePolicy(userName, shopName, pid1, pid2);
+			return new Response();
+		}catch (Exception e){
+			return new Response(e.getMessage());
+		}
+	}
+	public Response addIfPurchasePolicy(String userName, String shopName,int pid1, int pid2){
+		try{
+			market.addIfPurchasePolicy(userName, shopName, pid1, pid2);
+			return new Response();
+		}catch (Exception e){
+			return new Response(e.getMessage());
+		}
+	}
+
+	public ResponseT<Collection<PurchasePolicyDataObj>> getAllPurchasePolicies(String userName, String shopName){
+		try{
+			Map<Integer, PurchasePolicy> purchasePolicyMap = market.getAllPurchasePolicies(userName, shopName);
+			Collection<PurchasePolicyDataObj> ret = new ArrayList<>();
+			for(PurchasePolicy p : purchasePolicyMap.values())
+				ret.add(new PurchasePolicyDataObj(p));
+			return new ResponseT<>(ret);
+		}
+		catch (Exception e){
+			return new ResponseT<>(e.getMessage(),false);
+		}
+	}
+
+	public Response setActivePurchasePolicy(String userName, String shopName, int policyId) {
+		try{
+			market.setActivePurchasePolicy(userName,shopName,policyId);
+			return new Response();
+		}catch (Exception e){
+			return new Response(e.getMessage());
+		}
+	}
+
+	public ResponseT<Integer> getActivePurchasePolicyId(String userName, String shopName) {
+		try{
+			Integer i = market.getActivePurchasePolicyId(userName,shopName);
+			return new ResponseT<Integer>(i);
+		}catch (Exception e){
+			return new ResponseT<>(e.getMessage(),false);
+		}
 	}
 }

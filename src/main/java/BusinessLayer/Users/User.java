@@ -9,6 +9,7 @@ import BusinessLayer.Purchases.UserInvoice;
 import BusinessLayer.Shops.Product;
 import BusinessLayer.Shops.Shop;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -166,6 +167,8 @@ public class User implements NotificationObserver {
             }
         }
 
+    public LocalDate getBirthDay() {
+        return LocalDate.of(1999,9,4);
     }
 }
 

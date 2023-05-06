@@ -7,6 +7,8 @@ import BusinessLayer.Notifications.Notification;
 import BusinessLayer.Purchases.*;
 import BusinessLayer.Shops.Product;
 import BusinessLayer.Shops.ProductIntr;
+import BusinessLayer.Shops.PurchasePolicies.ComplexPolicyType;
+import BusinessLayer.Shops.PurchasePolicies.PurchasePolicy;
 import BusinessLayer.Shops.Shop;
 import BusinessLayer.Shops.ShopHandler;
 import BusinessLayer.Shops.*;
@@ -21,8 +23,10 @@ import org.apache.commons.lang3.NotImplementedException;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -739,5 +743,63 @@ public class Market implements MarketIntr{
 
     public void removeNotification(String username,Notification notification) {
         usersHandler.removeNotification(username,notification);
+
+public void addAgePurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int startAge, int endAge)throws Exception{
+        validateUserIsntGuest(userName);
+        isLoggedIn(userName);
+        getShop(shopName).getPurchasePolicyManager(userName).addAgeConstraint(isProduct,toConstraint,positive,startAge,endAge);
+    }
+
+    public void addQuantityPurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int minQuantity, int maxQuantity)throws Exception{
+        validateUserIsntGuest(userName);
+        isLoggedIn(userName);
+        getShop(shopName).getPurchasePolicyManager(userName).addQuantityConstraint(isProduct,toConstraint,positive,minQuantity,maxQuantity);
+    }
+
+    public void addDatePurchasePolicy(String userName, String shopName, boolean isProduct, String toConstraint, boolean positive, LocalDate startDate, LocalDate endDate)throws Exception{
+        validateUserIsntGuest(userName);
+        isLoggedIn(userName);
+        getShop(shopName).getPurchasePolicyManager(userName).addDateConstraint(isProduct,toConstraint,positive,startDate,endDate);
+    }
+
+    public void addTimePurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int startHour, int endHour)throws Exception{
+        validateUserIsntGuest(userName);
+        isLoggedIn(userName);
+        getShop(shopName).getPurchasePolicyManager(userName).addTimeConstraint(isProduct,toConstraint,positive,startHour,endHour);
+    }
+
+    public void addOrPurchasePolicy(String userName, String shopName,int pid1, int pid2)throws Exception{
+        validateUserIsntGuest(userName);
+        isLoggedIn(userName);
+        getShop(shopName).getPurchasePolicyManager(userName).addComplexConstraint(pid1,pid2, ComplexPolicyType.OR);
+    }
+    public void addAndPurchasePolicy(String userName, String shopName,int pid1, int pid2)throws Exception{
+        validateUserIsntGuest(userName);
+        isLoggedIn(userName);
+        getShop(shopName).getPurchasePolicyManager(userName).addComplexConstraint(pid1,pid2, ComplexPolicyType.AND);
+    }
+    public void addIfPurchasePolicy(String userName, String shopName,int pid1, int pid2)throws Exception{
+        validateUserIsntGuest(userName);
+        isLoggedIn(userName);
+        getShop(shopName).getPurchasePolicyManager(userName).addComplexConstraint(pid1,pid2, ComplexPolicyType.IF);
+    }
+
+    public Map<Integer, PurchasePolicy> getAllPurchasePolicies(String userName, String shopName) throws Exception {
+        validateUserIsntGuest(userName);
+        isLoggedIn(userName);
+        return getShop(shopName).getPurchasePolicyManager(userName).getAllPolicies();
+    }
+
+
+    public void setActivePurchasePolicy(String userName, String shopName, int policyId) throws Exception {
+        validateUserIsntGuest(userName);
+        isLoggedIn(userName);
+        getShop(shopName).getPurchasePolicyManager(userName).setActivePolicy(policyId);
+    }
+
+    public Integer getActivePurchasePolicyId(String userName, String shopName) throws Exception {
+        validateUserIsntGuest(userName);
+        isLoggedIn(userName);
+        return getShop(shopName).getPurchasePolicyManager(userName).getActivePolicyId();
     }
 }
