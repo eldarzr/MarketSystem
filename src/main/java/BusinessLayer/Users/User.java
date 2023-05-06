@@ -26,7 +26,8 @@ public class User implements NotificationObserver {
 
     Cart currentCart;
 
-    private ConcurrentLinkedQueue<Notification> pendingNotifications = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<Notification> pendingNotifications;
+    private NotificationCallback callback;
 
     public User(String name, String email, String password) {
         this.name = name;
@@ -35,6 +36,7 @@ public class User implements NotificationObserver {
         this.sessionID = null;
         userType = UserType.MEMBER;
         currentCart = new Cart();
+        pendingNotifications = new ConcurrentLinkedQueue<>();
     }
 
     public User(String guestName) {
@@ -126,6 +128,10 @@ public class User implements NotificationObserver {
 
     @Override
     public void notify(Notification notification) {
+        if(callback!=null) callback.call(notification.getMessage());
+    }
+
+    public void addPendingNotifications(Notification notification) {
         pendingNotifications.add(notification);
     }
 
@@ -140,6 +146,26 @@ public class User implements NotificationObserver {
 	public void setCart(Cart currentCart) {
         this.currentCart = currentCart;
     }
+
+    public void setNotificationCallback(NotificationCallback callback) {
+        this.callback=callback;
+    }
+
+    public Collection<Notification> getPendingNotification() {
+        return pendingNotifications;
+    }
+
+    public void removeNotification(Notification notification) {
+        for(Notification noti: pendingNotifications)
+        {
+            if(noti.getMessage().equals(notification.getMessage())
+            && noti.getSource().equals(notification.getSource())
+            && noti.getCreationTime().equals(notification.getCreationTime()))
+            {
+                pendingNotifications.remove(noti);
+                break;
+            }
+        }
 
     public LocalDate getBirthDay() {
         return LocalDate.of(1999,9,4);

@@ -5,7 +5,7 @@ import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Shops.Discount.DiscountRules.CompoundRuleType;
 import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
 import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
-import BusinessLayer.Shops.Shop;
+import BusinessLayer.Users.NotificationCallback;
 import FrontEnd.Model.*;
 import ServiceLayer.DataObjects.*;
 import ServiceLayer.DataObjects.DiscountDataObjects.CategoryDiscountDataObj;
@@ -364,10 +364,6 @@ public class MarketService {
 		return new SResponseT<>(r.getMessage(), r.isSuccess());
     }
 
-	public SResponseT<List<MessageModel>> getMessages(String userName) {
-		throw new NotImplementedException();
-	}
-
 	public SResponseT<CategoryDiscountDataObj> addCategoryDiscount(String shopName, String userName, double discountPercentage, String category) throws Exception {
 		ResponseT<CategoryDiscountDataObj> r = serviceMarket.addCategoryDiscount(userName, shopName,discountPercentage,category);
 		if (r.isSuccess())
@@ -417,7 +413,25 @@ public class MarketService {
 		return new SResponse(r.getMessage());
 	}
 
-	// Purchase policy
+	public void setNotificationCallback(String name, NotificationCallback callback) {
+		serviceMarket.setNotificationCallback(name,callback);
+	}
+
+	public SResponseT<List<MessageModel>> getMessages(String userName) {
+		throw new NotImplementedException();
+	}
+	public SResponseT<List<NotificationModel>> getUserNotifications(String userName) {
+		ResponseT<List<NotificationDataObj>> r = serviceMarket.getUserNotifications(userName);
+		if (r.isSuccess())
+			return new SResponseT<>(r.getData().stream().map(NotificationModel::new).collect(Collectors.toList()));
+		return new SResponseT<>(r.getMessage(), r.isSuccess());
+	}
+
+	public void removeNotification(String username, NotificationModel notification) {
+		NotificationDataObj notificationData=new NotificationDataObj(notification);
+		serviceMarket.removeNotification(username,notificationData);
+
+// Purchase policy
 
 	public SResponse addAgePurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int startAge, int endAge){
 

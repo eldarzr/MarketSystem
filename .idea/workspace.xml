@@ -4,7 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b632bc94-40ae-4fc8-ad09-f0a6a998ea35" name="Default Changelist" comment="" />
+    <list default="true" id="b632bc94-40ae-4fc8-ad09-f0a6a998ea35" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Market.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Market.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Notifications/Notification.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Notifications/Notification.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Users/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Users/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Users/UsersHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Users/UsersHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/FrontEnd/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/Application.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/FrontEnd/MarketService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/MarketService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/Admin/AdminProfileView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/Admin/AdminProfileView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/Admin/AdminUserMessagesView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/Admin/AdminUserMessagesView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/BaseView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/BaseView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/ProfileView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/ProfileView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ServiceLayer/ServiceMarket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ServiceLayer/ServiceMarket.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -23,11 +36,21 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="LogFilters">
+    <option name="FILTER_ERRORS" value="false" />
+    <option name="FILTER_WARNINGS" value="false" />
+    <option name="FILTER_INFO" value="true" />
+    <option name="FILTER_DEBUG" value="true" />
+    <option name="CUSTOM_FILTER" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
   <component name="MavenRunner">
     <option name="skipTests" value="true" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectId" id="2NsDd5esnsqHzi2PVet5h88KmtH" />
   <component name="ProjectLevelVcsManager">
@@ -42,9 +65,9 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/courses/שנה ג/סדנא/MarketSystem",
+    "last_opened_file_path": "D:/courses/third_year/Sadna/MarketSystem",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "spring.configuration.checksum": "032134b5102ef5c550f340eb223534b9"
   }
 }]]></component>
@@ -57,6 +80,8 @@
       <recent name="BusinessLayer.Shops" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="ServiceLayer.DataObjects" />
+      <recent name="FrontEnd.Views" />
       <recent name="BusinessLayer.Notifications" />
       <recent name="BusinessLayer" />
     </key>
@@ -74,7 +99,7 @@
       <command value="mvn clean install" />
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.Application">
+  <component name="RunManager" selected="Smart Tomcat.tomcat">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="BusinessLayer.Main" />
       <module name="MarketSystem" />
@@ -177,10 +202,36 @@
       <method v="2" />
     </configuration>
     <configuration name="Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <option name="ACTIVE_PROFILES" />
       <module name="MarketSystem" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="FrontEnd.Application" />
       <method v="2">
         <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="tomcat" type="com.poratu.idea.plugins.tomcat">
+      <predefined_log_file enabled="true" id="Tomcat Localhost Log" />
+      <predefined_log_file enabled="true" id="Tomcat Access Log" />
+      <predefined_log_file id="Tomcat Catalina Log" />
+      <predefined_log_file id="Tomcat Manager Log" />
+      <predefined_log_file id="Tomcat Host Manager Log" />
+      <option name="contextPath" value="/market" />
+      <option name="docBase" value="D:\courses\third_year\Sadna\MarketSystem\target" />
+      <option name="envOptions">
+        <map />
+      </option>
+      <option name="extraClassPath" value="" />
+      <option name="tomcatInfo">
+        <TomcatInfo>
+          <option name="name" value="Apache Tomcat/10.1.8" />
+          <option name="path" value="$PROJECT_DIR$/Tomcat 10.1" />
+          <option name="version" value="10.1.8.0" />
+        </TomcatInfo>
+      </option>
+      <option name="vmOptions" value="" />
+      <module name="MarketSystem" />
+      <method v="2">
+        <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="clean package -P production" />
       </method>
     </configuration>
     <list>
@@ -190,6 +241,7 @@
       <item itemvalue="JUnit.MarketCreateShopTest.createShopFailNotRegistered (1)" />
       <item itemvalue="JUnit.MarketgetShopTest" />
       <item itemvalue="Maven.MarketSystem [mvn,exec:java]" />
+      <item itemvalue="Smart Tomcat.tomcat" />
       <item itemvalue="Spring Boot.Application" />
     </list>
     <recent_temporary>
@@ -215,6 +267,7 @@
       <workItem from="1681583650945" duration="6528000" />
       <workItem from="1682790263384" duration="1101000" />
       <workItem from="1682855316765" duration="12165000" />
+      <workItem from="1683388413433" duration="10558000" />
     </task>
     <servers />
   </component>

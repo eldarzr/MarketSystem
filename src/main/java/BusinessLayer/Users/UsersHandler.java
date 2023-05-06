@@ -105,6 +105,10 @@ public class UsersHandler implements NotificationPublisher {
             throwIllegalArgumentException(String.format("User %s already logged in",userName));
         if(!passwordEncoder.matches(password,user.getPassword()))
             throwIllegalArgumentException("Incorrect password");
+        // todo: remove after meeting, only here to show real-time notifications work.
+        Notification notification=new Notification("me",String.format("hey all it's %s",userName));
+        notifyAll(notification);
+
         loginUsers.put(user.getName(),user);
         return user;
     }
@@ -273,8 +277,11 @@ public class UsersHandler implements NotificationPublisher {
     // Notify all users with notification (system notifications).
     public void notifyAll(Notification notification)
     {
-
-        for(User observer: members.values()) observer.notify(notification);
+        for(User observer: members.values())
+        {
+            if(isLoggedIn(observer.getName())) observer.notify(notification);
+            observer.addPendingNotifications(notification);
+        }
     }
 
     // Notify collection of users with notification (shop management notifications).
@@ -286,7 +293,9 @@ public class UsersHandler implements NotificationPublisher {
     // Notify Specific user with notification(user/shop-user notifications).
     public void notify(String userName,Notification notification)
     {
-        members.get(userName).notify(notification);
+        User user=members.get(userName);
+        if(isLoggedIn(userName)) user.notify(notification);
+        user.addPendingNotifications(notification);
     }
 
 	public List<User> getAllUsers(String adminName) throws Exception {
@@ -315,5 +324,17 @@ public class UsersHandler implements NotificationPublisher {
     public User getUser(String userName) {
         User user = findUserByName(userName.toLowerCase());
         return user;
+    }
+
+    public void setNotificationCallback(String name, NotificationCallback callback) {
+        findMemberByName(name).setNotificationCallback(callback);
+    }
+
+    public Collection<Notification> getUserNotifications(String userName) {
+        return findLoginUser(userName).getPendingNotification();
+    }
+
+    public void removeNotification(String username,Notification notification) {
+        findLoginUser(username).removeNotification(notification);
     }
 }

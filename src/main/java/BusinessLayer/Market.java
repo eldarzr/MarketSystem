@@ -16,6 +16,7 @@ import BusinessLayer.Shops.Discount.*;
 import BusinessLayer.Shops.Discount.DiscountRules.CompoundRuleType;
 import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
 import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
+import BusinessLayer.Users.NotificationCallback;
 import BusinessLayer.Users.User;
 import BusinessLayer.Users.UsersHandler;
 import org.apache.commons.lang3.NotImplementedException;
@@ -194,7 +195,7 @@ public class Market implements MarketIntr{
         shopHandler.openShop(userName, shopName);
         // notify management on opening shop
         String message=String.format("User %s opened shop %s.", userName, shopName);
-        Notification notification=new Notification(userName,message,java.time.LocalDate.now());
+        Notification notification=new Notification(userName,message);
         notifyShopManagement(userName, shopName,notification);
     }
 
@@ -207,7 +208,7 @@ public class Market implements MarketIntr{
         shopHandler.closeShop(userName, shopName);
         // notify management on closing shop
         String message=String.format("User %s closed shop %s.", userName, shopName);
-        Notification notification=new Notification(userName,message,java.time.LocalDate.now());
+        Notification notification=new Notification(userName,message);
         notifyShopManagement(userName, shopName,notification);
         logger.info(message);
     }
@@ -229,7 +230,7 @@ public class Market implements MarketIntr{
         shopHandler.addNewProduct(userName, shopName, productName, category, desc, price);
         // notify management on new product
         String message=String.format("User %s added new product %s to store %s.", userName,productName, shopName);
-        Notification notification=new Notification(userName,message,java.time.LocalDate.now());
+        Notification notification=new Notification(userName,message);
         notifyShopManagement(userName, shopName,notification);
         logger.info(message);
     }
@@ -243,7 +244,7 @@ public class Market implements MarketIntr{
         shopHandler.removeProduct(userName, shopName, productName);
         // notify management on new product
         String message=String.format("User %s removed product %s from store %s.", userName,productName, shopName);
-        Notification notification=new Notification(userName,message,java.time.LocalDate.now());
+        Notification notification=new Notification(userName,message);
         notifyShopManagement(userName, shopName,notification);
         logger.info(message);
     }
@@ -333,7 +334,7 @@ public class Market implements MarketIntr{
         reqShop.setShopOwner(appointedBy,appointee , user::sendMessage);
         //notify appointee
         String message=String.format("User %s appointed %s as shop-owner of shop %s.", appointedBy,appointee, shopName);
-        Notification notification=new Notification(appointedBy,message,java.time.LocalDate.now());
+        Notification notification=new Notification(appointedBy,message);
         usersHandler.notify(appointee,notification);
         logger.info(message);
     }
@@ -354,7 +355,7 @@ public class Market implements MarketIntr{
         reqShop.setShopManager(appointedBy,appointee ,user::sendMessage);
         //notify appointee
         String message=String.format("User %s appointed %s as shop-manager of shop %s.", appointedBy,appointee, shopName);
-        Notification notification=new Notification(appointedBy,message,java.time.LocalDate.now());
+        Notification notification=new Notification(appointedBy,message);
         usersHandler.notify(appointee,notification);
         logger.info(message);
     }
@@ -375,7 +376,7 @@ public class Market implements MarketIntr{
 
        //notify removed owner
         String message=String.format("Manager %s removed you as shop-manager of shop %s.", managerName, shopName);
-        Notification notification=new Notification(managerName,message,java.time.LocalDate.now());
+        Notification notification=new Notification(managerName,message);
         usersHandler.notify(userToRemove,notification);
         logger.info(String.format("Manager %s removed %s as shop-manager of shop %s.", managerName,userToRemove, shopName));
     }
@@ -389,7 +390,7 @@ public class Market implements MarketIntr{
         Shop reqShop = checkForShop(shopName);
         //notify appointee
         String message=String.format("User %s changed your permissions in shop %s.", actor, shopName);
-        Notification notification=new Notification(actor,message,java.time.LocalDate.now());
+        Notification notification=new Notification(actor,message);
         usersHandler.notify(actOn,notification);
         logger.info(String.format("User %s changed %s permissions in shop %s.", actor,actOn, shopName));
        return reqShop.setManageOption(actor,actOn,permission);
@@ -405,7 +406,7 @@ public class Market implements MarketIntr{
         reqShop.addManageOption(actor,actOn,permission);
         //notify appointee
         String message=String.format("User %s added to your permissions in shop %s.", actor, shopName);
-        Notification notification=new Notification(actor,message,java.time.LocalDate.now());
+        Notification notification=new Notification(actor,message);
         usersHandler.notify(actOn,notification);
         logger.info(String.format("User %s added to %s permissions in shop %s.", actor,actOn, shopName));
     }
@@ -730,7 +731,20 @@ public class Market implements MarketIntr{
         return shopHandler.getShop(name);
     }
 
-    public void addAgePurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int startAge, int endAge)throws Exception{
+    public void setNotificationCallback(String name, NotificationCallback callback) {
+        usersHandler.setNotificationCallback(name,callback);
+    }
+
+    public Collection<Notification> getUserNotifications(String userName) throws Exception {
+        validateUserIsntGuest(userName);
+        isLoggedIn(userName);
+        return usersHandler.getUserNotifications(userName);
+    }
+
+    public void removeNotification(String username,Notification notification) {
+        usersHandler.removeNotification(username,notification);
+
+public void addAgePurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int startAge, int endAge)throws Exception{
         validateUserIsntGuest(userName);
         isLoggedIn(userName);
         getShop(shopName).getPurchasePolicyManager(userName).addAgeConstraint(isProduct,toConstraint,positive,startAge,endAge);
