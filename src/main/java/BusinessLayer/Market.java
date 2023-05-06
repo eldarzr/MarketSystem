@@ -742,7 +742,8 @@ public class Market implements MarketIntr{
     }
 
     public void removeNotification(String username,Notification notification) {
-        usersHandler.removeNotification(username,notification);
+        usersHandler.removeNotification(username, notification);
+    }
 
 public void addAgePurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int startAge, int endAge)throws Exception{
         validateUserIsntGuest(userName);
