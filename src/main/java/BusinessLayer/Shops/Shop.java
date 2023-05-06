@@ -10,6 +10,7 @@ import BusinessLayer.Shops.Discount.*;
 import BusinessLayer.Shops.Discount.DiscountRules.CompoundRuleType;
 import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
 import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
+import BusinessLayer.Shops.PurchasePolicies.PurchasePolicyManager;
 import BusinessLayer.Users.User;
 import BusinessLayer.Purchases.ShopInvoice;
 
@@ -42,6 +43,7 @@ public class Shop implements ShopIntr {
 	private ConcurrentLinkedQueue<MessageObserver> observers;
 	private ConcurrentLinkedQueue<ShopInvoice> invoices;
 	private DiscountPolicy discountPolicy;
+	private PurchasePolicyManager purchasePolicyManager;
 
 	public Shop(String name, String founderUserName) {
 		this.name = name;
@@ -53,6 +55,7 @@ public class Shop implements ShopIntr {
 		this.observers = new ConcurrentLinkedQueue<>();
 		this.invoices = new ConcurrentLinkedQueue<>();
 		this.discountPolicy = new DiscountPolicy();
+		this.purchasePolicyManager = new PurchasePolicyManager();
 	}
 
 	public String getName() {
@@ -405,6 +408,16 @@ public class Shop implements ShopIntr {
 		if(!(validateUserHasRole(userName).getType() == ManageType.OWNER))
 			throw new IllegalArgumentException("Only owners can change the discount policy");
 		discountPolicy.addDiscountRule(discountRule,discountId,actionWithOldRule);
+	}
+
+	public PurchasePolicyManager getPurchasePolicyManager(String userName) throws Exception {
+		if(!(validateUserHasRole(userName).getType() == ManageType.OWNER))
+			throw new IllegalArgumentException("Only owners can change the discount policy");
+		return purchasePolicyManager;
+	}
+
+	public void evaluatePurchasePolicy(ShopBag shopBag, User user) throws Exception {
+		purchasePolicyManager.evaluate(shopBag, user);
 	}
 }
 

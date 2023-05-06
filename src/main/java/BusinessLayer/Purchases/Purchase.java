@@ -70,11 +70,28 @@ public class Purchase implements PurchaseIntr{
     private FinalCartPriceResult handleStock() throws Exception {
         Cart cart = user.getCart();
         ConcurrentHashMap<String, ShopBag>  shopsAndProducts = cart.getShopsAndProducts();
+        // Check for every shop if the purchase policy applies
+        checkPurchasePolicies(shopsAndProducts);
+
         checkProductsAvailability(shopsAndProducts);
         FinalCartPriceResult finalPriceResultResult = computeCartPrice();
         reduceProductsQuantity(shopsAndProducts);
         addProductsToInvoices(shopsAndProducts);
         return finalPriceResultResult;
+    }
+
+    private void checkPurchasePolicies(ConcurrentHashMap<String, ShopBag> shopsAndProducts) throws Exception {
+        for(String shopName : shopsAndProducts.keySet()){
+            Shop shop = null;
+            for(Shop s : shops){
+                if(s.getName().equals(shopName)){
+                    shop = s;
+                    break;
+                }
+            }
+            if(shop == null)throw new Exception("Shop not found: "+shopName);
+            shop.evaluatePurchasePolicy(shopsAndProducts.get(shopName), user);
+        }
     }
 
     private FinalCartPriceResult computeCartPrice() {

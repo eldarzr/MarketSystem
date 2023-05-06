@@ -19,6 +19,7 @@ import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.VaadinSession;
 import org.apache.commons.lang3.NotImplementedException;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -414,5 +415,70 @@ public class MarketService {
 		if (r.isSuccess())
 			return new SResponse();
 		return new SResponse(r.getMessage());
+	}
+
+	// Purchase policy
+
+	public SResponse addAgePurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int startAge, int endAge){
+
+		Response res = serviceMarket.addAgePurchasePolicy(userName, shopName, isProduct, toConstraint, positive, startAge, endAge);
+		if(res.isSuccess())return new SResponse();
+		else return new SResponse(res.getMessage());
+	}
+
+	public SResponse addQuantityPurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int minQuantity, int maxQuantity){
+
+		Response res = serviceMarket.addQuantityPurchasePolicy(userName, shopName, isProduct, toConstraint, positive, minQuantity, maxQuantity);
+		if(res.isSuccess())return new SResponse();
+		else return new SResponse(res.getMessage());
+	}
+
+	public SResponse addDatePurchasePolicy(String userName, String shopName, boolean isProduct, String toConstraint, boolean positive, LocalDate startDate, LocalDate endDate) {
+
+		Response res = serviceMarket.addDatePurchasePolicy(userName, shopName, isProduct, toConstraint, positive, startDate, endDate);
+		if(res.isSuccess())return new SResponse();
+		else return new SResponse(res.getMessage());
+	}
+
+	public SResponse addTimePurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int startHour, int endHour) {
+
+		Response res = serviceMarket.addTimePurchasePolicy(userName, shopName, isProduct, toConstraint, positive, startHour, endHour);
+		if(res.isSuccess())return new SResponse();
+		else return new SResponse(res.getMessage());
+	}
+
+	public SResponse addOrPurchasePolicy(String userName, String shopName,int pid1, int pid2){
+
+		Response res = serviceMarket.addOrPurchasePolicy(userName, shopName, pid1, pid2);
+		if(res.isSuccess())return new SResponse();
+		else return new SResponse(res.getMessage());
+	}
+	public SResponse addAndPurchasePolicy(String userName, String shopName,int pid1, int pid2){
+		Response res = serviceMarket.addAndPurchasePolicy(userName, shopName, pid1, pid2);
+		if(res.isSuccess())return new SResponse();
+		else return new SResponse(res.getMessage());
+	}
+	public SResponse addIfPurchasePolicy(String userName, String shopName,int pid1, int pid2){
+
+		Response res = serviceMarket.addIfPurchasePolicy(userName, shopName, pid1, pid2);
+		if(res.isSuccess())return new SResponse();
+		else return new SResponse(res.getMessage());
+	}
+	public SResponseT<Collection<PurchasePolicyDataObj>> getAllPurchasePolicies(String userName, String shopName){
+		ResponseT<Collection<PurchasePolicyDataObj>> res = serviceMarket.getAllPurchasePolicies(userName, shopName);
+		if(res.isSuccess())return new SResponseT<>(res.getData());
+		else return new SResponseT<>(res.getMessage(),false);
+	}
+
+	// if policy argument is -1 it means to simply remove the current policy, without choosing a different one.
+	public SResponse setActivePurchasePolicy(String userName, String shopName,int policyId){
+		Response res = serviceMarket.setActivePurchasePolicy(userName,shopName,policyId);
+		if(res.isSuccess())return new SResponse();
+		else return new SResponse(res.getMessage());
+	}
+	public SResponseT<Integer> getActivePurchasePolicyId(String userName, String shopName){
+		ResponseT<Integer> res = serviceMarket.getActivePurchasePolicyId(userName,shopName);
+		if(res.isSuccess())return new SResponseT<Integer>(res.getData());
+		else return new SResponseT<>(res.getMessage(),false);
 	}
 }
