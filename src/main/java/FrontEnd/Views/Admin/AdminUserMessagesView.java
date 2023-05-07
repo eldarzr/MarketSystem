@@ -20,7 +20,7 @@ import com.vaadin.flow.router.Route;
 import java.util.ArrayList;
 import java.util.List;
 
-@Route(value = "admin_user_messages")
+@Route(value = "admin_user_notifications")
 public class AdminUserMessagesView extends MyNotificationView implements HasUrlParameter<String> {
 
 	UserModel visitedUser;
