@@ -37,9 +37,18 @@ public class ServiceMarket {
 	}
 
 
-	public Response addNewProduct(String userName, String shopName, String productName, String category, String desc, double price) throws Exception {
+	public Response addNewProduct(String userName, String shopName, String productName, String category, String desc, double price) {
 		try {
 			market.addNewProduct(userName, shopName, productName, category, desc, price);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
+	}
+
+	public Response addNewProduct(String userName, String shopName, String productName, String productCategory, String productDescription, Double productPrice, Integer productQuantity) {
+		try {
+			market.addNewProduct(userName, shopName, productName, productCategory, productDescription, productPrice,productQuantity);
 		} catch (Exception exception) {
 			return new Response(exception.getMessage());
 		}
@@ -157,7 +166,7 @@ public class ServiceMarket {
 		return new Response();
 	}
 
-	public Response removeProduct(String userName, String shopName, String productName) throws Exception {
+	public Response removeProduct(String userName, String shopName, String productName){
 		try {
 			market.removeProduct(userName, shopName, productName);
 		} catch (Exception exception) {
@@ -166,7 +175,7 @@ public class ServiceMarket {
 		return new Response();
 	}
 
-	public Response updateProductName(String userName, String shopName, String productOldName, String productNewName) throws Exception {
+	public Response updateProductName(String userName, String shopName, String productOldName, String productNewName) {
 		try {
 			market.updateProductName(userName, shopName, productOldName, productNewName);
 		} catch (Exception exception) {
@@ -175,7 +184,7 @@ public class ServiceMarket {
 		return new Response();
 	}
 
-	public Response updateProductDesc(String userName, String shopName, String productName, String productNewDesc) throws Exception {
+	public Response updateProductDesc(String userName, String shopName, String productName, String productNewDesc) {
 		try {
 			market.updateProductDesc(userName, shopName, productName, productNewDesc);
 		} catch (Exception exception) {
@@ -184,7 +193,7 @@ public class ServiceMarket {
 		return new Response();
 	}
 
-	public Response updateProductPrice(String userName, String shopName, String productName, double price) throws Exception {
+	public Response updateProductPrice(String userName, String shopName, String productName, double price) {
 		try {
 			market.updateProductPrice(userName, shopName, productName, price);
 		} catch (Exception exception) {
@@ -193,9 +202,18 @@ public class ServiceMarket {
 		return new Response();
 	}
 
-	public Response updateProductQuantity(String userName, String shopName, String productName, int quantity) throws Exception {
+	public Response updateProductQuantity(String userName, String shopName, String productName, int quantity) {
 		try {
 			market.updateProductQuantity(userName, shopName, productName, quantity);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
+	}
+
+	public Response updateProductCategory(String userName, String shopName, String productName, String category) {
+		try {
+			market.updateProductCategory(userName, shopName, productName, category);
 		} catch (Exception exception) {
 			return new Response(exception.getMessage());
 		}
@@ -711,4 +729,7 @@ public class ServiceMarket {
 			return new ResponseT<>(e.getMessage(),false);
 		}
 	}
+
+
+
 }

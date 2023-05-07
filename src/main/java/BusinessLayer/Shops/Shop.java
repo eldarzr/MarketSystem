@@ -236,6 +236,12 @@ public class Shop implements ShopIntr {
 		products.get(productName).setQuantity(quantity);
 	}
 
+	public void updateProductCategory(String userName, String productName, String category) throws Exception {
+		validateProductExists(productName);
+		validatePermissionsException(userName, MANAGE_STOCK);
+		products.get(productName).setCategory(category);
+	}
+
 	public void addProductQuantity(String userName, String productName, int quantity) throws Exception {
 		validateProductExists(productName);
 		validatePermissionsException(userName, MANAGE_STOCK);
@@ -441,5 +447,7 @@ public class Shop implements ShopIntr {
 	public void evaluatePurchasePolicy(ShopBag shopBag, User user) throws Exception {
 		purchasePolicyManager.evaluate(shopBag, user);
 	}
+
+
 }
 
