@@ -37,7 +37,6 @@ public class UserProfileView extends BaseView implements HasUrlParameter<String>
 		//todo: pay attention, userprofile is the one that this screen is all about,
 		// we can come to this page if the user himself called it, or if admin called it,
 		// in such case we can only *show* info and not set it.
-		add(new Text("aaa\n"));
 	}
 
 	@Override

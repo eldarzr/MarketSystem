@@ -148,7 +148,7 @@ public class ServiceMarket {
 		return new Response();
 	}
 
-	public Response closeShop(String userName, String shopName) throws Exception {
+	public Response closeShop(String userName, String shopName)  {
 		try {
 			market.closeShop(userName, shopName);
 		} catch (Exception exception) {

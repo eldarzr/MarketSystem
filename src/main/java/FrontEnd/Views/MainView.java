@@ -43,21 +43,19 @@ public class MainView extends BaseView {
 //        Label sessionIdLabel = new Label("Session ID: " + userModel.getName());
 
 //        Image profileImage = new Image("img/profilePic.jpg", "Profile picture");
-        Icon profileIcon = VaadinIcon.USER.create();
-        profileButton = new Button(profileIcon);
-        profileButton.addClickListener(e ->
-                profileButton.getUI().ifPresent(ui ->
-                        ui.navigate("profile"))
-        );
+//        Icon profileIcon = VaadinIcon.USER.create();
+//        profileButton = new Button(profileIcon);
+//        profileButton.addClickListener(e ->
+//                profileButton.getUI().ifPresent(ui ->
+//                        ui.navigate("profile"))
+//        );
 //        add(profileButton); // Add the button to the layout
 
 
         registerButton = new Button("Register");
         registerButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
         registerButton.getStyle().set("color", "white");
-        registerButton.addClickListener(e ->
-                registerButton.getUI().ifPresent(ui ->
-                        ui.navigate("register"))
+        registerButton.addClickListener(e -> onRegister()
         );
         loginButton = new Button("Login");
 //        loginButton.getStyle().set("background-image", "linear-gradient(to right, #00c6ff, #0072ff)");
@@ -65,9 +63,7 @@ public class MainView extends BaseView {
         loginButton.getStyle().set("color", "white");
 //        loginButton.getStyle().set("transition", "background-color 0.5s ease");
 
-        loginButton.addClickListener(e ->
-                loginButton.getUI().ifPresent(ui ->
-                        ui.navigate("login"))
+        loginButton.addClickListener(e -> onLogin()
         );
         searchButton = new Button("Search");
         searchButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
@@ -86,7 +82,17 @@ public class MainView extends BaseView {
                 adminButton.getUI().ifPresent(ui ->
                         ui.navigate("admin"))
         );
-        add(registerButton, loginButton, searchButton, adminButton,profileButton);
+        add(registerButton, loginButton, searchButton, adminButton);
+    }
+
+    private void onLogin() {
+        if(getCurrentUser().getUserType() == UserType.GUEST )
+            loginButton.getUI().ifPresent(ui -> ui.navigate("login"));
+    }
+
+    private void onRegister() {
+        if(getCurrentUser().getUserType() == UserType.GUEST )
+            registerButton.getUI().ifPresent(ui -> ui.navigate("register"));
     }
 
     @Override
@@ -95,6 +101,8 @@ public class MainView extends BaseView {
             adminButton.setVisible(userModel.getUserType() == UserType.ADMIN);
         if (loginButton != null)
             loginButton.setVisible(userModel.getUserType() == UserType.GUEST);
+        if (registerButton != null)
+            registerButton.setVisible(userModel.getUserType() == UserType.GUEST);
     }
 
 }

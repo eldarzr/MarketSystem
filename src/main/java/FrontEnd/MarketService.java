@@ -141,8 +141,11 @@ public class MarketService {
 		throw new NotImplementedException();
 	}
 
-	public Response closeShop(String userName, String shopName) throws Exception {
-		throw new NotImplementedException();
+	public SResponse closeShop(String userName, String shopName) {
+		Response r = serviceMarket.closeShop(userName , shopName);
+		if (r.isSuccess())
+			return new SResponse();
+		return new SResponse(r.getMessage());
 	}
 
 	public Response removeProduct(String userName, String shopName, String productName) throws Exception {

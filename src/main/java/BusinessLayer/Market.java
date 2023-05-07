@@ -205,7 +205,7 @@ public class Market implements MarketIntr{
     @Override
     public void closeShop(String userName, String shopName) throws Exception {
         logger.info(String.format("Attempt by user %s to close store %s.", userName,shopName));
-        User founder=usersHandler.findMemberByName(userName);
+        //usersHandler.findMemberByName(userName);
         usersHandler.findLoginUser(userName);
         shopHandler.closeShop(userName, shopName);
         // notify management on closing shop
@@ -393,7 +393,8 @@ public class Market implements MarketIntr{
     public MemberRoleInShop changeManagerPermissions(String actor, String actOn, String shopName, List<Integer> permission) throws Exception {
         logger.info(String.format("Attempt by user %s to change manager permissions of %s as shop-manager of shop %s.", actor,actOn, shopName));
         validateUserIsntGuest(actor);
-        isLoggedIn(actor);
+        //isLoggedIn(actor);
+        validateLoggedInException(actor);
         validateUserIsntGuest(actOn);
         Shop reqShop = checkForShop(shopName);
         //notify appointee
