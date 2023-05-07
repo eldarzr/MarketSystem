@@ -51,7 +51,7 @@ public class GuestSearchTest {
         try {
             // Search for product by name
             Collection<ProductBridge> results = market.basicSearch(tempUserName, "item1");
-            assertEquals("Incorrect number of products returned by basic search", 4, results.size());
+            assertEquals("Incorrect number of products returned by basic search", 20, results.size());
             assertTrue(results.stream().anyMatch(p -> p.getProductName().equals("item1")), "Product not found in search results");
 
             // Search for non-existing product

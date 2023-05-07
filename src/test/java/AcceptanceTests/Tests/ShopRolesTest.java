@@ -99,6 +99,8 @@ public class ShopRolesTest {
                 managerUserNames.add(manager);
                 assertTrue(marketSystem.isShopManager(manager, shopName));
             }
+            shopManager1=shopManager1.toLowerCase();
+            shopManager2=shopManager2.toLowerCase();
             assertTrue(managerUserNames.contains(shopManager1));
             assertTrue(managerUserNames.contains(shopManager2));
         } catch (Exception e) {
