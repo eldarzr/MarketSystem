@@ -3,9 +3,10 @@ package FrontEnd.Views;
 import FrontEnd.Model.MemberRoleInShopModel;
 import FrontEnd.Model.ShopModel;
 import FrontEnd.Model.UserModel;
+import FrontEnd.SResponse;
 import FrontEnd.SResponseT;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -107,11 +108,48 @@ public class MyShopsView extends BaseView {
             enterButton.addClickListener(e -> navigateToShop(role.getRoleShop().getName()));
             enableButton(enterButton);
 
-            shopLayout.add(shopNameLabel, roleLabel, enterButton);
+            Button closeButton = new Button("Close Shop");
+            closeButton.addClickListener(e -> onCloseShop(role.getRoleShop().getName()));
+            enableButton(closeButton);
+
+            shopLayout.add(shopNameLabel, roleLabel, enterButton,closeButton);
             shopLayout.setFlexGrow(1, shopNameLabel, roleLabel);
             myShopsLayout.add(shopLayout);
         }
     }
+
+    protected void onCloseShop(String shopName) {
+        Dialog confirmDialog = new Dialog();
+        confirmDialog.setCloseOnEsc(false);
+        confirmDialog.setCloseOnOutsideClick(false);
+
+        Label message = new Label("Are you sure you want to close the shop? This action cannot be undone.");
+        Button confirmButton = new Button("Close Shop");
+        confirmButton.addClickListener(event -> {
+            SResponse res = marketService.closeShop(getCurrentUser().getName(), shopName);
+            if (!res.isSuccess() && res!=null) {
+                Notification.show(res.getMessage());
+            } else {
+                Notification.show("The shop has been Closed");
+            }
+            confirmDialog.close();
+        });
+        Button cancelButton = new Button("Cancel", event -> confirmDialog.close());
+        HorizontalLayout buttonsLayout = new HorizontalLayout(confirmButton, cancelButton);
+
+        confirmDialog.add(message, buttonsLayout);
+        confirmDialog.open();
+
+        //enableButton(closeButton);   // Not sure what this does, so I commented it out
+    }
+//    protected void onCloseShop(String shopName) {
+//        SResponse res = marketService.closeShop(getCurrentUser().getName(), shopName);
+//        if (!res.isSuccess() && res!=null) {
+//            Notification.show(res.getMessage());
+//        } else {
+//            Notification.show("The shop has been Closed");
+//        }
+//    }
 
     protected void navigateToShop(String shopId) {
         getUI().ifPresent(ui -> ui.navigate("shop/" + shopId));

@@ -80,9 +80,7 @@ public abstract class BaseView extends VerticalLayout{
 //				e -> getUI().ifPresent(ui -> ui.navigate("profile")));
 		profileButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
 		profileButton.getStyle().set("color", "white");
-		profileButton.addClickListener(e ->
-				profileButton.getUI().ifPresent(ui ->
-						ui.navigate("profile"))
+		profileButton.addClickListener(e -> handleProfile()
 		);
 
 		Div userMenu = new Div(userIcon, userNameLabel);
@@ -103,6 +101,14 @@ public abstract class BaseView extends VerticalLayout{
 			showLoginScreen();
 		else
 			showLogoutScreen();
+	}
+
+	private void handleProfile() {
+
+		if(getCurrentUser().getUserType() != UserType.GUEST)
+			profileButton.getUI().ifPresent(ui ->
+					ui.navigate("profile"));
+		else { Notification.show("guest dosent have a profile") ;}
 	}
 
 	protected boolean login(String username, String password) {

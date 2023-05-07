@@ -67,7 +67,7 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
             SResponseT<ShopModel> res = marketService.getShop(parameter);
             if (res.isSuccess()) {
                 shopProfile = res.getData();
-                add(new Text(shopProfile.getName()));
+//                add(new Text(shopProfile.getName()));
                 showShopProfileScreen();
             } else Notification.show(res.getMessage());
         }
@@ -87,7 +87,7 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
 
 
         // Buttons
-        promoteButton = new Button("Promote To Owner" , e -> handleSetOwnerButtonClick());
+        promoteButton = new Button("Promote To Owner" , e -> handlePromoteOwnerButtonClick());
         setDefaultStyle(promoteButton);
 
         removeOwnerButton = new Button("RemoveOwner", e -> handleRemoveOwnerButtonClick());
@@ -220,6 +220,10 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
     private void handleSetOwnerButtonClick() {
         String newOwnerUsername = newManagerTextField.getValue();
         setOwner(getCurrentUser().getName(),newOwnerUsername,shopProfile.getName());
+    }
+
+    private void handlePromoteOwnerButtonClick() {
+        setOwner(getCurrentUser().getName(),clickedRole.getRoleUser(),shopProfile.getName());
     }
     private void handleSetManagerButtonClick() {
         String newManagerUsername = newManagerTextField.getValue();
