@@ -388,7 +388,7 @@ public class ServiceMarket {
 	}
 
 
-	public ResponseT<Collection<UserInvoiceDataObj>> getUserPurchaseHistoryByAdmin(String adminName, String memberName) {
+	public ResponseT<List<UserInvoiceDataObj>> getUserPurchaseHistoryByAdmin(String adminName, String memberName) {
 		try {
 		return new ResponseT<>(market.getUserPurchaseHistoryByAdmin(adminName, memberName).stream()
 				.map(UserInvoiceDataObj::new).collect(Collectors.toList()));

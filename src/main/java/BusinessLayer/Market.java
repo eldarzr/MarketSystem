@@ -1,6 +1,7 @@
 package BusinessLayer;
 
 import BusinessLayer.Enums.UserType;
+import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Notifications.Notification;
@@ -694,6 +695,12 @@ public class Market implements MarketIntr{
             addNewProduct(usersName[0], "Super Shop", "product" + i, cat[0], descs[0], prices[0]);
             addProductItems(usersName[0], "Super Shop", "product" + i, 3);
         }
+
+        addProductsToCart(usersName[0], shopNames[0], prodNames[0], 1);
+        addProductsToCart(usersName[0], shopNames[1], prodNames[1], 1);
+        PaymentDetails paymentDetails = new CreditCardPaymentDetails("1234123412341234", "10", "28", "eldar", "123", "123456789");
+        SupplyDetails supplyDetails = new SupplyDetails("eldar1", "sa", "dimona", "israel", "123456");
+        purchaseCart(usersName[0], paymentDetails, supplyDetails);
 
         logout("eldar_first");
         logout("niv_first");
