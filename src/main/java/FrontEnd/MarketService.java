@@ -283,8 +283,14 @@ public class MarketService {
 	}
 
 
-	public ResponseT<Collection<ShopInvoiceDataObj>> getShopPurchaseHistory(String userName, String shopName) {
-		throw new NotImplementedException();
+	public SResponseT<List<ShopInvoiceModel>> getShopPurchaseHistory(String userName, String shopName) {
+		try {
+			return new SResponseT<>(serviceMarket.getShopPurchaseHistory(userName, shopName).getData().stream().
+					map(ShopInvoiceModel::new).collect(Collectors.toList()));
+
+		} catch (Exception exception) {
+			return new SResponseT(exception.getMessage(), false);
+		}
 	}
 
 
@@ -298,8 +304,14 @@ public class MarketService {
 	}
 
 
-	public ResponseT<Collection<ShopInvoiceDataObj>> getShopPurchaseHistoryByAdmin(String adminName, String shopName) {
-		throw new NotImplementedException();
+	public SResponseT<List<ShopInvoiceModel>> getShopPurchaseHistoryByAdmin(String adminName, String shopName) {
+		try {
+			return new SResponseT<>(serviceMarket.getShopPurchaseHistoryByAdmin(adminName, shopName).getData().stream().
+					map(ShopInvoiceModel::new).collect(Collectors.toList()));
+
+		} catch (Exception exception) {
+			return new SResponseT(exception.getMessage(), false);
+		}
 	}
 
 

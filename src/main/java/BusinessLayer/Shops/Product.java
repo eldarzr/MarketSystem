@@ -106,10 +106,12 @@ public class Product implements ProductIntr{
 
 	public void lockProduct(){
 		productLock.lock();
+		System.out.println("!!!!!!!!!!!!!!!!!!11" + name);
 	}
 
 	public void unlockProduct(){
 		productLock.unlock();
+		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@2" + name);
 	}
 
 	public String getShopName() {

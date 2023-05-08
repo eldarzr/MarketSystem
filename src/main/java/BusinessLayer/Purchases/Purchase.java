@@ -18,6 +18,7 @@ public class Purchase implements PurchaseIntr{
 
     List<Shop> shops;
     User user;
+    List<Product> products;
     PaymentDetails paymentDetails;
     SupplyDetails supplyDetails;
     UserInvoice userInvoice;
@@ -36,9 +37,9 @@ public class Purchase implements PurchaseIntr{
 
     @Override
     public void process() throws Exception {
-        acquireProductsLocks();
-        FinalCartPriceResult finalPrice = handleStock();
         try{
+            acquireProductsLocks();
+            FinalCartPriceResult finalPrice = handleStock();
             paymentDetails.accept(this,finalPrice.getTotalPriceAfterDiscount());
         }catch (Exception e){
             revert();
@@ -58,8 +59,13 @@ public class Purchase implements PurchaseIntr{
 
     private void addInvoicesToObjects() {
         user.addInvoice(userInvoice);
-        for (ShopInvoice shopInvoice : shopInvoices)
-            getShopByName(shopInvoice.getShopName()).addInvoice(shopInvoice);
+        for (ShopInvoice shopInvoice : shopInvoices) {
+            Shop shop = getShopByName(shopInvoice.getShopName());
+            if (shop != null) {
+                shop.addInvoice(shopInvoice);
+                System.out.println("!@!@!@!@!@!@!@!@!@!" + shopInvoice);
+            }
+        }
     }
 
     private void revertPay() throws InterruptedException {
@@ -139,7 +145,7 @@ public class Purchase implements PurchaseIntr{
 
     private void acquireProductsLocks(){
         Cart cart = user.getCart();
-        List<Product> products = cart.getAllProducts();
+        products = cart.getAllProducts();
         products.sort(new Comparator<Product>() {
             public int compare(Product p1, Product p2) {
                 return p1.getName().compareTo(p2.getName());
@@ -151,7 +157,7 @@ public class Purchase implements PurchaseIntr{
 
     private void releaseProductsLocks(){
         Cart cart = user.getCart();
-        List<Product> products = cart.getAllProducts();
+//        List<Product> products = cart.getAllProducts();
         products.sort(new Comparator<Product>() {
             public int compare(Product p1, Product p2) {
                 return p1.getName().compareTo(p2.getName());
@@ -162,7 +168,7 @@ public class Purchase implements PurchaseIntr{
     }
 
     private void revert() throws Exception {
-        acquireProductsLocks();
+//        acquireProductsLocks();
         Cart cart = user.getCart();
         ConcurrentHashMap<String, ShopBag>  shopsAndProducts = cart.getShopsAndProducts();
         revertProductsReduce(shopsAndProducts);
@@ -204,6 +210,7 @@ public class Purchase implements PurchaseIntr{
             ShopBag shopBag = shopsAndProducts.get(shopName);
             for (ShopBagItem shopBagItem : shopBag.getProductsAndQuantities().values()){
                 System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + shopBagItem.getProduct());
+                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + shopName);
                 userInvoice.addProduct(shopName, shopBagItem.getProduct(), shopBagItem.getQuantity());
                 shopInvoice.addProduct(shopName, shopBagItem.getProduct(), shopBagItem.getQuantity());
             }

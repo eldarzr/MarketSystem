@@ -1,7 +1,8 @@
-package ServiceLayer.DataObjects;
+package FrontEnd.Model;
 
 import BusinessLayer.Purchases.ShopInvoice;
-import BusinessLayer.Shops.Product;
+import ServiceLayer.DataObjects.InvoiceDataObj;
+import ServiceLayer.DataObjects.ShopInvoiceDataObj;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,26 +10,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ShopInvoiceDataObj extends InvoiceDataObj {
+public class ShopInvoiceModel extends InvoiceModel {
 
 //	private HashMap<product name, product fields> productInfoInShop;
 	private HashMap<String, List<String>> productInfoInShop;
 	private String shopName;
 
-	public ShopInvoiceDataObj(String userName, String paymentMethod, String deliveryMethod, String shopName) {
+	public ShopInvoiceModel(String userName, String paymentMethod, String deliveryMethod, String shopName) {
 		super(userName, paymentMethod, deliveryMethod);
 		productInfoInShop = new HashMap<>();
 		this.shopName = shopName;
 	}
 
-	public ShopInvoiceDataObj(ShopInvoice shopInvoice) {
+	public ShopInvoiceModel(ShopInvoiceDataObj shopInvoice) {
 		super(shopInvoice);
 		productInfoInShop = new HashMap<>();
 		this.shopName = shopInvoice.getShopName();
-		HashMap<String, List<String>> productInfoInShopB = shopInvoice.getProductInfoInShop();
-		for (String productName : productInfoInShopB.keySet()) {
+		HashMap<String, List<String>> productInfoInShopS = shopInvoice.getProductInfoInShop();
+		for (String productName : productInfoInShopS.keySet()) {
 			productInfoInShop.put(productName, new ArrayList<>());
-			for (String s : productInfoInShopB.get(productName))
+			for (String s : productInfoInShopS.get(productName))
 				productInfoInShop.get(productName).add(s);
 		}
 	}
