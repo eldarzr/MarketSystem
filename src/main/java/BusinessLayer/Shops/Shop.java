@@ -15,6 +15,7 @@ import BusinessLayer.Shops.PurchasePolicies.PurchasePolicyManager;
 import BusinessLayer.Users.User;
 import BusinessLayer.Purchases.ShopInvoice;
 
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -190,6 +191,18 @@ public class Shop implements ShopIntr {
 			throwException(String.format("there is already product %s in the shop %s", productName, name));
 		validatePermissionsException(userName, MANAGE_STOCK);
 		products.put(productName, ShopProduct.createProduct(productName, category, desc, price, this.name));
+//		EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
+//		EntityManager em = emf.createEntityManager();
+//		em.getTransaction().begin();
+//		em.persist(products.get(productName));
+//		em.getTransaction().commit();
+//		Session session = em.unwrap(Session.class);
+//		String directory = (String) session.doReturningWork(connection -> {
+//			return connection.getMetaData().getURL();
+//		});
+//		System.out.println("File directory in database: " + directory);
+//		em.close();
+//		emf.close();
 	}
 
 	private void validatePermissionsException(String userName, ManagePermissionsEnum permissionsEnum) throws Exception {

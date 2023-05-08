@@ -22,6 +22,9 @@ import BusinessLayer.Users.User;
 import BusinessLayer.Users.UsersHandler;
 import org.apache.commons.lang3.NotImplementedException;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -686,7 +689,12 @@ public class Market implements MarketIntr{
             register(usersName[i], emails[i], passwords[i]);
             login(guestName, usersName[i], passwords[i]);
             createShop(usersName[i], shopNames[i]);
-            addNewProduct(usersName[i], shopNames[i], prodNames[i], cat[i], descs[i], prices[i]);
+            try {
+                addNewProduct(usersName[i], shopNames[i], prodNames[i], cat[i], descs[i], prices[i]);
+            }
+            catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
             addProductItems(usersName[i], shopNames[i], prodNames[i], 3);
         }
         createShop(usersName[0],"The Shop");

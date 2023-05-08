@@ -1,11 +1,13 @@
 package BusinessLayer.Shops;
 
+import DataAccessLayer.ProductDTO;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 
+import java.io.Serializable;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Product implements ProductIntr{
+public class Product implements ProductIntr, Serializable {
 
 	Lock productLock = new ReentrantLock();
 
@@ -21,6 +23,7 @@ public class Product implements ProductIntr{
 	protected double MAX_CATEGORY_LENGTH = 30;
 	protected double MIN_NAME_LENGTH = 3;
 	protected double MAX_NAME_LENGTH = 300;
+	protected ProductDTO productDTO;
 
 	public Product(String name, String category, String description, double price, String shopName) {
 		this.name = name;
@@ -28,6 +31,7 @@ public class Product implements ProductIntr{
 		this.description = description;
 		this.price = price;
 		this.shopName = shopName;
+		productDTO = ProductDTO.createProductDTO(name, category, description, price, shopName);
 	}
 
 	protected Product() { }
