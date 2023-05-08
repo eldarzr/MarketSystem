@@ -12,9 +12,10 @@ import BusinessLayer.Shops.Shop;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class User implements NotificationObserver {
+public class User {
     private UserType userType;
     private String name;
     private String sessionID;
@@ -26,8 +27,7 @@ public class User implements NotificationObserver {
 
     Cart currentCart;
 
-    private ConcurrentLinkedQueue<Notification> pendingNotifications;
-    private NotificationCallback callback;
+    private ConcurrentLinkedDeque<Notification> pendingNotifications;
 
     public User(String name, String email, String password) {
         this.name = name.toLowerCase();
@@ -36,7 +36,7 @@ public class User implements NotificationObserver {
         this.sessionID = null;
         userType = UserType.MEMBER;
         currentCart = new Cart();
-        pendingNotifications = new ConcurrentLinkedQueue<>();
+        pendingNotifications = new ConcurrentLinkedDeque<>();
     }
 
     public User(String guestName) {
@@ -126,13 +126,8 @@ public class User implements NotificationObserver {
         currentCart = new Cart();
     }
 
-    @Override
-    public void notify(Notification notification) {
-        if(callback!=null) callback.call(notification.getMessage());
-    }
-
     public void addPendingNotifications(Notification notification) {
-        pendingNotifications.add(notification);
+        pendingNotifications.push(notification);
     }
 
     public String getSessionID() {
@@ -145,10 +140,6 @@ public class User implements NotificationObserver {
 	
 	public void setCart(Cart currentCart) {
         this.currentCart = currentCart;
-    }
-
-    public void setNotificationCallback(NotificationCallback callback) {
-        this.callback=callback;
     }
 
     public Collection<Notification> getPendingNotification() {
@@ -168,6 +159,11 @@ public class User implements NotificationObserver {
 
     public LocalDate getBirthDay() {
         return LocalDate.of(1999,9,4);
+    }
+
+    public void ReadNotifications() {
+        for(Notification notification: pendingNotifications)
+            if(!notification.isRead()) notification.Read();
     }
 }
 

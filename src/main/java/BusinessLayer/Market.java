@@ -5,6 +5,7 @@ import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Notifications.Notification;
+import BusinessLayer.Notifications.NotificationPublisher;
 import BusinessLayer.Purchases.*;
 import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRuleName;
 import BusinessLayer.Shops.Product;
@@ -196,10 +197,6 @@ public class Market implements MarketIntr{
         User founder=usersHandler.findMemberByName(userName);
         usersHandler.findLoginUser(userName);
         shopHandler.openShop(userName, shopName);
-        // notify management on opening shop
-        String message=String.format("User %s opened shop %s.", userName, shopName);
-        Notification notification=new Notification(userName,message);
-        notifyShopManagement(userName, shopName,notification);
     }
 
     //todo: naor
@@ -209,21 +206,7 @@ public class Market implements MarketIntr{
         //usersHandler.findMemberByName(userName);
         usersHandler.findLoginUser(userName);
         shopHandler.closeShop(userName, shopName);
-        // notify management on closing shop
-        String message=String.format("User %s closed shop %s.", userName, shopName);
-        Notification notification=new Notification(userName,message);
-        notifyShopManagement(userName, shopName,notification);
-        logger.info(message);
-    }
-
-    private void notifyShopManagement(String userName, String shopName,Notification notification){
-        try {
-            for(String roleName: shopHandler.getShop(shopName).getManagementUserNames())
-            {
-                // no need to notify himself.
-                if (!roleName.equals(userName)) usersHandler.notify(roleName,notification);
-            }
-        } catch (Exception e) {}
+        logger.info(String.format("User %s closed shop %s.", userName, shopName));
     }
 
     @Override
@@ -232,11 +215,7 @@ public class Market implements MarketIntr{
         userName = userName.toLowerCase();
         validateLoggedInException(userName);
         shopHandler.addNewProduct(userName, shopName, productName, category, desc, price);
-        // notify management on new product
-        String message=String.format("User %s added new product %s to store %s.", userName,productName, shopName);
-        Notification notification=new Notification(userName,message);
-        notifyShopManagement(userName, shopName,notification);
-        logger.info(message);
+        logger.info(String.format("User %s added new product %s to store %s.", userName,productName, shopName));
     }
 
     public void addNewProduct(String userName, String shopName, String productName, String productCategory, String productDescription, Double productPrice, Integer productQuantity) throws Exception {
@@ -249,11 +228,7 @@ public class Market implements MarketIntr{
         logger.info(String.format("Attempt by user %s to remove product %s from store %s.", userName,productName, shopName));
         validateLoggedInException(userName);
         shopHandler.removeProduct(userName, shopName, productName);
-        // notify management on new product
-        String message=String.format("User %s removed product %s from store %s.", userName,productName, shopName);
-        Notification notification=new Notification(userName,message);
-        notifyShopManagement(userName, shopName,notification);
-        logger.info(message);
+        logger.info(String.format("User %s removed product %s from store %s.", userName,productName, shopName));
     }
 
     @Override
@@ -350,10 +325,10 @@ public class Market implements MarketIntr{
         Shop reqShop = checkForShop(shopName);
         reqShop.setShopOwner(appointedBy,appointee , user::sendMessage);
         //notify appointee
-        String message=String.format("User %s appointed %s as shop-owner of shop %s.", appointedBy,appointee, shopName);
+        String message=String.format("User %s appointed you as shop-owner of shop %s.", appointedBy, shopName);
         Notification notification=new Notification(appointedBy,message);
-        usersHandler.notify(appointee,notification);
-        logger.info(message);
+        NotificationPublisher.getInstance().notify(appointee,notification);
+        logger.info(String.format("User %s appointed %s as shop-owner of shop %s.", appointedBy,appointee, shopName));
     }
 
     public Shop checkForShop(String shopName) throws Exception {
@@ -372,10 +347,10 @@ public class Market implements MarketIntr{
         Shop reqShop = checkForShop(shopName);
         reqShop.setShopManager(appointedBy,appointee ,user::sendMessage);
         //notify appointee
-        String message=String.format("User %s appointed %s as shop-manager of shop %s.", appointedBy,appointee, shopName);
+        String message=String.format("User %s appointed you as shop-manager of shop %s.", appointedBy, shopName);
         Notification notification=new Notification(appointedBy,message);
-        usersHandler.notify(appointee,notification);
-        logger.info(message);
+        NotificationPublisher.getInstance().notify(appointee,notification);
+        logger.info(String.format("User %s appointed %s as shop-manager of shop %s.", appointedBy,appointee, shopName));
     }
 
     @Override
@@ -397,7 +372,7 @@ public class Market implements MarketIntr{
        //notify removed owner
         String message=String.format("Manager %s removed you as shop-manager of shop %s.", managerName, shopName);
         Notification notification=new Notification(managerName,message);
-        usersHandler.notify(userToRemove,notification);
+        NotificationPublisher.getInstance().notify(userToRemove,notification);
         logger.info(String.format("Manager %s removed %s as shop-manager of shop %s.", managerName,userToRemove, shopName));
     }
 
@@ -413,14 +388,15 @@ public class Market implements MarketIntr{
         String message=String.format("User %s changed your permissions in shop %s.", actor, shopName);
         Notification notification=new Notification(actor,message);
         actOn=actOn.toLowerCase();
-        usersHandler.notify(actOn,notification);
+        NotificationPublisher.getInstance().notify(actOn,notification);
         logger.info(String.format("User %s changed %s permissions in shop %s.", actor,actOn, shopName));
        return reqShop.setManageOption(actor,actOn,permission);
     }
 
+    // Just for tests.
     public void notifyUser( String actOn,Notification notification)
     {
-        usersHandler.notify(actOn,notification);
+        NotificationPublisher.getInstance().notify(actOn,notification);
     }
 
     @Override
@@ -434,7 +410,7 @@ public class Market implements MarketIntr{
         //notify appointee
         String message=String.format("User %s added to your permissions in shop %s.", actor, shopName);
         Notification notification=new Notification(actor,message);
-        usersHandler.notify(actOn,notification);
+        NotificationPublisher.getInstance().notify(actOn,notification);
         logger.info(String.format("User %s added to %s permissions in shop %s.", actor,actOn, shopName));
     }
 
@@ -766,8 +742,13 @@ public class Market implements MarketIntr{
         return shopHandler.getShop(name);
     }
 
-    public void setNotificationCallback(String name, NotificationCallback callback) {
-        usersHandler.setNotificationCallback(name,callback);
+    public void setNotificationCallback(String username, NotificationCallback callback) {
+        NotificationPublisher.getInstance().setNotificationCallback(username,callback);
+    }
+
+    public void removeNotificationCallback(String username)
+    {
+        NotificationPublisher.getInstance().removeNotificationCallback(username);
     }
 
     public Collection<Notification> getUserNotifications(String userName) throws Exception {
@@ -862,5 +843,7 @@ public class Market implements MarketIntr{
     }
 
 
-
+    public void ReadUserNotifications(String username) {
+        usersHandler.getUser(username).ReadNotifications();
+    }
 }
