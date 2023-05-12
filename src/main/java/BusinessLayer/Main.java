@@ -1,12 +1,16 @@
 package BusinessLayer;
 
 import BusinessLayer.Shops.Product;
+import BusinessLayer.Shops.Shop;
 import BusinessLayer.Shops.ShopProduct;
 import org.apache.commons.text.similarity.LevenshteinDistance;
+import org.springframework.security.core.parameters.P;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.util.List;
+import java.util.Map;
 
 public class Main {
 	//this class made only for tests
@@ -15,17 +19,38 @@ public class Main {
 		System.out.println(distance.apply("dany", "dani"));
 		System.out.println("hello world!");
 
-//		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("market");
-//
-//// Step 5: Create an instance of EntityManager
-//		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("market");
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
 
-// Step 6: Use JPA APIs to perform database operations
-// Create a new product
-//		ShopProduct product = new ShopProduct.createProduct("prod1", "cat1", "desc1", 2, "shop1");
-//		Product shopProduct = Product("prod1", "cat1", "desc1", 2, "shop1");
-		ShopProduct product = ShopProduct.createProduct("prod1", "cat1", "desc1", 2, "shop1");
+		Shop shop = entityManager.find(Shop.class, "Gabi's Goods 1");
+		System.out.println("aaa");
 
+//		Market market = new Market();
+//		market.resetAll();
+//		market.init();
+//		System.out.println(product.getCategory());
+
+	}
+
+	public static void getShop(){
+		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("market");
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+
+		String shopName = "shopFirst1"; // The name of the shop you want to retrieve
+
+		Shop shop = entityManager.find(Shop.class, shopName);
+
+		if (shop != null) {
+			// Shop found in the database
+
+			// Access the products map
+			List<ShopProduct> products = shop.getProducts();
+
+		} else {
+			// Shop not found in the database
+			System.out.println("Shop not found");
+		}
 
 	}
 }

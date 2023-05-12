@@ -25,6 +25,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Transient;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -680,7 +681,7 @@ public class Market implements MarketIntr{
         String[] emails = {"eldarFirst@gmail.com", "nivFirst@gmail.com"};
         String[] shopNames = {"shopFirst1", "shopFirst2"};
         String[] prodNames = {"prodFirst1", "prodFirst2"};
-        String[] descs = {"description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 ", "description2"};
+        String[] descs = {"description1 description1 description1", "description2"};
         String[] cat = {"catFirst1", "catFirst2"};
         double[] prices = {5, 10};
 

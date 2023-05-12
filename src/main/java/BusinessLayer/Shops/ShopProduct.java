@@ -1,17 +1,18 @@
 package BusinessLayer.Shops;
 
-import DataAccessLayer.ProductDTO;
-import DataAccessLayer.ShopProductDTO;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "products")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class ShopProduct extends Product{
 
+	@Column(name = "quantity")
 	private int quantity;
-	protected ShopProductDTO shopProductDTO;
 
 	private ShopProduct(String name, String category, String description, double price, String shopName) {
 		super(name, category, description, price, shopName);
 		quantity = 0;
-		shopProductDTO = ShopProductDTO.createShopProductDTO(name, category, description, price, shopName, quantity);
 	}
 
 	private ShopProduct(){
@@ -33,7 +34,6 @@ public class ShopProduct extends Product{
 
 	public static ShopProduct createProduct(String name, String category, String description, double price, String shopName) throws Exception {
 		ShopProduct product = new ShopProduct();
-		product.shopProductDTO = ShopProductDTO.createShopProductDTO(name, category, description, price, shopName, 0);
 		product.setName(name);
 		product.setCategory(category);
 		product.setDescription(description);

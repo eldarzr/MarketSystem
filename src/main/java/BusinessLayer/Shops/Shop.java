@@ -4,6 +4,7 @@ import BusinessLayer.Enums.ManagePermissionsEnum;
 import BusinessLayer.Enums.ManageType;
 import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.MessageObserver;
+import BusinessLayer.PersistenceManager;
 import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Purchases.ShopBagItem;
 import BusinessLayer.Shops.Discount.*;
@@ -16,9 +17,11 @@ import BusinessLayer.Users.User;
 import BusinessLayer.Purchases.ShopInvoice;
 
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.Lock;
@@ -28,24 +31,47 @@ import java.util.stream.Collectors;
 
 import static BusinessLayer.Enums.ManagePermissionsEnum.*;
 
+@Entity
+@Table(name = "shops")
 public class Shop implements ShopIntr {
+
+	@Transient
+	public static EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
+
+	@Transient
 	private final static int PRODUCT_MIN_QUANTITY = 0;
 
+	@Transient
 	private static final Logger logger = Logger.getLogger("Market");
 
+	@Id
+	@Column(name = "shopName")
 	private String name;
+	@Column(name = "open")
 	private boolean open;
+	@Column(name = "active")
 	private boolean active;
 
+	@Transient
 	private Lock remLock;
-	private final String founderUserName;
+	private String founderUserName;
 	//map of user name to role in this shop
+	@Transient
 	private ConcurrentHashMap<String, MemberRoleInShop> roles;
-	private ConcurrentHashMap<String, ShopProduct> products;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "shopName", fetch = FetchType.LAZY)
+	@MapKeyColumn(name = "productName") // specify the index column
+	private Map<String, ShopProduct> products;
+	@Transient
 	private ConcurrentLinkedQueue<MessageObserver> observers;
+	@Transient
 	private ConcurrentLinkedQueue<ShopInvoice> invoices;
+	@Transient
 	private DiscountPolicy discountPolicy;
+	@Transient
 	private PurchasePolicyManager purchasePolicyManager;
+
+	public Shop() {
+	}
 
 	public Shop(String name, String founderUserName) {
 		this.name = name;
@@ -191,6 +217,9 @@ public class Shop implements ShopIntr {
 			throwException(String.format("there is already product %s in the shop %s", productName, name));
 		validatePermissionsException(userName, MANAGE_STOCK);
 		products.put(productName, ShopProduct.createProduct(productName, category, desc, price, this.name));
+		entityManager.getTransaction().begin();
+		entityManager.merge(this);
+		entityManager.getTransaction().commit();
 //		EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
 //		EntityManager em = emf.createEntityManager();
 //		em.getTransaction().begin();
