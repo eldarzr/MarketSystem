@@ -844,26 +844,32 @@ public class Market implements MarketIntr{
 
     public Map<Integer, PurchasePolicy> getAllPurchasePolicies(String userName, String shopName) throws Exception {
         validateUserIsntGuest(userName);
-        isLoggedIn(userName);
+        usersHandler.findLoginUser(userName);
         return getShop(shopName).getPurchasePolicyManager(userName).getAllPolicies();
     }
 
 
     public void setActivePurchasePolicy(String userName, String shopName, int policyId) throws Exception {
         validateUserIsntGuest(userName);
-        isLoggedIn(userName);
+        usersHandler.findLoginUser(userName);
         getShop(shopName).getPurchasePolicyManager(userName).setActivePolicy(policyId);
     }
 
     public Integer getActivePurchasePolicyId(String userName, String shopName) throws Exception {
         validateUserIsntGuest(userName);
-        isLoggedIn(userName);
+        usersHandler.findLoginUser(userName);
         return getShop(shopName).getPurchasePolicyManager(userName).getActivePolicyId();
     }
     
     public FinalCartPriceResult calcCartPriceAfterDiscount(String userName) throws Exception {
-        throw new Exception("Temamesh oti ya maniak");
+        logger.info(String.format("Attempt by user %s to purchase cart.", userName));
+        User user = usersHandler.findLoginUser(userName);
+        List<Shop> shops = shopHandler.getShops(user.getCart().getShopsNames());
+        Purchase purchase = new Purchase(user,shops,null,null);
+        FinalCartPriceResult priceToReturn = purchase.computeCartPrice();
+        //return invoice or order number or order summary something like this need to decide
+        logger.info(String.format("User %s purchase cart successfully.", userName));
+        return priceToReturn;
     }
-
 
 }
