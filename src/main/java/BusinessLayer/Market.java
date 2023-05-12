@@ -860,7 +860,10 @@ public class Market implements MarketIntr{
         isLoggedIn(userName);
         return getShop(shopName).getPurchasePolicyManager(userName).getActivePolicyId();
     }
-
+    
+    public FinalCartPriceResult calcCartPriceAfterDiscount(String userName) throws Exception {
+        throw new Exception("Temamesh oti ya maniak");
+    }
 
 
 }
