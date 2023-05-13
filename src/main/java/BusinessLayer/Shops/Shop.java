@@ -2,6 +2,7 @@ package BusinessLayer.Shops;
 
 import BusinessLayer.Enums.ManagePermissionsEnum;
 import BusinessLayer.Enums.ManageType;
+import BusinessLayer.ManagePermissions;
 import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.MessageObserver;
 import BusinessLayer.Purchases.ShopBag;
@@ -18,6 +19,7 @@ import BusinessLayer.Purchases.ShopInvoice;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.Lock;
@@ -449,5 +451,19 @@ public class Shop implements ShopIntr {
 	}
 
 
+	public Collection<String> getBidResponsibleUsers(User user) throws Exception {
+		boolean isAdmin = user.isAdmin();
+		MemberRoleInShop m = roles.get(user.getName());
+		if(!isAdmin & (m == null))
+			throw new Exception("user "+user.getName()+" doesn't have a role in shop "+name);
+		if(!isAdmin && (m.getType().equals(ManageType.MANAGER) && !m.getPermissions().validatePermission(MANAGE_BIDS)))
+			throw new Exception("user "+user.getName()+" doesn't have a permission to manage bids in shop "+name);
+
+		Collection<String> users = new ArrayList<>();
+		for(Map.Entry<String,MemberRoleInShop> e :roles.entrySet())
+			if(e.getValue().getPermissions().validatePermission(MANAGE_BIDS) || e.getValue().getType().equals(ManageType.OWNER))
+				users.add(e.getKey());
+		return users;
+	}
 }
 

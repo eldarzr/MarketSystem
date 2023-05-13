@@ -17,7 +17,8 @@ public enum ManagePermissionsEnum {
 	REMOVE_MANAGER(13),
 	CHANGE_MANAGER_PERMISSIONS(14),
 	CLOSE_SHOP(15),
-	OPEN_SHOP(16);
+	OPEN_SHOP(16),
+	MANAGE_BIDS(17);
 
 	private final int value;
 

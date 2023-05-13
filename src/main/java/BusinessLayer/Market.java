@@ -1,5 +1,6 @@
 package BusinessLayer;
 
+import BusinessLayer.Bids.Bid;
 import BusinessLayer.Enums.UserType;
 import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
@@ -844,23 +845,59 @@ public class Market implements MarketIntr{
 
     public Map<Integer, PurchasePolicy> getAllPurchasePolicies(String userName, String shopName) throws Exception {
         validateUserIsntGuest(userName);
-        isLoggedIn(userName);
+        usersHandler.findLoginUser(userName);
         return getShop(shopName).getPurchasePolicyManager(userName).getAllPolicies();
     }
 
 
     public void setActivePurchasePolicy(String userName, String shopName, int policyId) throws Exception {
         validateUserIsntGuest(userName);
-        isLoggedIn(userName);
+        usersHandler.findLoginUser(userName);
         getShop(shopName).getPurchasePolicyManager(userName).setActivePolicy(policyId);
     }
 
     public Integer getActivePurchasePolicyId(String userName, String shopName) throws Exception {
         validateUserIsntGuest(userName);
-        isLoggedIn(userName);
+        usersHandler.findLoginUser(userName);
         return getShop(shopName).getPurchasePolicyManager(userName).getActivePolicyId();
     }
+    
+    public FinalCartPriceResult calcCartPriceAfterDiscount(String userName) throws Exception {
+        logger.info(String.format("Attempt by user %s to purchase cart.", userName));
+        User user = usersHandler.findLoginUser(userName);
+        List<Shop> shops = shopHandler.getShops(user.getCart().getShopsNames());
+        Purchase purchase = new Purchase(user,shops,null,null);
+        FinalCartPriceResult priceToReturn = purchase.computeCartPrice();
+        //return invoice or order number or order summary something like this need to decide
+        logger.info(String.format("User %s purchase cart successfully.", userName));
+        return priceToReturn;
+    }
 
+    //Bid functions
+    public void createBidOffer (String userName, String productName, String shopName, double bidPrice) throws Exception {
+        validateLoggedInException(userName);
+        shopHandler.createBid(productName, shopName, bidPrice);
+    }
+    public Collection<Bid> getPendingBids(String userName,String shopName) throws Exception {
+        validateLoggedInException(userName);
+        return shopHandler.getPendingBids(shopName);
+    }
+    public Collection<Bid> getApprovedBids(String userName,String shopName) throws Exception {
+        validateLoggedInException(userName);
+        return shopHandler.getApprovedBids(shopName);
+    }
+    public Collection<Bid> getRejectedBids(String userName,String shopName) throws Exception {
+        validateLoggedInException(userName);
+        return shopHandler.getRejectedBids(shopName);
+    }
+    public void approveBid(String userName, int bidId) throws Exception {
+        validateLoggedInException(userName);
+        shopHandler.approveBid(getUser(userName),bidId);
+    }
+    public void rejectBid(String userName, int bidId) throws Exception {
+        validateLoggedInException(userName);
+        shopHandler.rejectBid(getUser(userName),bidId);
+    }
 
 
 }

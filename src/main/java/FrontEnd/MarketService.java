@@ -1,5 +1,6 @@
 package FrontEnd;
 
+import BusinessLayer.Bids.Bid;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Users.NotificationCallback;
@@ -19,6 +20,7 @@ import com.vaadin.flow.server.VaadinSession;
 import org.apache.commons.lang3.NotImplementedException;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -565,6 +567,58 @@ public class MarketService {
 		return new SResponse(r.getMessage());
 	}
 
+	//Bid functions
+	public SResponse createBidOffer (String userName, String productName, String shopName, double bidPrice)  {
+		Response res = serviceMarket.createBidOffer(userName, productName, shopName, bidPrice);
+		if(res.isSuccess()){
+			return new SResponse();
+		}else{
+			return new SResponse(res.getMessage());
+		}
+	}
+	public SResponseT<Collection<BidDataObj>> getPendingBids(String userName, String shopName) {
+		ResponseT<Collection<BidDataObj>> res = serviceMarket.getPendingBids(userName, shopName);
+		if(res.isSuccess())
+			return new SResponseT<Collection<BidDataObj>>(res.getData());
+		else
+			return new SResponseT<Collection<BidDataObj>>(res.getMessage(),false);
+	}
+	public SResponseT<Collection<BidDataObj>> getApprovedBids(String userName,String shopName)  {
+		ResponseT<Collection<BidDataObj>> res = serviceMarket.getApprovedBids(userName, shopName);
+		if(res.isSuccess())
+			return new SResponseT<Collection<BidDataObj>>(res.getData());
+		else
+			return new SResponseT<Collection<BidDataObj>>(res.getMessage(),false);
+	}
+	public SResponseT<Collection<BidDataObj>> getRejectedBids(String userName,String shopName)  {
+		ResponseT<Collection<BidDataObj>> res = serviceMarket.getRejectedBids(userName, shopName);
+		if(res.isSuccess())
+			return new SResponseT<Collection<BidDataObj>>(res.getData());
+		else
+			return new SResponseT<Collection<BidDataObj>>(res.getMessage(),false);
+	}
+	public SResponse approveBid(String userName, int bidId){
+		Response res = serviceMarket.approveBid(userName, bidId);
+		if(res.isSuccess()){
+			return new SResponse();
+		}else{
+			return new SResponse(res.getMessage());
+		}
+	}
+	public SResponse rejectBid(String userName, int bidId)  {
+		Response res = serviceMarket.rejectBid(userName, bidId);
+		if(res.isSuccess()){
+			return new SResponse();
+		}else{
+			return new SResponse(res.getMessage());
+		}
+	}
+	public SResponseT<FinalCartPriceDataObj> calcCartPriceAfterDiscount(String userName){
+		ResponseT<FinalCartPriceDataObj> res = serviceMarket.calcCartPriceAfterDiscount(userName);
+		if(res.isSuccess())
+			return new SResponseT<>(res.getData());
+		else return new SResponseT<>(res.getMessage(),false);
+	}
 
 
 }

@@ -30,7 +30,8 @@ public class Purchase implements PurchaseIntr{
         this.shops = shops;
         this.paymentDetails = paymentDetails;
         this.supplyDetails = supplyDetails;
-        this.userInvoice = new UserInvoice(user.getName(), paymentDetails.toString(), paymentDetails.toString());
+        if(paymentDetails != null && supplyDetails != null)
+            this.userInvoice = new UserInvoice(user.getName(), paymentDetails.toString(), paymentDetails.toString());
         this.shopInvoices = new ArrayList<>();
     }
 
@@ -72,7 +73,6 @@ public class Purchase implements PurchaseIntr{
         ConcurrentHashMap<String, ShopBag>  shopsAndProducts = cart.getShopsAndProducts();
         // Check for every shop if the purchase policy applies
         checkPurchasePolicies(shopsAndProducts);
-
         checkProductsAvailability(shopsAndProducts);
         FinalCartPriceResult finalPriceResultResult = computeCartPrice();
         reduceProductsQuantity(shopsAndProducts);
@@ -94,7 +94,7 @@ public class Purchase implements PurchaseIntr{
         }
     }
 
-    private FinalCartPriceResult computeCartPrice() {
+    public FinalCartPriceResult computeCartPrice() {
         Cart userCart = user.getCart();
         FinalCartPriceResult finalCartPriceResult = new FinalCartPriceResult();
         for(String shopName : userCart.getShopsNames()){
