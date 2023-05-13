@@ -1,9 +1,11 @@
 package ServiceLayer;
 
+import BusinessLayer.Bids.Bid;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Market;
 import BusinessLayer.Notifications.Notification;
+import BusinessLayer.Shops.FinalCartPriceResult;
 import BusinessLayer.Shops.PurchasePolicies.ComplexPolicyType;
 import BusinessLayer.Shops.PurchasePolicies.PurchasePolicy;
 import BusinessLayer.Shops.Shop;
@@ -729,7 +731,69 @@ public class ServiceMarket {
 			return new ResponseT<>(e.getMessage(),false);
 		}
 	}
-
+	//Bid functions
+	public Response createBidOffer (String userName, String productName, String shopName, double bidPrice)  {
+		try {
+			market.createBidOffer(userName, productName, shopName, bidPrice);
+			return new Response();
+		}catch (Exception e){
+			return new Response(e.getMessage());
+		}
+	}
+	public ResponseT<Collection<BidDataObj>> getPendingBids(String userName, String shopName)  {
+		try{
+			Collection<BidDataObj> ret = new ArrayList<>();
+			for(Bid b : market.getPendingBids(userName, shopName))
+				ret.add(new BidDataObj(b));
+			return new ResponseT<>(ret);
+		}catch (Exception e){
+			return new ResponseT<>(e.getMessage(),false);
+		}
+	}
+	public ResponseT<Collection<BidDataObj>> getApprovedBids(String userName,String shopName)  {
+		try{
+			Collection<BidDataObj> ret = new ArrayList<>();
+			for(Bid b : market.getApprovedBids(userName, shopName))
+				ret.add(new BidDataObj(b));
+			return new ResponseT<>(ret);
+		}catch (Exception e){
+			return new ResponseT<>(e.getMessage(),false);
+		}
+	}
+	public ResponseT<Collection<BidDataObj>> getRejectedBids(String userName,String shopName)  {
+		try{
+			Collection<BidDataObj> ret = new ArrayList<>();
+			for(Bid b : market.getRejectedBids(userName, shopName))
+				ret.add(new BidDataObj(b));
+			return new ResponseT<>(ret);
+		}catch (Exception e){
+			return new ResponseT<>(e.getMessage(),false);
+		}
+	}
+	public Response approveBid(String userName, int bidId)  {
+		try{
+			market.approveBid(userName, bidId);
+			return new Response();
+		}catch (Exception e){
+			return new Response(e.getMessage());
+		}
+	}
+	public Response rejectBid(String userName, int bidId)  {
+		try{
+			market.rejectBid(userName, bidId);
+			return new Response();
+		}catch (Exception e){
+			return new Response(e.getMessage());
+		}
+	}
+	public ResponseT<FinalCartPriceDataObj> calcCartPriceAfterDiscount(String userName) {
+		try{
+			FinalCartPriceResult result = market.calcCartPriceAfterDiscount(userName);
+			return new ResponseT<FinalCartPriceDataObj>(new FinalCartPriceDataObj(result));
+		}catch (Exception e){
+			return new ResponseT<FinalCartPriceDataObj>(e.getMessage(),false);
+		}
+	}
 
 
 }

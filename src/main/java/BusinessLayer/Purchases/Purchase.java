@@ -30,7 +30,8 @@ public class Purchase implements PurchaseIntr{
         this.shops = shops;
         this.paymentDetails = paymentDetails;
         this.supplyDetails = supplyDetails;
-        this.userInvoice = new UserInvoice(user.getName(), paymentDetails.toString(), paymentDetails.toString());
+        if(paymentDetails != null && supplyDetails != null)
+            this.userInvoice = new UserInvoice(user.getName(), paymentDetails.toString(), paymentDetails.toString());
         this.shopInvoices = new ArrayList<>();
     }
 
