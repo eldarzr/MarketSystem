@@ -19,15 +19,15 @@ public class Main {
 		System.out.println(distance.apply("dany", "dani"));
 		System.out.println("hello world!");
 
-		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("market");
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
-
-		Shop shop = entityManager.find(Shop.class, "Gabi's Goods 1");
-		System.out.println("aaa");
-
-//		Market market = new Market();
+//		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("market");
+//		EntityManager entityManager = entityManagerFactory.createEntityManager();
+//
+//		Shop shop = entityManager.find(Shop.class, "Gabi's Goods 1");
+//		System.out.println("aaa");
+//
+		Market market = new Market();
 //		market.resetAll();
-//		market.init();
+		market.init();
 //		System.out.println(product.getCategory());
 
 	}

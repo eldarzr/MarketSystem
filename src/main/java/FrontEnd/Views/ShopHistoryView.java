@@ -1,5 +1,6 @@
 package FrontEnd.Views;
 
+import BusinessLayer.Purchases.ProductInfo;
 import FrontEnd.Model.*;
 import FrontEnd.SResponseT;
 import com.vaadin.flow.component.Text;
@@ -58,20 +59,20 @@ public class ShopHistoryView extends BaseView implements HasUrlParameter<String>
         shopGrid.setItems(shopInvoiceModels);
 
 
-        Grid<Map.Entry<String, List<String>>> innerGrid = new Grid<>();
-        innerGrid.addColumn(Map.Entry::getKey).setHeader("product Name");
-        innerGrid.addColumn(entry -> entry.getValue().get(InvoiceModel.PRODUCT_DESCRIPTION)).setHeader("product description");
-        innerGrid.addColumn(entry -> entry.getValue().get(InvoiceModel.PRODUCT_CATEGORY)).setHeader("product category");
-        innerGrid.addColumn(entry -> entry.getValue().get(InvoiceModel.PRODUCT_PRICE)).setHeader("product price");
-        innerGrid.addColumn(entry -> entry.getValue().get(InvoiceModel.PRODUCT_QUANTITY)).setHeader("product quantity");
+        Grid<ProductInfoModel> innerGrid = new Grid<>();
+        innerGrid.addColumn(ProductInfoModel::getName).setHeader("product Name");
+        innerGrid.addColumn(ProductInfoModel::getDescription).setHeader("product description");
+        innerGrid.addColumn(ProductInfoModel::getCategory).setHeader("product category");
+        innerGrid.addColumn(ProductInfoModel::getPrice).setHeader("product price");
+        innerGrid.addColumn(ProductInfoModel::getQuantity).setHeader("product quantity");
         innerGrid.setSelectionMode(Grid.SelectionMode.NONE);
 
         shopGrid.addSelectionListener(event2 -> {
             ShopInvoiceModel selectedShop = event2.getFirstSelectedItem().orElse(null);
             if (selectedShop != null) {
-                HashMap<String, List<String>> innerFields = selectedShop.getProductInfoInShop();
-                List<Map.Entry<String, List<String>>> innerFieldsList = new ArrayList<>(innerFields.entrySet());
-                innerGrid.setItems(innerFieldsList);
+                List<ProductInfoModel> innerFields = selectedShop.getProductInfoInShop();
+//                List<Map.Entry<String, List<String>>> innerFieldsList = new ArrayList<>(innerFields.entrySet());
+                innerGrid.setItems(innerFields);
             } else {
                 innerGrid.setItems(Collections.emptyList());
             }

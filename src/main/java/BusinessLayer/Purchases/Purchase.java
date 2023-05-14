@@ -3,6 +3,7 @@ package BusinessLayer.Purchases;
 import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
+import BusinessLayer.PersistenceManager;
 import BusinessLayer.Shops.FinalBagPriceResult;
 import BusinessLayer.Shops.FinalCartPriceResult;
 import BusinessLayer.Shops.Product;
@@ -212,9 +213,12 @@ public class Purchase implements PurchaseIntr{
                 System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + shopBagItem.getProduct());
                 System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + shopName);
                 userInvoice.addProduct(shopName, shopBagItem.getProduct(), shopBagItem.getQuantity());
-                shopInvoice.addProduct(shopName, shopBagItem.getProduct(), shopBagItem.getQuantity());
+                shopInvoice.addProduct(shopBagItem.getProduct(), shopBagItem.getQuantity());
             }
             shopInvoices.add(shopInvoice);
+            PersistenceManager.getInstance().persistObj(shopInvoice);
         }
+
+        PersistenceManager.getInstance().persistObj(userInvoice);
     }
 }

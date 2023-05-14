@@ -29,4 +29,16 @@ public class PersistenceManager {
 	public EntityManager getEntityManager() {
 		return entityManager;
 	}
+
+	public void persistObj(Object obj) {
+		PersistenceManager.getInstance().getEntityManager().getTransaction().begin();
+		PersistenceManager.getInstance().getEntityManager().persist(obj);
+		PersistenceManager.getInstance().getEntityManager().getTransaction().commit();
+	}
+
+	public void updateObj(Object obj) {
+		PersistenceManager.getInstance().getEntityManager().getTransaction().begin();
+		PersistenceManager.getInstance().getEntityManager().merge(obj);
+		PersistenceManager.getInstance().getEntityManager().getTransaction().commit();
+	}
 }
