@@ -25,8 +25,6 @@ public class Purchase implements PurchaseIntr{
     SupplyDetails supplyDetails;
     UserInvoice userInvoice;
     List<ShopInvoice> shopInvoices;
-    double totalPrice;
-    double priceAfterDiscount;
 
     public Purchase(User user, List<Shop> shops, PaymentDetails paymentDetails, SupplyDetails supplyDetails) {
         this.user = user;

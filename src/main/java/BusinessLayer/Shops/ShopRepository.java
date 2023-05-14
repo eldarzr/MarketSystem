@@ -75,10 +75,11 @@ public class ShopRepository {
             entityManager.getTransaction().rollback();
             entityManager.clear();
         }
-        entityManager.getTransaction().begin();
-        entityManager.createNativeQuery("DELETE FROM `shops`").executeUpdate();
-        entityManager.createNativeQuery("DELETE FROM `products`").executeUpdate();
-        entityManager.getTransaction().commit();
+        PersistenceManager.getInstance().reset();
+//        entityManager.getTransaction().begin();
+//        entityManager.createNativeQuery("DELETE FROM `shops`").executeUpdate();
+//        entityManager.createNativeQuery("DELETE FROM `products`").executeUpdate();
+//        entityManager.getTransaction().commit();
     }
 
     private void throwException(String errorMsg)  throws IllegalArgumentException{
