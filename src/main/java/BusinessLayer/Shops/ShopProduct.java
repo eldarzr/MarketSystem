@@ -1,7 +1,13 @@
 package BusinessLayer.Shops;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "products")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class ShopProduct extends Product{
 
+	@Column(name = "quantity")
 	private int quantity;
 
 	private ShopProduct(String name, String category, String description, double price, String shopName) {

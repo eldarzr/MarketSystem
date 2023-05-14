@@ -28,10 +28,6 @@ public abstract class InvoiceDataObj {
 			this.deliveryMethod = invoice.getDeliveryMethod();
 	}
 
-	public abstract Collection<String> getProducts();
-
-	public abstract int getQuantityOfProduct(String productName) throws Exception;
-
 	public String getUserName() {
 		return userName;
 	}

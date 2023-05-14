@@ -81,26 +81,25 @@ public class UserHistoryView extends BaseView {
 
 
 
-        Grid<Map.Entry<String, List<String>>> innerGrid = new Grid<>();
-        innerGrid.addColumn(Map.Entry::getKey).setHeader("product Name");
-        innerGrid.addColumn(entry -> entry.getValue().get(InvoiceModel.PRODUCT_DESCRIPTION)).setHeader("product description");
-        innerGrid.addColumn(entry -> entry.getValue().get(InvoiceModel.PRODUCT_CATEGORY)).setHeader("product category");
-        innerGrid.addColumn(entry -> entry.getValue().get(InvoiceModel.PRODUCT_PRICE)).setHeader("product price");
-        innerGrid.addColumn(entry -> entry.getValue().get(InvoiceModel.PRODUCT_QUANTITY)).setHeader("product quantity");
+        Grid<ProductInfoModel> innerGrid = new Grid<>();
+        innerGrid.addColumn(ProductInfoModel::getName).setHeader("product Name");
+        innerGrid.addColumn(ProductInfoModel::getDescription).setHeader("product description");
+        innerGrid.addColumn(ProductInfoModel::getCategory).setHeader("product category");
+        innerGrid.addColumn(ProductInfoModel::getPrice).setHeader("product price");
+        innerGrid.addColumn(ProductInfoModel::getQuantity).setHeader("product quantity");
         innerGrid.setSelectionMode(Grid.SelectionMode.NONE);
 
         historyGrid.addSelectionListener(event -> {
             UserInvoiceModel userInvoiceModel = event.getFirstSelectedItem().orElse(null);
             if (userInvoiceModel != null) {
-                HashMap<String, HashMap<String, List<String>>> productInfoInShop = userInvoiceModel.getProductInfoInShop();
+                HashMap<String, ShopInfoModel> productInfoInShop = userInvoiceModel.getProductInfoInShop();
                 List<String> shopList = new ArrayList<>(productInfoInShop.keySet());
                 shopGrid.setItems(shopList);
                 shopGrid.addSelectionListener(event2 -> {
                     String selectedShop = event2.getFirstSelectedItem().orElse(null);
                     if (selectedShop != null) {
-                        HashMap<String, List<String>> innerFields = productInfoInShop.get(selectedShop);
-                        List<Map.Entry<String, List<String>>> innerFieldsList = new ArrayList<>(innerFields.entrySet());
-                        innerGrid.setItems(innerFieldsList);
+                        List<ProductInfoModel> innerFields = productInfoInShop.get(selectedShop).getProductInfos();
+                        innerGrid.setItems(innerFields);
                     } else {
                         innerGrid.setItems(Collections.emptyList());
                     }

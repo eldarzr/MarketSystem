@@ -51,7 +51,7 @@ public class AdminShopProfileView extends ShopProfileView {
 		shopProfile = shop_res.getData();
 		add(new Text(shopProfile.getName()));
 		showShopProfileScreen();
-		editProductButton.setVisible(false);
+		disableButtons();
 	}
 
 	@Override
@@ -59,6 +59,14 @@ public class AdminShopProfileView extends ShopProfileView {
 		getUI().ifPresent(ui ->
 				ui.navigate(ADMIN_PREFIX + "manage_roles?userName=" + userProfile.getName()
 						+ "&shopName=" + shopProfile.getName()));
+	}
+
+	private void disableButtons(){
+		editProductButton.setVisible(false);
+		removeProductButton.setVisible(false);
+		addProductButton.setVisible(false);
+		purchasePoliciesButton.setVisible(false);
+		manageDiscount.setVisible(false);
 	}
 
 }

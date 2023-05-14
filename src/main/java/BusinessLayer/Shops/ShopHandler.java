@@ -25,6 +25,7 @@ public class ShopHandler {
     private final int SHOP_DISTANCE_MAX_LIMIT = 2;
     private final int PRODUCT_DISTANCE_MAX_LIMIT = 2;
     private LevenshteinDistance distance = new LevenshteinDistance();
+    private final ShopRepository shopRepository = ShopRepository.getInstance();
 
     public List<Shop> getAllShops() {
         return shops.values().stream().toList();
@@ -70,6 +71,7 @@ public class ShopHandler {
     public void addShop(String shopName, Shop shop) throws Exception {
         if(shops.containsKey(shopName))
             throwException("There is already shop with that name");
+        shopRepository.addShop(shopName, shop);
         shops.put(shopName, shop);
     }
 
@@ -210,6 +212,7 @@ public class ShopHandler {
 
     public void reset() {
         shops.clear();
+        shopRepository.reset();
     }
 
     public Collection<ShopInvoice> getShopPurchaseHistory(String shopName, String userName) throws Exception {

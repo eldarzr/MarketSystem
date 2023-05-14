@@ -208,7 +208,7 @@ public abstract class BaseView extends VerticalLayout{
 
 	protected void disableButton(Button button){
 		button.setEnabled(false);
-		button.getStyle().set("background-color", "#ffba66");
+		button.getStyle().set("background-image", "linear-gradient(to right,#ffd966 , #ffba66)");
 		button.getStyle().set("color", "white");
 	}
 

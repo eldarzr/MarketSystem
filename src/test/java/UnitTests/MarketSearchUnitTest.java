@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,9 +22,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MarketSearchUnitTest {
 	ShopHandler shopHandler;
-	Shop[] shops = new Shop[2];
+	@Transient
+	Shop[] shops;
+	@Transient
 	ShopProduct[] product = new ShopProduct[3];
+	@Transient
 	MemberRoleInShop memberRoleInShop;
+	@Transient
 	ManagePermissions managePermissions;
 	String[] usersName = {"eldar", "niv12"};
 	String[] passwords = {"Aa123456", "Aa123456"};

@@ -1,5 +1,9 @@
 package FrontEnd.Model;
 
+import BusinessLayer.Purchases.ProductInfo;
+import BusinessLayer.Purchases.ShopInfo;
+import ServiceLayer.DataObjects.ProductInfoDataObj;
+import ServiceLayer.DataObjects.ShopInfoDataObj;
 import ServiceLayer.DataObjects.UserInvoiceDataObj;
 
 import java.io.Serializable;
@@ -11,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class UserInvoiceModel extends InvoiceModel implements Serializable {
 
-	private HashMap<String, HashMap<String, List<String>>> productInfoInShop;
+	private HashMap<String, ShopInfoModel> productInfoInShop;
 
 	public UserInvoiceModel(String userName, String paymentMethod, String deliveryMethod) {
 		super(userName, paymentMethod, deliveryMethod);
@@ -21,35 +25,13 @@ public class UserInvoiceModel extends InvoiceModel implements Serializable {
 	public UserInvoiceModel(UserInvoiceDataObj userInvoice) {
 		super(userInvoice);
 		productInfoInShop = new HashMap<>();
-		HashMap<String, HashMap<String, List<String>>> productInfoInShopS = userInvoice.getProductInfoInShop();
-		for (String shopName : productInfoInShopS.keySet()){
-			productInfoInShop.put(shopName, new HashMap<>());
-			HashMap<String, List<String>> productInfo = productInfoInShopS.get(shopName);
-			for (String productName : productInfo.keySet()){
-				productInfoInShop.get(shopName).put(productName, new ArrayList<>());
-				for (String s : productInfo.get(productName))
-					productInfoInShop.get(shopName).get(productName).add(s);
-			}
+		HashMap<String, ShopInfoDataObj> productInfoInShopB = userInvoice.getProductInfoInShop();
+		for (ShopInfoDataObj shopInfo : productInfoInShopB.values()){
+			productInfoInShop.put(shopInfo.getShopName(), new ShopInfoModel(shopInfo));
 		}
 	}
 
-	@Override
-	public Collection<String> getProducts() {
-		List<String> toRet = new ArrayList<>();
-		for (HashMap<String, List<String>> maps : productInfoInShop.values())
-			for (List<String> list : maps.values())
-				toRet.add(list.toString());
-		return toRet;
-	}
-
-	@Override
-	public int getQuantityOfProduct(String productName) throws Exception {
-		return Integer.parseInt(String.valueOf(productInfoInShop.values().stream().
-				filter(hm -> hm.containsKey(productName)).collect(Collectors.toList()).
-				get(0).get(PRODUCT_QUANTITY)));
-	}
-
-	public HashMap<String, HashMap<String, List<String>>> getProductInfoInShop() {
+	public HashMap<String, ShopInfoModel> getProductInfoInShop() {
 		return productInfoInShop;
 	}
 }

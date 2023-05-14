@@ -3,6 +3,7 @@ package BusinessLayer.Purchases;
 import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
+import BusinessLayer.PersistenceManager;
 import BusinessLayer.Shops.FinalBagPriceResult;
 import BusinessLayer.Shops.FinalCartPriceResult;
 import BusinessLayer.Shops.Product;
@@ -12,18 +13,18 @@ import BusinessLayer.Users.User;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Purchase implements PurchaseIntr{
 
     List<Shop> shops;
     User user;
+    List<Product> products;
     PaymentDetails paymentDetails;
     SupplyDetails supplyDetails;
     UserInvoice userInvoice;
     List<ShopInvoice> shopInvoices;
-    double totalPrice;
-    double priceAfterDiscount;
 
     public Purchase(User user, List<Shop> shops, PaymentDetails paymentDetails, SupplyDetails supplyDetails) {
         this.user = user;
@@ -37,9 +38,9 @@ public class Purchase implements PurchaseIntr{
 
     @Override
     public void process() throws Exception {
-        acquireProductsLocks();
-        FinalCartPriceResult finalPrice = handleStock();
         try{
+            acquireProductsLocks();
+            FinalCartPriceResult finalPrice = handleStock();
             paymentDetails.accept(this,finalPrice.getTotalPriceAfterDiscount());
         }catch (Exception e){
             revert();
@@ -59,8 +60,13 @@ public class Purchase implements PurchaseIntr{
 
     private void addInvoicesToObjects() {
         user.addInvoice(userInvoice);
-        for (ShopInvoice shopInvoice : shopInvoices)
-            getShopByName(shopInvoice.getShopName()).addInvoice(shopInvoice);
+        for (ShopInvoice shopInvoice : shopInvoices) {
+            Shop shop = getShopByName(shopInvoice.getShopName());
+            if (shop != null) {
+                shop.addInvoice(shopInvoice);
+                System.out.println("!@!@!@!@!@!@!@!@!@!" + shopInvoice);
+            }
+        }
     }
 
     private void revertPay() throws InterruptedException {
@@ -70,7 +76,7 @@ public class Purchase implements PurchaseIntr{
 
     private FinalCartPriceResult handleStock() throws Exception {
         Cart cart = user.getCart();
-        ConcurrentHashMap<String, ShopBag>  shopsAndProducts = cart.getShopsAndProducts();
+        Map<String, ShopBag> shopsAndProducts = cart.getShopsAndProducts();
         // Check for every shop if the purchase policy applies
         checkPurchasePolicies(shopsAndProducts);
         checkProductsAvailability(shopsAndProducts);
@@ -80,7 +86,7 @@ public class Purchase implements PurchaseIntr{
         return finalPriceResultResult;
     }
 
-    private void checkPurchasePolicies(ConcurrentHashMap<String, ShopBag> shopsAndProducts) throws Exception {
+    private void checkPurchasePolicies(Map<String, ShopBag> shopsAndProducts) throws Exception {
         for(String shopName : shopsAndProducts.keySet()){
             Shop shop = null;
             for(Shop s : shops){
@@ -106,7 +112,7 @@ public class Purchase implements PurchaseIntr{
         return finalCartPriceResult;
     }
 
-    private void reduceProductsQuantity(ConcurrentHashMap<String, ShopBag> shopsAndProducts) throws Exception {
+    private void reduceProductsQuantity(Map<String, ShopBag> shopsAndProducts) throws Exception {
         for(String shopName : shopsAndProducts.keySet()){
             Shop currentShop = getShopByName(shopName);
             try {
@@ -118,7 +124,7 @@ public class Purchase implements PurchaseIntr{
         }
     }
 
-    private void checkProductsAvailability(ConcurrentHashMap<String, ShopBag> shopsAndProducts) throws Exception {
+    private void checkProductsAvailability(Map<String, ShopBag> shopsAndProducts) throws Exception {
         for(String shopName : shopsAndProducts.keySet()){
             Shop currentShop = getShopByName(shopName);
             try {
@@ -139,7 +145,7 @@ public class Purchase implements PurchaseIntr{
 
     private void acquireProductsLocks(){
         Cart cart = user.getCart();
-        List<Product> products = cart.getAllProducts();
+        products = cart.getAllProducts();
         products.sort(new Comparator<Product>() {
             public int compare(Product p1, Product p2) {
                 return p1.getName().compareTo(p2.getName());
@@ -151,7 +157,7 @@ public class Purchase implements PurchaseIntr{
 
     private void releaseProductsLocks(){
         Cart cart = user.getCart();
-        List<Product> products = cart.getAllProducts();
+//        List<Product> products = cart.getAllProducts();
         products.sort(new Comparator<Product>() {
             public int compare(Product p1, Product p2) {
                 return p1.getName().compareTo(p2.getName());
@@ -162,14 +168,14 @@ public class Purchase implements PurchaseIntr{
     }
 
     private void revert() throws Exception {
-        acquireProductsLocks();
+//        acquireProductsLocks();
         Cart cart = user.getCart();
-        ConcurrentHashMap<String, ShopBag>  shopsAndProducts = cart.getShopsAndProducts();
+        Map<String, ShopBag>  shopsAndProducts = cart.getShopsAndProducts();
         revertProductsReduce(shopsAndProducts);
         releaseProductsLocks();
     }
 
-    private void revertProductsReduce(ConcurrentHashMap<String, ShopBag>  shopsAndProducts) throws Exception {
+    private void revertProductsReduce(Map<String, ShopBag>  shopsAndProducts) throws Exception {
         for(String shopName : shopsAndProducts.keySet()){
             Shop currentShop = getShopByName(shopName);
             try {
@@ -197,17 +203,21 @@ public class Purchase implements PurchaseIntr{
         Thread.sleep(20);
     }
 
-    public void addProductsToInvoices(ConcurrentHashMap<String, ShopBag> shopsAndProducts) {
+    public void addProductsToInvoices(Map<String, ShopBag> shopsAndProducts) {
         for(String shopName : shopsAndProducts.keySet()){
             ShopInvoice shopInvoice = new ShopInvoice
                     (user.getName(), paymentDetails.toString(), supplyDetails.toString(), shopName);
             ShopBag shopBag = shopsAndProducts.get(shopName);
             for (ShopBagItem shopBagItem : shopBag.getProductsAndQuantities().values()){
                 System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + shopBagItem.getProduct());
+                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + shopName);
                 userInvoice.addProduct(shopName, shopBagItem.getProduct(), shopBagItem.getQuantity());
-                shopInvoice.addProduct(shopName, shopBagItem.getProduct(), shopBagItem.getQuantity());
+                shopInvoice.addProduct(shopBagItem.getProduct(), shopBagItem.getQuantity());
             }
             shopInvoices.add(shopInvoice);
+            PersistenceManager.getInstance().persistObj(shopInvoice);
         }
+
+        PersistenceManager.getInstance().persistObj(userInvoice);
     }
 }
