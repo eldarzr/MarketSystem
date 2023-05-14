@@ -4,29 +4,50 @@ import BusinessLayer.Enums.UserType;
 import BusinessLayer.Notifications.Notification;
 import BusinessLayer.Notifications.NotificationObserver;
 import BusinessLayer.MemberRoleInShop;
+import BusinessLayer.PersistenceManager;
 import BusinessLayer.Purchases.Cart;
 import BusinessLayer.Purchases.UserInvoice;
 import BusinessLayer.Shops.Product;
 import BusinessLayer.Shops.Shop;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+@Entity
+@Table(name = "users")
 public class User implements NotificationObserver {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
     private UserType userType;
+
     private String name;
     private String sessionID;
     private String email;
+
+    @Column(name = "password") // To avoid using a reserved keyword
     private String password;
+
+    @Transient
     private ConcurrentLinkedQueue<String> shopsMessages = new ConcurrentLinkedQueue<>();
+
+    @Transient
     private ConcurrentLinkedQueue<UserInvoice> invoices = new ConcurrentLinkedQueue<>();
+
     private boolean twoFactorEnabled;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cart_id")
     Cart currentCart;
 
+    @Transient
     private ConcurrentLinkedQueue<Notification> pendingNotifications;
+    @Transient
     private NotificationCallback callback;
 
     public User(String name, String email, String password) {
@@ -100,6 +121,7 @@ public class User implements NotificationObserver {
 
     public void addProductToCart(String shopName, Product product, int quantity) throws Exception {
         getCart().addProduct(shopName, product, quantity);
+        PersistenceManager.getInstance().persistObj(getCart());
     }
 
     public void updateProductsFromCart(String shopName, String productName, int newQuantity) throws Exception {

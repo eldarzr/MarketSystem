@@ -13,6 +13,7 @@ import BusinessLayer.Users.User;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Purchase implements PurchaseIntr{
@@ -76,7 +77,7 @@ public class Purchase implements PurchaseIntr{
 
     private FinalCartPriceResult handleStock() throws Exception {
         Cart cart = user.getCart();
-        ConcurrentHashMap<String, ShopBag>  shopsAndProducts = cart.getShopsAndProducts();
+        Map<String, ShopBag> shopsAndProducts = cart.getShopsAndProducts();
         // Check for every shop if the purchase policy applies
         checkPurchasePolicies(shopsAndProducts);
 
@@ -87,7 +88,7 @@ public class Purchase implements PurchaseIntr{
         return finalPriceResultResult;
     }
 
-    private void checkPurchasePolicies(ConcurrentHashMap<String, ShopBag> shopsAndProducts) throws Exception {
+    private void checkPurchasePolicies(Map<String, ShopBag> shopsAndProducts) throws Exception {
         for(String shopName : shopsAndProducts.keySet()){
             Shop shop = null;
             for(Shop s : shops){
@@ -113,7 +114,7 @@ public class Purchase implements PurchaseIntr{
         return finalCartPriceResult;
     }
 
-    private void reduceProductsQuantity(ConcurrentHashMap<String, ShopBag> shopsAndProducts) throws Exception {
+    private void reduceProductsQuantity(Map<String, ShopBag> shopsAndProducts) throws Exception {
         for(String shopName : shopsAndProducts.keySet()){
             Shop currentShop = getShopByName(shopName);
             try {
@@ -125,7 +126,7 @@ public class Purchase implements PurchaseIntr{
         }
     }
 
-    private void checkProductsAvailability(ConcurrentHashMap<String, ShopBag> shopsAndProducts) throws Exception {
+    private void checkProductsAvailability(Map<String, ShopBag> shopsAndProducts) throws Exception {
         for(String shopName : shopsAndProducts.keySet()){
             Shop currentShop = getShopByName(shopName);
             try {
@@ -171,12 +172,12 @@ public class Purchase implements PurchaseIntr{
     private void revert() throws Exception {
 //        acquireProductsLocks();
         Cart cart = user.getCart();
-        ConcurrentHashMap<String, ShopBag>  shopsAndProducts = cart.getShopsAndProducts();
+        Map<String, ShopBag>  shopsAndProducts = cart.getShopsAndProducts();
         revertProductsReduce(shopsAndProducts);
         releaseProductsLocks();
     }
 
-    private void revertProductsReduce(ConcurrentHashMap<String, ShopBag>  shopsAndProducts) throws Exception {
+    private void revertProductsReduce(Map<String, ShopBag>  shopsAndProducts) throws Exception {
         for(String shopName : shopsAndProducts.keySet()){
             Shop currentShop = getShopByName(shopName);
             try {
@@ -204,7 +205,7 @@ public class Purchase implements PurchaseIntr{
         Thread.sleep(20);
     }
 
-    public void addProductsToInvoices(ConcurrentHashMap<String, ShopBag> shopsAndProducts) {
+    public void addProductsToInvoices(Map<String, ShopBag> shopsAndProducts) {
         for(String shopName : shopsAndProducts.keySet()){
             ShopInvoice shopInvoice = new ShopInvoice
                     (user.getName(), paymentDetails.toString(), supplyDetails.toString(), shopName);

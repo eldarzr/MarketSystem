@@ -3,26 +3,43 @@ package BusinessLayer.Purchases;
 import BusinessLayer.Shops.Product;
 
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-public class ShopBag {
+@Entity
+@Table(name = "shop_bags")
+public class ShopBag implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public ConcurrentHashMap<String, ShopBagItem> getProductsAndQuantities() {
-        return productsAndQuantities;
-    }
+    @Column(name = "shop_name")
+    private String shopName;
 
-    ConcurrentHashMap<String, ShopBagItem> productsAndQuantities;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "shop_name", referencedColumnName = "shop_name")
+    @MapKeyColumn(name = "product_name")
+    private Map<String, ShopBagItem> productsAndQuantities = new ConcurrentHashMap<>();
 
-    public ShopBag() {
+    public ShopBag(String shopName) {
         this.productsAndQuantities = new ConcurrentHashMap<>();
+        this.shopName = shopName;
     }
 
-    public ShopBag(ConcurrentHashMap<String, ShopBagItem> productsAndQuantities){
+    public ShopBag(Map<String, ShopBagItem> productsAndQuantities, String shopName){
         this.productsAndQuantities = productsAndQuantities;
+        this.shopName = shopName;
+    }
+
+    public Map<String, ShopBagItem> getProductsAndQuantities() {
+        return productsAndQuantities;
     }
 
     public void addProduct(Product product, int quantity) {
@@ -69,7 +86,8 @@ public class ShopBag {
         for(String productName : productsAndQuantities.keySet()){
             productsAndQuantitiesClone.put(productName,productsAndQuantities.get(productName).deepClone());
         }
-        return new ShopBag(productsAndQuantitiesClone);
+        String shopNameClone = shopName;
+        return new ShopBag(productsAndQuantitiesClone, shopNameClone);
     }
 
     public boolean isEmpty(){

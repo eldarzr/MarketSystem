@@ -57,7 +57,7 @@ public class Shop implements ShopIntr {
 	private String founderUserName;
 	//map of user name to role in this shop
 	@Transient
-	private ConcurrentHashMap<String, MemberRoleInShop> roles;
+	private Map<String, MemberRoleInShop> roles;
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "shopName", fetch = FetchType.LAZY)
 	@MapKeyColumn(name = "productName") // specify the index column
 	private Map<String, ShopProduct> products;
@@ -330,7 +330,7 @@ public class Shop implements ShopIntr {
 		return rolesInfo.toString();
 	}
 
-	public void newPurchase(String userName, ConcurrentHashMap<String, ShopBagItem> productsAndQuantities) {
+	public void newPurchase(String userName, Map<String, ShopBagItem> productsAndQuantities) {
 		//username is for history purpose will do it in another commit
 		for(String productName : productsAndQuantities.keySet()){
 			ShopProduct shopProduct = products.get(productName);
@@ -338,7 +338,7 @@ public class Shop implements ShopIntr {
 		}
 	}
 
-	public void validateAvailability(ConcurrentHashMap<String, ShopBagItem> productsAndQuantities) throws Exception {
+	public void validateAvailability(Map<String, ShopBagItem> productsAndQuantities) throws Exception {
 		for (String productName : productsAndQuantities.keySet()) {
 			int realQuantity = products.get(productName).getQuantity();
 			int desireQuantity = productsAndQuantities.get(productName).getQuantity();
@@ -348,7 +348,7 @@ public class Shop implements ShopIntr {
 		}
 	}
 
-	public void revertPurchase(String name, ConcurrentHashMap<String, ShopBagItem> productsAndQuantities) {
+	public void revertPurchase(String name, Map<String, ShopBagItem> productsAndQuantities) {
 		for(String productName : productsAndQuantities.keySet()) {
 			products.get(productName).addQuantity(productsAndQuantities.get(productName).getQuantity());
 		}
@@ -408,7 +408,7 @@ public class Shop implements ShopIntr {
 	}
 
 	private void removeSubordinates(String ownerToRemove) {
-		//ConcurrentHashMap<String , MemberRoleInShop> Subordinates = new ConcurrentHashMap<>();
+		//Map<String , MemberRoleInShop> Subordinates = new Map<>();
 		for (MemberRoleInShop role : roles.values()){
 			if(role.getGrantor() != null && role.getGrantor().equals(ownerToRemove)){
 				removeSubordinates(role.getRoleUser());
