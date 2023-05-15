@@ -2,8 +2,10 @@ package BusinessLayer.Shops;
 
 import BusinessLayer.Enums.ManagePermissionsEnum;
 import BusinessLayer.Enums.ManageType;
+import BusinessLayer.ManagePermissions;
 import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.MessageObserver;
+import BusinessLayer.PersistenceManager;
 import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Purchases.ShopBagItem;
 import BusinessLayer.Shops.Discount.*;
@@ -15,9 +17,12 @@ import BusinessLayer.Shops.PurchasePolicies.PurchasePolicyManager;
 import BusinessLayer.Users.User;
 import BusinessLayer.Purchases.ShopInvoice;
 
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.Lock;
@@ -27,24 +32,47 @@ import java.util.stream.Collectors;
 
 import static BusinessLayer.Enums.ManagePermissionsEnum.*;
 
+@Entity
+@Table(name = "shops")
 public class Shop implements ShopIntr {
+
+	@Transient
+	public static EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
+
+	@Transient
 	private final static int PRODUCT_MIN_QUANTITY = 0;
 
+	@Transient
 	private static final Logger logger = Logger.getLogger("Market");
 
+	@Id
+	@Column(name = "shopName")
 	private String name;
+	@Column(name = "open")
 	private boolean open;
+	@Column(name = "active")
 	private boolean active;
 
+	@Transient
 	private Lock remLock;
-	private final String founderUserName;
+	private String founderUserName;
 	//map of user name to role in this shop
-	private ConcurrentHashMap<String, MemberRoleInShop> roles;
-	private ConcurrentHashMap<String, ShopProduct> products;
+	@Transient
+	private Map<String, MemberRoleInShop> roles;
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "shopName", fetch = FetchType.LAZY)
+	@MapKeyColumn(name = "productName") // specify the index column
+	private Map<String, ShopProduct> products;
+	@Transient
 	private ConcurrentLinkedQueue<MessageObserver> observers;
+	@Transient
 	private ConcurrentLinkedQueue<ShopInvoice> invoices;
+	@Transient
 	private DiscountPolicy discountPolicy;
+	@Transient
 	private PurchasePolicyManager purchasePolicyManager;
+
+	public Shop() {
+	}
 
 	public Shop(String name, String founderUserName) {
 		this.name = name;
@@ -190,6 +218,21 @@ public class Shop implements ShopIntr {
 			throwException(String.format("there is already product %s in the shop %s", productName, name));
 		validatePermissionsException(userName, MANAGE_STOCK);
 		products.put(productName, ShopProduct.createProduct(productName, category, desc, price, this.name));
+		entityManager.getTransaction().begin();
+		entityManager.merge(this);
+		entityManager.getTransaction().commit();
+//		EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
+//		EntityManager em = emf.createEntityManager();
+//		em.getTransaction().begin();
+//		em.persist(products.get(productName));
+//		em.getTransaction().commit();
+//		Session session = em.unwrap(Session.class);
+//		String directory = (String) session.doReturningWork(connection -> {
+//			return connection.getMetaData().getURL();
+//		});
+//		System.out.println("File directory in database: " + directory);
+//		em.close();
+//		emf.close();
 	}
 
 	private void validatePermissionsException(String userName, ManagePermissionsEnum permissionsEnum) throws Exception {
@@ -288,7 +331,7 @@ public class Shop implements ShopIntr {
 		return rolesInfo.toString();
 	}
 
-	public void newPurchase(String userName, ConcurrentHashMap<String, ShopBagItem> productsAndQuantities) {
+	public void newPurchase(String userName, Map<String, ShopBagItem> productsAndQuantities) {
 		//username is for history purpose will do it in another commit
 		for(String productName : productsAndQuantities.keySet()){
 			ShopProduct shopProduct = products.get(productName);
@@ -296,7 +339,7 @@ public class Shop implements ShopIntr {
 		}
 	}
 
-	public void validateAvailability(ConcurrentHashMap<String, ShopBagItem> productsAndQuantities) throws Exception {
+	public void validateAvailability(Map<String, ShopBagItem> productsAndQuantities) throws Exception {
 		for (String productName : productsAndQuantities.keySet()) {
 			int realQuantity = products.get(productName).getQuantity();
 			int desireQuantity = productsAndQuantities.get(productName).getQuantity();
@@ -306,7 +349,7 @@ public class Shop implements ShopIntr {
 		}
 	}
 
-	public void revertPurchase(String name, ConcurrentHashMap<String, ShopBagItem> productsAndQuantities) {
+	public void revertPurchase(String name, Map<String, ShopBagItem> productsAndQuantities) {
 		for(String productName : productsAndQuantities.keySet()) {
 			products.get(productName).addQuantity(productsAndQuantities.get(productName).getQuantity());
 		}
@@ -366,7 +409,7 @@ public class Shop implements ShopIntr {
 	}
 
 	private void removeSubordinates(String ownerToRemove) {
-		//ConcurrentHashMap<String , MemberRoleInShop> Subordinates = new ConcurrentHashMap<>();
+		//Map<String , MemberRoleInShop> Subordinates = new Map<>();
 		for (MemberRoleInShop role : roles.values()){
 			if(role.getGrantor() != null && role.getGrantor().equals(ownerToRemove)){
 				removeSubordinates(role.getRoleUser());
@@ -449,5 +492,19 @@ public class Shop implements ShopIntr {
 	}
 
 
+	public Collection<String> getBidResponsibleUsers(User user) throws Exception {
+		boolean isAdmin = user.isAdmin();
+		MemberRoleInShop m = roles.get(user.getName());
+		if(!isAdmin & (m == null))
+			throw new Exception("user "+user.getName()+" doesn't have a role in shop "+name);
+		if(!isAdmin && (m.getType().equals(ManageType.MANAGER) && !m.getPermissions().validatePermission(MANAGE_BIDS)))
+			throw new Exception("user "+user.getName()+" doesn't have a permission to manage bids in shop "+name);
+
+		Collection<String> users = new ArrayList<>();
+		for(Map.Entry<String,MemberRoleInShop> e :roles.entrySet())
+			if(e.getValue().getPermissions().validatePermission(MANAGE_BIDS) || e.getValue().getType().equals(ManageType.OWNER))
+				users.add(e.getKey());
+		return users;
+	}
 }
 

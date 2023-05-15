@@ -1,5 +1,6 @@
 package BusinessLayer;
 
+import BusinessLayer.Bids.Bid;
 import BusinessLayer.Enums.UserType;
 import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
@@ -23,6 +24,10 @@ import BusinessLayer.Users.User;
 import BusinessLayer.Users.UsersHandler;
 import org.apache.commons.lang3.NotImplementedException;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.Transient;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -653,7 +658,7 @@ public class Market implements MarketIntr{
         String[] emails = {"eldarFirst@gmail.com", "nivFirst@gmail.com"};
         String[] shopNames = {"shopFirst1", "shopFirst2"};
         String[] prodNames = {"prodFirst1", "prodFirst2"};
-        String[] descs = {"description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 ", "description2"};
+        String[] descs = {"description1 description1 description1", "description2"};
         String[] cat = {"catFirst1", "catFirst2"};
         double[] prices = {5, 10};
 
@@ -662,7 +667,12 @@ public class Market implements MarketIntr{
             register(usersName[i], emails[i], passwords[i]);
             login(guestName, usersName[i], passwords[i]);
             createShop(usersName[i], shopNames[i]);
-            addNewProduct(usersName[i], shopNames[i], prodNames[i], cat[i], descs[i], prices[i]);
+            try {
+                addNewProduct(usersName[i], shopNames[i], prodNames[i], cat[i], descs[i], prices[i]);
+            }
+            catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
             addProductItems(usersName[i], shopNames[i], prodNames[i], 3);
         }
         createShop(usersName[0],"The Shop");
@@ -825,23 +835,59 @@ public class Market implements MarketIntr{
 
     public Map<Integer, PurchasePolicy> getAllPurchasePolicies(String userName, String shopName) throws Exception {
         validateUserIsntGuest(userName);
-        isLoggedIn(userName);
+        usersHandler.findLoginUser(userName);
         return getShop(shopName).getPurchasePolicyManager(userName).getAllPolicies();
     }
 
 
     public void setActivePurchasePolicy(String userName, String shopName, int policyId) throws Exception {
         validateUserIsntGuest(userName);
-        isLoggedIn(userName);
+        usersHandler.findLoginUser(userName);
         getShop(shopName).getPurchasePolicyManager(userName).setActivePolicy(policyId);
     }
 
     public Integer getActivePurchasePolicyId(String userName, String shopName) throws Exception {
         validateUserIsntGuest(userName);
-        isLoggedIn(userName);
+        usersHandler.findLoginUser(userName);
         return getShop(shopName).getPurchasePolicyManager(userName).getActivePolicyId();
     }
+    
+    public FinalCartPriceResult calcCartPriceAfterDiscount(String userName) throws Exception {
+        logger.info(String.format("Attempt by user %s to purchase cart.", userName));
+        User user = usersHandler.findLoginUser(userName);
+        List<Shop> shops = shopHandler.getShops(user.getCart().getShopsNames());
+        Purchase purchase = new Purchase(user,shops,null,null);
+        FinalCartPriceResult priceToReturn = purchase.computeCartPrice();
+        //return invoice or order number or order summary something like this need to decide
+        logger.info(String.format("User %s purchase cart successfully.", userName));
+        return priceToReturn;
+    }
 
+    //Bid functions
+    public void createBidOffer (String userName, String productName, String shopName, double bidPrice) throws Exception {
+        validateLoggedInException(userName);
+        shopHandler.createBid(productName, shopName, bidPrice);
+    }
+    public Collection<Bid> getPendingBids(String userName,String shopName) throws Exception {
+        validateLoggedInException(userName);
+        return shopHandler.getPendingBids(shopName);
+    }
+    public Collection<Bid> getApprovedBids(String userName,String shopName) throws Exception {
+        validateLoggedInException(userName);
+        return shopHandler.getApprovedBids(shopName);
+    }
+    public Collection<Bid> getRejectedBids(String userName,String shopName) throws Exception {
+        validateLoggedInException(userName);
+        return shopHandler.getRejectedBids(shopName);
+    }
+    public void approveBid(String userName, int bidId) throws Exception {
+        validateLoggedInException(userName);
+        shopHandler.approveBid(getUser(userName),bidId);
+    }
+    public void rejectBid(String userName, int bidId) throws Exception {
+        validateLoggedInException(userName);
+        shopHandler.rejectBid(getUser(userName),bidId);
+    }
 
     public void ReadUserNotifications(String username) {
         usersHandler.getUser(username).ReadNotifications();

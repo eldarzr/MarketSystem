@@ -37,12 +37,12 @@ public class MyShopsView extends BaseView {
         myShopsLayout = new VerticalLayout();
 
         // Get the user's roles and populate myShops
-        importShops();
+        importShops(false);
 
         add(mainLayout);
     }
 
-    protected void importShops() {
+    protected void importShops(boolean isAdmin) {
         SResponseT<List<MemberRoleInShopModel>> rolesRes = getUserRolesRes();
         if (rolesRes != null && !rolesRes.isSuccess()) {
             Notification.show(rolesRes.getMessage());
@@ -50,7 +50,7 @@ public class MyShopsView extends BaseView {
         } else {
             if (rolesRes != null && rolesRes.isSuccess())
                 myRoles.addAll(rolesRes.getData());
-            populateShopsList();
+            populateShopsList(isAdmin);
         }
     }
 
@@ -63,8 +63,8 @@ public class MyShopsView extends BaseView {
 
     }
 
-    private void populateShopsList() {
-        addShopsToLayout();
+    private void populateShopsList(boolean isAdmin) {
+        addShopsToLayout(isAdmin);
 
         // Add the create shop form at the end
         createShopLayout = new HorizontalLayout();
@@ -85,7 +85,7 @@ public class MyShopsView extends BaseView {
         mainLayout.add(myShopsLayout, createShopLayout);
     }
 
-    protected void addShopsToLayout() {
+    protected void addShopsToLayout(boolean isAdmin) {
         myShopsLayout.removeAll();
         for (MemberRoleInShopModel role : myRoles) {
             String shopName = role.getRoleShop().getName();
@@ -110,12 +110,20 @@ public class MyShopsView extends BaseView {
 
             Button closeButton = new Button("Close Shop");
             closeButton.addClickListener(e -> onCloseShop(role.getRoleShop().getName()));
-            enableButton(closeButton);
+            closeButton.setVisible(!isAdmin);
 
-            shopLayout.add(shopNameLabel, roleLabel, enterButton,closeButton);
+            Button historyButton = new Button("Shop history");
+            historyButton.addClickListener(e -> navigateToHistory(shopName));
+            enableButton(historyButton);
+
+            shopLayout.add(shopNameLabel, roleLabel, enterButton,closeButton, historyButton);
             shopLayout.setFlexGrow(1, shopNameLabel, roleLabel);
             myShopsLayout.add(shopLayout);
         }
+    }
+
+    protected void navigateToHistory(String shopName){
+        getUI().ifPresent(ui -> ui.navigate("shop_history/" + shopName));
     }
 
     protected void onCloseShop(String shopName) {
@@ -168,7 +176,7 @@ public class MyShopsView extends BaseView {
                 myRoles.clear();
                 myRoles.addAll(rolesRes.getData());
                 mainLayout.removeAll();
-                populateShopsList();
+                populateShopsList(false);
             }
         }
 

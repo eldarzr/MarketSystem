@@ -5,6 +5,7 @@ import BusinessLayer.Purchases.ShopBagItem;
 import BusinessLayer.Shops.Product;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -18,7 +19,7 @@ public class ShopBagDataObj {
 
     public ShopBagDataObj(ShopBag shopBag) {
         productsAndQuantities = new ConcurrentHashMap<>();
-        ConcurrentHashMap<String, ShopBagItem> productsMap = shopBag.getProductsAndQuantities();
+        Map<String, ShopBagItem> productsMap = shopBag.getProductsAndQuantities();
         for (String key : productsMap.keySet())
             productsAndQuantities.put(key, new ShopBagItemDataObj(productsMap.get(key)));
     }
