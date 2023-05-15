@@ -69,23 +69,23 @@ class MarketManageProductUnitTest {
 		assertThrows(Exception.class, () -> shop.removeProduct(usersName[0], prodNames[0]));
 	}
 
-	@Test
-	void updateProductNameSuccess() throws Exception {
-		Mockito.when(managePermissions.validatePermission(ManagePermissionsEnum.MANAGE_STOCK)).thenReturn(true);
-		assertDoesNotThrow(() -> shop.updateProductName(usersName[0], prodNames[0], prodNamesNew[0]));
-	}
-
-	@Test
-	void updateProductNameFailPermission() throws Exception {
-		Mockito.when(managePermissions.validatePermission(ManagePermissionsEnum.MANAGE_STOCK)).thenReturn(false);
-		assertThrows(Exception.class, () -> shop.updateProductName(usersName[0], prodNames[0], prodNamesNew[0]));
-	}
-
-	@Test
-	void updateProductNameFailExistsNAme() throws Exception {
-		Mockito.when(managePermissions.validatePermission(ManagePermissionsEnum.MANAGE_STOCK)).thenReturn(true);
-		assertThrows(Exception.class, () -> shop.updateProductName(usersName[0], prodNames[0], prodNames[1]));
-	}
+//	@Test
+//	void updateProductNameSuccess() throws Exception {
+//		Mockito.when(managePermissions.validatePermission(ManagePermissionsEnum.MANAGE_STOCK)).thenReturn(true);
+//		assertDoesNotThrow(() -> shop.updateProductName(usersName[0], prodNames[0], prodNamesNew[0]));
+//	}
+//
+//	@Test
+//	void updateProductNameFailPermission() throws Exception {
+//		Mockito.when(managePermissions.validatePermission(ManagePermissionsEnum.MANAGE_STOCK)).thenReturn(false);
+//		assertThrows(Exception.class, () -> shop.updateProductName(usersName[0], prodNames[0], prodNamesNew[0]));
+//	}
+//
+//	@Test
+//	void updateProductNameFailExistsNAme() throws Exception {
+//		Mockito.when(managePermissions.validatePermission(ManagePermissionsEnum.MANAGE_STOCK)).thenReturn(true);
+//		assertThrows(Exception.class, () -> shop.updateProductName(usersName[0], prodNames[0], prodNames[1]));
+//	}
 
 	@Test
 	void updateProductDescSuccess() throws Exception {

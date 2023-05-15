@@ -217,22 +217,10 @@ public class Shop implements ShopIntr {
 		if (products.containsKey(productName))
 			throwException(String.format("there is already product %s in the shop %s", productName, name));
 		validatePermissionsException(userName, MANAGE_STOCK);
-		products.put(productName, ShopProduct.createProduct(productName, category, desc, price, this.name));
-		entityManager.getTransaction().begin();
-		entityManager.merge(this);
-		entityManager.getTransaction().commit();
-//		EntityManagerFactory emf = Persistence.createEntityManagerFactory("myPersistenceUnit");
-//		EntityManager em = emf.createEntityManager();
-//		em.getTransaction().begin();
-//		em.persist(products.get(productName));
-//		em.getTransaction().commit();
-//		Session session = em.unwrap(Session.class);
-//		String directory = (String) session.doReturningWork(connection -> {
-//			return connection.getMetaData().getURL();
-//		});
-//		System.out.println("File directory in database: " + directory);
-//		em.close();
-//		emf.close();
+		ShopProduct shopProduct = ShopProduct.createProduct(productName, category, desc, price, this.name);
+		PersistenceManager.getInstance().persistObj(shopProduct);
+		products.put(productName, shopProduct);
+		PersistenceManager.getInstance().updateObj(this);
 	}
 
 	private void validatePermissionsException(String userName, ManagePermissionsEnum permissionsEnum) throws Exception {
@@ -249,17 +237,19 @@ public class Shop implements ShopIntr {
 		products.remove(productName);
 	}
 
-	public void updateProductName(String userName, String productOldName, String productNewName) throws Exception {
-		validateProductExists(productOldName);
-		validatePermissionsException(userName, MANAGE_STOCK);
-		if (products.containsKey(productNewName))
-			throw new Exception(String.format("there is already product %s in the shop %s", productNewName, name));
-		synchronized (products) {
-			ShopProduct product = products.remove(productOldName);
-			product.setName(productNewName);
-			products.put(productNewName, product);
-		}
-	}
+//	public void updateProductName(String userName, String productOldName, String productNewName) throws Exception {
+//		validateProductExists(productOldName);
+//		validatePermissionsException(userName, MANAGE_STOCK);
+//		if (products.containsKey(productNewName))
+//			throw new Exception(String.format("there is already product %s in the shop %s", productNewName, name));
+//		synchronized (products) {
+//			ShopProduct product = products.get(productOldName);
+//			product.setName(productNewName);
+//			PersistenceManager.getInstance().updateObj(product);
+//			product = products.remove(productOldName);
+//			products.put(productNewName, product);
+//		}
+//	}
 
 	public void updateProductDesc(String userName, String productName, String productNewDesc) throws Exception {
 		validateProductExists(productName);
@@ -288,7 +278,8 @@ public class Shop implements ShopIntr {
 	public void addProductQuantity(String userName, String productName, int quantity) throws Exception {
 		validateProductExists(productName);
 		validatePermissionsException(userName, MANAGE_STOCK);
-		products.get(productName).addQuantity(quantity);
+		ShopProduct shopProduct = products.get(productName);
+		shopProduct.addQuantity(quantity);
 	}
 
 	private void validateProductExists(String productName) throws Exception {

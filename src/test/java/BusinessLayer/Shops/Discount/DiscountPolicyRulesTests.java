@@ -33,10 +33,10 @@ public class DiscountPolicyRulesTests {
         Map<String, ShopBagItem> productsAndQuantities = new ConcurrentHashMap<>();
         for(int i = 0; i < productsNames.length; i++){
             Product product = new Product(productsNames[i], categories[i],description,prices[i],shopName);
-            ShopBagItem sbi = new ShopBagItem(product,quantities[i]);
+            ShopBagItem sbi = new ShopBagItem(product,quantities[i], "bla");
             productsAndQuantities.put(productsNames[i],sbi);
         }
-        shopBag = new ShopBag(productsAndQuantities, shopName);
+        shopBag = new ShopBag(productsAndQuantities, shopName, "bla");
 
     }
 

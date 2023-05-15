@@ -52,8 +52,8 @@ public class AppointShopManagerParallelismTest {
     @AfterEach
     public void tearDown() {
         // Log out all users and clear data
-        marketSystem.logout(admin1);
-        marketSystem.logout(admin2);
+//        marketSystem.logout(admin1);
+//        marketSystem.logout(admin2);
 //        marketSystem.logout(shopOwner1);
 //        marketSystem.logout(shopOwner2); todo: log out twice ,at thread task and here
         marketSystem.clearData();

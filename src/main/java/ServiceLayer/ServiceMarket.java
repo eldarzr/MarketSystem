@@ -177,14 +177,14 @@ public class ServiceMarket {
 		return new Response();
 	}
 
-	public Response updateProductName(String userName, String shopName, String productOldName, String productNewName) {
-		try {
-			market.updateProductName(userName, shopName, productOldName, productNewName);
-		} catch (Exception exception) {
-			return new Response(exception.getMessage());
-		}
-		return new Response();
-	}
+//	public Response updateProductName(String userName, String shopName, String productOldName, String productNewName) {
+//		try {
+//			market.updateProductName(userName, shopName, productOldName, productNewName);
+//		} catch (Exception exception) {
+//			return new Response(exception.getMessage());
+//		}
+//		return new Response();
+//	}
 
 	public Response updateProductDesc(String userName, String shopName, String productName, String productNewDesc) {
 		try {
