@@ -1,5 +1,6 @@
 package BusinessLayer.Purchases;
 
+import BusinessLayer.ShopBagId;
 import BusinessLayer.Shops.Product;
 
 import javax.persistence.*;
@@ -10,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "carts")
@@ -23,10 +23,19 @@ public class Cart implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "cart_id", referencedColumnName = "id")
-    @MapKeyColumn(name = "shop_name")
+    @Column(name = "userName")
+    private String userName;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userName", fetch = FetchType.LAZY)
+    @MapKeyColumn(name = "shopName") // specify the index column
     private Map<String, ShopBag> cart = new ConcurrentHashMap<>();
+
+    public Cart() {
+    }
+
+    public Cart(String userName){
+        this.userName = userName;
+    }
 
     public ShopBag getShoppingBag(String shopName) {
       ShopBag sb = cart.get(shopName);
@@ -39,7 +48,7 @@ public class Cart implements Serializable {
 
     public void addProduct(String shopName, Product product, int quantity) throws Exception {
         if(!cart.containsKey(shopName))
-            cart.put(shopName,new ShopBag(shopName));
+            cart.put(shopName,new ShopBag(shopName, userName));
         ShopBag shopBag = getShoppingBag(shopName);
         shopBag.addProduct(product,quantity);
     }

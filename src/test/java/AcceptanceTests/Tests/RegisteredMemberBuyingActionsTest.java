@@ -57,8 +57,8 @@ public class RegisteredMemberBuyingActionsTest {
 
     // test that the cart is saved when a registered user logs out
     @Test
-    public void testCartSavedOnLogout() {
-        try {
+    public void testCartSavedOnLogout() throws Exception {
+//        try {
             // log in as registered user
             market.login("testUser", "Passw0rd!!!");
 
@@ -79,9 +79,9 @@ public class RegisteredMemberBuyingActionsTest {
             ProductBridge cartProduct = cartProducts.iterator().next();
             assertEquals("Incorrect product name in cart after logout", product.getProductName(), cartProduct.getProductName());
             assertEquals("Incorrect quantity of product in cart after logout", 1, market.getCart(tempUserName).getQuantityOfProduct(product.getProductName()));
-        } catch (Exception e) {
-            fail("Exception thrown while testing cart saved on logout: " + e.getMessage());
-        }
+//        } catch (Exception e) {
+//            fail("Exception thrown while testing cart saved on logout: " + e.getMessage());
+//        }
     }
 
     // test that the cart is deleted when a guest user logs out

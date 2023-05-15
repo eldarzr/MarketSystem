@@ -1,5 +1,7 @@
 package BusinessLayer.Purchases;
 
+import BusinessLayer.ShopBagId;
+import BusinessLayer.ShopBagItemId;
 import BusinessLayer.Shops.Product;
 
 
@@ -15,27 +17,39 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "shop_bags")
+@IdClass(ShopBagId.class)
 public class ShopBag implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @Column(name = "shop_name")
+    @Id
+    @Column(name = "shopName")
     private String shopName;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "shop_name", referencedColumnName = "shop_name")
-    @MapKeyColumn(name = "product_name")
+    @Id
+    @Column(name = "userName")
+    private String userName;
+
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumns({
+            @JoinColumn(name="shopName", referencedColumnName="shopName"),
+            @JoinColumn(name="userName", referencedColumnName="userName")
+    })
+    @MapKeyColumn(name = "productName") // specify the index column
     private Map<String, ShopBagItem> productsAndQuantities = new ConcurrentHashMap<>();
 
-    public ShopBag(String shopName) {
-        this.productsAndQuantities = new ConcurrentHashMap<>();
-        this.shopName = shopName;
+    public ShopBag() {
     }
 
-    public ShopBag(Map<String, ShopBagItem> productsAndQuantities, String shopName){
+    public ShopBag(String shopName, String userName) {
+        this.productsAndQuantities = new ConcurrentHashMap<>();
+        this.shopName = shopName;
+        this.userName = userName;
+    }
+
+    public ShopBag(Map<String, ShopBagItem> productsAndQuantities, String shopName, String userName){
         this.productsAndQuantities = productsAndQuantities;
         this.shopName = shopName;
+        this.userName = userName;
     }
 
     public Map<String, ShopBagItem> getProductsAndQuantities() {
@@ -43,7 +57,7 @@ public class ShopBag implements Serializable {
     }
 
     public void addProduct(Product product, int quantity) {
-        ShopBagItem shopBagItem = new ShopBagItem(product,quantity);
+        ShopBagItem shopBagItem = new ShopBagItem(product,quantity, userName);
         if(productsAndQuantities.containsKey(product.getName())){
             ShopBagItem ExistingShopBagItem = productsAndQuantities.get(product);
             ExistingShopBagItem.setQuantity(ExistingShopBagItem.getQuantity()+quantity);
@@ -87,7 +101,8 @@ public class ShopBag implements Serializable {
             productsAndQuantitiesClone.put(productName,productsAndQuantities.get(productName).deepClone());
         }
         String shopNameClone = shopName;
-        return new ShopBag(productsAndQuantitiesClone, shopNameClone);
+        String userNameClone = userName;
+        return new ShopBag(productsAndQuantitiesClone, shopNameClone, userNameClone);
     }
 
     public boolean isEmpty(){

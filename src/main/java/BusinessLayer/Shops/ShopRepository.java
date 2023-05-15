@@ -25,7 +25,6 @@ public class ShopRepository {
         return ShopRepo.instance;
     }
 
-    private final EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
     private static final Logger logger = Logger.getLogger("Market");
     private Map<String,Shop> shops;
 
@@ -40,21 +39,19 @@ public class ShopRepository {
     public void addShop(String shopName, Shop shop) throws Exception {
         if(shops.containsKey(shopName))
             throwException("There is already shop with that name");
-        Shop shopFromDB = entityManager.find(Shop.class, shopName);
+        Shop shopFromDB = PersistenceManager.getInstance().getEntityManager().find(Shop.class, shopName);
         if (shopFromDB != null) {
             shops.put(shopName, shopFromDB);
             throwException("There is already shop with that name");
         }
         shops.put(shopName, shop);
-        entityManager.getTransaction().begin();
-        entityManager.persist(shop);
-        entityManager.getTransaction().commit();
+        PersistenceManager.getInstance().persistObj(shop);
     }
 
     public Shop getShop(String shopName) throws Exception {
         if (shops.containsKey(shopName))
             return shops.get(shopName);
-        Shop shop = entityManager.find(Shop.class, shopName);
+        Shop shop = PersistenceManager.getInstance().getEntityManager().find(Shop.class, shopName);
         if (shop == null)
             throwException("there is no such shop named :" +shopName);
         shops.put(shopName, shop);
@@ -71,10 +68,10 @@ public class ShopRepository {
 
     public void reset() {
         shops.clear();
-        if (entityManager.getTransaction().isActive()) {
-            entityManager.getTransaction().rollback();
-            entityManager.clear();
-        }
+//        if (entityManager.getTransaction().isActive()) {
+//            entityManager.getTransaction().rollback();
+//            entityManager.clear();
+//        }
         PersistenceManager.getInstance().reset();
 //        entityManager.getTransaction().begin();
 //        entityManager.createNativeQuery("DELETE FROM `shops`").executeUpdate();

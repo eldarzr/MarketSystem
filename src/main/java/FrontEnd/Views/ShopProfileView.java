@@ -110,6 +110,8 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 		NumberField productPrice = new NumberField("Product Price");
 		IntegerField productQuantity = new IntegerField("Product Quantity");
 
+		productName.setEnabled(false);
+
 		editProductButton = new Button("Edit Product");
 		editProductButton.getStyle().set("color", "white");
 		disableButton(editProductButton);
@@ -290,12 +292,12 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 				Notification.show(res.getMessage());
 			else Notification.show("Updated Quantity successfully");
 		}
-		if(!productName.equals(currentProduct.getName())){
-			SResponse res = marketService.updateProductName(getCurrentUser().getName(), shopProfile.getName(),currentProduct.getName(),productName);
-			if(!res.isSuccess())
-				Notification.show(res.getMessage());
-			else Notification.show("Updated Name successfully");
-		}
+//		if(!productName.equals(currentProduct.getName())){
+//			SResponse res = marketService.updateProductName(getCurrentUser().getName(), shopProfile.getName(),currentProduct.getName(),productName);
+//			if(!res.isSuccess())
+//				Notification.show(res.getMessage());
+//			else Notification.show("Updated Name successfully");
+//		}
 	}
 
 	private void refreshProducts(){

@@ -261,13 +261,13 @@ public class Market implements MarketIntr{
         logger.info(message);
     }
 
-    @Override
-    public void updateProductName(String userName, String shopName, String productOldName, String productNewName) throws Exception {
-        logger.info(String.format("Attempt by user %s to update product %s name from store %s.", userName,productOldName, shopName));
-        validateLoggedInException(userName);
-        shopHandler.updateProductName(userName, shopName, productOldName, productNewName);
-        logger.info(String.format("User %s updated product %s name to %s from store %s.", userName,productOldName,productNewName, shopName));
-    }
+//    @Override
+//    public void updateProductName(String userName, String shopName, String productOldName, String productNewName) throws Exception {
+//        logger.info(String.format("Attempt by user %s to update product %s name from store %s.", userName,productOldName, shopName));
+//        validateLoggedInException(userName);
+//        shopHandler.updateProductName(userName, shopName, productOldName, productNewName);
+//        logger.info(String.format("User %s updated product %s name to %s from store %s.", userName,productOldName,productNewName, shopName));
+//    }
 
     @Override
     public void updateProductDesc(String userName, String shopName, String productName, String productNewDesc) throws Exception {
@@ -520,6 +520,7 @@ public class Market implements MarketIntr{
         Shop shop = shopHandler.getShop(shopName);
         Product product = shop.getProduct(productName,quantity);
         user.addProductToCart(shop.getName(),product,quantity);
+//        PersistenceManager.getInstance().updateObj(user);
         logger.info(String.format("User %s added %d %s from shop %s.", userName,quantity,productName,shopName));
     }
 

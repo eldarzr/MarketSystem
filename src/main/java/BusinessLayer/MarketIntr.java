@@ -47,7 +47,7 @@ public interface MarketIntr {
 
     void removeProduct(String userName, String shopName, String productName) throws Exception;
 
-    void updateProductName(String userName, String shopName, String productOldName, String productNewName) throws Exception;
+//    void updateProductName(String userName, String shopName, String productOldName, String productNewName) throws Exception;
 
     void updateProductDesc(String userName, String shopName, String productName, String productNewDesc) throws Exception;
 
