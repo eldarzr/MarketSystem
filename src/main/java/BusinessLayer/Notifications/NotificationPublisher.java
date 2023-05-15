@@ -50,7 +50,10 @@ public class NotificationPublisher {
         for(User observer: usersHandler.getAllMembers())
         {
             if(usersHandler.isLoggedIn(observer.getName()))
-                userNotificationsCallbacks.get(observer.getName()).call(notification.getMessage(),false);
+            {
+                NotificationCallback callback=userNotificationsCallbacks.get(observer.getName());
+                if(callback!=null) callback.call(notification.getMessage(),false);
+            } 
             observer.addPendingNotifications(notification);
         }
     }
@@ -65,7 +68,11 @@ public class NotificationPublisher {
     public void notify(String userName,Notification notification)
     {
         User user=usersHandler.findMemberByName(userName);
-        if(usersHandler.isLoggedIn(userName)) userNotificationsCallbacks.get(userName).call(notification.getMessage(),false);
+        if(usersHandler.isLoggedIn(userName))
+        {
+            NotificationCallback callback=userNotificationsCallbacks.get(userName);
+            if(callback!=null) callback.call(notification.getMessage(),false);
+        }
         user.addPendingNotifications(notification);
     }
 
