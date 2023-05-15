@@ -49,7 +49,7 @@ class MarketRTNotificationsIntegrationTest {
 		Collection<Notification> notifications=market.getUserNotifications(usersName[1]);
 		for(Notification notification: notifications)
 		{
-			if(notification.getMessage().equals(String.format("User %s appointed %s as shop-manager of shop %s.", usersName[0],usersName[1], shopNames[0])))
+			if(notification.getMessage().equals(String.format("User %s appointed you as shop-manager of shop %s.", usersName[0], shopNames[0])))
 			{
 				assertTrue(true);
 				return;
@@ -64,7 +64,7 @@ class MarketRTNotificationsIntegrationTest {
 		Collection<Notification> notifications=market.getUserNotifications(usersName[2]);
 		for(Notification notification: notifications)
 		{
-			if(notification.getMessage().equals(String.format("User %s appointed %s as shop-manager of shop %s.", usersName[0],usersName[1], shopNames[0])))
+			if(notification.getMessage().equals(String.format("User %s appointed you as shop-manager of shop %s.", usersName[0], shopNames[0])))
 			{
 				fail();
 			}
@@ -78,7 +78,7 @@ class MarketRTNotificationsIntegrationTest {
 		Collection<Notification> notifications=market.getUserNotifications(usersName[1]);
 		for(Notification notification: notifications)
 		{
-			if(notification.getMessage().equals(String.format("User %s appointed %s as shop-owner of shop %s.", usersName[0],usersName[1], shopNames[0])))
+			if(notification.getMessage().equals(String.format("User %s appointed you as shop-owner of shop %s.", usersName[0], shopNames[0])))
 			{
 				assertTrue(true);
 				return;
@@ -93,7 +93,7 @@ class MarketRTNotificationsIntegrationTest {
 		Collection<Notification> notifications=market.getUserNotifications(usersName[2]);
 		for(Notification notification: notifications)
 		{
-			if(notification.getMessage().equals(String.format("User %s appointed %s as shop-owner of shop %s.", usersName[0],usersName[1], shopNames[0])))
+			if(notification.getMessage().equals(String.format("User %s appointed you as shop-owner of shop %s.", usersName[0], shopNames[0])))
 			{
 				fail();
 				return;
