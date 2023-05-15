@@ -2,10 +2,14 @@ package FrontEnd.Views;
 
 import BusinessLayer.Enums.UserType;
 import FrontEnd.MarketService;
+import FrontEnd.Model.NotificationModel;
 import FrontEnd.Model.UserModel;
 import FrontEnd.SResponseT;
 import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.contextmenu.ContextMenu;
+import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -22,7 +26,10 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.*;
 import jakarta.servlet.http.HttpSession;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Route("base")
@@ -32,6 +39,9 @@ public abstract class BaseView extends VerticalLayout{
 	private HorizontalLayout horizontalLayout;
 	private Button goToCartButton;
 	private Button profileButton;
+	private Button bellButton;
+	private Span numberOfNotifications;
+	private ContextMenu NotificationsMenu;
 	private Label userNameLabel;
 	private Label title;
 	private HorizontalLayout loginLayout;
@@ -57,6 +67,32 @@ public abstract class BaseView extends VerticalLayout{
 				goToCartButton.getUI().ifPresent(ui ->
 						ui.navigate("cart"))
 		);
+
+		numberOfNotifications = new Span("0");
+		numberOfNotifications.getElement().getThemeList().addAll(Arrays.asList("badge", "error", "primary", "small", "pill"));
+		numberOfNotifications.getStyle().set("color", "red");
+		numberOfNotifications.setVisible(false);
+
+		bellButton = new Button(VaadinIcon.BELL_O.create());
+		bellButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+		bellButton.getElement().appendChild(numberOfNotifications.getElement());
+		bellButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
+		bellButton.getStyle().set("color", "white");
+		bellButton.setVisible(false);
+
+		NotificationsMenu = new ContextMenu();
+		NotificationsMenu.setOpenOnClick(true);
+		NotificationsMenu.setTarget(bellButton);
+
+		bellButton.addClickListener(e->
+		{
+			LoadUserNotifications();
+			numberOfNotifications.setText("0");
+			numberOfNotifications.setVisible(false);
+			marketService.ReadUserNotifications(getCurrentUser().getName());
+			bellButton.getStyle().set("color", "white");
+		});
+
 		userNameLabel = new Label();
 		userNameLabel.getStyle().set("background-color", "white");
 		userNameLabel.getStyle().set("color", "black");
@@ -87,7 +123,7 @@ public abstract class BaseView extends VerticalLayout{
 		userMenu.getStyle().set("display", "flex");
 		userMenu.getStyle().set("align-items", "center");
 
-		horizontalLayout = new HorizontalLayout(userMenu,goToCartButton,profileButton);
+		horizontalLayout = new HorizontalLayout(userMenu,goToCartButton,profileButton,bellButton);
 		horizontalLayout.getStyle().set("background-color", "#FFFFFF");
 		horizontalLayout.getStyle().set("padding", "1rem");
 		horizontalLayout.getStyle().set("border", "1px solid #ccc");
@@ -103,6 +139,27 @@ public abstract class BaseView extends VerticalLayout{
 			showLogoutScreen();
 	}
 
+	private void LoadUserNotifications() {
+		NotificationsMenu.removeAll();
+		SResponseT<List<NotificationModel>> NotificationsRes=marketService.getUserNotifications(getCurrentUser().getName());
+		List<NotificationModel> notifications=NotificationsRes.getData();
+		if (notifications.size()==0) return;
+		for(NotificationModel notification:notifications)
+		{
+			Div newNotification = new Div(new Text(notification.getMessage()));
+			newNotification.getStyle().set("padding", "var(--lumo-space-l)");
+			if (!notification.isRead())
+			{
+				newNotification.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
+				int num=Integer.parseInt(numberOfNotifications.getText());
+				numberOfNotifications.setText(Integer.toString(num+1));
+				numberOfNotifications.setVisible(true);
+			}
+			newNotification.addClickListener(e->newNotification.getStyle().remove("background-image"));
+			NotificationsMenu.add(newNotification);
+		}
+	}
+
 	private void handleProfile() {
 
 		if(getCurrentUser().getUserType() != UserType.GUEST)
@@ -112,7 +169,6 @@ public abstract class BaseView extends VerticalLayout{
 	}
 
 	protected boolean login(String username, String password) {
-		var ui=UI.getCurrent();
 		UserModel userModel = getCurrentUser();
 		if (username.trim().isEmpty()) {
 			Notification.show("Enter a username");
@@ -123,7 +179,6 @@ public abstract class BaseView extends VerticalLayout{
 			if (res.isSuccess()){
 				Notification.show("login successfully");
 				userModel = res.getData();
-				marketService.setNotificationCallback(userModel.getName(),((String notification)->ui.access(()->Notification.show(notification))));
 				Notification.show(userModel.getName());
 				setCurrentUser(userModel);
 				horizontalLayout.remove(loginLayout);
@@ -136,11 +191,35 @@ public abstract class BaseView extends VerticalLayout{
 		return false;
 	}
 
+	private void updateNotificationButton(String username)
+	{
+		var ui=UI.getCurrent();
+		marketService.setNotificationCallback(username,((String notification,Boolean isRead)->
+			ui.access(()->
+			{
+				Div newNotification = new Div(new Text(notification));
+				newNotification.getStyle().set("padding", "var(--lumo-space-l)");
+				if (!isRead)
+				{
+					newNotification.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
+					bellButton.getStyle().set("color", "red");
+					int num=Integer.parseInt(numberOfNotifications.getText());
+					numberOfNotifications.setText(Integer.toString(num+1));
+					numberOfNotifications.setVisible(true);
+				}
+				newNotification.addClickListener(e->newNotification.getStyle().remove("background-image"));
+				NotificationsMenu.add(newNotification);
+			})
+		));
+		bellButton.setVisible(true);
+	}
+
 	protected boolean logout() {
 		UserModel userModel = getCurrentUser();
 		SResponseT<String> res = marketService.logout(userModel.getName());
 		if (res.isSuccess()) {
 			Notification.show("logout successfully");
+			marketService.removeNotificationCallback(userModel.getName());
 			userModel = new UserModel(res.getData(), res.getData());
 			Notification.show(userModel.getName());
 			setCurrentUser(userModel);
@@ -166,6 +245,8 @@ public abstract class BaseView extends VerticalLayout{
 	}
 
 	private void showLogoutScreen(){
+		LoadUserNotifications();
+        updateNotificationButton(getCurrentUser().getName());
 		Button logoutButton = new Button("Logout");
 		logoutButton.addClickListener(click -> logout());
 		logoutButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");

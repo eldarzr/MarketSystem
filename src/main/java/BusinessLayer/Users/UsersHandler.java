@@ -3,7 +3,6 @@ package BusinessLayer.Users;
 import BusinessLayer.Notifications.Notification;
 import BusinessLayer.Notifications.NotificationPublisher;
 import BusinessLayer.Purchases.UserInvoice;
-import ServiceLayer.DataObjects.UserDataObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,7 +19,7 @@ import java.util.stream.Stream;
 
 import static BusinessLayer.Enums.UserType.*;
 
-public class UsersHandler implements NotificationPublisher {
+public class UsersHandler {
     private static final Logger logger = Logger.getLogger("Market");
 
     @Autowired
@@ -105,10 +104,6 @@ public class UsersHandler implements NotificationPublisher {
             throwIllegalArgumentException(String.format("User %s already logged in",userName));
         if(!passwordEncoder.matches(password,user.getPassword()))
             throwIllegalArgumentException("Incorrect password");
-        // todo: remove after meeting, only here to show real-time notifications work.
-        Notification notification=new Notification("me",String.format("hey all it's %s",userName));
-        notifyAll(notification);
-
         loginUsers.put(user.getName(),user);
         return user;
     }
@@ -276,30 +271,6 @@ public class UsersHandler implements NotificationPublisher {
         return sessionID;
     }
 
-    // Notify all users with notification (system notifications).
-    public void notifyAll(Notification notification)
-    {
-        for(User observer: members.values())
-        {
-            if(isLoggedIn(observer.getName())) observer.notify(notification);
-            observer.addPendingNotifications(notification);
-        }
-    }
-
-    // Notify collection of users with notification (shop management notifications).
-    public void notifySome(Collection<String> userNames,Notification notification)
-    {
-        for(String userName: userNames) notify(userName,notification);
-    }
-
-    // Notify Specific user with notification(user/shop-user notifications).
-    public void notify(String userName,Notification notification)
-    {
-        User user=members.get(userName);
-        if(isLoggedIn(userName)) user.notify(notification);
-        user.addPendingNotifications(notification);
-    }
-
 	public List<User> getAllUsers(String adminName) throws Exception {
         User admin = findLoginUser(adminName.toLowerCase());
         if(!isAdmin(adminName.toLowerCase())){
@@ -308,6 +279,11 @@ public class UsersHandler implements NotificationPublisher {
         return Stream.concat(members.values().stream(), loginUsers.values().stream()).distinct()
                 .collect(Collectors.toList());
 	}
+
+    // Just for notification publisher.
+    public List<User> getAllMembers(){
+        return new ArrayList<>(members.values());
+    }
 
     public String removeUser(String adminName, String userName) throws Exception {
         User admin = findLoginUser(adminName.toLowerCase());
@@ -326,10 +302,6 @@ public class UsersHandler implements NotificationPublisher {
     public User getUser(String userName) {
         User user = findUserByName(userName.toLowerCase());
         return user;
-    }
-
-    public void setNotificationCallback(String name, NotificationCallback callback) {
-        findMemberByName(name).setNotificationCallback(callback);
     }
 
     public Collection<Notification> getUserNotifications(String userName) {

@@ -14,11 +14,12 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Entity
 @Table(name = "users")
-public class User implements NotificationObserver {
+public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -45,9 +46,9 @@ public class User implements NotificationObserver {
     @JoinColumn(name = "cart_id")
 //    @Transient
     Cart currentCart;
-
+  
     @Transient
-    private ConcurrentLinkedQueue<Notification> pendingNotifications;
+    private ConcurrentLinkedDeque<Notification> pendingNotifications;
     @Transient
     private NotificationCallback callback;
 
@@ -151,13 +152,8 @@ public class User implements NotificationObserver {
         currentCart = new Cart(name);
     }
 
-    @Override
-    public void notify(Notification notification) {
-        if(callback!=null) callback.call(notification.getMessage());
-    }
-
     public void addPendingNotifications(Notification notification) {
-        pendingNotifications.add(notification);
+        pendingNotifications.push(notification);
     }
 
     public String getSessionID() {
@@ -170,10 +166,6 @@ public class User implements NotificationObserver {
 	
 	public void setCart(Cart currentCart) {
         this.currentCart = currentCart;
-    }
-
-    public void setNotificationCallback(NotificationCallback callback) {
-        this.callback=callback;
     }
 
     public Collection<Notification> getPendingNotification() {
@@ -193,6 +185,11 @@ public class User implements NotificationObserver {
 
     public LocalDate getBirthDay() {
         return LocalDate.of(1999,9,4);
+    }
+
+    public void ReadNotifications() {
+        for(Notification notification: pendingNotifications)
+            if(!notification.isRead()) notification.Read();
     }
 }
 

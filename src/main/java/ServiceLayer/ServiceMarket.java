@@ -604,7 +604,10 @@ public class ServiceMarket {
 	public void setNotificationCallback(String name, NotificationCallback callback) {
 		market.setNotificationCallback(name,callback);
 	}
-	
+
+	public void removeNotificationCallback(String name) {
+		market.removeNotificationCallback(name);
+	}
 
 	public ResponseT<DiscountPolicyDataObj> getShopDiscountPolicy(String currentUser, String shopName) {
 		try{
@@ -795,5 +798,7 @@ public class ServiceMarket {
 		}
 	}
 
-
+    public void ReadUserNotifications(String username) {
+		market.ReadUserNotifications(username);
+    }
 }

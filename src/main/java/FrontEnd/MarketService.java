@@ -476,6 +476,11 @@ public class MarketService {
 		serviceMarket.setNotificationCallback(name,callback);
 	}
 
+	public void removeNotificationCallback(String name) {
+		serviceMarket.removeNotificationCallback(name);
+	}
+
+
 	public SResponseT<List<MessageModel>> getMessages(String userName) {
 		throw new NotImplementedException();
 	}
@@ -579,6 +584,10 @@ public class MarketService {
 		return new SResponse(r.getMessage());
 	}
 
+	public void ReadUserNotifications(String username) {
+		serviceMarket.ReadUserNotifications(username);
+	}
+  
 	//Bid functions
 	public SResponse createBidOffer (String userName, String productName, String shopName, double bidPrice)  {
 		Response res = serviceMarket.createBidOffer(userName, productName, shopName, bidPrice);
@@ -631,6 +640,5 @@ public class MarketService {
 			return new SResponseT<>(res.getData());
 		else return new SResponseT<>(res.getMessage(),false);
 	}
-
 
 }

@@ -6,6 +6,8 @@ import BusinessLayer.MemberRoleInShop;
 
 import java.util.Collection;
 
+import BusinessLayer.Notifications.Notification;
+import BusinessLayer.Notifications.NotificationPublisher;
 import BusinessLayer.PersistenceManager;
 import BusinessLayer.Purchases.ShopInvoice;
 import BusinessLayer.Search;
@@ -80,12 +82,20 @@ public class ShopHandler {
         userName = userName.toLowerCase();
         Shop reqShop = getShop(shopName);
         reqShop.closeShop(userName);
+        // notify management on closing shop
+        String message=String.format("User %s closed shop %s.", userName, shopName);
+        Notification notification=new Notification(userName,message);
+        NotificationPublisher.getInstance().notifyShopManagement(userName, shopName,notification);
     }
 
     public void openShop(String userName, String shopName) throws Exception {
         userName = userName.toLowerCase();
         Shop reqShop = getShop(shopName);
         reqShop.openShop(userName);
+        // notify management on opening shop
+        String message=String.format("User %s opened shop %s.", userName, shopName);
+        Notification notification=new Notification(userName,message);
+        NotificationPublisher.getInstance().notifyShopManagement(userName, shopName,notification);
     }
 
     public Shop getShop(String shopName) throws Exception {
@@ -107,12 +117,20 @@ public class ShopHandler {
         userName = userName.toLowerCase();
         validateShopExistsOpenedException(shopName);
         shops.get(shopName).addNewProduct(userName, productName, category, desc, price);
+        // notify management on new product
+        String message=String.format("User %s added new product %s to store %s.", userName,productName, shopName);
+        Notification notification=new Notification(userName,message);
+        NotificationPublisher.getInstance().notifyShopManagement(userName, shopName,notification);
     }
 
     public void removeProduct(String userName, String shopName, String productName) throws Exception {
         userName = userName.toLowerCase();
         validateShopExistsOpenedException(shopName);
         shops.get(shopName).removeProduct(userName, productName);
+        // notify management on new product
+        String message=String.format("User %s removed product %s from store %s.", userName,productName, shopName);
+        Notification notification=new Notification(userName,message);
+        NotificationPublisher.getInstance().notifyShopManagement(userName, shopName,notification);
     }
 
 //    public void updateProductName(String userName, String shopName, String productOldName, String productNewName) throws Exception {
