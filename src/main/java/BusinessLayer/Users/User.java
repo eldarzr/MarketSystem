@@ -44,6 +44,7 @@ public class User{
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_id")
+//    @Transient
     Cart currentCart;
   
     @Transient
@@ -57,15 +58,17 @@ public class User{
         this.password = password;
         this.sessionID = null;
         userType = UserType.MEMBER;
-        currentCart = new Cart();
-        pendingNotifications = new ConcurrentLinkedDeque<>();
+        currentCart = new Cart(name);
+        pendingNotifications = new ConcurrentLinkedQueue<>();
+        PersistenceManager.getInstance().persistObj(currentCart);
     }
 
     public User(String guestName) {
         name = guestName.toLowerCase();
         sessionID = null;
         userType = UserType.GUEST;
-        currentCart = new Cart();
+        currentCart = new Cart(guestName);
+        PersistenceManager.getInstance().persistObj(currentCart);
     }
 
     public void sendMessage(String message) {
@@ -122,7 +125,7 @@ public class User{
 
     public void addProductToCart(String shopName, Product product, int quantity) throws Exception {
         getCart().addProduct(shopName, product, quantity);
-        PersistenceManager.getInstance().persistObj(getCart());
+        PersistenceManager.getInstance().updateObj(getCart());
     }
 
     public void updateProductsFromCart(String shopName, String productName, int newQuantity) throws Exception {
@@ -146,7 +149,7 @@ public class User{
     }
 
     public void clearCart() {
-        currentCart = new Cart();
+        currentCart = new Cart(name);
     }
 
     public void addPendingNotifications(Notification notification) {

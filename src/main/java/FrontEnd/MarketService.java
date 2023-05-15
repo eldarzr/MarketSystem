@@ -159,12 +159,12 @@ public class MarketService {
 		return new SResponse(r.getMessage());
 	}
 
-	public SResponse updateProductName(String userName, String shopName, String productOldName, String productNewName) {
-		Response r = serviceMarket.updateProductName(userName,shopName, productOldName,productNewName);
-		if (r.isSuccess())
-			return new SResponse();
-		return new SResponse(r.getMessage());
-	}
+//	public SResponse updateProductName(String userName, String shopName, String productOldName, String productNewName) {
+//		Response r = serviceMarket.updateProductName(userName,shopName, productOldName,productNewName);
+//		if (r.isSuccess())
+//			return new SResponse();
+//		return new SResponse(r.getMessage());
+//	}
 
 	public SResponse updateProductDesc(String userName, String shopName, String productName, String productNewDesc){
 		Response r = serviceMarket.updateProductDesc(userName,shopName, productName,productNewDesc);

@@ -8,6 +8,7 @@ import java.util.Collection;
 
 import BusinessLayer.Notifications.Notification;
 import BusinessLayer.Notifications.NotificationPublisher;
+import BusinessLayer.PersistenceManager;
 import BusinessLayer.Purchases.ShopInvoice;
 import BusinessLayer.Search;
 import BusinessLayer.Users.User;
@@ -27,7 +28,7 @@ public class ShopHandler {
     private final int SHOP_DISTANCE_MAX_LIMIT = 2;
     private final int PRODUCT_DISTANCE_MAX_LIMIT = 2;
     private LevenshteinDistance distance = new LevenshteinDistance();
-    private final ShopRepository shopRepository = ShopRepository.getInstance();
+    private ShopRepository shopRepository = ShopRepository.getInstance();
 
     public List<Shop> getAllShops() {
         return shops.values().stream().toList();
@@ -132,16 +133,18 @@ public class ShopHandler {
         NotificationPublisher.getInstance().notifyShopManagement(userName, shopName,notification);
     }
 
-    public void updateProductName(String userName, String shopName, String productOldName, String productNewName) throws Exception {
-        userName = userName.toLowerCase();
-        validateShopExistsOpenedException(shopName);
-        shops.get(shopName).updateProductName(userName, productOldName, productNewName);
-    }
+//    public void updateProductName(String userName, String shopName, String productOldName, String productNewName) throws Exception {
+//        userName = userName.toLowerCase();
+//        validateShopExistsOpenedException(shopName);
+//        shops.get(shopName).updateProductName(userName, productOldName, productNewName);
+//        PersistenceManager.getInstance().updateObj(shops.get(shopName));
+//    }
 
     public void updateProductDesc(String userName, String shopName, String productName, String productNewDesc) throws Exception {
         userName = userName.toLowerCase();
         validateShopExistsOpenedException(shopName);
         shops.get(shopName).updateProductDesc(userName, productName, productNewDesc);
+        PersistenceManager.getInstance().updateObj(shops.get(shopName));
     }
 
     public void updateProductPrice(String userName, String shopName, String productName, double price) throws Exception {
@@ -165,6 +168,7 @@ public class ShopHandler {
         userName = userName.toLowerCase();
         validateShopExistsOpenedException(shopName);
         shops.get(shopName).addProductQuantity(userName, productName, quantity);
+        PersistenceManager.getInstance().updateObj(shops.get(shopName));
     }
 
     public Shop searchShop(String shopName, boolean isAdmin) throws Exception {
@@ -230,6 +234,7 @@ public class ShopHandler {
 
     public void reset() {
         shops.clear();
+        shopRepository = ShopRepository.getInstance();
         shopRepository.reset();
     }
 
@@ -256,6 +261,7 @@ public class ShopHandler {
     public void approveBid(User user, int bidId) throws Exception {
         Bid bid = bidManager.getBid(bidId);
         Shop shop = getShop(bid.getProduct().getShopName());
+
         Collection<String> shouldApprove = shop.getBidResponsibleUsers(user);
         bidManager.approveBid(bidId, user.getName(), shouldApprove);
     }
@@ -276,6 +282,10 @@ public class ShopHandler {
     public Collection<Bid> getRejectedBids(String shopName) throws Exception {
         if(!shops.containsKey(shopName))throw new Exception("Shop "+shopName+" doesn't exist");
         return bidManager.getRejectedBids(shopName);
+    }
+	
+    public void setShopRepositoryForTests(ShopRepository shopRepository){
+        this.shopRepository = shopRepository;
     }
 
 }

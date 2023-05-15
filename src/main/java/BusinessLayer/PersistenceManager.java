@@ -26,24 +26,36 @@ public class PersistenceManager {
 
 	public void reset() {
 		List<String> tableNames = getAllTableNames();
-        entityManager.getTransaction().begin();
+
+		EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
+		entityManager.getTransaction().begin();
+
+		// Disable foreign key checks
 		entityManager.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();
+
+		// Delete all records from all tables
+		for (String tableName : tableNames) {
+			String deleteQuery = String.format("DELETE FROM %s;", tableName);
+			entityManager.createNativeQuery(deleteQuery).executeUpdate();
+		}
+
+		// Re-enable foreign key checks
+		entityManager.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();
+
 		entityManager.getTransaction().commit();
 
-		entityManager.getTransaction().begin();
-		for (String tableName : tableNames) {
-			entityManager.createNativeQuery("DELETE FROM " + tableName).executeUpdate();
-		}
-        entityManager.getTransaction().commit();
-		entityManager.clear();
-
+		entityManager.close();
 	}
 
+
 	public List<String> getAllTableNames() {
+		EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
+		entityManager.getTransaction().begin();
 		List<String> tableNames = entityManager.createNativeQuery(
 				"SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'market'"
 		).getResultList();
-
+		entityManager.getTransaction().commit();
+		entityManager.close();
 		return tableNames;
 	}
 
@@ -57,18 +69,28 @@ public class PersistenceManager {
 
 
 	public EntityManager getEntityManager() {
-		return entityManager;
+		return entityManagerFactory.createEntityManager();
 	}
 
 	public void persistObj(Object obj) {
-		PersistenceManager.getInstance().getEntityManager().getTransaction().begin();
-		PersistenceManager.getInstance().getEntityManager().persist(obj);
-		PersistenceManager.getInstance().getEntityManager().getTransaction().commit();
+		try {
+			EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
+			entityManager.getTransaction().begin();
+			entityManager.persist(obj);
+			entityManager.getTransaction().commit();
+		} finally {
+			entityManager.close();
+		}
 	}
 
 	public void updateObj(Object obj) {
-		PersistenceManager.getInstance().getEntityManager().getTransaction().begin();
-		PersistenceManager.getInstance().getEntityManager().merge(obj);
-		PersistenceManager.getInstance().getEntityManager().getTransaction().commit();
+		try {
+			EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
+			entityManager.getTransaction().begin();
+			entityManager.merge(obj);
+			entityManager.getTransaction().commit();
+		} finally {
+			entityManager.close();
+		}
 	}
 }

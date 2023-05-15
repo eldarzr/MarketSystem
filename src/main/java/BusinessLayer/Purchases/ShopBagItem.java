@@ -1,5 +1,7 @@
 package BusinessLayer.Purchases;
 
+import BusinessLayer.ProductId;
+import BusinessLayer.ShopBagItemId;
 import BusinessLayer.Shops.Product;
 
 import javax.persistence.*;
@@ -7,31 +9,44 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "shop_bag_items")
+@IdClass(ShopBagItemId.class)
 public class ShopBagItem implements Serializable {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name="shop_name", referencedColumnName="shopName", insertable = false, updatable = false),
-            @JoinColumn(name="product_name", referencedColumnName="productName", insertable = false, updatable = false)
-    })
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
+
+//    @ManyToOne
+//    @JoinColumns({
+//            @JoinColumn(name="shopName", referencedColumnName="shopName", insertable = false, updatable = false),
+//            @JoinColumn(name="productName", referencedColumnName="productName", insertable = false, updatable = false)
+//    })
+    @Transient
     private Product product;
 
-    @Column(name = "product_name")
+    @Id
+    @Column(name = "productName")
     private String productName;
 
-    @Column(name = "shop_name")
+    @Id
+    @Column(name = "shopName")
     private String shopName;
+
+    @Id
+    @Column(name = "userName")
+    private String userName;
 
     private int quantity;
 
-    public ShopBagItem(Product product, int quantity) {
+    public ShopBagItem() {
+    }
+
+    public ShopBagItem(Product product, int quantity, String userName) {
         this.product = product;
         this.quantity = quantity;
         this.productName = product.getName();
         this.shopName = product.getShopName();
+        this.userName = userName;
     }
 
     public Product getProduct() {
@@ -51,7 +66,7 @@ public class ShopBagItem implements Serializable {
     }
 
     public ShopBagItem deepClone() {
-        return new ShopBagItem(product.deepClone(),quantity);
+        return new ShopBagItem(product.deepClone(),quantity, userName);
     }
 
     public String getProductName() {

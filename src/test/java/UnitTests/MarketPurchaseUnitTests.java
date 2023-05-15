@@ -74,7 +74,7 @@ class MarketPurchaseUnitTests {
             plist.add(product);
             Mockito.when(shop.getProducts()).thenReturn(plist);
             shops.add(shop);
-            Cart cart = new Cart();
+            Cart cart = new Cart(usersName[i]);
             cart.addProduct(shopNames[0],plist.get(0),quantity[0]);
             Mockito.when(user.getCart()).thenReturn(cart);
         }

@@ -93,11 +93,11 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
         realBridge.removeProduct(userName, shopName, productName);
     }
 
-    @Override
-    public void updateProductName(String userName, String shopName, String productOldName, String productNewName) throws Exception {
-        nullCheck();
-        realBridge.updateProductName(userName, shopName, productOldName, productNewName);
-    }
+//    @Override
+//    public void updateProductName(String userName, String shopName, String productOldName, String productNewName) throws Exception {
+//        nullCheck();
+//        realBridge.updateProductName(userName, shopName, productOldName, productNewName);
+//    }
 
     @Override
     public void updateProductDesc(String userName, String shopName, String productName, String productNewDesc) throws Exception {
