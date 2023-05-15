@@ -2,6 +2,7 @@ package FrontEnd.Views;
 
 import BusinessLayer.Enums.UserType;
 
+import FrontEnd.Model.ProductModel;
 import FrontEnd.SResponse;
 import FrontEnd.SResponseT;
 import ServiceLayer.DataObjects.PurchasePolicyDataObj;
@@ -32,7 +33,9 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Route(value = "purchase_policy/:shopName")
 @PageTitle("Purchase Policy")
@@ -67,7 +70,6 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
         policyGrid.setClassNameGenerator(policy -> {
             SResponseT<Integer> activePolicyResponse = marketService.getActivePurchasePolicyId(getCurrentUser().getName(), shopName);
             if (!activePolicyResponse.isSuccess()) {
-                Notification.show("Failed to get active purchase policy");
                 // Handle the failure case if needed (e.g., display an error message)
                 return "inactive-policy";
             }
@@ -88,8 +90,7 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
                 if (setActiveResponse.isSuccess()) {
                     updatePolicyGrid();
                 } else {
-                    Notification.show("Failed set active");
-                    // Handle the failure case if needed (e.g., display an error message)
+                    Notification.show("Error: "+setActiveResponse.getMessage());
                 }
             });
             return setActiveButton;
@@ -123,17 +124,12 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
     }
 
     private void updatePolicyGrid() {
-        Notification.show("shopName : "+shopName);
+
 
         SResponseT<Collection<PurchasePolicyDataObj>> policiesResponse = marketService.getAllPurchasePolicies(currentUser.getName(), shopName);
-
         if (policiesResponse.isSuccess()) {
             policyGrid.setItems(policiesResponse.getData());
-        } else {
-            Notification.show("Failed to load policies "+policiesResponse.getMessage());
-            // Show an error message
         }
-
     }
 
     private void openCreateSimplePolicyDialog() {
@@ -182,16 +178,35 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
     }
 
     private void openAgeConstraintDialog() {
+        List<String> productNames = new ArrayList<>();
+        List<String> categoryNames = new ArrayList<>();
+        for (ProductModel p :marketService.getShop(shopName).getData().getProducts().values().stream().toList()){
+            productNames.add(p.getName());
+            if(!categoryNames.contains(p.getCategory()))
+                categoryNames.add(p.getCategory());
+        }
+
         Dialog dialog = new Dialog();
         dialog.setWidth("400px");
 
         VerticalLayout layout = new VerticalLayout();
         layout.setPadding(false);
         ComboBox<String> productOrCategoryComboBox = new ComboBox<>("Constraint On:");
+
         productOrCategoryComboBox.setItems("Product", "Category");
         productOrCategoryComboBox.setRequired(true);
 
-        TextField productName = new TextField("Name");
+        ComboBox<String> productName = new ComboBox<>("Name"); // Change TextField to ComboBox
+
+        productOrCategoryComboBox.addValueChangeListener(event -> {
+            if (event.getValue().equals("Product")) {
+                productName.setItems(productNames);
+            } else if (event.getValue().equals("Category")) {
+                productName.setItems(categoryNames);
+            }
+        });
+
+
         ComboBox<String> policyActionComboBox = new ComboBox<>("Action");
         policyActionComboBox.setItems("Allow", "Restrict");
         policyActionComboBox.setRequired(true);
@@ -210,7 +225,6 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
             SResponse res = marketService.addAgePurchasePolicy(getCurrentUser().getName(),shopName,isProduct,toConstraint,positive,sAge,eAge);
             if(!res.isSuccess())Notification.show("Error: "+res.getMessage());
             else {
-                Notification.show("Res isSuccess!");
                 updatePolicyGrid();
             }
         });
@@ -223,6 +237,14 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
     }
 
     private void openQuantityConstraintDialog() {
+        List<String> productNames = new ArrayList<>();
+        List<String> categoryNames = new ArrayList<>();
+        for (ProductModel p :marketService.getShop(shopName).getData().getProducts().values().stream().toList()){
+            productNames.add(p.getName());
+            if(!categoryNames.contains(p.getCategory()))
+                categoryNames.add(p.getCategory());
+        }
+
         Dialog dialog = new Dialog();
         dialog.setWidth("400px");
 
@@ -232,7 +254,16 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
         productOrCategoryComboBox.setItems("Product", "Category");
         productOrCategoryComboBox.setRequired(true);
 
-        TextField productName = new TextField("Name");
+        ComboBox<String> productName = new ComboBox<>("Name"); // Change TextField to ComboBox
+
+        productOrCategoryComboBox.addValueChangeListener(event -> {
+            if (event.getValue().equals("Product")) {
+                productName.setItems(productNames);
+            } else if (event.getValue().equals("Category")) {
+                productName.setItems(categoryNames);
+            }
+        });
+
         ComboBox<String> policyActionComboBox = new ComboBox<>("Action");
         policyActionComboBox.setItems("Allow", "Restrict");
         policyActionComboBox.setRequired(true);
@@ -250,7 +281,6 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
             SResponse res = marketService.addQuantityPurchasePolicy(getCurrentUser().getName(),shopName,isProduct,toConstraint,positive,min,max);
             if(!res.isSuccess())Notification.show(res.getMessage());
             else {
-                Notification.show("Res isSuccess!");
                 updatePolicyGrid();
             }
         });
@@ -263,6 +293,14 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
     }
 
     private void openDateConstraintDialog() {
+        List<String> productNames = new ArrayList<>();
+        List<String> categoryNames = new ArrayList<>();
+        for (ProductModel p :marketService.getShop(shopName).getData().getProducts().values().stream().toList()){
+            productNames.add(p.getName());
+            if(!categoryNames.contains(p.getCategory()))
+                categoryNames.add(p.getCategory());
+        }
+
         Dialog dialog = new Dialog();
         dialog.setWidth("400px");
 
@@ -273,7 +311,16 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
         productOrCategoryComboBox.setItems("Product", "Category");
         productOrCategoryComboBox.setRequired(true);
 
-        TextField productName = new TextField("Name");
+        ComboBox<String> productName = new ComboBox<>("Name"); // Change TextField to ComboBox
+
+        productOrCategoryComboBox.addValueChangeListener(event -> {
+            if (event.getValue().equals("Product")) {
+                productName.setItems(productNames);
+            } else if (event.getValue().equals("Category")) {
+                productName.setItems(categoryNames);
+            }
+        });
+
         ComboBox<String> policyActionComboBox = new ComboBox<>("Action");
         policyActionComboBox.setItems("Allow", "Restrict");
         policyActionComboBox.setRequired(true);
@@ -292,7 +339,6 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
             SResponse res = marketService.addDatePurchasePolicy(getCurrentUser().getName(),shopName,isProduct,toConstraint,positive,sDate,eDate);
             if(!res.isSuccess())Notification.show(res.getMessage());
             else {
-                Notification.show("Res isSuccess!");
                 updatePolicyGrid();
             }
         });
@@ -305,6 +351,14 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
     }
 
     private void openTimeConstraintDialog() {
+        List<String> productNames = new ArrayList<>();
+        List<String> categoryNames = new ArrayList<>();
+        for (ProductModel p :marketService.getShop(shopName).getData().getProducts().values().stream().toList()){
+            productNames.add(p.getName());
+            if(!categoryNames.contains(p.getCategory()))
+                categoryNames.add(p.getCategory());
+        }
+
         Dialog dialog = new Dialog();
         dialog.setWidth("400px");
 
@@ -315,7 +369,16 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
         productOrCategoryComboBox.setItems("Product", "Category");
         productOrCategoryComboBox.setRequired(true);
 
-        TextField productName = new TextField("Name");
+        ComboBox<String> productName = new ComboBox<>("Name"); // Change TextField to ComboBox
+
+        productOrCategoryComboBox.addValueChangeListener(event -> {
+            if (event.getValue().equals("Product")) {
+                productName.setItems(productNames);
+            } else if (event.getValue().equals("Category")) {
+                productName.setItems(categoryNames);
+            }
+        });
+
         ComboBox<String> policyActionComboBox = new ComboBox<>("Action");
         policyActionComboBox.setItems("Allow", "Restrict");
         policyActionComboBox.setRequired(true);
@@ -334,7 +397,7 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
             SResponse res = marketService.addTimePurchasePolicy(getCurrentUser().getName(),shopName,isProduct,toConstraint,positive,sTime,eTime);
             if(!res.isSuccess())Notification.show(res.getMessage());
             else {
-                Notification.show("Res isSuccess!");
+
                 updatePolicyGrid();
             }
         });
@@ -471,7 +534,6 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
         event.getRouteParameters().get("shopName").ifPresent(shopName -> {
-            Notification.show("Before enter");
             this.shopName = shopName;
             updateAfterUserNameChange(getCurrentUser());
         });

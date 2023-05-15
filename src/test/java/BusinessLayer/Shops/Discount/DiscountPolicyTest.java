@@ -37,7 +37,7 @@ class DiscountPolicyTest {
             ShopBagItem sbi = new ShopBagItem(product,quantities[i]);
             productsAndQuantities.put(productsNames[i],sbi);
         }
-        shopBag = new ShopBag(productsAndQuantities);
+        shopBag = new ShopBag(productsAndQuantities, shopName);
     }
 
     @AfterEach

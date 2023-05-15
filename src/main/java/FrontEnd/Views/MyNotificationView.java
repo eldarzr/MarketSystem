@@ -1,5 +1,6 @@
 package FrontEnd.Views;
 
+import BusinessLayer.Enums.UserType;
 import FrontEnd.Model.*;
 import FrontEnd.SResponseT;
 import com.vaadin.flow.component.button.Button;
@@ -32,12 +33,12 @@ public class MyNotificationView extends BaseView {
 
     public MyNotificationView() {
         this.GetNotifications();
-        this.setupGrid();
+        this.setupGrid(getCurrentUser().getUserType() == UserType.ADMIN);
         this.refreshGrid();
     }
 
 
-    private void setupGrid() {
+    private void setupGrid(boolean isAdmin) {
         notificationGrid = new Grid<>(NotificationModel.class, false);
         notificationGrid.setAllRowsVisible(true);
         notificationGrid.addColumn(NotificationModel::getSource).setHeader("Sender");
@@ -51,6 +52,7 @@ public class MyNotificationView extends BaseView {
                             ButtonVariant.LUMO_TERTIARY);
                     button.addClickListener(e -> this.removeNotification(notification));
                     button.setIcon(new Icon(VaadinIcon.TRASH));
+                    button.setVisible(isAdmin);
                 })).setHeader("Manage");
 
         notificationGrid.setItems(notifications);

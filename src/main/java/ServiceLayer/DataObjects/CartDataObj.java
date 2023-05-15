@@ -4,6 +4,7 @@ import BusinessLayer.Purchases.Cart;
 import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Purchases.ShopBagItem;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class CartDataObj {
@@ -16,7 +17,7 @@ public class CartDataObj {
 
     public CartDataObj(Cart cart) {
         this.cart = new ConcurrentHashMap<>();
-        ConcurrentHashMap<String, ShopBag> shopBagMap = cart.getShopsAndProducts();
+        Map<String, ShopBag> shopBagMap = cart.getShopsAndProducts();
         for (String key : shopBagMap.keySet())
             this.cart.put(key, new ShopBagDataObj(shopBagMap.get(key)));
     }

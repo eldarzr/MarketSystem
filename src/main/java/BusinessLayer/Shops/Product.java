@@ -1,26 +1,47 @@
 package BusinessLayer.Shops;
 
+import BusinessLayer.ProductId;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Product implements ProductIntr{
+@Entity
+@Table(name = "products")
+@IdClass(ProductId.class)
+public class Product implements ProductIntr, Serializable {
 
+	@Transient
 	Lock productLock = new ReentrantLock();
 
+	@Id
+	@Column(name = "shopName")
 	protected String shopName;
+	@Id
+	@Column(name = "productName")
 	protected String name;
+	@Column(name = "category")
 	protected String category;
+	@Column(name = "description")
 	protected String description;
+	@Column(name = "price")
 	protected double price;
+	@Transient
 	protected double MIN_PRICE = 0;
+	@Transient
 	protected double MIN_DESCRIPTION_LENGTH = 5;
-	protected double MAX_DESCRIPTION_LENGTH = 500;
+	@Transient
+	protected double MAX_DESCRIPTION_LENGTH = 255;
+	@Transient
 	protected double MIN_CATEGORY_LENGTH = 3;
+	@Transient
 	protected double MAX_CATEGORY_LENGTH = 30;
+	@Transient
 	protected double MIN_NAME_LENGTH = 3;
-	protected double MAX_NAME_LENGTH = 300;
+	@Transient
+	protected double MAX_NAME_LENGTH = 255;
 
 	public Product(String name, String category, String description, double price, String shopName) {
 		this.name = name;
@@ -106,10 +127,12 @@ public class Product implements ProductIntr{
 
 	public void lockProduct(){
 		productLock.lock();
+		System.out.println("!!!!!!!!!!!!!!!!!!11" + name);
 	}
 
 	public void unlockProduct(){
 		productLock.unlock();
+		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@2" + name);
 	}
 
 	public String getShopName() {

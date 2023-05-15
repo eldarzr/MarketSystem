@@ -2,53 +2,41 @@ package BusinessLayer.Purchases;
 
 import BusinessLayer.Shops.Product;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import javax.persistence.*;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+
+@Entity
+@Table(name = "user_invoices")
 public class UserInvoice extends Invoice {
 
-//	private HashMap<shop name, HashMap<product name, product fields>> productInfoInShop;
-	private HashMap<String, HashMap<String, List<String>>> productInfoInShop;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "user_invoice_shop_info",
+			joinColumns = @JoinColumn(name = "user_invoice_id"),
+			inverseJoinColumns = @JoinColumn(name = "shop_info_id"))
+	@MapKeyColumn(name = "shop_name")
+	private Map<String, ShopInfo> shopInfos;
 
 	public UserInvoice(String userName, String paymentMethod, String deliveryMethod) {
 		super(userName, paymentMethod, deliveryMethod);
-		productInfoInShop = new HashMap<>();
+		shopInfos = new HashMap<>();
 	}
 
 	public void addProduct(String shopName, Product product, int quantity){
-		if (!productInfoInShop.containsKey(shopName))
-			productInfoInShop.put(shopName, new HashMap<>());
-		if (!productInfoInShop.get(shopName).containsKey(product.getName()))
-			productInfoInShop.get(shopName).put(product.getName(), new ArrayList<>());
-		addProductToList(shopName, product, quantity);
+		if (!shopInfos.containsKey(shopName)) {
+			shopInfos.put(shopName, new ShopInfo(shopName));
+		}
+		shopInfos.get(shopName).addProduct(new ProductInfo(product,quantity));
 	}
 
-
-
-	protected void addProductField(String shopName, String productName, String fieldValue, int fieldIndex) {
-		productInfoInShop.get(shopName).get(productName).add(fieldIndex, fieldValue);
-	}
-
-	@Override
-	public Collection<String> getProducts() {
-		List<String> toRet = new ArrayList<>();
-		for (HashMap<String, List<String>> maps : productInfoInShop.values())
-			for (List<String> list : maps.values())
-				toRet.add(list.toString());
-		return toRet;
-	}
-
-	@Override
-	public int getQuantityOfProduct(String productName) throws Exception {
-		return Integer.parseInt(String.valueOf(productInfoInShop.values().stream().filter(hm -> hm.containsKey(productName)).collect(Collectors.toList()).
-				get(0).get(PRODUCT_QUANTITY)));
-	}
-
-	public HashMap<String, HashMap<String, List<String>>> getProductInfoInShop() {
-		return productInfoInShop;
+	public Map<String, ShopInfo> getProductInfoInShop() {
+		return shopInfos;
 	}
 }
