@@ -86,6 +86,7 @@ public class DiscountPolicy {
     //this function applies discount on a shop bag, it changes the state of the shop bag so it should be called with a deep clone
     //return discount result which contains the price before discount , price after discount and discounts applied descriptions
     public FinalBagPriceResult applyDiscount(ShopBag shopBag){
+        shopBag = shopBag.deepClone();
         FinalBagPriceResult discountResult = FinalBagPriceResult.makeDiscountResult();
         discountResult.setPriceBeforeDiscount(shopBag.calculatePrice());
         ShopBag shopBagPrev = shopBag;

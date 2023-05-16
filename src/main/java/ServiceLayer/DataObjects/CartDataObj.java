@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class CartDataObj {
 
-    ConcurrentHashMap<String, ShopBagDataObj> cart = new ConcurrentHashMap<>();
+    ConcurrentHashMap<String, ShopBagDataObj> cart;
 
     public CartDataObj(ConcurrentHashMap<String, ShopBagDataObj> cart) {
         this.cart = cart;

@@ -69,6 +69,16 @@ class DiscountPolicyTest {
     }
 
     @Test
+    void addProductDiscount_product_price_not_change() {
+        double milkPrice = shopBag.getProductsAndQuantities().get("milk carton").getProduct().getPrice();
+        discountPolicy.addProductDiscount(50,"milk carton");
+        double milkPriceAfter1 = shopBag.getProductsAndQuantities().get("milk carton").getProduct().getPrice();
+        FinalBagPriceResult discountResult = discountPolicy.applyDiscount(shopBag);
+        double milkPriceAfter = shopBag.getProductsAndQuantities().get("milk carton").getProduct().getPrice();
+        assertEquals(milkPrice,milkPriceAfter);
+    }
+
+    @Test
     void addShopDiscount() {
         discountPolicy.addShopDiscount(20);
         double totalBagPriceBefore = shopBag.calculatePrice();
