@@ -20,6 +20,7 @@ class MarketCreateShopIntegrationTest {
 	@BeforeEach
 	void setUp() throws Exception {
 		market = new Market();
+		market.resetAll();
 		market.init();
 		guestName = market.startSession();
 	}
