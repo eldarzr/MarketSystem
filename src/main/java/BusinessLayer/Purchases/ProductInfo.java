@@ -27,6 +27,9 @@ public class ProductInfo {
 	@Column(name = "quantity")
 	protected double quantity;
 
+	public ProductInfo() {
+	}
+
 	public ProductInfo(Product product, int quantity) {
 		this.name = product.getName();
 		this.category = product.getCategory();

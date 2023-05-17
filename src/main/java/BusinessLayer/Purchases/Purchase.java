@@ -4,10 +4,7 @@ import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.PersistenceManager;
-import BusinessLayer.Shops.FinalBagPriceResult;
-import BusinessLayer.Shops.FinalCartPriceResult;
-import BusinessLayer.Shops.Product;
-import BusinessLayer.Shops.Shop;
+import BusinessLayer.Shops.*;
 import BusinessLayer.Users.User;
 
 import java.util.ArrayList;
@@ -65,6 +62,7 @@ public class Purchase implements PurchaseIntr{
             if (shop != null) {
                 shop.addInvoice(shopInvoice);
                 System.out.println("!@!@!@!@!@!@!@!@!@!" + shopInvoice);
+                ShopRepository.getInstance().updateToDB(shop.getName());
             }
         }
     }
@@ -212,12 +210,12 @@ public class Purchase implements PurchaseIntr{
                 System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + shopBagItem.getProduct());
                 System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + shopName);
                 userInvoice.addProduct(shopName, shopBagItem.getProduct(), shopBagItem.getQuantity());
-                shopInvoice.addProduct(shopBagItem.getProduct(), shopBagItem.getQuantity());
+                shopInvoice.addProduct(new ProductInfo(shopBagItem.getProduct(), shopBagItem.getQuantity()));
             }
             shopInvoices.add(shopInvoice);
-            PersistenceManager.getInstance().persistObj(shopInvoice);
+//            PersistenceManager.getInstance().persistObj(shopInvoice);
         }
 
-        PersistenceManager.getInstance().persistObj(userInvoice);
+//        PersistenceManager.getInstance().persistObj(userInvoice);
     }
 }

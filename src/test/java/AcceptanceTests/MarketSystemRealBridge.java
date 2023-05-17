@@ -252,7 +252,7 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
         market.logout(adminUserName);
         Collection<String> ret = new ArrayList<>();
         for(MemberRoleInShop m : memberRoleInShops){
-            if(m.getType().equals(ManageType.OWNER))ret.add(m.getRoleUser());
+            if(m.getType().equals(ManageType.OWNER))ret.add(m.getUserName());
         }
         return ret;
     }
@@ -263,7 +263,7 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
         market.logout(adminUserName);
         Collection<String> ret = new ArrayList<>();
         for(MemberRoleInShop m : memberRoleInShops){
-            if(m.getType().equals(ManageType.MANAGER))ret.add(m.getRoleUser());
+            if(m.getType().equals(ManageType.MANAGER))ret.add(m.getUserName());
         }
         return ret;
     }
@@ -335,7 +335,7 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
         market.logout(adminUserName);
         shopManager=shopManager.toLowerCase();
         for ( MemberRoleInShop m : memberRoleInShops){
-            if(m.getRoleUser().equals(shopManager)){
+            if(m.getUserName().equals(shopManager)){
                 return m.getPermissions().getActivatedPermissions();
             }
         }

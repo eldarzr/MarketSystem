@@ -1,37 +1,53 @@
 package BusinessLayer;
 
-import BusinessLayer.ManagePermissions;
 import BusinessLayer.Enums.ManageType;
 import BusinessLayer.Shops.Shop;
 //import BusinessLayer.Shops.ShopMessageObserver;
-import BusinessLayer.Users.User;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static BusinessLayer.Enums.ManageType.*;
-import static BusinessLayer.Enums.ManagePermissionsEnum.*;
 
-public class MemberRoleInShop {
-	private Shop roleShop;
+@Entity
+	@Table(name = "MemberRoleInShop")
+	@IdClass(ShopBagId.class) // composite key class
+	public class MemberRoleInShop implements Serializable {
 
-	private String grantor;
-	private String roleUser;
-	private ManageType type;
-	private ManagePermissions permissions;
-	private List<Integer> activatedPermissions;
+		@ManyToOne
+		@JoinColumn(name = "roleShopName")
+		private Shop roleShop;
 
-	private Lock lock;
+		private String grantor;
+		@Id
+		@Column(name = "userName")
+		private String userName;
+		@Id
+		@Column(name = "shopName")
+		private String shopName;
+		private ManageType type;
+//		@Transient
+		@OneToOne(cascade = CascadeType.ALL)
+		@JoinColumn(name = "permissions_id", referencedColumnName = "id")
+		private ManagePermissions permissions;
 
-	private MemberRoleInShop(Shop roleShop , String roleUser , String grantor, ManageType type, ManagePermissions permissions) {
+		@Transient
+		private Lock lock;
+
+		public MemberRoleInShop() {
+		}
+
+		private MemberRoleInShop(Shop roleShop , String userName, String grantor, ManageType type, ManagePermissions permissions) {
 		this.grantor = grantor;
 		this.type = type;
 		this.permissions = permissions;
 		this.roleShop =  roleShop;
-		this.roleUser = roleUser;
+		this.shopName =  roleShop.getName();
+		this.userName = userName;
 		this.lock = new ReentrantLock();
-		this.activatedPermissions =  this.permissions.getActivatedPermissions();
 	}
 
 	public static MemberRoleInShop createFounder(String user, Shop shop, MessageObserver observer) throws Exception {
@@ -64,12 +80,12 @@ public class MemberRoleInShop {
 		return grantor;
 	}
 
-	public String getRoleUser() {
-		return roleUser;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setRoleUser(String roleUser) {
-		this.roleUser = roleUser;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public ManageType getType() {
@@ -86,17 +102,15 @@ public class MemberRoleInShop {
 
 	public void setPermissions(ManagePermissions permissions) {
 		this.permissions = permissions;
-		this.activatedPermissions = this.permissions.getActivatedPermissions();
 	}
 
 	public void setPermissions(List<Integer> permissions) throws Exception {
 		lock.lock();
 		this.permissions.setNewPermissions(permissions);
-		this.activatedPermissions = this.permissions.getActivatedPermissions();
 		lock.unlock();
 	}
 	private static MemberRoleInShop adjustRole(MemberRoleInShop role , MessageObserver obs) throws Exception {
-		String roleUser = role.roleUser;
+		String roleUser = role.userName;
 		Shop roleShop = role.roleShop;
 //		roleUser.addShopRole(roleShop.getName() ,role);
 		roleShop.addRole(roleUser,role);
@@ -106,16 +120,21 @@ public class MemberRoleInShop {
 
 	public void addPermission(int permission) throws Exception {
 		this.permissions.addAnotherPermission(permission);
-		this.activatedPermissions = this.permissions.getActivatedPermissions();
 	}
 
 	public String getRoleInfo() {
 		StringBuilder rolesInfo = new StringBuilder();
-		rolesInfo.append("The user ").append(roleUser).append(" is a ").append(type).append(" in the store\n");
+		rolesInfo.append("The user ").append(userName).append(" is a ").append(type).append(" in the store\n");
 		return rolesInfo.toString();
 	}
 
+		public String getShopName() {
+			return shopName;
+		}
 
+		public void setShopName(String shopName) {
+			this.shopName = shopName;
+		}
 //	private static MemberRoleInShop adjustRole(MemberRoleInShop role) throws Exception {
 //		String roleUser = role.roleUser;
 //		Shop roleShop = role.roleShop;

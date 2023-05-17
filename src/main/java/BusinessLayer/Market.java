@@ -232,6 +232,7 @@ public class Market implements MarketIntr{
     public void removeProduct(String userName, String shopName, String productName) throws Exception {
         logger.info(String.format("Attempt by user %s to remove product %s from store %s.", userName,productName, shopName));
         validateLoggedInException(userName);
+        //TODO: remove product from all carts. relevant for DB
         shopHandler.removeProduct(userName, shopName, productName);
         logger.info(String.format("User %s removed product %s from store %s.", userName,productName, shopName));
     }

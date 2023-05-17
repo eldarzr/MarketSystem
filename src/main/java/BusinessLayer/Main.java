@@ -27,14 +27,15 @@ public class Main {
 //		System.out.println("aaa");
 //
 		Market market = new Market();
-		market.register("eldar222", "eldar@gmail.com", "Aa123456");
-		String guest = market.startSession();
-		User user = market.login(guest, "eldar222", "Aa123456");
-		market.searchShop(user.getName(), "shopFirst1");
+//		market.register("eldar222", "eldar@gmail.com", "Aa123456");
+//		String guest = market.startSession();
+//		User user = market.login(guest, "eldar222", "Aa123456");
+//		market.searchShop(user.getName(), "shopFirst1");
 //		market.resetAll();
-//		market.init();
+		market.init();
 //		System.out.println(product.getCategory());
 
+//		getShop();
 	}
 
 	public static void getShop(){
@@ -46,6 +47,7 @@ public class Main {
 
 		Shop shop = entityManager.find(Shop.class, shopName);
 
+		//TODO: add to every class default constructor with terenint
 		if (shop != null) {
 			// Shop found in the database
 

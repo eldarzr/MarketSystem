@@ -16,12 +16,12 @@ public class ShopBagItem implements Serializable {
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
 //    private Long id;
 
-//    @ManyToOne
-//    @JoinColumns({
-//            @JoinColumn(name="shopName", referencedColumnName="shopName", insertable = false, updatable = false),
-//            @JoinColumn(name="productName", referencedColumnName="productName", insertable = false, updatable = false)
-//    })
-    @Transient
+    @ManyToOne
+    @JoinColumns({
+            @JoinColumn(name="shopName", referencedColumnName="shopName", insertable = false, updatable = false),
+            @JoinColumn(name="productName", referencedColumnName="productName", insertable = false, updatable = false)
+    })
+//    @Transient
     private Product product;
 
     @Id

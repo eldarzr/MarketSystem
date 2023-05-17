@@ -13,20 +13,21 @@ import BusinessLayer.Shops.Shop;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Entity
 @Table(name = "users")
 public class User{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
+    @Id
+    @Column(name = "userName")
     private String name;
     private String sessionID;
     private String email;
@@ -37,8 +38,9 @@ public class User{
     @Transient
     private ConcurrentLinkedQueue<String> shopsMessages = new ConcurrentLinkedQueue<>();
 
-    @Transient
-    private ConcurrentLinkedQueue<UserInvoice> invoices = new ConcurrentLinkedQueue<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "userName")
+    private List<UserInvoice> invoices;
 
     private boolean twoFactorEnabled;
 
@@ -60,6 +62,7 @@ public class User{
         userType = UserType.MEMBER;
         currentCart = new Cart(name);
         pendingNotifications = new ConcurrentLinkedDeque<>();
+        this.invoices = new CopyOnWriteArrayList<>();
         PersistenceManager.getInstance().persistObj(currentCart);
     }
 
@@ -68,6 +71,7 @@ public class User{
         sessionID = null;
         userType = UserType.GUEST;
         currentCart = new Cart(guestName);
+        this.invoices = new CopyOnWriteArrayList<>();
         PersistenceManager.getInstance().persistObj(currentCart);
     }
 
@@ -144,7 +148,7 @@ public class User{
         invoices.add(userInvoice);
     }
 
-    public ConcurrentLinkedQueue<UserInvoice> getInvoices() {
+    public List<UserInvoice> getInvoices() {
         return invoices;
     }
 
