@@ -16,11 +16,10 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static BusinessLayer.Shops.Shop.entityManager;
 
 public class ShopRepository {
 
-    private static class  ShopRepo {
+	private static class  ShopRepo {
         private static ShopRepository instance = new ShopRepository() ;
     }
 
@@ -36,7 +35,7 @@ public class ShopRepository {
     }
 
     public List<Shop> getAllShops() {
-        TypedQuery<Shop> query = entityManager.createQuery("SELECT s FROM Shop s", Shop.class);
+        TypedQuery<Shop> query = PersistenceManager.getInstance().getEntityManager().createQuery("SELECT s FROM Shop s", Shop.class);
         return query.getResultList();
     }
 
@@ -84,4 +83,9 @@ public class ShopRepository {
         Shop shop = getShop(shopName);
         PersistenceManager.getInstance().updateObj(shop);
     }
+
+    public void removeConnectionFromDB(String shopName, ShopProduct shopProduct) {
+        Shop shop = getShop(shopName);
+    }
+
 }

@@ -125,8 +125,8 @@ public class ShopHandler {
     public void removeProduct(String userName, String shopName, String productName) throws Exception {
         userName = userName.toLowerCase();
         validateShopExistsOpenedException(shopName);
-        shopRepository.getShop(shopName).removeProduct(userName, productName);
-        shopRepository.updateToDB(shopName);
+        ShopProduct shopProduct = shopRepository.getShop(shopName).removeProduct(userName, productName);
+        shopRepository.removeConnectionFromDB(shopName, shopProduct);
         // notify management on new product
         String message=String.format("User %s removed product %s from store %s.", userName,productName, shopName);
         Notification notification=new Notification(userName,message);
