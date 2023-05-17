@@ -8,14 +8,31 @@ import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRuleName;
 import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRulesFactory;
 import BusinessLayer.Shops.FinalBagPriceResult;
 
+import javax.persistence.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Entity
+@Table(name = "discount_policy")
 public class DiscountPolicy {
 
-    ConcurrentHashMap<Integer,Discount> discountsById;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "discount_policy_discount",
+            joinColumns = @JoinColumn(name = "discount_policy_id"),
+            inverseJoinColumns = @JoinColumn(name = "discount_id"))
+    private Map<Integer,Discount> discountsById;
+
+    // discountIdIndexer will not be stored in the database,
+    // it should be calculated based on the maximum discountId in discountsById map
+    @Transient
     AtomicInteger discountIdIndexer;
 
 
@@ -71,7 +88,7 @@ public class DiscountPolicy {
     public XorCompoundDiscount addXorDiscount(List<Integer> discountsIds, XorDecisionRuleName xorDiscountRuleName){
         List<Discount> discounts = getMatchingDiscountAndRemove(discountsIds);
         int id = discountIdIndexer.addAndGet(1);
-        XorCompoundDiscount xorCompoundDiscount = new XorCompoundDiscount(discounts,id, XorDecisionRulesFactory.makeRule(xorDiscountRuleName));
+        XorCompoundDiscount xorCompoundDiscount = new XorCompoundDiscount(discounts,id, xorDiscountRuleName);
         discountsById.put(id, xorCompoundDiscount);
         return xorCompoundDiscount;
     }
@@ -127,7 +144,7 @@ public class DiscountPolicy {
         return  discountsList;
     }
 
-    public ConcurrentHashMap<Integer, Discount> getDiscountsById() {
+    public Map<Integer, Discount> getDiscountsById() {
         return discountsById;
     }
 

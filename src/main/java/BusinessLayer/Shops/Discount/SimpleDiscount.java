@@ -3,14 +3,21 @@ package BusinessLayer.Shops.Discount;
 import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Shops.Product;
 
+import javax.persistence.*;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+@Entity
+@DiscriminatorValue("SimpleDiscount")
 public abstract class SimpleDiscount extends Discount{
 
     public static final int ROUND_FACTOR = 1000;
 
+    @Column(name = "percentage")
     double percentage;
+
+    protected SimpleDiscount() {
+    }
 
     public SimpleDiscount(double percentage, int discountId) { // todo : make sure percentage is a number between 0 to 100 in the calling function
         super(discountId);

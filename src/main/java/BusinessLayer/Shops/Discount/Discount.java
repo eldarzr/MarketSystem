@@ -3,12 +3,26 @@ package BusinessLayer.Shops.Discount;
 import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Shops.Discount.DiscountRules.*;
 
+import javax.persistence.*;
 import java.util.Arrays;
 
+@Entity
+@Table(name = "discount")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "discount_type")
 public abstract class Discount {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     protected int discountId;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "discount_rule_id")
     DiscountRule discountRule;
+
+    protected Discount() {
+    }
 
     public Discount(int discountId) {
         this.discountId = discountId;

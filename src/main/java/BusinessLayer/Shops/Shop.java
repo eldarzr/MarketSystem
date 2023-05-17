@@ -66,8 +66,11 @@ public class Shop implements ShopIntr {
 	private ConcurrentLinkedQueue<MessageObserver> observers;
 	@Transient
 	private ConcurrentLinkedQueue<ShopInvoice> invoices;
-	@Transient
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "discount_policy_id")
 	private DiscountPolicy discountPolicy;
+
 	@Transient
 	private PurchasePolicyManager purchasePolicyManager;
 
@@ -216,7 +219,7 @@ public class Shop implements ShopIntr {
 			throwException(String.format("there is already product %s in the shop %s", productName, name));
 		validatePermissionsException(userName, MANAGE_STOCK);
 		ShopProduct shopProduct = ShopProduct.createProduct(productName, category, desc, price, this.name);
-		PersistenceManager.getInstance().persistObj(shopProduct);
+//		PersistenceManager.getInstance().persistObj(shopProduct);
 		products.put(productName, shopProduct);
 			}
 
