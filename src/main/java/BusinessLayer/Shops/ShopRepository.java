@@ -9,11 +9,14 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static BusinessLayer.Shops.Shop.entityManager;
 
 public class ShopRepository {
 
@@ -33,7 +36,8 @@ public class ShopRepository {
     }
 
     public List<Shop> getAllShops() {
-        throw new NotImplementedException("bring all data from DB");
+        TypedQuery<Shop> query = entityManager.createQuery("SELECT s FROM Shop s", Shop.class);
+        return query.getResultList();
     }
 
     public void addShop(String shopName, Shop shop) throws Exception {
@@ -48,12 +52,12 @@ public class ShopRepository {
         PersistenceManager.getInstance().persistObj(shop);
     }
 
-    public Shop getShop(String shopName) throws Exception {
+    public Shop getShop(String shopName) {
         if (shops.containsKey(shopName))
             return shops.get(shopName);
         Shop shop = PersistenceManager.getInstance().getEntityManager().find(Shop.class, shopName);
         if (shop == null)
-            throwException("there is no such shop named :" +shopName);
+            return null;
         shops.put(shopName, shop);
         return shop;
     }
@@ -68,19 +72,16 @@ public class ShopRepository {
 
     public void reset() {
         shops.clear();
-//        if (entityManager.getTransaction().isActive()) {
-//            entityManager.getTransaction().rollback();
-//            entityManager.clear();
-//        }
         PersistenceManager.getInstance().reset();
-//        entityManager.getTransaction().begin();
-//        entityManager.createNativeQuery("DELETE FROM `shops`").executeUpdate();
-//        entityManager.createNativeQuery("DELETE FROM `products`").executeUpdate();
-//        entityManager.getTransaction().commit();
     }
 
     private void throwException(String errorMsg)  throws IllegalArgumentException{
         logger.severe(errorMsg);
         throw new IllegalArgumentException(errorMsg);
+    }
+
+    public void updateToDB(String shopName){
+        Shop shop = getShop(shopName);
+        PersistenceManager.getInstance().updateObj(shop);
     }
 }

@@ -129,8 +129,7 @@ public class Shop implements ShopIntr {
 			return;
 		}
 		MemberRoleInShop.createOwner(actOn, this, actor, sendMessage);
-
-	}
+			}
 
 	public void setShopManager(String actor, String actOn, MessageObserver sendMessage) throws Exception {
 		validateUserHasRole(actor);
@@ -141,8 +140,7 @@ public class Shop implements ShopIntr {
 			throwException("the user :" + actOn + "is already have a role in the store");
 		}
 		MemberRoleInShop.createManager(actOn, this, actor, sendMessage);
-
-	}
+			}
 
 	public MemberRoleInShop validateUserHasRole(String actorUserName) throws Exception {
 		actorUserName=actorUserName.toLowerCase();
@@ -186,20 +184,20 @@ public class Shop implements ShopIntr {
 	public void addManageOption(String actor, String actOn , int permission) throws Exception {
 		MemberRoleInShop reqRole = validatePermissionsChangeAllowed(actor,actOn);
 		reqRole.addPermission(permission);
-		}
+				}
 
 		/// TODO : ADD / SET - CONCURRENCY ETC
 	public MemberRoleInShop setManageOption(String actor, String actOn, List<Integer> permissions) throws Exception {
 		MemberRoleInShop reqRole = validatePermissionsChangeAllowed(actor,actOn);
 		reqRole.setPermissions(permissions);
-		return reqRole;
+				return reqRole;
 	}
 
 	public void closeShop(String userName) throws Exception {
 		if (!this.founderUserName.equals(userName))
 			throwException("Only the founder can close a store.");
 		this.active = false;
-		//TODO : Only owners & Admins can acheive information on the shop.
+				//TODO : Only owners & Admins can acheive information on the shop.
 		//TODO : products of the store should be unavilable now when a member looking for them.
 	}
 
@@ -207,7 +205,7 @@ public class Shop implements ShopIntr {
 		if (!this.founderUserName.equals(userName))
 			throwException("Only the founder can open a store.");
 		this.active = true;
-	}
+			}
 
 	public List<ShopProduct> getProducts() {
 		return products.values().stream().collect(Collectors.toList());
@@ -220,8 +218,7 @@ public class Shop implements ShopIntr {
 		ShopProduct shopProduct = ShopProduct.createProduct(productName, category, desc, price, this.name);
 		PersistenceManager.getInstance().persistObj(shopProduct);
 		products.put(productName, shopProduct);
-		PersistenceManager.getInstance().updateObj(this);
-	}
+			}
 
 	private void validatePermissionsException(String userName, ManagePermissionsEnum permissionsEnum) throws Exception {
 		if (!roles.containsKey(userName))
@@ -235,7 +232,7 @@ public class Shop implements ShopIntr {
 		validateProductExists(productName);
 		validatePermissionsException(userName, MANAGE_STOCK);
 		products.remove(productName);
-	}
+			}
 
 //	public void updateProductName(String userName, String productOldName, String productNewName) throws Exception {
 //		validateProductExists(productOldName);
@@ -255,32 +252,32 @@ public class Shop implements ShopIntr {
 		validateProductExists(productName);
 		validatePermissionsException(userName, MANAGE_STOCK);
 		products.get(productName).setDescription(productNewDesc);
-	}
+			}
 
 	public void updateProductPrice(String userName, String productName, double price) throws Exception {
 		validateProductExists(productName);
 		validatePermissionsException(userName, MANAGE_STOCK);
 		products.get(productName).setPrice(price);
-	}
+			}
 
 	public void updateProductQuantity(String userName, String productName, int quantity) throws Exception {
 		validateProductExists(productName);
 		validatePermissionsException(userName, MANAGE_STOCK);
 		products.get(productName).setQuantity(quantity);
-	}
+			}
 
 	public void updateProductCategory(String userName, String productName, String category) throws Exception {
 		validateProductExists(productName);
 		validatePermissionsException(userName, MANAGE_STOCK);
 		products.get(productName).setCategory(category);
-	}
+			}
 
 	public void addProductQuantity(String userName, String productName, int quantity) throws Exception {
 		validateProductExists(productName);
 		validatePermissionsException(userName, MANAGE_STOCK);
 		ShopProduct shopProduct = products.get(productName);
 		shopProduct.addQuantity(quantity);
-	}
+			}
 
 	private void validateProductExists(String productName) throws Exception {
 		if (!products.containsKey(productName))
@@ -394,7 +391,7 @@ public class Shop implements ShopIntr {
 			}
 			removeSubordinates(ownerToRemove);
 			roles.remove(ownerToRemove);
-		} finally {
+					} finally {
 			remLock.unlock();
 		}
 	}
@@ -407,7 +404,7 @@ public class Shop implements ShopIntr {
 				roles.remove(role.getRoleUser());
 			}
 		}
-	}
+			}
 	
 	
 	public FinalBagPriceResult computeShopBagPrice(ShopBag shopBag) {

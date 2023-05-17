@@ -59,7 +59,7 @@ public class User{
         this.sessionID = null;
         userType = UserType.MEMBER;
         currentCart = new Cart(name);
-        pendingNotifications = new ConcurrentLinkedQueue<>();
+        pendingNotifications = new ConcurrentLinkedDeque<>();
         PersistenceManager.getInstance().persistObj(currentCart);
     }
 

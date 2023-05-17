@@ -511,14 +511,13 @@ public class ShopAndProductCreationAndManipulationTests {
             assertTrue(true);
         }
     }
-/*
 
     //unsuccessful addition to cart because the user exists but isn't logged in
     @Test
     public void test32addProductToCart5(){
         try {
             String userName = "gabi0";
-            String productName = "Football";
+            String productName = "Basketball";
             int quantity = 1;
             String shopName = "Gabi's Goods";
             bridge.addProductsToCart(userName, shopName, productName, quantity);
@@ -528,7 +527,6 @@ public class ShopAndProductCreationAndManipulationTests {
         }
     }
 
-*/
     //successful addition to cart - the user is registered, logged in, and exists in the shop
     @Test
     public void test33addProductToCart6(){

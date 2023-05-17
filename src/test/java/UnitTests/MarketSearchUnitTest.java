@@ -44,6 +44,7 @@ class MarketSearchUnitTest {
 			shops[i] = Mockito.mock(Shop.class);
 			shops[i].addRole(usersName[0], memberRoleInShop);
 			Mockito.when(shops[i].isActive()).thenReturn(true);
+			Mockito.when(shops[i].getName()).thenReturn(shopNames[i]);
 			Mockito.doNothing().when(shopRepository).addShop(shopNames[i], shops[i]);
 			shopHandler.addShop(shopNames[i], shops[i]);
 		}
@@ -57,6 +58,9 @@ class MarketSearchUnitTest {
 			Mockito.when(product[i].isOnCategory(cats[0])).thenReturn(true);
 			shops[0].addNewProductTest(product[i]);
 		}
+		Mockito.when(shopRepository.getAllShops()).thenReturn(Arrays.asList(shops[0]));
+		Mockito.when(shopRepository.getShop(shopNames[0])).thenReturn(shops[0]);
+		Mockito.when(shops[0].isActive()).thenReturn(true);
 	}
 
 	@AfterEach
