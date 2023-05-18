@@ -70,7 +70,6 @@ public class Shop implements ShopIntr {
 	@JoinColumn(name = "shopName")
 //	@Transient
 	private List<ShopInvoice> invoices;
-	@Transient
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "discount_policy_id")
 	private DiscountPolicy discountPolicy;
