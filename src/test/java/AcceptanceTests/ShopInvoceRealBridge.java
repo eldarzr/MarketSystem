@@ -18,7 +18,7 @@ public class ShopInvoceRealBridge implements PurchaseBridge{
 
     @Override
     public int getQuantityOfProduct(String productName) throws Exception {
-        return shopInvoice.getQuantityOfProduct(productName);
+        return 0;
         //return purchaseIntr.getQuantityOfProduct(productName);
     }
 

@@ -1,19 +1,41 @@
 package BusinessLayer.Purchases;
 
+import BusinessLayer.ShopBagId;
 import BusinessLayer.Shops.Product;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
-public class Cart {
+@Entity
+@Table(name = "carts")
+public class Cart implements Serializable {
 
+    @Transient
     private static final Logger logger = Logger.getLogger("Market");
 
-    ConcurrentHashMap<String,ShopBag> cart = new ConcurrentHashMap<>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "userName")
+    private String userName;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userName", fetch = FetchType.LAZY)
+    @MapKeyColumn(name = "shopName") // specify the index column
+    private Map<String, ShopBag> cart = new ConcurrentHashMap<>();
+
+    public Cart() {
+    }
+
+    public Cart(String userName){
+        this.userName = userName;
+    }
 
     public ShopBag getShoppingBag(String shopName) {
       ShopBag sb = cart.get(shopName);
@@ -26,7 +48,7 @@ public class Cart {
 
     public void addProduct(String shopName, Product product, int quantity) throws Exception {
         if(!cart.containsKey(shopName))
-            cart.put(shopName,new ShopBag());
+            cart.put(shopName,new ShopBag(shopName, userName));
         ShopBag shopBag = getShoppingBag(shopName);
         shopBag.addProduct(product,quantity);
     }
@@ -47,7 +69,7 @@ public class Cart {
         shopBag.removeProduct(productName);
     }
 
-    public ConcurrentHashMap<String, ShopBag> getShopsAndProducts() {
+    public Map<String, ShopBag> getShopsAndProducts() {
         return cart;
     }
 

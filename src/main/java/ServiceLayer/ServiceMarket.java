@@ -1,9 +1,11 @@
 package ServiceLayer;
 
+import BusinessLayer.Bids.Bid;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Market;
 import BusinessLayer.Notifications.Notification;
+import BusinessLayer.Shops.FinalCartPriceResult;
 import BusinessLayer.Shops.PurchasePolicies.ComplexPolicyType;
 import BusinessLayer.Shops.PurchasePolicies.PurchasePolicy;
 import BusinessLayer.Shops.Shop;
@@ -175,14 +177,14 @@ public class ServiceMarket {
 		return new Response();
 	}
 
-	public Response updateProductName(String userName, String shopName, String productOldName, String productNewName) {
-		try {
-			market.updateProductName(userName, shopName, productOldName, productNewName);
-		} catch (Exception exception) {
-			return new Response(exception.getMessage());
-		}
-		return new Response();
-	}
+//	public Response updateProductName(String userName, String shopName, String productOldName, String productNewName) {
+//		try {
+//			market.updateProductName(userName, shopName, productOldName, productNewName);
+//		} catch (Exception exception) {
+//			return new Response(exception.getMessage());
+//		}
+//		return new Response();
+//	}
 
 	public Response updateProductDesc(String userName, String shopName, String productName, String productNewDesc) {
 		try {
@@ -602,7 +604,10 @@ public class ServiceMarket {
 	public void setNotificationCallback(String name, NotificationCallback callback) {
 		market.setNotificationCallback(name,callback);
 	}
-	
+
+	public void removeNotificationCallback(String name) {
+		market.removeNotificationCallback(name);
+	}
 
 	public ResponseT<DiscountPolicyDataObj> getShopDiscountPolicy(String currentUser, String shopName) {
 		try{
@@ -729,7 +734,71 @@ public class ServiceMarket {
 			return new ResponseT<>(e.getMessage(),false);
 		}
 	}
+	//Bid functions
+	public Response createBidOffer (String userName, String productName, String shopName, double bidPrice)  {
+		try {
+			market.createBidOffer(userName, productName, shopName, bidPrice);
+			return new Response();
+		}catch (Exception e){
+			return new Response(e.getMessage());
+		}
+	}
+	public ResponseT<Collection<BidDataObj>> getPendingBids(String userName, String shopName)  {
+		try{
+			Collection<BidDataObj> ret = new ArrayList<>();
+			for(Bid b : market.getPendingBids(userName, shopName))
+				ret.add(new BidDataObj(b));
+			return new ResponseT<>(ret);
+		}catch (Exception e){
+			return new ResponseT<>(e.getMessage(),false);
+		}
+	}
+	public ResponseT<Collection<BidDataObj>> getApprovedBids(String userName,String shopName)  {
+		try{
+			Collection<BidDataObj> ret = new ArrayList<>();
+			for(Bid b : market.getApprovedBids(userName, shopName))
+				ret.add(new BidDataObj(b));
+			return new ResponseT<>(ret);
+		}catch (Exception e){
+			return new ResponseT<>(e.getMessage(),false);
+		}
+	}
+	public ResponseT<Collection<BidDataObj>> getRejectedBids(String userName,String shopName)  {
+		try{
+			Collection<BidDataObj> ret = new ArrayList<>();
+			for(Bid b : market.getRejectedBids(userName, shopName))
+				ret.add(new BidDataObj(b));
+			return new ResponseT<>(ret);
+		}catch (Exception e){
+			return new ResponseT<>(e.getMessage(),false);
+		}
+	}
+	public Response approveBid(String userName, int bidId)  {
+		try{
+			market.approveBid(userName, bidId);
+			return new Response();
+		}catch (Exception e){
+			return new Response(e.getMessage());
+		}
+	}
+	public Response rejectBid(String userName, int bidId)  {
+		try{
+			market.rejectBid(userName, bidId);
+			return new Response();
+		}catch (Exception e){
+			return new Response(e.getMessage());
+		}
+	}
+	public ResponseT<FinalCartPriceDataObj> calcCartPriceAfterDiscount(String userName) {
+		try{
+			FinalCartPriceResult result = market.calcCartPriceAfterDiscount(userName);
+			return new ResponseT<FinalCartPriceDataObj>(new FinalCartPriceDataObj(result));
+		}catch (Exception e){
+			return new ResponseT<FinalCartPriceDataObj>(e.getMessage(),false);
+		}
+	}
 
-
-
+    public void ReadUserNotifications(String username) {
+		market.ReadUserNotifications(username);
+    }
 }

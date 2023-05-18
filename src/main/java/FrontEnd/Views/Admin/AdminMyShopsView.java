@@ -36,6 +36,12 @@ public class AdminMyShopsView extends MyShopsView implements HasUrlParameter<Str
     }
 
     @Override
+    protected void navigateToHistory(String shopName){
+        getUI().ifPresent(ui -> ui.navigate("admin_shop_history?userName=" + visitedUser.getName() +
+                "&shopName=" + shopName));
+    }
+
+    @Override
     protected SResponseT<List<MemberRoleInShopModel>> getUserRolesRes() {
         return visitedUser == null ? null : marketService.getUserRoles(visitedUser.getName());
     }
@@ -58,7 +64,7 @@ public class AdminMyShopsView extends MyShopsView implements HasUrlParameter<Str
         }
 
         setTitle(String.format("Welcome to %s shops", visitedUser.getName()));
-        importShops();
+        importShops(true);
     }
 }
 

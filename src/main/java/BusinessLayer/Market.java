@@ -1,10 +1,12 @@
 package BusinessLayer;
 
+import BusinessLayer.Bids.Bid;
 import BusinessLayer.Enums.UserType;
 import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Notifications.Notification;
+import BusinessLayer.Notifications.NotificationPublisher;
 import BusinessLayer.Purchases.*;
 import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRuleName;
 import BusinessLayer.Shops.Product;
@@ -22,6 +24,10 @@ import BusinessLayer.Users.User;
 import BusinessLayer.Users.UsersHandler;
 import org.apache.commons.lang3.NotImplementedException;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.Transient;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -196,10 +202,6 @@ public class Market implements MarketIntr{
         User founder=usersHandler.findMemberByName(userName);
         usersHandler.findLoginUser(userName);
         shopHandler.openShop(userName, shopName);
-        // notify management on opening shop
-        String message=String.format("User %s opened shop %s.", userName, shopName);
-        Notification notification=new Notification(userName,message);
-        notifyShopManagement(userName, shopName,notification);
     }
 
     //todo: naor
@@ -209,21 +211,7 @@ public class Market implements MarketIntr{
         //usersHandler.findMemberByName(userName);
         usersHandler.findLoginUser(userName);
         shopHandler.closeShop(userName, shopName);
-        // notify management on closing shop
-        String message=String.format("User %s closed shop %s.", userName, shopName);
-        Notification notification=new Notification(userName,message);
-        notifyShopManagement(userName, shopName,notification);
-        logger.info(message);
-    }
-
-    private void notifyShopManagement(String userName, String shopName,Notification notification){
-        try {
-            for(String roleName: shopHandler.getShop(shopName).getManagementUserNames())
-            {
-                // no need to notify himself.
-                if (!roleName.equals(userName)) usersHandler.notify(roleName,notification);
-            }
-        } catch (Exception e) {}
+        logger.info(String.format("User %s closed shop %s.", userName, shopName));
     }
 
     @Override
@@ -232,11 +220,7 @@ public class Market implements MarketIntr{
         userName = userName.toLowerCase();
         validateLoggedInException(userName);
         shopHandler.addNewProduct(userName, shopName, productName, category, desc, price);
-        // notify management on new product
-        String message=String.format("User %s added new product %s to store %s.", userName,productName, shopName);
-        Notification notification=new Notification(userName,message);
-        notifyShopManagement(userName, shopName,notification);
-        logger.info(message);
+        logger.info(String.format("User %s added new product %s to store %s.", userName,productName, shopName));
     }
 
     public void addNewProduct(String userName, String shopName, String productName, String productCategory, String productDescription, Double productPrice, Integer productQuantity) throws Exception {
@@ -249,20 +233,16 @@ public class Market implements MarketIntr{
         logger.info(String.format("Attempt by user %s to remove product %s from store %s.", userName,productName, shopName));
         validateLoggedInException(userName);
         shopHandler.removeProduct(userName, shopName, productName);
-        // notify management on new product
-        String message=String.format("User %s removed product %s from store %s.", userName,productName, shopName);
-        Notification notification=new Notification(userName,message);
-        notifyShopManagement(userName, shopName,notification);
-        logger.info(message);
+        logger.info(String.format("User %s removed product %s from store %s.", userName,productName, shopName));
     }
 
-    @Override
-    public void updateProductName(String userName, String shopName, String productOldName, String productNewName) throws Exception {
-        logger.info(String.format("Attempt by user %s to update product %s name from store %s.", userName,productOldName, shopName));
-        validateLoggedInException(userName);
-        shopHandler.updateProductName(userName, shopName, productOldName, productNewName);
-        logger.info(String.format("User %s updated product %s name to %s from store %s.", userName,productOldName,productNewName, shopName));
-    }
+//    @Override
+//    public void updateProductName(String userName, String shopName, String productOldName, String productNewName) throws Exception {
+//        logger.info(String.format("Attempt by user %s to update product %s name from store %s.", userName,productOldName, shopName));
+//        validateLoggedInException(userName);
+//        shopHandler.updateProductName(userName, shopName, productOldName, productNewName);
+//        logger.info(String.format("User %s updated product %s name to %s from store %s.", userName,productOldName,productNewName, shopName));
+//    }
 
     @Override
     public void updateProductDesc(String userName, String shopName, String productName, String productNewDesc) throws Exception {
@@ -350,10 +330,10 @@ public class Market implements MarketIntr{
         Shop reqShop = checkForShop(shopName);
         reqShop.setShopOwner(appointedBy,appointee , user::sendMessage);
         //notify appointee
-        String message=String.format("User %s appointed %s as shop-owner of shop %s.", appointedBy,appointee, shopName);
+        String message=String.format("User %s appointed you as shop-owner of shop %s.", appointedBy, shopName);
         Notification notification=new Notification(appointedBy,message);
-        usersHandler.notify(appointee,notification);
-        logger.info(message);
+        NotificationPublisher.getInstance().notify(appointee,notification);
+        logger.info(String.format("User %s appointed %s as shop-owner of shop %s.", appointedBy,appointee, shopName));
     }
 
     public Shop checkForShop(String shopName) throws Exception {
@@ -372,10 +352,10 @@ public class Market implements MarketIntr{
         Shop reqShop = checkForShop(shopName);
         reqShop.setShopManager(appointedBy,appointee ,user::sendMessage);
         //notify appointee
-        String message=String.format("User %s appointed %s as shop-manager of shop %s.", appointedBy,appointee, shopName);
+        String message=String.format("User %s appointed you as shop-manager of shop %s.", appointedBy, shopName);
         Notification notification=new Notification(appointedBy,message);
-        usersHandler.notify(appointee,notification);
-        logger.info(message);
+        NotificationPublisher.getInstance().notify(appointee,notification);
+        logger.info(String.format("User %s appointed %s as shop-manager of shop %s.", appointedBy,appointee, shopName));
     }
 
     @Override
@@ -397,7 +377,7 @@ public class Market implements MarketIntr{
        //notify removed owner
         String message=String.format("Manager %s removed you as shop-manager of shop %s.", managerName, shopName);
         Notification notification=new Notification(managerName,message);
-        usersHandler.notify(userToRemove,notification);
+        NotificationPublisher.getInstance().notify(userToRemove,notification);
         logger.info(String.format("Manager %s removed %s as shop-manager of shop %s.", managerName,userToRemove, shopName));
     }
 
@@ -413,14 +393,15 @@ public class Market implements MarketIntr{
         String message=String.format("User %s changed your permissions in shop %s.", actor, shopName);
         Notification notification=new Notification(actor,message);
         actOn=actOn.toLowerCase();
-        usersHandler.notify(actOn,notification);
+        NotificationPublisher.getInstance().notify(actOn,notification);
         logger.info(String.format("User %s changed %s permissions in shop %s.", actor,actOn, shopName));
        return reqShop.setManageOption(actor,actOn,permission);
     }
 
+    // Just for tests.
     public void notifyUser( String actOn,Notification notification)
     {
-        usersHandler.notify(actOn,notification);
+        NotificationPublisher.getInstance().notify(actOn,notification);
     }
 
     @Override
@@ -434,7 +415,7 @@ public class Market implements MarketIntr{
         //notify appointee
         String message=String.format("User %s added to your permissions in shop %s.", actor, shopName);
         Notification notification=new Notification(actor,message);
-        usersHandler.notify(actOn,notification);
+        NotificationPublisher.getInstance().notify(actOn,notification);
         logger.info(String.format("User %s added to %s permissions in shop %s.", actor,actOn, shopName));
     }
 
@@ -515,6 +496,7 @@ public class Market implements MarketIntr{
         Shop shop = shopHandler.getShop(shopName);
         Product product = shop.getProduct(productName,quantity);
         user.addProductToCart(shop.getName(),product,quantity);
+//        PersistenceManager.getInstance().updateObj(user);
         logger.info(String.format("User %s added %d %s from shop %s.", userName,quantity,productName,shopName));
     }
 
@@ -677,7 +659,7 @@ public class Market implements MarketIntr{
         String[] emails = {"eldarFirst@gmail.com", "nivFirst@gmail.com"};
         String[] shopNames = {"shopFirst1", "shopFirst2"};
         String[] prodNames = {"prodFirst1", "prodFirst2"};
-        String[] descs = {"description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 description1 ", "description2"};
+        String[] descs = {"description1 description1 description1", "description2"};
         String[] cat = {"catFirst1", "catFirst2"};
         double[] prices = {5, 10};
 
@@ -686,7 +668,12 @@ public class Market implements MarketIntr{
             register(usersName[i], emails[i], passwords[i]);
             login(guestName, usersName[i], passwords[i]);
             createShop(usersName[i], shopNames[i]);
-            addNewProduct(usersName[i], shopNames[i], prodNames[i], cat[i], descs[i], prices[i]);
+            try {
+                addNewProduct(usersName[i], shopNames[i], prodNames[i], cat[i], descs[i], prices[i]);
+            }
+            catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
             addProductItems(usersName[i], shopNames[i], prodNames[i], 3);
         }
         createShop(usersName[0],"The Shop");
@@ -766,8 +753,13 @@ public class Market implements MarketIntr{
         return shopHandler.getShop(name);
     }
 
-    public void setNotificationCallback(String name, NotificationCallback callback) {
-        usersHandler.setNotificationCallback(name,callback);
+    public void setNotificationCallback(String username, NotificationCallback callback) {
+        NotificationPublisher.getInstance().setNotificationCallback(username,callback);
+    }
+
+    public void removeNotificationCallback(String username)
+    {
+        NotificationPublisher.getInstance().removeNotificationCallback(username);
     }
 
     public Collection<Notification> getUserNotifications(String userName) throws Exception {
@@ -844,23 +836,61 @@ public class Market implements MarketIntr{
 
     public Map<Integer, PurchasePolicy> getAllPurchasePolicies(String userName, String shopName) throws Exception {
         validateUserIsntGuest(userName);
-        isLoggedIn(userName);
+        usersHandler.findLoginUser(userName);
         return getShop(shopName).getPurchasePolicyManager(userName).getAllPolicies();
     }
 
 
     public void setActivePurchasePolicy(String userName, String shopName, int policyId) throws Exception {
         validateUserIsntGuest(userName);
-        isLoggedIn(userName);
+        usersHandler.findLoginUser(userName);
         getShop(shopName).getPurchasePolicyManager(userName).setActivePolicy(policyId);
     }
 
     public Integer getActivePurchasePolicyId(String userName, String shopName) throws Exception {
         validateUserIsntGuest(userName);
-        isLoggedIn(userName);
+        usersHandler.findLoginUser(userName);
         return getShop(shopName).getPurchasePolicyManager(userName).getActivePolicyId();
     }
+    
+    public FinalCartPriceResult calcCartPriceAfterDiscount(String userName) throws Exception {
+        logger.info(String.format("Attempt by user %s to purchase cart.", userName));
+        User user = usersHandler.findLoginUser(userName);
+        List<Shop> shops = shopHandler.getShops(user.getCart().getShopsNames());
+        Purchase purchase = new Purchase(user,shops,null,null);
+        FinalCartPriceResult priceToReturn = purchase.computeCartPrice();
+        //return invoice or order number or order summary something like this need to decide
+        logger.info(String.format("User %s purchase cart successfully.", userName));
+        return priceToReturn;
+    }
 
+    //Bid functions
+    public void createBidOffer (String userName, String productName, String shopName, double bidPrice) throws Exception {
+        validateLoggedInException(userName);
+        shopHandler.createBid(productName, shopName, bidPrice);
+    }
+    public Collection<Bid> getPendingBids(String userName,String shopName) throws Exception {
+        validateLoggedInException(userName);
+        return shopHandler.getPendingBids(shopName);
+    }
+    public Collection<Bid> getApprovedBids(String userName,String shopName) throws Exception {
+        validateLoggedInException(userName);
+        return shopHandler.getApprovedBids(shopName);
+    }
+    public Collection<Bid> getRejectedBids(String userName,String shopName) throws Exception {
+        validateLoggedInException(userName);
+        return shopHandler.getRejectedBids(shopName);
+    }
+    public void approveBid(String userName, int bidId) throws Exception {
+        validateLoggedInException(userName);
+        shopHandler.approveBid(getUser(userName),bidId);
+    }
+    public void rejectBid(String userName, int bidId) throws Exception {
+        validateLoggedInException(userName);
+        shopHandler.rejectBid(getUser(userName),bidId);
+    }
 
-
+    public void ReadUserNotifications(String username) {
+        usersHandler.getUser(username).ReadNotifications();
+    }
 }

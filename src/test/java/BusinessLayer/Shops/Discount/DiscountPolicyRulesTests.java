@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,13 +30,13 @@ public class DiscountPolicyRulesTests {
     @BeforeEach
     void setUp() {
         discountPolicy = new DiscountPolicy();
-        ConcurrentHashMap<String, ShopBagItem> productsAndQuantities = new ConcurrentHashMap<>();
+        Map<String, ShopBagItem> productsAndQuantities = new ConcurrentHashMap<>();
         for(int i = 0; i < productsNames.length; i++){
             Product product = new Product(productsNames[i], categories[i],description,prices[i],shopName);
-            ShopBagItem sbi = new ShopBagItem(product,quantities[i]);
+            ShopBagItem sbi = new ShopBagItem(product,quantities[i], "bla");
             productsAndQuantities.put(productsNames[i],sbi);
         }
-        shopBag = new ShopBag(productsAndQuantities);
+        shopBag = new ShopBag(productsAndQuantities, shopName, "bla");
 
     }
 

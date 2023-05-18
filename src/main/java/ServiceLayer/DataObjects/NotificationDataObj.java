@@ -16,6 +16,7 @@ public class NotificationDataObj {
         this.source = notification.getSource();
         this.message = notification.getMessage();
         this.creationTime = notification.getCreationTime();
+        this.read=notification.isRead();
     }
 
     public NotificationDataObj(NotificationModel notification) {

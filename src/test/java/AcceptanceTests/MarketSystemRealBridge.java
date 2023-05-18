@@ -90,9 +90,9 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
         market.removeProduct(userName, shopName, productName);
     }
 
-    public void updateProductName(String userName, String shopName, String productOldName, String productNewName) throws Exception {
-        market.updateProductName(userName, shopName, productOldName, productNewName);
-    }
+//    public void updateProductName(String userName, String shopName, String productOldName, String productNewName) throws Exception {
+//        market.updateProductName(userName, shopName, productOldName, productNewName);
+//    }
 
     public void updateProductDesc(String userName, String shopName, String productName, String productNewDesc) throws Exception {
         market.updateProductDesc(userName, shopName, productName, productNewDesc);

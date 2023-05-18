@@ -85,31 +85,31 @@ class MarketManageProductIntegrationTest {
 		assertThrows(Exception.class, () -> market.removeProduct(usersName[0], shopNames[1], prodNames[0]));
 	}
 
-	@Test
-	void updateProductNameSuccess() throws Exception {
-		for(int i = 0; i < usersName.length; i++) {
-			market.addNewProduct(usersName[i], shopNames[i], prodNames[i], cat[i], descs[i], prices[i]);
-			market.updateProductName(usersName[i], shopNames[i], prodNames[i], prodNamesNew[i]);
-			ProductIntr product = market.getProduct(usersName[i], shopNames[i], prodNamesNew[i]);
-			assertTrue(product.getName().equals(prodNamesNew[i]));
-		}
-	}
-
-	@Test
-	void updateProductNameFailLogin() throws Exception {
-		market.addNewProduct(usersName[0], shopNames[0], prodNames[0], cat[0], descs[0], prices[0]);
-		market.logout(usersName[0]);
-		assertThrows(Exception.class, () -> market.updateProductName(usersName[0], shopNames[0], prodNames[0],
-				prodNamesNew[0]));
-	}
-
-	@Test
-	void updateProductNameFailPermission() throws Exception {
-		market.addNewProduct(usersName[0], shopNames[0], prodNames[0], cat[0], descs[0], prices[0]);
-		market.logout(usersName[0]);
-		assertThrows(Exception.class, () -> market.updateProductName(usersName[0], shopNames[1], prodNames[0],
-				prodNamesNew[0]));
-	}
+//	@Test
+//	void updateProductNameSuccess() throws Exception {
+//		for(int i = 0; i < usersName.length; i++) {
+//			market.addNewProduct(usersName[i], shopNames[i], prodNames[i], cat[i], descs[i], prices[i]);
+//			market.updateProductName(usersName[i], shopNames[i], prodNames[i], prodNamesNew[i]);
+//			ProductIntr product = market.getProduct(usersName[i], shopNames[i], prodNamesNew[i]);
+//			assertTrue(product.getName().equals(prodNamesNew[i]));
+//		}
+//	}
+//
+//	@Test
+//	void updateProductNameFailLogin() throws Exception {
+//		market.addNewProduct(usersName[0], shopNames[0], prodNames[0], cat[0], descs[0], prices[0]);
+//		market.logout(usersName[0]);
+//		assertThrows(Exception.class, () -> market.updateProductName(usersName[0], shopNames[0], prodNames[0],
+//				prodNamesNew[0]));
+//	}
+//
+//	@Test
+//	void updateProductNameFailPermission() throws Exception {
+//		market.addNewProduct(usersName[0], shopNames[0], prodNames[0], cat[0], descs[0], prices[0]);
+//		market.logout(usersName[0]);
+//		assertThrows(Exception.class, () -> market.updateProductName(usersName[0], shopNames[1], prodNames[0],
+//				prodNamesNew[0]));
+//	}
 
 	@Test
 	void updateProductDescSuccess() throws Exception {

@@ -40,7 +40,8 @@ public class Notification {
         return read;
     }
 
-    public void Read(boolean read) {
-        this.read = read;
+    public void Read() {
+        this.read = true;
     }
+
 }

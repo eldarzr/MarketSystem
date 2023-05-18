@@ -25,6 +25,7 @@ public class GuestShoppingActionsTest {
     @BeforeEach
     public void setUp() throws Exception {
 
+        market= new MarketSystemRealBridge();
         market.init();
         tempUserName = market.startSession();
 

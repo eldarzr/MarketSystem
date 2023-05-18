@@ -8,6 +8,7 @@ import BusinessLayer.Shops.Product;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -21,9 +22,9 @@ public class ShoppingCartRealBridge implements ShoppingCartBridge{
 
     @Override
     public int getQuantityOfProduct(String productName) {
-        ConcurrentHashMap<String, ShopBag> productList = cart.getShopsAndProducts();
+        Map<String, ShopBag> productList = cart.getShopsAndProducts();
         for(ShopBag shopBag : productList.values()){
-            ConcurrentHashMap<String, ShopBagItem> productAndQuan = shopBag.getProductsAndQuantities();
+            Map<String, ShopBagItem> productAndQuan = shopBag.getProductsAndQuantities();
             for(String product : productAndQuan.keySet()){
                 if(product.equals(productName))
                     return productAndQuan.get(product).getQuantity();

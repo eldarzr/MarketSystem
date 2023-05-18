@@ -2,16 +2,13 @@ package FrontEnd.Views;
 
 
 import FrontEnd.SResponse;
+import ServiceLayer.DataObjects.*;
 import ServiceLayer.Response;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 import FrontEnd.Model.ProductModel;
 import FrontEnd.Model.UserModel;
 import FrontEnd.SResponseT;
-import ServiceLayer.DataObjects.CartDataObj;
-import ServiceLayer.DataObjects.ShopBagDataObj;
-import ServiceLayer.DataObjects.ShopBagItemDataObj;
-import ServiceLayer.DataObjects.ShopDataObj;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.accordion.AccordionPanel;
@@ -54,6 +51,14 @@ public class CartView extends BaseView {
         shopAccordion = new Accordion();
         add(shopAccordion);
         double totalPurchasePrice = 0;
+        double totalPriceAfterDiscount = 0;
+        SResponseT<FinalCartPriceDataObj> res = marketService.calcCartPriceAfterDiscount(userModel.getName());
+        if(res.isSuccess()){
+
+            totalPurchasePrice = res.getData().getPriceBeforeDiscount();
+            totalPriceAfterDiscount = res.getData().getPriceAfterDiscount();
+        }
+        
         // Fetch cart data
         SResponseT<CartDataObj> cart_res = marketService.getCart(userModel.getName());
         if(cart_res.isSuccess()) {
@@ -72,24 +77,28 @@ public class CartView extends BaseView {
                 shopAccordion.add(shopPanel);
             }
 
-            totalPurchasePrice = cart.entrySet().stream()
-                    .mapToDouble(entry -> {
-                        Map<String, ShopBagItemDataObj> productNameToItem = entry.getValue().getProductsAndQuantities();
-                        return productNameToItem.values().stream()
-                                .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
-                                .sum();
-                    })
-                    .sum();
+            //totalPurchasePrice = cart.entrySet().stream()
+//                    .mapToDouble(entry -> {
+//                        Map<String, ShopBagItemDataObj> productNameToItem = entry.getValue().getProductsAndQuantities();
+//                        return productNameToItem.values().stream()
+//                                .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
+//                                .sum();
+//                    })
+//                    .sum();
         }
         else {
             Notification.show(cart_res.getMessage());
         }
 
         // Display the total purchase price
-        Span totalPurchasePriceSpan = new Span("Total purchase price: $" + String.format("%.2f", totalPurchasePrice));
+        Span totalPurchasePriceSpan = new Span("Price before discount: $" + String.format("%.2f", totalPurchasePrice));
         totalPurchasePriceSpan.getStyle().set("font-size", "18px");
         totalPurchasePriceSpan.getStyle().set("font-weight", "bold");
         totalPurchasePriceSpan.getStyle().set("margin-right", "1rem");
+        Span priceAfterDiscount = new Span("Total price: $" + String.format("%.2f", totalPriceAfterDiscount));
+        priceAfterDiscount.getStyle().set("font-size", "18px");
+        priceAfterDiscount.getStyle().set("font-weight", "bold");
+        priceAfterDiscount.getStyle().set("margin-right", "1rem");
 
         Button checkoutButton = new Button("Checkout", e -> {
                 getUI().ifPresent(ui ->
@@ -101,7 +110,7 @@ public class CartView extends BaseView {
 
         add(checkoutButton);
 
-        HorizontalLayout buttonLayout = new HorizontalLayout(totalPurchasePriceSpan, checkoutButton);
+        HorizontalLayout buttonLayout = new HorizontalLayout(totalPurchasePriceSpan,priceAfterDiscount, checkoutButton);
         buttonLayout.setAlignItems(Alignment.BASELINE);
         add(buttonLayout);
     }
@@ -115,7 +124,32 @@ public class CartView extends BaseView {
         grid.addColumn(cartItem -> cartItem.getProduct().getDescription()).setHeader("Description").setWidth("200px");
         grid.addColumn(cartItem -> priceFormat.format(cartItem.getProduct().getPrice())).setHeader("Price").setWidth("100px");
         grid.addColumn(ShopBagItemDataObj::getQuantity).setHeader("Quantity").setWidth("100px");
+        grid.addComponentColumn(cartItem -> {
+            Button bidButton = new Button("Bid", e -> {
+                // Implement the edit quantity functionality
+                Dialog bidDialog = new Dialog();
 
+                NumberField priceField = new NumberField("Bid price");
+                priceField.setStep(0.01);
+                priceField.setMin(0.01);
+
+
+
+                Button submitButton = new Button("Submit offer", event -> {
+                    double bidPrice = priceField.getValue().doubleValue();
+                    handleSumbitBid(cartItem, bidPrice);
+                    bidDialog.close();
+                });
+
+                Button cancelButton = new Button("Cancel", event -> bidDialog.close());
+
+                bidDialog.add(new VerticalLayout(priceField, new HorizontalLayout(submitButton, cancelButton)));
+                bidDialog.open();
+            });
+            bidButton.getStyle().set("color", "white");
+            bidButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
+            return bidButton;
+        }).setHeader("Bid");
 
         grid.addComponentColumn(cartItem -> {
             Button editButton = new Button("Edit", e -> {
@@ -164,6 +198,12 @@ public class CartView extends BaseView {
         grid.setHeight(gridHeight + "px");
 
         return grid;
+    }
+
+    private void handleSumbitBid(ShopBagItemDataObj cartItem, double bidPrice) {
+        SResponse res = marketService.createBidOffer(getCurrentUser().getName(),cartItem.getProduct().getName(),cartItem.getProduct().getShopName(),bidPrice);
+        if(!res.isSuccess())Notification.show(res.getMessage());
+        else Notification.show("Bid successfully submitted !");
     }
 
     private void handleRemoveFromCart(ShopBagItemDataObj cartItem) {

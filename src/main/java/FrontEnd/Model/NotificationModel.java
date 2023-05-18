@@ -11,10 +11,13 @@ public class NotificationModel {
     private String message;
     private LocalDate creationTime;
 
+    private boolean read;
+
     public NotificationModel(NotificationDataObj notification) {
         this.source = notification.getSource();
         this.message = notification.getMessage();
         this.creationTime = notification.getCreationTime();
+        this.read = notification.isRead();
     }
 
     public String getSource() {
@@ -27,6 +30,10 @@ public class NotificationModel {
 
     public LocalDate getCreationTime() {
         return creationTime;
+    }
+
+    public boolean isRead() {
+        return this.read;
     }
 }
 

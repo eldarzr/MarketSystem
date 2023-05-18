@@ -39,7 +39,4 @@ public abstract class InvoiceModel {
 		return deliveryMethod;
 	}
 
-	public abstract Collection<String> getProducts();
-
-	public abstract int getQuantityOfProduct(String productName) throws Exception;
 }

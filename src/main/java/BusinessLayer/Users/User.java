@@ -4,29 +4,52 @@ import BusinessLayer.Enums.UserType;
 import BusinessLayer.Notifications.Notification;
 import BusinessLayer.Notifications.NotificationObserver;
 import BusinessLayer.MemberRoleInShop;
+import BusinessLayer.PersistenceManager;
 import BusinessLayer.Purchases.Cart;
 import BusinessLayer.Purchases.UserInvoice;
 import BusinessLayer.Shops.Product;
 import BusinessLayer.Shops.Shop;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class User implements NotificationObserver {
+@Entity
+@Table(name = "users")
+public class User{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
     private UserType userType;
+
     private String name;
     private String sessionID;
     private String email;
+
+    @Column(name = "password") // To avoid using a reserved keyword
     private String password;
+
+    @Transient
     private ConcurrentLinkedQueue<String> shopsMessages = new ConcurrentLinkedQueue<>();
+
+    @Transient
     private ConcurrentLinkedQueue<UserInvoice> invoices = new ConcurrentLinkedQueue<>();
+
     private boolean twoFactorEnabled;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "cart_id")
+//    @Transient
     Cart currentCart;
-
-    private ConcurrentLinkedQueue<Notification> pendingNotifications;
+  
+    @Transient
+    private ConcurrentLinkedDeque<Notification> pendingNotifications;
+    @Transient
     private NotificationCallback callback;
 
     public User(String name, String email, String password) {
@@ -35,15 +58,17 @@ public class User implements NotificationObserver {
         this.password = password;
         this.sessionID = null;
         userType = UserType.MEMBER;
-        currentCart = new Cart();
-        pendingNotifications = new ConcurrentLinkedQueue<>();
+        currentCart = new Cart(name);
+        pendingNotifications = new ConcurrentLinkedDeque<>();
+        PersistenceManager.getInstance().persistObj(currentCart);
     }
 
     public User(String guestName) {
         name = guestName.toLowerCase();
         sessionID = null;
         userType = UserType.GUEST;
-        currentCart = new Cart();
+        currentCart = new Cart(guestName);
+        PersistenceManager.getInstance().persistObj(currentCart);
     }
 
     public void sendMessage(String message) {
@@ -100,6 +125,7 @@ public class User implements NotificationObserver {
 
     public void addProductToCart(String shopName, Product product, int quantity) throws Exception {
         getCart().addProduct(shopName, product, quantity);
+        PersistenceManager.getInstance().updateObj(getCart());
     }
 
     public void updateProductsFromCart(String shopName, String productName, int newQuantity) throws Exception {
@@ -123,16 +149,11 @@ public class User implements NotificationObserver {
     }
 
     public void clearCart() {
-        currentCart = new Cart();
-    }
-
-    @Override
-    public void notify(Notification notification) {
-        if(callback!=null) callback.call(notification.getMessage());
+        currentCart = new Cart(name);
     }
 
     public void addPendingNotifications(Notification notification) {
-        pendingNotifications.add(notification);
+        pendingNotifications.push(notification);
     }
 
     public String getSessionID() {
@@ -145,10 +166,6 @@ public class User implements NotificationObserver {
 	
 	public void setCart(Cart currentCart) {
         this.currentCart = currentCart;
-    }
-
-    public void setNotificationCallback(NotificationCallback callback) {
-        this.callback=callback;
     }
 
     public Collection<Notification> getPendingNotification() {
@@ -168,6 +185,11 @@ public class User implements NotificationObserver {
 
     public LocalDate getBirthDay() {
         return LocalDate.of(1999,9,4);
+    }
+
+    public void ReadNotifications() {
+        for(Notification notification: pendingNotifications)
+            if(!notification.isRead()) notification.Read();
     }
 }
 

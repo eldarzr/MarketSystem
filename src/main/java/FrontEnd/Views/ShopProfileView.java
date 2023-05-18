@@ -42,6 +42,7 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 	protected Button addDiscountButton;
 	protected Button purchasePoliciesButton;
 	protected Button manageDiscount;
+	protected Button bidsButton;
 
 	public ShopProfileView() {
 		//todo: pay attention, userprofile is the one that this screen is all about,
@@ -94,12 +95,22 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 				purchasePoliciesButton.getUI().ifPresent(ui ->
 						ui.navigate("purchase_policy/"+shopProfile.getName()))
 		);
+		bidsButton = new Button("Manage Bids");
+		bidsButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
+		bidsButton.getStyle().set("color", "white");
+		bidsButton.addClickListener(e ->
+				bidsButton.getUI().ifPresent(ui ->
+						ui.navigate("bids/"+shopProfile.getName()))
+		);
+
 
 		TextField productName = new TextField("Product Name");
 		TextField productCategory = new TextField("Product Category");
 		TextField productDescription = new TextField("Product Description");
 		NumberField productPrice = new NumberField("Product Price");
 		IntegerField productQuantity = new IntegerField("Product Quantity");
+
+		productName.setEnabled(false);
 
 		editProductButton = new Button("Edit Product");
 		editProductButton.getStyle().set("color", "white");
@@ -242,7 +253,7 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 
 		showProducts();
 
-		HorizontalLayout horizontalLayout = new HorizontalLayout(manageRolesButton, editProductButton,addProductButton,removeProductButton,manageDiscount,purchasePoliciesButton);
+		HorizontalLayout horizontalLayout = new HorizontalLayout(manageRolesButton, editProductButton,addProductButton,removeProductButton,manageDiscount,purchasePoliciesButton,bidsButton);
 
 		add(horizontalLayout);
 
@@ -281,12 +292,12 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 				Notification.show(res.getMessage());
 			else Notification.show("Updated Quantity successfully");
 		}
-		if(!productName.equals(currentProduct.getName())){
-			SResponse res = marketService.updateProductName(getCurrentUser().getName(), shopProfile.getName(),currentProduct.getName(),productName);
-			if(!res.isSuccess())
-				Notification.show(res.getMessage());
-			else Notification.show("Updated Name successfully");
-		}
+//		if(!productName.equals(currentProduct.getName())){
+//			SResponse res = marketService.updateProductName(getCurrentUser().getName(), shopProfile.getName(),currentProduct.getName(),productName);
+//			if(!res.isSuccess())
+//				Notification.show(res.getMessage());
+//			else Notification.show("Updated Name successfully");
+//		}
 	}
 
 	private void refreshProducts(){

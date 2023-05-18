@@ -2,10 +2,7 @@ package UnitTests;
 
 import BusinessLayer.ManagePermissions;
 import BusinessLayer.MemberRoleInShop;
-import BusinessLayer.Shops.ProductIntr;
-import BusinessLayer.Shops.Shop;
-import BusinessLayer.Shops.ShopHandler;
-import BusinessLayer.Shops.ShopProduct;
+import BusinessLayer.Shops.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MarketSearchUnitTest {
 	ShopHandler shopHandler;
+	ShopRepository shopRepository;
 	Shop[] shops = new Shop[2];
 	ShopProduct[] product = new ShopProduct[3];
 	MemberRoleInShop memberRoleInShop;
@@ -37,6 +35,8 @@ class MarketSearchUnitTest {
 	@BeforeEach
 	void setUp() throws Exception {
 		shopHandler = ShopHandler.getInstance();
+		shopRepository = Mockito.mock(ShopRepository.class);
+		shopHandler.setShopRepositoryForTests(shopRepository);
 		memberRoleInShop = Mockito.mock(MemberRoleInShop.class);
 		managePermissions = Mockito.mock(ManagePermissions.class);
 		Mockito.when(memberRoleInShop.getPermissions()).thenReturn(managePermissions);
@@ -44,6 +44,8 @@ class MarketSearchUnitTest {
 			shops[i] = Mockito.mock(Shop.class);
 			shops[i].addRole(usersName[0], memberRoleInShop);
 			Mockito.when(shops[i].isActive()).thenReturn(true);
+			Mockito.when(shops[i].getName()).thenReturn(shopNames[i]);
+			Mockito.doNothing().when(shopRepository).addShop(shopNames[i], shops[i]);
 			shopHandler.addShop(shopNames[i], shops[i]);
 		}
 		Mockito.when(shops[0].getProducts()).thenReturn(Arrays.asList(product));
@@ -56,6 +58,9 @@ class MarketSearchUnitTest {
 			Mockito.when(product[i].isOnCategory(cats[0])).thenReturn(true);
 			shops[0].addNewProductTest(product[i]);
 		}
+		Mockito.when(shopRepository.getAllShops()).thenReturn(Arrays.asList(shops[0]));
+		Mockito.when(shopRepository.getShop(shopNames[0])).thenReturn(shops[0]);
+		Mockito.when(shops[0].isActive()).thenReturn(true);
 	}
 
 	@AfterEach

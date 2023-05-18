@@ -86,11 +86,13 @@ public class AdminView extends BaseView {
 			else{
 				disableButton(userProfileButton);
 				disableButton(userHistoryButton);
+				disableButton(removeButton);
 			}
 		});
 		shopGrid = new Grid<>();
 		shopGrid.addColumn(ShopModel::getName).setHeader("Name");
 		shopGrid.setDataProvider(shopDataProvider);
+		shopGrid.setSizeFull();
 
 		shopGrid.addSelectionListener(event -> {
 			Optional<ShopModel> selectedShop = event.getFirstSelectedItem();
@@ -128,7 +130,7 @@ public class AdminView extends BaseView {
 		userHistoryButton.addClickListener(event -> {
 			UserModel selectedUser = userGrid.asSingleSelect().getValue();
 			if (selectedUser != null)
-				getUI().ifPresent(ui -> ui.navigate("userHistory/" + selectedUser.getName()));
+				getUI().ifPresent(ui -> ui.navigate("admin_user_history/" + selectedUser.getName()));
 		});
 
 		shopHistoryButton = new Button("Shop Purchase History");
@@ -136,13 +138,14 @@ public class AdminView extends BaseView {
 		shopHistoryButton.addClickListener(event -> {
 			ShopModel selectedShop = shopGrid.asSingleSelect().getValue();
 			if (selectedShop != null)
-				getUI().ifPresent(ui -> ui.navigate("shopHistory/" + selectedShop.getName()));
+				getUI().ifPresent(ui -> ui.navigate("admin_shop_history?userName=" + userModel.getName() +
+						"&shopName=" + selectedShop.getName()));
 		});
-
 		// Add the components to the layout
 		VerticalLayout userLayout = new VerticalLayout(userGrid,
 				new HorizontalLayout(removeButton, userHistoryButton, userProfileButton));
 		VerticalLayout shopLayout = new VerticalLayout(shopGrid, shopHistoryButton);
+		shopLayout.setWidth(userLayout.getWidth());
 		add(new HorizontalLayout(userLayout, shopLayout));
 	}
 
