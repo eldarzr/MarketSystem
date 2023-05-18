@@ -35,8 +35,10 @@ public class User{
     @Column(name = "password") // To avoid using a reserved keyword
     private String password;
 
-    @Transient
-    private ConcurrentLinkedQueue<String> shopsMessages = new ConcurrentLinkedQueue<>();
+    @ElementCollection
+    @CollectionTable(name = "shops_messages", joinColumns = @JoinColumn(name = "userName"))
+    @Column(name = "message")
+    private List<String> shopsMessages;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "userName")
@@ -48,12 +50,15 @@ public class User{
     @JoinColumn(name = "cart_id")
 //    @Transient
     Cart currentCart;
-  
-    @Transient
-    private ConcurrentLinkedDeque<Notification> pendingNotifications;
 
-    public User() {
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "userName")
+    private List<Notification> pendingNotifications;
+    @Transient
+    private NotificationCallback callback;
+	public User() {
         pendingNotifications = new ConcurrentLinkedDeque<>();
+		this.invoices = new CopyOnWriteArrayList<>();
     }
 
     public User(String name, String email, String password) {
@@ -63,9 +68,10 @@ public class User{
         this.sessionID = null;
         userType = UserType.MEMBER;
         currentCart = new Cart(name);
-        pendingNotifications = new ConcurrentLinkedDeque<>();
+        pendingNotifications = new CopyOnWriteArrayList<>();
+        shopsMessages = new CopyOnWriteArrayList<>();
         this.invoices = new CopyOnWriteArrayList<>();
-        PersistenceManager.getInstance().persistObj(currentCart);
+//        PersistenceManager.getInstance().persistObj(currentCart);
     }
 
     public User(String guestName) {
@@ -74,7 +80,7 @@ public class User{
         userType = UserType.GUEST;
         currentCart = new Cart(guestName);
         this.invoices = new CopyOnWriteArrayList<>();
-        PersistenceManager.getInstance().persistObj(currentCart);
+//        PersistenceManager.getInstance().persistObj(currentCart);
     }
 
     public void sendMessage(String message) {
@@ -117,7 +123,7 @@ public class User{
         this.userType = userType;
     }
 
-    public ConcurrentLinkedQueue<String> getShopsMessages() {
+    public List<String> getShopsMessages() {
         return shopsMessages;
     }
 
@@ -159,7 +165,7 @@ public class User{
     }
 
     public void addPendingNotifications(Notification notification) {
-        pendingNotifications.push(notification);
+        pendingNotifications.add(notification);
     }
 
     public String getSessionID() {
