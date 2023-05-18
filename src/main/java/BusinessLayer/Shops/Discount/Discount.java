@@ -15,6 +15,9 @@ public abstract class Discount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    private Long id; //for data base use
+
+    @Column(name = "b_id")
     protected int discountId;
 
     @OneToOne(cascade = CascadeType.ALL)

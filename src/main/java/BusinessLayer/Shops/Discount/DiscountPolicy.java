@@ -3,9 +3,7 @@ package BusinessLayer.Shops.Discount;
 import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Shops.Discount.DiscountRules.CompoundRuleType;
 import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
-import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
 import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRuleName;
-import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRulesFactory;
 import BusinessLayer.Shops.FinalBagPriceResult;
 
 import javax.persistence.*;
@@ -32,13 +30,14 @@ public class DiscountPolicy {
 
     // discountIdIndexer will not be stored in the database,
     // it should be calculated based on the maximum discountId in discountsById map
-    @Transient
-    AtomicInteger discountIdIndexer;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "discount_id_indexer_id")
+    DiscountIdIndexer discountIdIndexer;
 
 
     public DiscountPolicy() {
         discountsById = new ConcurrentHashMap<>();
-        this.discountIdIndexer = new AtomicInteger(0);
+        this.discountIdIndexer = new DiscountIdIndexer();
     }
 
     public CategoryDiscount addCategoryDiscount(double discountPercentage, String category){
@@ -103,6 +102,7 @@ public class DiscountPolicy {
     //this function applies discount on a shop bag, it changes the state of the shop bag so it should be called with a deep clone
     //return discount result which contains the price before discount , price after discount and discounts applied descriptions
     public FinalBagPriceResult applyDiscount(ShopBag shopBag){
+        shopBag = shopBag.deepClone();
         FinalBagPriceResult discountResult = FinalBagPriceResult.makeDiscountResult();
         discountResult.setPriceBeforeDiscount(shopBag.calculatePrice());
         ShopBag shopBagPrev = shopBag;

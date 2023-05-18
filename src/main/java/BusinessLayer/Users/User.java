@@ -51,8 +51,10 @@ public class User{
   
     @Transient
     private ConcurrentLinkedDeque<Notification> pendingNotifications;
-    @Transient
-    private NotificationCallback callback;
+
+    public User() {
+        pendingNotifications = new ConcurrentLinkedDeque<>();
+    }
 
     public User(String name, String email, String password) {
         this.name = name.toLowerCase();
