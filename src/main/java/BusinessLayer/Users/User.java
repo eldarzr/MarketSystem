@@ -13,20 +13,21 @@ import BusinessLayer.Shops.Shop;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Entity
 @Table(name = "users")
 public class User{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
+    @Id
+    @Column(name = "userName")
     private String name;
     private String sessionID;
     private String email;
@@ -34,11 +35,14 @@ public class User{
     @Column(name = "password") // To avoid using a reserved keyword
     private String password;
 
-    @Transient
-    private ConcurrentLinkedQueue<String> shopsMessages = new ConcurrentLinkedQueue<>();
+    @ElementCollection
+    @CollectionTable(name = "shops_messages", joinColumns = @JoinColumn(name = "userName"))
+    @Column(name = "message")
+    private List<String> shopsMessages;
 
-    @Transient
-    private ConcurrentLinkedQueue<UserInvoice> invoices = new ConcurrentLinkedQueue<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "userName")
+    private List<UserInvoice> invoices;
 
     private boolean twoFactorEnabled;
 
@@ -46,11 +50,16 @@ public class User{
     @JoinColumn(name = "cart_id")
 //    @Transient
     Cart currentCart;
-  
-    @Transient
-    private ConcurrentLinkedDeque<Notification> pendingNotifications;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "userName")
+    private List<Notification> pendingNotifications;
     @Transient
     private NotificationCallback callback;
+	public User() {
+        pendingNotifications = new CopyOnWriteArrayList<>();
+		this.invoices = new CopyOnWriteArrayList<>();
+    }
 
     public User(String name, String email, String password) {
         this.name = name.toLowerCase();
@@ -59,8 +68,10 @@ public class User{
         this.sessionID = null;
         userType = UserType.MEMBER;
         currentCart = new Cart(name);
-        pendingNotifications = new ConcurrentLinkedDeque<>();
-        PersistenceManager.getInstance().persistObj(currentCart);
+        pendingNotifications = new CopyOnWriteArrayList<>();
+        shopsMessages = new CopyOnWriteArrayList<>();
+        this.invoices = new CopyOnWriteArrayList<>();
+//        PersistenceManager.getInstance().persistObj(currentCart);
     }
 
     public User(String guestName) {
@@ -68,7 +79,8 @@ public class User{
         sessionID = null;
         userType = UserType.GUEST;
         currentCart = new Cart(guestName);
-        PersistenceManager.getInstance().persistObj(currentCart);
+        this.invoices = new CopyOnWriteArrayList<>();
+//        PersistenceManager.getInstance().persistObj(currentCart);
     }
 
     public void sendMessage(String message) {
@@ -111,7 +123,7 @@ public class User{
         this.userType = userType;
     }
 
-    public ConcurrentLinkedQueue<String> getShopsMessages() {
+    public List<String> getShopsMessages() {
         return shopsMessages;
     }
 
@@ -144,16 +156,19 @@ public class User{
         invoices.add(userInvoice);
     }
 
-    public ConcurrentLinkedQueue<UserInvoice> getInvoices() {
+    public List<UserInvoice> getInvoices() {
         return invoices;
     }
 
     public void clearCart() {
-        currentCart = new Cart(name);
+//        PersistenceManager.getInstance().removeFromDB(currentCart);
+        currentCart.clear();
+//        PersistenceManager.getInstance().removeFromDB(currentCart);
+//        currentCart = new Cart(name);
     }
 
     public void addPendingNotifications(Notification notification) {
-        pendingNotifications.push(notification);
+        pendingNotifications.add(notification);
     }
 
     public String getSessionID() {

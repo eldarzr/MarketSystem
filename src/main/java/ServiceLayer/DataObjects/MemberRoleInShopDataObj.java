@@ -30,7 +30,7 @@ public class MemberRoleInShopDataObj {
 		this.type = memberRoleInShop.getType();
 		this.permissions = memberRoleInShop.getPermissions();
 		this.roleShop =  new ShopDataObj(memberRoleInShop.getRoleShop());
-		this.roleUser = memberRoleInShop.getRoleUser();
+		this.roleUser = memberRoleInShop.getUserName();
 		this.activatedPermissions = memberRoleInShop.getPermissions().getActivatedPermissions();
 	}
 

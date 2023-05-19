@@ -46,6 +46,7 @@ class MarketCreateShopUnitTest {
 	void createShopFailDoubleName() throws Exception {
 		Mockito.doNothing().when(shopRepository).addShop(shopNames[0], shops[0]);
 		shopHandler.addShop(shopNames[0], shops[0]);
+		Mockito.doThrow(new Exception()).when(shopRepository).addShop(shopNames[0], shops[1]);
 		assertThrows(Exception.class, () -> shopHandler.addShop(shopNames[0], shops[1]));
 	}
 }

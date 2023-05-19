@@ -1,20 +1,31 @@
 package BusinessLayer.Shops.Discount.DiscountRules;
 
 import BusinessLayer.Purchases.ShopBag;
-import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
 
-import java.util.Arrays;
+import javax.persistence.*;
 import java.util.List;
 
-public class CompoundDiscountRule implements DiscountRule {
+@Entity
+@Table(name = "compound_discount_rules")
+public class CompoundDiscountRule extends DiscountRule {
 
+    @Column(name = "rule_main_type", insertable = false, updatable = false)
     String ruleMainType = "Compound";
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "discount_rule_id")
     List<DiscountRule> discountRules;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "rule_type")
     CompoundRuleType ruleType;
 
     public CompoundDiscountRule(List<DiscountRule> discountRules, CompoundRuleType ruleType) {
         this.discountRules = discountRules;
         this.ruleType = ruleType;
+    }
+
+    protected CompoundDiscountRule() {
     }
 
     @Override

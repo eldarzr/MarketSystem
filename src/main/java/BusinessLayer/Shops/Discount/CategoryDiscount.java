@@ -3,9 +3,17 @@ package BusinessLayer.Shops.Discount;
 import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Purchases.ShopBagItem;
 
+import javax.persistence.*;
+
+@Entity
+@DiscriminatorValue("CategoryDiscount")
 public class CategoryDiscount extends SimpleDiscount {
 
+    @Column(name = "category")
     String category;
+
+    public CategoryDiscount() {
+    }
 
     public CategoryDiscount(double percentage, int discountId, String category) {
         super(percentage, discountId);

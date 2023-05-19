@@ -1,5 +1,6 @@
 package BusinessLayer.Purchases;
 
+import BusinessLayer.PersistenceManager;
 import BusinessLayer.ShopBagId;
 import BusinessLayer.ShopBagItemId;
 import BusinessLayer.Shops.Product;
@@ -17,24 +18,25 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "shop_bags")
-@IdClass(ShopBagId.class)
+//@IdClass(ShopBagId.class)
 public class ShopBag implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+//    @Id
     @Column(name = "shopName")
     private String shopName;
 
-    @Id
+//    @Id
     @Column(name = "userName")
     private String userName;
 
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumns({
-            @JoinColumn(name="shopName", referencedColumnName="shopName"),
-            @JoinColumn(name="userName", referencedColumnName="userName")
-    })
+    @OneToMany(cascade = CascadeType.ALL)
     @MapKeyColumn(name = "productName") // specify the index column
+    @JoinColumn(name = "shop_bag_id") // specify the join column in ShopBag table
     private Map<String, ShopBagItem> productsAndQuantities = new ConcurrentHashMap<>();
 
     public ShopBag() {
@@ -107,5 +109,36 @@ public class ShopBag implements Serializable {
 
     public boolean isEmpty(){
         return productsAndQuantities.isEmpty();
+    }
+
+    public void clear() {
+        for (ShopBagItem shopBagItem : productsAndQuantities.values()){
+//            PersistenceManager.getInstance().removeFromDB(shopBagItem);
+
+//            ShopBagItemId shopBagItemId = new ShopBagItemId(shopName, userName, shopBagItem.getProductName());
+//            EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
+//            entityManager.getTransaction().begin();
+//            ShopBagItem managedShopBagItem = entityManager.find(ShopBagItem.class, shopBagItem.getId());
+//            entityManager.remove(managedShopBagItem);
+//            entityManager.getTransaction().commit();
+
+//            entityManager.getTransaction().begin();
+//            ShopBagItem managedShopBagItem = entityManager.merge(shopBagItem);
+//            entityManager.remove(managedShopBagItem);
+//            entityManager.flush();
+//            entityManager.getTransaction().commit();
+        }
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 }

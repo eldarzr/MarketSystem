@@ -1,14 +1,12 @@
 package BusinessLayer.Purchases;
 
+import BusinessLayer.PersistenceManager;
 import BusinessLayer.ShopBagId;
 import BusinessLayer.Shops.Product;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
@@ -26,8 +24,9 @@ public class Cart implements Serializable {
     @Column(name = "userName")
     private String userName;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userName", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL)
     @MapKeyColumn(name = "shopName") // specify the index column
+    @JoinColumn(name = "cart_id") // specify the join column in ShopBag table
     private Map<String, ShopBag> cart = new ConcurrentHashMap<>();
 
     public Cart() {
@@ -79,5 +78,21 @@ public class Cart implements Serializable {
             products.addAll(shopBag.getProducts());
         }
         return products;
+    }
+
+    public void clear() {
+        for (String shopBagName : cart.keySet()){
+            ShopBag shopBag = getShoppingBag(shopBagName);
+            shopBag.clear();
+//            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("market");
+//            EntityManager entityManager = entityManagerFactory.createEntityManager();
+//            entityManager.getTransaction().begin();
+//            ShopBag managedShopBagItem = entityManager.find(ShopBag.class, shopBag.getId());
+//            entityManager.remove(managedShopBagItem);
+//            entityManager.getTransaction().commit();
+//            PersistenceManager.getInstance().removeFromDB(shopBag);
+            PersistenceManager.getInstance().removeFromDB(shopBag);
+        }
+        cart.clear();
     }
 }

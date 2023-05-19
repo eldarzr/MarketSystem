@@ -66,8 +66,8 @@ public class ShopRoleTests2 {
     }
 
     @Test
-    public void testRequestShopRoles() {
-        try {
+    public void testRequestShopRoles() throws Exception {
+//        try {
             // Request shop roles
             Collection<String> shopOwners = marketSystem.getShopOwners(shopName);
             Collection<String> shopManagers = marketSystem.getShopManagers(shopName);
@@ -96,9 +96,9 @@ public class ShopRoleTests2 {
             assertFalse(marketSystem.isShopManager(nonShopOwnerManager, shopName));
             marketSystem.login(nonShopOwnerManager, "Passw0rd!!!");
             marketSystem.unregister(nonShopOwnerManager);
-        } catch (Exception e) {
-            fail("Failed to test requesting shop roles: " + e.getMessage());
-        }
+//        } catch (Exception e) {
+//            fail("Failed to test requesting shop roles: " + e.getMessage());
+//        }
     }
 
     @Test

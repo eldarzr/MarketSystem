@@ -2,15 +2,26 @@ package BusinessLayer.Notifications;
 
 import ServiceLayer.DataObjects.NotificationDataObj;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Date;
 
+@Entity
+@Table(name = "notifications")
 public class Notification {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String source;
     private String message;
     private LocalDate creationTime;
+    @Column(name = "`read_status`") // changed from "read" to "read_status" and quoted to avoid SQL syntax issues
     private boolean read;
+
+    public Notification() {
+    }
 
     public Notification(String source, String message) {
         this.source = source;

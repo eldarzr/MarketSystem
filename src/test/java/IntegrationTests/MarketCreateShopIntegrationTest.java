@@ -22,7 +22,6 @@ class MarketCreateShopIntegrationTest {
 		market = new Market();
 		market.resetAll();
 		market.init();
-		guestName = market.startSession();
 	}
 
 	@AfterEach
@@ -33,6 +32,7 @@ class MarketCreateShopIntegrationTest {
 	@Test
 	void createShopSuccess() throws Exception {
 		for(int i = 0; i < usersName.length; i++) {
+			guestName = market.startSession();
 			market.register(usersName[i], emails[i], passwords[i]);
 			market.login(guestName,usersName[i], passwords[i]);
 			market.createShop(usersName[i], shopNames[i]);
@@ -42,6 +42,7 @@ class MarketCreateShopIntegrationTest {
 	@Test
 	void createShopFailDoubleName() throws Exception {
 		for(int i = 0; i < usersName.length; i++) {
+			guestName = market.startSession();
 			market.register(usersName[i], emails[i], passwords[i]);
 			market.login(guestName,usersName[i], passwords[i]);
 		}
@@ -53,6 +54,7 @@ class MarketCreateShopIntegrationTest {
 
 	@Test
 	void createShopFailNotLoggedIn() throws Exception {
+		guestName = market.startSession();
 		market.register(usersName[0], emails[0], passwords[0]);
 		assertThrows(Exception.class, () -> market.createShop(usersName[0], shopNames[0]));
 	}

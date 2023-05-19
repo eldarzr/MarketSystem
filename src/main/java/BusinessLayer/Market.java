@@ -60,9 +60,14 @@ public class Market implements MarketIntr{
     public void init() throws Exception {
         logger.info("Starting market init.");
         createLogger();
+        loadData();
+        logger.info("Market init Finished successfully.");
+    }
+
+    private void loadData() throws Exception {
+        resetAll();
         loadAdmin();
         loadProducts();
-        logger.info("Market init Finished successfully.");
     }
 
     private void loadAdmin() throws Exception {
@@ -232,6 +237,7 @@ public class Market implements MarketIntr{
     public void removeProduct(String userName, String shopName, String productName) throws Exception {
         logger.info(String.format("Attempt by user %s to remove product %s from store %s.", userName,productName, shopName));
         validateLoggedInException(userName);
+        //TODO: remove product from all carts. relevant for DB
         shopHandler.removeProduct(userName, shopName, productName);
         logger.info(String.format("User %s removed product %s from store %s.", userName,productName, shopName));
     }
@@ -557,42 +563,54 @@ public class Market implements MarketIntr{
         usersHandler.findMemberByName(userName);
         usersHandler.findLoginUser(userName);
         Shop shop = shopHandler.getShop(shopName);
-        return shop.addCategoryDiscount(userName,discountPercentage,category);
+        CategoryDiscount categoryDiscount = shop.addCategoryDiscount(userName,discountPercentage,category);
+        ShopRepository.getInstance().updateToDB(shopName);
+        return categoryDiscount;
     }
 
     public ProductDiscount addProductDiscount(String shopName, String userName, double discountPercentage, String productName) throws Exception {
         usersHandler.findMemberByName(userName);
         usersHandler.findLoginUser(userName);
         Shop shop = shopHandler.getShop(shopName);
-        return shop.addProductDiscount(userName,discountPercentage,productName);
+        ProductDiscount productDiscount =  shop.addProductDiscount(userName,discountPercentage,productName);
+        ShopRepository.getInstance().updateToDB(shopName);
+        return productDiscount;
     }
 
     public ShopDiscount addShopDiscount(String shopName, String userName, double discountPercentage) throws Exception {
         usersHandler.findMemberByName(userName);
         usersHandler.findLoginUser(userName);
         Shop shop = shopHandler.getShop(shopName);
-        return shop.addShopDiscount(userName,discountPercentage);
+        ShopDiscount shopDiscount = shop.addShopDiscount(userName,discountPercentage);
+        ShopRepository.getInstance().updateToDB(shopName);
+        return shopDiscount;
     }
 
     public SumCompoundDiscount addSumDiscount(String shopName, String userName, List<Integer> discountsIds) throws Exception {
         usersHandler.findMemberByName(userName);
         usersHandler.findLoginUser(userName);
         Shop shop = shopHandler.getShop(shopName);
-        return shop.addSumDiscount(userName,discountsIds);
+        SumCompoundDiscount sumCompoundDiscount = shop.addSumDiscount(userName,discountsIds);
+        ShopRepository.getInstance().updateToDB(shopName);
+        return sumCompoundDiscount;
     }
 
     public MaxCompoundDiscount addMaxDiscount(String shopName, String userName, List<Integer> discountsIds) throws Exception {
         usersHandler.findMemberByName(userName);
         usersHandler.findLoginUser(userName);
         Shop shop = shopHandler.getShop(shopName);
-        return shop.addMaxDiscount(userName,discountsIds);
+        MaxCompoundDiscount maxCompoundDiscount = shop.addMaxDiscount(userName,discountsIds);
+        ShopRepository.getInstance().updateToDB(shopName);
+        return maxCompoundDiscount;
     }
 
     public XorCompoundDiscount addXorDiscount(String shopName, String userName, List<Integer> discountsIds, XorDecisionRuleName xorDiscountRule) throws Exception {
         usersHandler.findMemberByName(userName);
         usersHandler.findLoginUser(userName);
         Shop shop = shopHandler.getShop(shopName);
-        return shop.addXorDiscount(userName,discountsIds,xorDiscountRule);
+        XorCompoundDiscount xorCompoundDiscount = shop.addXorDiscount(userName,discountsIds,xorDiscountRule);
+        ShopRepository.getInstance().updateToDB(shopName);
+        return xorCompoundDiscount;
     }
 
     public void addDiscountRule(String shopName, String userName, DiscountRule discountRule, int discountId, String actionWithOldRule) throws Exception {
@@ -601,6 +619,7 @@ public class Market implements MarketIntr{
         Shop shop = shopHandler.getShop(shopName);
         CompoundRuleType actionWithOldRuleE = getEnumValue(actionWithOldRule);
         shop.addDiscountRule(userName,discountRule,discountId,actionWithOldRuleE);
+        ShopRepository.getInstance().updateToDB(shopName);
     }
 
     public void resetDiscountRule(String shopName, String userName, int discountId) throws Exception {
@@ -608,6 +627,7 @@ public class Market implements MarketIntr{
         usersHandler.findLoginUser(userName);
         Shop shop = shopHandler.getShop(shopName);
         shop.resetDiscountRule(discountId);
+        ShopRepository.getInstance().updateToDB(shopName);
     }
 
 
