@@ -56,10 +56,6 @@ public class User{
     private List<Notification> pendingNotifications;
     @Transient
     private NotificationCallback callback;
-	public User() {
-        pendingNotifications = new CopyOnWriteArrayList<>();
-		this.invoices = new CopyOnWriteArrayList<>();
-    }
 
     public User(String name, String email, String password) {
         this.name = name.toLowerCase();
@@ -79,8 +75,15 @@ public class User{
         sessionID = null;
         userType = UserType.GUEST;
         currentCart = new Cart(guestName);
+        pendingNotifications = new CopyOnWriteArrayList<>();
+        shopsMessages = new CopyOnWriteArrayList<>();
         this.invoices = new CopyOnWriteArrayList<>();
-//        PersistenceManager.getInstance().persistObj(currentCart);
+    }
+
+    public User() {
+        this.invoices = new CopyOnWriteArrayList<>();
+        pendingNotifications = new CopyOnWriteArrayList<>();
+        shopsMessages = new CopyOnWriteArrayList<>();
     }
 
     public void sendMessage(String message) {
@@ -169,6 +172,7 @@ public class User{
 
     public void addPendingNotifications(Notification notification) {
         pendingNotifications.add(notification);
+        PersistenceManager.getInstance().updateObj(this);
     }
 
     public String getSessionID() {
