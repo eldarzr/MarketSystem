@@ -28,7 +28,7 @@ public class Main {
 //
 		Market market = new Market();
 //		market.resetAll();
-		market.init();
+//		market.init();
 //
 //
 //		market.register("eldar222", "eldar@gmail.com", "Aa123456");
@@ -50,7 +50,12 @@ public class Main {
 ////		User user = market.getUser(userName);
 //		user.clearCart();
 //		System.out.println("a");
-	}
+
+		String guest = market.startSession();
+		User user = market.login(guest, "admin", "Aa123456");
+		List<User> users = market.getAllUsers( "admin");
+		System.out.println("a");
+		}
 
 	public static void getShop(){
 		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("market");

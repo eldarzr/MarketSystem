@@ -24,6 +24,9 @@ public class ShopInfo {
 		this.productInfos = new ArrayList<>();
 	}
 
+	public ShopInfo() {
+	}
+
 	public void addProduct(ProductInfo productInfo){
 		productInfos.add(productInfo);
 	}
