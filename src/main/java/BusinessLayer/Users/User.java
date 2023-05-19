@@ -161,7 +161,10 @@ public class User{
     }
 
     public void clearCart() {
-        currentCart = new Cart(name);
+//        PersistenceManager.getInstance().removeFromDB(currentCart);
+        currentCart.clear();
+//        PersistenceManager.getInstance().removeFromDB(currentCart);
+//        currentCart = new Cart(name);
     }
 
     public void addPendingNotifications(Notification notification) {

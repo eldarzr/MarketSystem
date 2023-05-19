@@ -125,8 +125,10 @@ public class PersistenceManager {
 
 	public void removeFromDB(Object needToRemove) {
 		EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
+		entityManager.clear();
 		entityManager.getTransaction().begin();
-		entityManager.remove(needToRemove);
+		Object managedShopBagItem = entityManager.merge(needToRemove);
+		entityManager.remove(managedShopBagItem);
 		entityManager.getTransaction().commit();
 	}
 }

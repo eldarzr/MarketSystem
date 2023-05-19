@@ -27,15 +27,29 @@ public class Main {
 //		System.out.println("aaa");
 //
 		Market market = new Market();
+//		market.resetAll();
+		market.init();
+//
+//
 //		market.register("eldar222", "eldar@gmail.com", "Aa123456");
 //		String guest = market.startSession();
 //		User user = market.login(guest, "eldar222", "Aa123456");
 //		market.searchShop(user.getName(), "shopFirst1");
-//		market.resetAll();
-		market.init();
 //		System.out.println(product.getCategory());
-
+//
 //		getShop();
+
+
+//		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("market");
+//		EntityManager entityManager = entityManagerFactory.createEntityManager();
+////
+////
+//		String userName = "eldar_first"; // The name of the shop you want to retrieve
+////
+//		User user = entityManager.find(User.class, userName);
+////		User user = market.getUser(userName);
+//		user.clearCart();
+//		System.out.println("a");
 	}
 
 	public static void getShop(){
