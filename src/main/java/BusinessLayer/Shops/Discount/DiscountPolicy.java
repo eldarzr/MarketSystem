@@ -103,6 +103,10 @@ public class DiscountPolicy {
     //return discount result which contains the price before discount , price after discount and discounts applied descriptions
     public FinalBagPriceResult applyDiscount(ShopBag shopBag){
         shopBag = shopBag.deepClone();
+        return applyDiscountAndChangePrices(shopBag);
+    }
+
+    public FinalBagPriceResult applyDiscountAndChangePrices(ShopBag shopBag){
         FinalBagPriceResult discountResult = FinalBagPriceResult.makeDiscountResult();
         discountResult.setPriceBeforeDiscount(shopBag.calculatePrice());
         ShopBag shopBagPrev = shopBag;

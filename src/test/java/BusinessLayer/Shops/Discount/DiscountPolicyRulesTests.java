@@ -62,7 +62,7 @@ public class DiscountPolicyRulesTests {
         ProductDiscount productDiscount = discountPolicy.addProductDiscount(10,"tomatoes");
         discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeBagPriceHigherThanRule(200),productDiscount.discountId, CompoundRuleType.REPLACE);
         double totalBagPriceBefore = shopBag.calculatePrice();
-        discountPolicy.applyDiscount(shopBag);
+        discountPolicy.applyDiscountAndChangePrices(shopBag);
         double totalBagPriceAfter = shopBag.calculatePrice();
         assertNotEquals(totalBagPriceBefore,totalBagPriceAfter);
     }
@@ -82,7 +82,7 @@ public class DiscountPolicyRulesTests {
         ProductDiscount productDiscount = discountPolicy.addProductDiscount(10,"tomatoes");
         discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeMinProductQuantityRule(quantities[0]-1,productsNames[0]),productDiscount.discountId, CompoundRuleType.REPLACE);
         double totalBagPriceBefore = shopBag.calculatePrice();
-        discountPolicy.applyDiscount(shopBag);
+        discountPolicy.applyDiscountAndChangePrices(shopBag);
         double totalBagPriceAfter = shopBag.calculatePrice();
         assertNotEquals(totalBagPriceBefore,totalBagPriceAfter);
     }
@@ -102,7 +102,7 @@ public class DiscountPolicyRulesTests {
         ProductDiscount productDiscount = discountPolicy.addProductDiscount(10,"tomatoes");
         discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeMinFromCategoryRule(quantities[0]-1,categories[0]),productDiscount.discountId, CompoundRuleType.REPLACE);
         double totalBagPriceBefore = shopBag.calculatePrice();
-        discountPolicy.applyDiscount(shopBag);
+        discountPolicy.applyDiscountAndChangePrices(shopBag);
         double totalBagPriceAfter = shopBag.calculatePrice();
         assertNotEquals(totalBagPriceBefore,totalBagPriceAfter);
     }
@@ -122,7 +122,7 @@ public class DiscountPolicyRulesTests {
         ProductDiscount productDiscount = discountPolicy.addProductDiscount(10,"tomatoes");
         discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeMaxFromCategoryRule(10000000,categories[0]),productDiscount.discountId, CompoundRuleType.REPLACE);
         double totalBagPriceBefore = shopBag.calculatePrice();
-        discountPolicy.applyDiscount(shopBag);
+        discountPolicy.applyDiscountAndChangePrices(shopBag);
         double totalBagPriceAfter = shopBag.calculatePrice();
         assertNotEquals(totalBagPriceBefore,totalBagPriceAfter);
     }
@@ -142,7 +142,7 @@ public class DiscountPolicyRulesTests {
         ProductDiscount productDiscount = discountPolicy.addProductDiscount(10,"tomatoes");
         discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeMaxProductQuantityRule(quantities[0]+1,productsNames[0]),productDiscount.discountId, CompoundRuleType.REPLACE);
         double totalBagPriceBefore = shopBag.calculatePrice();
-        discountPolicy.applyDiscount(shopBag);
+        discountPolicy.applyDiscountAndChangePrices(shopBag);
         double totalBagPriceAfter = shopBag.calculatePrice();
         assertNotEquals(totalBagPriceBefore,totalBagPriceAfter);
     }
@@ -156,7 +156,7 @@ public class DiscountPolicyRulesTests {
         CompoundDiscountRule andDiscountRule = new CompoundDiscountRule(discountRules,CompoundRuleType.AND);
         discountPolicy.addDiscountRule(andDiscountRule,categoryDiscount.discountId, CompoundRuleType.REPLACE);
         double totalBagPriceBefore = shopBag.calculatePrice();
-        discountPolicy.applyDiscount(shopBag);
+        discountPolicy.applyDiscountAndChangePrices(shopBag);
         double totalBagPriceAfter = shopBag.calculatePrice();
         assertNotEquals(totalBagPriceBefore,totalBagPriceAfter);
     }
@@ -184,7 +184,7 @@ public class DiscountPolicyRulesTests {
         CompoundDiscountRule orDiscountRule = new CompoundDiscountRule(discountRules,CompoundRuleType.OR);
         discountPolicy.addDiscountRule(orDiscountRule,categoryDiscount.discountId, CompoundRuleType.REPLACE);
         double totalBagPriceBefore = shopBag.calculatePrice();
-        discountPolicy.applyDiscount(shopBag);
+        discountPolicy.applyDiscountAndChangePrices(shopBag);
         double totalBagPriceAfter = shopBag.calculatePrice();
         assertNotEquals(totalBagPriceBefore,totalBagPriceAfter);
     }
@@ -220,7 +220,7 @@ public class DiscountPolicyRulesTests {
         categoryDiscount.addRule(BasicDiscountRulesFactory.makeBagPriceHigherThanRule(10), CompoundRuleType.REPLACE);
         categoryDiscount.addRule(BasicDiscountRulesFactory.makeMinProductQuantityRule(1, "pasta"), CompoundRuleType.AND);
         double totalBagPriceBefore = shopBag.calculatePrice();
-        discountPolicy.applyDiscount(shopBag);
+        discountPolicy.applyDiscountAndChangePrices(shopBag);
         double totalBagPriceAfter = shopBag.calculatePrice();
         assertNotEquals(totalBagPriceBefore,totalBagPriceAfter);
     }

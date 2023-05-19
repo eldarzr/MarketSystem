@@ -50,7 +50,7 @@ class DiscountPolicyTest {
         discountPolicy.addCategoryDiscount(50,"Diary");
         double milkCartonPriceBeforeDiscount = shopBag.getProductsAndQuantities().get("milk carton").getProduct().getPrice();
         double totalBagPriceBefore = shopBag.calculatePrice();
-        FinalBagPriceResult discountResult = discountPolicy.applyDiscount(shopBag);
+        FinalBagPriceResult discountResult = discountPolicy.applyDiscountAndChangePrices(shopBag);
         double milkCartonPriceAfterDiscount = shopBag.getProductsAndQuantities().get("milk carton").getProduct().getPrice();
         double totalBagPriceAfter = shopBag.calculatePrice();
         assertNotEquals(milkCartonPriceAfterDiscount,milkCartonPriceBeforeDiscount);
@@ -62,7 +62,7 @@ class DiscountPolicyTest {
     void addProductDiscount() {
         discountPolicy.addProductDiscount(20,"milk carton");
         double milkCartonPriceBeforeDiscount = shopBag.getProductsAndQuantities().get("milk carton").getProduct().getPrice();
-        FinalBagPriceResult discountResult = discountPolicy.applyDiscount(shopBag);
+        FinalBagPriceResult discountResult = discountPolicy.applyDiscountAndChangePrices(shopBag);
         double milkCartonPriceAfterDiscount = shopBag.getProductsAndQuantities().get("milk carton").getProduct().getPrice();
         assertNotEquals(milkCartonPriceAfterDiscount,milkCartonPriceBeforeDiscount);
         assertTrue(Math.abs(milkCartonPriceAfterDiscount-milkCartonPriceBeforeDiscount*0.8) < 0.1);
@@ -73,7 +73,7 @@ class DiscountPolicyTest {
         discountPolicy.addShopDiscount(20);
         double totalBagPriceBefore = shopBag.calculatePrice();
         double milkCartonPriceBeforeDiscount = shopBag.getProductsAndQuantities().get("milk carton").getProduct().getPrice();
-        FinalBagPriceResult discountResult = discountPolicy.applyDiscount(shopBag);
+        FinalBagPriceResult discountResult = discountPolicy.applyDiscountAndChangePrices(shopBag);
         double milkCartonPriceAfterDiscount = shopBag.getProductsAndQuantities().get("milk carton").getProduct().getPrice();
         double totalBagPriceAfter = shopBag.calculatePrice();
         assertNotEquals(milkCartonPriceAfterDiscount,milkCartonPriceBeforeDiscount);
@@ -91,7 +91,7 @@ class DiscountPolicyTest {
         SumCompoundDiscount sumCompoundDiscount = discountPolicy.addSumDiscount(discountsIds);
         double milkCartonPriceBeforeDiscount = shopBag.getProductsAndQuantities().get("milk carton").getProduct().getPrice();
         double breadPriceBeforeDiscount = shopBag.getProductsAndQuantities().get("bread").getProduct().getPrice();
-        FinalBagPriceResult discountResult = discountPolicy.applyDiscount(shopBag);
+        FinalBagPriceResult discountResult = discountPolicy.applyDiscountAndChangePrices(shopBag);
         double milkCartonPriceAfterDiscount = shopBag.getProductsAndQuantities().get("milk carton").getProduct().getPrice();
         double breadPriceAfterDiscount = shopBag.getProductsAndQuantities().get("bread").getProduct().getPrice();
         assertTrue(Math.abs(breadPriceBeforeDiscount*0.8 - breadPriceAfterDiscount) < 0.1);
@@ -108,7 +108,7 @@ class DiscountPolicyTest {
         MaxCompoundDiscount maxCompoundDiscount = discountPolicy.addMaxDiscount(discountsIds);
         double milkCartonPriceBeforeDiscount = shopBag.getProductsAndQuantities().get("milk carton").getProduct().getPrice();
         double pastaPriceBeforeDiscount = shopBag.getProductsAndQuantities().get("pasta").getProduct().getPrice();
-        FinalBagPriceResult discountResult = discountPolicy.applyDiscount(shopBag);
+        FinalBagPriceResult discountResult = discountPolicy.applyDiscountAndChangePrices(shopBag);
         double milkCartonPriceAfterDiscount = shopBag.getProductsAndQuantities().get("milk carton").getProduct().getPrice();
         double pastaPriceAfterDiscount = shopBag.getProductsAndQuantities().get("pasta").getProduct().getPrice();
         assertEquals(pastaPriceAfterDiscount,pastaPriceBeforeDiscount);
@@ -124,7 +124,7 @@ class DiscountPolicyTest {
         XorCompoundDiscount xorCompoundDiscount = discountPolicy.addXorDiscount(discountsIds, XorDecisionRuleName.SMALLER_ID);
         double milkCartonPriceBeforeDiscount = shopBag.getProductsAndQuantities().get("milk carton").getProduct().getPrice();
         double pastaPriceBeforeDiscount = shopBag.getProductsAndQuantities().get("pasta").getProduct().getPrice();
-        FinalBagPriceResult discountResult = discountPolicy.applyDiscount(shopBag);
+        FinalBagPriceResult discountResult = discountPolicy.applyDiscountAndChangePrices(shopBag);
         double milkCartonPriceAfterDiscount = shopBag.getProductsAndQuantities().get("milk carton").getProduct().getPrice();
         double pastaPriceAfterDiscount = shopBag.getProductsAndQuantities().get("pasta").getProduct().getPrice();
         assertEquals(milkCartonPriceBeforeDiscount,milkCartonPriceAfterDiscount);
@@ -139,7 +139,7 @@ class DiscountPolicyTest {
         XorCompoundDiscount xorCompoundDiscount = discountPolicy.addXorDiscount(discountsIds, XorDecisionRuleName.BIGGER_DISCOUNT);
         double milkCartonPriceBeforeDiscount = shopBag.getProductsAndQuantities().get("milk carton").getProduct().getPrice();
         double pastaPriceBeforeDiscount = shopBag.getProductsAndQuantities().get("pasta").getProduct().getPrice();
-        FinalBagPriceResult discountResult = discountPolicy.applyDiscount(shopBag);
+        FinalBagPriceResult discountResult = discountPolicy.applyDiscountAndChangePrices(shopBag);
         double milkCartonPriceAfterDiscount = shopBag.getProductsAndQuantities().get("milk carton").getProduct().getPrice();
         double pastaPriceAfterDiscount = shopBag.getProductsAndQuantities().get("pasta").getProduct().getPrice();
         assertEquals(pastaPriceAfterDiscount,pastaPriceBeforeDiscount);
@@ -154,7 +154,7 @@ class DiscountPolicyTest {
         XorCompoundDiscount xorCompoundDiscount = discountPolicy.addXorDiscount(discountsIds, XorDecisionRuleName.SMALLER_DISCOUNT);
         double milkCartonPriceBeforeDiscount = shopBag.getProductsAndQuantities().get("milk carton").getProduct().getPrice();
         double pastaPriceBeforeDiscount = shopBag.getProductsAndQuantities().get("pasta").getProduct().getPrice();
-        FinalBagPriceResult discountResult = discountPolicy.applyDiscount(shopBag);
+        FinalBagPriceResult discountResult = discountPolicy.applyDiscountAndChangePrices(shopBag);
         double milkCartonPriceAfterDiscount = shopBag.getProductsAndQuantities().get("milk carton").getProduct().getPrice();
         double pastaPriceAfterDiscount = shopBag.getProductsAndQuantities().get("pasta").getProduct().getPrice();
         assertEquals(milkCartonPriceBeforeDiscount,milkCartonPriceAfterDiscount);
