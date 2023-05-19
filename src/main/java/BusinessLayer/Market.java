@@ -60,9 +60,14 @@ public class Market implements MarketIntr{
     public void init() throws Exception {
         logger.info("Starting market init.");
         createLogger();
+        loadData();
+        logger.info("Market init Finished successfully.");
+    }
+
+    private void loadData() throws Exception {
+        resetAll();
         loadAdmin();
         loadProducts();
-        logger.info("Market init Finished successfully.");
     }
 
     private void loadAdmin() throws Exception {
@@ -669,7 +674,6 @@ public class Market implements MarketIntr{
     }
 
     private void loadProducts() throws Exception {
-        resetAll();
         String[] usersName = {"eldar_first", "niv_first"};
         String[] passwords = {"Aa123456", "Aa123456"};
         String[] emails = {"eldarFirst@gmail.com", "nivFirst@gmail.com"};

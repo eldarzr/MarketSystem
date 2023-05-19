@@ -57,7 +57,7 @@ public class User{
     @Transient
     private NotificationCallback callback;
 	public User() {
-        pendingNotifications = new ConcurrentLinkedDeque<>();
+        pendingNotifications = new CopyOnWriteArrayList<>();
 		this.invoices = new CopyOnWriteArrayList<>();
     }
 
