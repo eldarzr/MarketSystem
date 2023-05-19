@@ -17,6 +17,7 @@ import BusinessLayer.Shops.Discount.DiscountRules.*;
 import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
 import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRuleName;
 
+import BusinessLayer.Users.User;
 import ServiceLayer.DataObjects.*;
 import ServiceLayer.DataObjects.DiscountDataObjects.*;
 import ServiceLayer.DataObjects.DiscountDataObjects.DiscountRulesDataObjects.DiscountRuleServiceInterface;

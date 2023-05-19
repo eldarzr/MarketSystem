@@ -51,7 +51,9 @@ public class Shop implements ShopIntr {
 	private String founderUserName;
 	//map of user name to role in this shop
 //	@Transient
-	@OneToMany(mappedBy = "roleShop", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "shopName", referencedColumnName = "shopName")
+	@MapKeyColumn(name = "userName")
 	private Map<String, MemberRoleInShop> roles;
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumns({
