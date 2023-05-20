@@ -28,8 +28,6 @@ public class DiscountPolicy {
             inverseJoinColumns = @JoinColumn(name = "discount_id"))
     private Map<Integer,Discount> discountsById;
 
-    // discountIdIndexer will not be stored in the database,
-    // it should be calculated based on the maximum discountId in discountsById map
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "discount_id_indexer_id")
     DiscountIdIndexer discountIdIndexer;
