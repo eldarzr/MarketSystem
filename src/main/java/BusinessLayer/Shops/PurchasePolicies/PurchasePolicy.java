@@ -3,12 +3,35 @@ package BusinessLayer.Shops.PurchasePolicies;
 import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Users.User;
 
-public interface PurchasePolicy {
+import javax.persistence.*;
 
-    boolean evaluate(ShopBag shopBag, User user);
+@Entity
+@Table(name = "purchasePolicy")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "purchase_type")
+public abstract class PurchasePolicy {
 
-    String getRuleName();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id; //for data base use
+
+    @Column(name = "b_id")
+    int policyId;
+
+    public PurchasePolicy(int policyId) {
+        this.policyId = policyId;
+    }
+
+    public PurchasePolicy() {
+    }
+
+    public abstract boolean evaluate(ShopBag shopBag, User user);
+
+    public abstract String getRuleName();
 
 
-    int getPolicyId();
+    public int getPolicyId(){
+        return policyId;
+    }
 }

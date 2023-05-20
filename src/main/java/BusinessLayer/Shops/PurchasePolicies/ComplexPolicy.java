@@ -3,17 +3,33 @@ package BusinessLayer.Shops.PurchasePolicies;
 import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Users.User;
 
-public class ComplexPolicy implements PurchasePolicy{
-    int policyId;
+import javax.persistence.*;
+
+@Entity
+@DiscriminatorValue("ComplexPolicy")
+public class ComplexPolicy extends PurchasePolicy {
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "policy_a", referencedColumnName = "id")
     PurchasePolicy policyA;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "policy_b", referencedColumnName = "id")
     PurchasePolicy policyB;
+
+    @Enumerated(EnumType.STRING)
     ComplexPolicyType type;
+
+    public ComplexPolicy() {
+    }
+
     public ComplexPolicy(int policyId, PurchasePolicy policy1, PurchasePolicy policy2, ComplexPolicyType type){
+        super(policyId);
         policyA = policy1;
         policyB = policy2;
         this.type = type;
-        this.policyId = policyId;
     }
+
     @Override
     public boolean evaluate(ShopBag shopBag, User user) {
         boolean evalA = policyA.evaluate(shopBag, user);
@@ -60,8 +76,4 @@ public class ComplexPolicy implements PurchasePolicy{
         return "("+policyA.getRuleName()+") Or ("+policyB.getRuleName()+")";
     }
 
-    @Override
-    public int getPolicyId() {
-        return policyId;
-    }
 }

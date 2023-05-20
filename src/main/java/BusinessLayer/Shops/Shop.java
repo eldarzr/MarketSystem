@@ -70,12 +70,12 @@ public class Shop implements ShopIntr {
 //	@MapKeyColumn(name = "shopName") // specify the index column
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "shopName")
-//	@Transient
 	private List<ShopInvoice> invoices;
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "discount_policy_id")
 	private DiscountPolicy discountPolicy;
-	@Transient
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "purchase_policy_manager_id")
 	private PurchasePolicyManager purchasePolicyManager;
 
 	public Shop() {
