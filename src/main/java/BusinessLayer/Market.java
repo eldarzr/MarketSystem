@@ -60,7 +60,7 @@ public class Market implements MarketIntr{
     public void init() throws Exception {
         logger.info("Starting market init.");
         createLogger();
-//        loadData();
+        loadData();
         logger.info("Market init Finished successfully.");
     }
 
