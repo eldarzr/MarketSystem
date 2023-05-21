@@ -3,14 +3,33 @@ package BusinessLayer.Shops.Discount.DiscountRules;
 import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Purchases.ShopBagItem;
 
-public class SimpleDiscountRule implements DiscountRule{
+import javax.persistence.*;
 
+@Entity
+@Table(name = "simple_discount_rules")
+public class SimpleDiscountRule extends DiscountRule{
+
+    @Column(name = "rule_main_type", insertable = false, updatable = false)
     String ruleMainType = "Simple";
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "rule_sub_type")
     SimpleRuleType ruleType;
+
+    @Column(name = "subject_name")
     String subjectName; //subject name could be category name or product name
+
+    @Column(name = "min_quantity")
     int minQuantity;
+
+    @Column(name = "max_quantity")
     int maxQuantity;
+
+    @Column(name = "min_price")
     double minPrice;
+
+    protected SimpleDiscountRule() {
+    }
 
     public SimpleDiscountRule(SimpleRuleType ruleType) {
         this.ruleType = ruleType;

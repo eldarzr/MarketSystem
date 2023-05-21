@@ -4,23 +4,30 @@ import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Purchases.ShopBagItem;
 import BusinessLayer.Shops.PurchasePolicies.PurchasePolicy;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public abstract class BasicPolicy implements PurchasePolicy {
-    protected int policyId;
+@Entity
+@DiscriminatorValue("BasicPolicy")
+public abstract class BasicPolicy extends PurchasePolicy {
+    @Column(name = "is_product")
     protected boolean isProduct;
+    @Column(name = "to_constraint")
     protected String toConstraint;
+    @Column(name = "positive")
     protected boolean positive;
-    public BasicPolicy(int id, boolean isProduct, String toConstraint,boolean positive){
-        this.policyId = id;
+
+    protected BasicPolicy() {
+    }
+
+    public BasicPolicy(int id, boolean isProduct, String toConstraint, boolean positive){
+        super(id);
         this.isProduct = isProduct;
         this.toConstraint = toConstraint;
         this.positive = positive;
     }
-    public int getPolicyId(){
-        return policyId;
-    }
+
     protected ShopBagItem findProduct(ShopBag shopBag){
         for(ShopBagItem s : shopBag.getProductsAndQuantities().values()){
             if(s.getProduct().getName().equals(toConstraint))return s;

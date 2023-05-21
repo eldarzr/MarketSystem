@@ -2,9 +2,15 @@ package BusinessLayer.Shops.Discount;
 
 import BusinessLayer.Purchases.ShopBag;
 
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
+@DiscriminatorValue("MaxCompoundDiscount")
 public class MaxCompoundDiscount extends CompoundDiscount{
+
+    public MaxCompoundDiscount() {
+    }
 
     public MaxCompoundDiscount(List<Discount> discounts, int discountId) {
         super(discounts, discountId);

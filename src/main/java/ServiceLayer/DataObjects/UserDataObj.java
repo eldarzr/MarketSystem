@@ -13,14 +13,16 @@ public class UserDataObj {
     private String name;
     private String sessionID;
     private String email;
-    private ConcurrentLinkedQueue<String> shopsMessages = new ConcurrentLinkedQueue<>();
-    private ConcurrentLinkedQueue<UserInvoiceDataObj> invoices = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<String> shopsMessages;
+    private ConcurrentLinkedQueue<UserInvoiceDataObj> invoices;
 
     public UserDataObj(String name, String email, String sessionID) {
         this.name = name;
         this.email = email;
         this.sessionID = sessionID;
         this.userType = UserType.MEMBER;
+        this.shopsMessages = new ConcurrentLinkedQueue<>();
+        this.invoices = new ConcurrentLinkedQueue<>();
     }
 
     public UserDataObj(User user) {
@@ -28,6 +30,8 @@ public class UserDataObj {
         this.email = user.getEmail();
         this.userType = user.getUserType();
         this.sessionID = user.getSessionID();
+        this.shopsMessages = new ConcurrentLinkedQueue<>();
+        this.invoices = new ConcurrentLinkedQueue<>();
         shopsMessages.addAll(user.getShopsMessages());
         for (UserInvoice invoice : user.getInvoices())
             invoices.add(new UserInvoiceDataObj(invoice));

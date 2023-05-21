@@ -51,7 +51,9 @@ public class Shop implements ShopIntr {
 	private String founderUserName;
 	//map of user name to role in this shop
 //	@Transient
-	@OneToMany(mappedBy = "roleShop", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "shopName", referencedColumnName = "shopName")
+	@MapKeyColumn(name = "userName")
 	private Map<String, MemberRoleInShop> roles;
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumns({
@@ -68,11 +70,12 @@ public class Shop implements ShopIntr {
 //	@MapKeyColumn(name = "shopName") // specify the index column
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "shopName")
-//	@Transient
 	private List<ShopInvoice> invoices;
-	@Transient
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "discount_policy_id")
 	private DiscountPolicy discountPolicy;
-	@Transient
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "purchase_policy_manager_id")
 	private PurchasePolicyManager purchasePolicyManager;
 
 	public Shop() {

@@ -15,18 +15,22 @@ import static BusinessLayer.Enums.ManageType.*;
 
 @Entity
 	@Table(name = "MemberRoleInShop")
-	@IdClass(ShopBagId.class) // composite key class
+//	@IdClass(ShopBagId.class) // composite key class
 	public class MemberRoleInShop implements Serializable {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
 		@ManyToOne
 		@JoinColumn(name = "roleShopName")
 		private Shop roleShop;
 
 		private String grantor;
-		@Id
+//		@Id
 		@Column(name = "userName")
 		private String userName;
-		@Id
+//		@Id
 		@Column(name = "shopName")
 		private String shopName;
 		private ManageType type;

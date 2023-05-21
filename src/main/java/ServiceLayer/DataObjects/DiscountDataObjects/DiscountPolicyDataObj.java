@@ -2,17 +2,18 @@ package ServiceLayer.DataObjects.DiscountDataObjects;
 
 import BusinessLayer.Shops.Discount.*;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DiscountPolicyDataObj {
 
-    ConcurrentHashMap<Integer, DiscountDataObj> discountsById;
+    Map<Integer, DiscountDataObj> discountsById;
 
     public DiscountPolicyDataObj(DiscountPolicy discountPolicy){
         discountsById = convertToDataObj(discountPolicy.getDiscountsById());
     }
 
-    private ConcurrentHashMap<Integer, DiscountDataObj> convertToDataObj(ConcurrentHashMap<Integer, Discount> discountsById) {
+    private Map<Integer, DiscountDataObj> convertToDataObj(Map<Integer, Discount> discountsById) {
         ConcurrentHashMap<Integer, DiscountDataObj> newMap = new ConcurrentHashMap<>();
         for(Integer id : discountsById.keySet()){
             newMap.put(id,makeDiscountDataObj(discountsById.get(id)));
@@ -43,7 +44,7 @@ public class DiscountPolicyDataObj {
     }
 
 
-    public ConcurrentHashMap<Integer, DiscountDataObj> getDiscountsById() {
+    public Map<Integer, DiscountDataObj> getDiscountsById() {
         return discountsById;
     }
 }

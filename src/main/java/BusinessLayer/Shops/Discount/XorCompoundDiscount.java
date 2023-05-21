@@ -2,16 +2,26 @@ package BusinessLayer.Shops.Discount;
 
 import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
+import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRuleName;
+import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRulesFactory;
 
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
+@DiscriminatorValue("XorCompoundDiscount")
 public class XorCompoundDiscount extends CompoundDiscount {
 
-    XorDecisionRule xorDecisionRule;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "xor_decision_rule_name")
+    XorDecisionRuleName xorDecisionRuleName;
 
-    public XorCompoundDiscount(List<Discount> discounts, int discountId,XorDecisionRule xorDecisionRule) {
+    public XorCompoundDiscount() {
+    }
+
+    public XorCompoundDiscount(List<Discount> discounts, int discountId, XorDecisionRuleName xorDecisionRule) {
         super(discounts,discountId);
-        this.xorDecisionRule = xorDecisionRule;
+        this.xorDecisionRuleName = xorDecisionRule;
     }
 
     @Override
@@ -22,6 +32,7 @@ public class XorCompoundDiscount extends CompoundDiscount {
                 if(discountToApply == null)
                     discountToApply = discount;
                 else{
+                    XorDecisionRule xorDecisionRule = XorDecisionRulesFactory.makeRule(xorDecisionRuleName);
                     discountToApply = xorDecisionRule.decide(discountToApply,discount,shopBag);
                 }
             }

@@ -7,11 +7,12 @@ import BusinessLayer.Users.UsersHandler;
 
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class NotificationPublisher {
 
-    private ConcurrentHashMap<String, NotificationCallback> userNotificationsCallbacks;
+    private Map<String, NotificationCallback> userNotificationsCallbacks;
 
     UsersHandler usersHandler;
     ShopHandler shopHandler;

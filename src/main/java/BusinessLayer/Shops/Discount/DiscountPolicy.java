@@ -3,25 +3,39 @@ package BusinessLayer.Shops.Discount;
 import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Shops.Discount.DiscountRules.CompoundRuleType;
 import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
-import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
 import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRuleName;
-import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRulesFactory;
 import BusinessLayer.Shops.FinalBagPriceResult;
 
+import javax.persistence.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Entity
+@Table(name = "discount_policy")
 public class DiscountPolicy {
 
-    ConcurrentHashMap<Integer,Discount> discountsById;
-    AtomicInteger discountIdIndexer;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "discount_policy_discount",
+            joinColumns = @JoinColumn(name = "discount_policy_id"),
+            inverseJoinColumns = @JoinColumn(name = "discount_id"))
+    private Map<Integer,Discount> discountsById;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "discount_id_indexer_id")
+    DiscountIdIndexer discountIdIndexer;
 
 
     public DiscountPolicy() {
         discountsById = new ConcurrentHashMap<>();
-        this.discountIdIndexer = new AtomicInteger(0);
+        this.discountIdIndexer = new DiscountIdIndexer();
     }
 
     public CategoryDiscount addCategoryDiscount(double discountPercentage, String category){
@@ -71,7 +85,7 @@ public class DiscountPolicy {
     public XorCompoundDiscount addXorDiscount(List<Integer> discountsIds, XorDecisionRuleName xorDiscountRuleName){
         List<Discount> discounts = getMatchingDiscountAndRemove(discountsIds);
         int id = discountIdIndexer.addAndGet(1);
-        XorCompoundDiscount xorCompoundDiscount = new XorCompoundDiscount(discounts,id, XorDecisionRulesFactory.makeRule(xorDiscountRuleName));
+        XorCompoundDiscount xorCompoundDiscount = new XorCompoundDiscount(discounts,id, xorDiscountRuleName);
         discountsById.put(id, xorCompoundDiscount);
         return xorCompoundDiscount;
     }
@@ -86,6 +100,11 @@ public class DiscountPolicy {
     //this function applies discount on a shop bag, it changes the state of the shop bag so it should be called with a deep clone
     //return discount result which contains the price before discount , price after discount and discounts applied descriptions
     public FinalBagPriceResult applyDiscount(ShopBag shopBag){
+        shopBag = shopBag.deepClone();
+        return applyDiscountAndChangePrices(shopBag);
+    }
+
+    public FinalBagPriceResult applyDiscountAndChangePrices(ShopBag shopBag){
         FinalBagPriceResult discountResult = FinalBagPriceResult.makeDiscountResult();
         discountResult.setPriceBeforeDiscount(shopBag.calculatePrice());
         ShopBag shopBagPrev = shopBag;
@@ -127,7 +146,7 @@ public class DiscountPolicy {
         return  discountsList;
     }
 
-    public ConcurrentHashMap<Integer, Discount> getDiscountsById() {
+    public Map<Integer, Discount> getDiscountsById() {
         return discountsById;
     }
 

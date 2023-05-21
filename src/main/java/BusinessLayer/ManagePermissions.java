@@ -34,8 +34,8 @@ public class ManagePermissions implements Serializable {
 
 	public ManagePermissions() {
 		permissions = new ArrayList<>();
-		resetPermissions();
 		this.manageAccess = ManageKindEnum.READ_ONLY;
+		initPermissions();
 		this.lock = new ReentrantLock();
 	}
 
@@ -69,6 +69,11 @@ public class ManagePermissions implements Serializable {
 
 	public void resetPermissions() {
 		for (int i = 0; i < NUM_OF_PERMISSIONS; i++)
+			permissions.set(i, false);
+	}
+
+	public void initPermissions() {
+		for (int i = 0; i < NUM_OF_PERMISSIONS; i++)
 			permissions.add(false);
 	}
 
@@ -87,12 +92,14 @@ public class ManagePermissions implements Serializable {
 	public static ManagePermissions getFullAccessPermissions() {
 		ManagePermissions mp = new ManagePermissions();
 		mp.changeToFullAccess();
+		PersistenceManager.getInstance().updateObj(mp);
 		return mp;
 	}
 
 	public static ManagePermissions getReadOnlyPermissions() {
 		ManagePermissions mp = new ManagePermissions();
 		mp.changeToReadOnlyAccess();
+		PersistenceManager.getInstance().updateObj(mp);
 		return mp;
 	}
 
