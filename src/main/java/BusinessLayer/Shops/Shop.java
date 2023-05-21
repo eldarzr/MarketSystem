@@ -498,5 +498,13 @@ public class Shop implements ShopIntr {
 				users.add(e.getKey());
 		return users;
 	}
+
+    public MemberRoleInShop changeManageOption(String actor, String actOn, int permission) throws Exception {
+		MemberRoleInShop reqRole = validatePermissionsChangeAllowed(actor, actOn);
+//		int accessKind = reqRole.getAccessKind();
+		reqRole.promoteAccess(permission);
+		return reqRole;
+
+    }
 }
 

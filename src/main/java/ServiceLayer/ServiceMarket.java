@@ -317,6 +317,16 @@ public class ServiceMarket {
 		}
 	}
 
+	public ResponseT<MemberRoleInShopDataObj> changeManagerAccess(String actor, String actOn, String shopName, int permission){
+		try {
+			return new ResponseT<MemberRoleInShopDataObj>(new MemberRoleInShopDataObj(market.changeManagerAccess(actor, actOn, shopName, permission)));
+
+		} catch (Exception exception) {
+			return new ResponseT(exception.getMessage(), false);
+		}
+	}
+
+
 
 	public Response addManagerPermissions(String actor, String actOn, String shopName, int permission) throws Exception {
 		try {

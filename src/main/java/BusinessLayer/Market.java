@@ -420,6 +420,22 @@ public class Market implements MarketIntr{
         logger.info(String.format("User %s added to %s permissions in shop %s.", actor,actOn, shopName));
     }
 
+    public MemberRoleInShop changeManagerAccess(String actor, String actOn, String shopName,int permission) throws Exception {
+        logger.info(String.format("Attempt by user %s to add manager permissions of %s as shop-manager of shop %s.", actor,actOn, shopName));
+        validateUserIsntGuest(actor);
+        isLoggedIn(actor);
+        validateUserIsntGuest(actOn);
+        Shop reqShop = checkForShop(shopName);
+        //notify appointee
+        String message=String.format("User %s added to your permissions in shop %s.", actor, shopName);
+        Notification notification=new Notification(actor,message);
+        NotificationPublisher.getInstance().notify(actOn,notification);
+        logger.info(String.format("User %s added to %s permissions in shop %s.", actor,actOn, shopName));
+      return reqShop.changeManageOption(actor,actOn,permission);
+
+    }
+
+
     //todo: naor - talk with eldar
     @Override
     public Collection<MemberRoleInShop> getShopManagersAndPermissions(String userName, String shopName) throws Exception {
