@@ -1,7 +1,10 @@
 package BusinessLayer;
 
 
+import BusinessLayer.Enums.ManageKindEnum;
 import BusinessLayer.Enums.ManagePermissionsEnum;
+import BusinessLayer.Enums.ManageType;
+import com.helger.commons.codec.ICharArrayStreamEncoder;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -23,6 +26,7 @@ public class ManagePermissions implements Serializable {
 	@ElementCollection
 	@OrderColumn(name = "permission_order")
 	private List<Boolean> permissions;
+	private ManageKindEnum manageAccess;
 
 	@Transient
 	private Lock lock;
@@ -30,6 +34,7 @@ public class ManagePermissions implements Serializable {
 
 	public ManagePermissions() {
 		permissions = new ArrayList<>();
+		this.manageAccess = ManageKindEnum.READ_ONLY;
 		initPermissions();
 		this.lock = new ReentrantLock();
 	}
@@ -37,12 +42,29 @@ public class ManagePermissions implements Serializable {
 	public void changeToFullAccess() {
 		for (int i = 0; i < NUM_OF_PERMISSIONS; i++)
 			permissions.set(i, true);
+		this.manageAccess = ManageKindEnum.FULL_ACCESS;
 	}
 
 	public void changeToReadOnlyAccess() {
 		resetPermissions();
 		permissions.set(WATCH_HISTORY.getValue(), true);
 		permissions.set(WATCH_MANAGERS_INFO.getValue(), true);
+		permissions.set(MESSAGES_ACCESS.getValue(), true);
+		this.manageAccess = ManageKindEnum.READ_ONLY;
+	}
+
+	public void changeToManageAccess() {
+		changeToReadOnlyAccess();
+		permissions.set(MANAGE_STOCK.getValue(), true);
+		permissions.set(MANAGE_BIDS.getValue(), true);
+		permissions.set(MANAGE_PURCHASE_TYPE.getValue(), true);
+		permissions.set(MANAGE_DISCOUNT_TYPE.getValue(), true);
+		permissions.set(MANAGE_DISCOUNT_CONSTRAINTS.getValue(), true);
+		permissions.set(MANAGE_PURCHASE_CONSTRAINTS.getValue(), true);
+		permissions.set(MANAGE_PURCHASE_POLICY.getValue(), true);
+		permissions.set(MANAGE_DISCOUNT_POLICY.getValue(), true);
+		this.manageAccess = ManageKindEnum.MANAGE_READ_ACCESS;
+
 	}
 
 	public void resetPermissions() {
@@ -130,5 +152,20 @@ public class ManagePermissions implements Serializable {
 		}
 		permissions.set(permission, true);
 
+	}
+
+	public ManageKindEnum getManageAccess() {
+		return manageAccess;
+	}
+
+	public void promoteAccess(int permission) {
+		switch (permission){
+			case 0:
+				changeToReadOnlyAccess();
+			case 1:
+				changeToManageAccess();
+			case 2:
+				changeToFullAccess();
+		}
 	}
 }
