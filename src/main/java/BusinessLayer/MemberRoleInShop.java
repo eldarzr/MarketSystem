@@ -1,5 +1,6 @@
 package BusinessLayer;
 
+import BusinessLayer.Enums.ManageKindEnum;
 import BusinessLayer.Enums.ManageType;
 import BusinessLayer.Shops.Shop;
 //import BusinessLayer.Shops.ShopMessageObserver;
@@ -139,6 +140,22 @@ import static BusinessLayer.Enums.ManageType.*;
 		public void setShopName(String shopName) {
 			this.shopName = shopName;
 		}
+
+	public void promoteAccess(int permission) {
+			this.permissions.promoteAccess(permission);
+
+	}
+
+
+	public int getAccessKind() {
+			return this.permissions.getManageAccess().getValue();
+	}
+
+	public ManageKindEnum getManageKind() {
+			return this.permissions.getManageAccess();
+	}
+
+
 //	private static MemberRoleInShop adjustRole(MemberRoleInShop role) throws Exception {
 //		String roleUser = role.roleUser;
 //		Shop roleShop = role.roleShop;
