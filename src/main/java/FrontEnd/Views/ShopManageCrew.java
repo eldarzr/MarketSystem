@@ -94,7 +94,7 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
         setDefaultStyle(removeOwnerButton);
 
 
-        viewPermissionsButton = new Button("ViewPermissions" , e -> handleViewPermissionsButtonClick());
+        viewPermissionsButton = new Button("ViewPermissions" , e -> handleViewPermissionsButtonClick2());
         setDefaultStyle(viewPermissionsButton);
 
         add(new HorizontalLayout(promoteButton, removeOwnerButton, viewPermissionsButton));
@@ -229,7 +229,56 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
         String newManagerUsername = newManagerTextField.getValue();
         setManager(getCurrentUser().getName(),newManagerUsername,shopProfile.getName());
     }
+
+
     public void handleViewPermissionsButtonClick() {
+
+        List<Integer> currentPermissions = clickedRole.getActivatedPermissions();
+        int manageAccess = clickedRole.getManageKind().getValue();
+        Dialog dialog = new Dialog();
+        dialog.setWidth("600px");
+
+        Grid<ManagePermissionsEnum> grid = new Grid<>();
+        grid.setItems(Arrays.asList(ManagePermissionsEnum.values()));
+        grid.addColumn(ManagePermissionsEnum::name).setHeader("Permission");
+        grid.addComponentColumn(permission -> {
+            Checkbox checkBox = new Checkbox();
+            checkBox.setValue(currentPermissions.contains(permission.getValue()));
+            return checkBox;
+        }).setHeader("Activated");
+
+        VerticalLayout layout = new VerticalLayout();
+        layout.add(grid);
+
+        Button changePermissionsButton = new Button("Change Permissions");
+        changePermissionsButton.addClickListener(event -> {
+            List<Integer> chosenPermissions = new ArrayList<>();
+            for (ManagePermissionsEnum permission : grid.getSelectedItems()) {
+                chosenPermissions.add(permission.getValue());
+            }
+            SResponseT<MemberRoleInShopModel> res = marketService.changeManagerPermissions(currentUser,clickedRole.getRoleUser(),
+
+//            SResponseT<MemberRoleInShopModel> res = marketService.changeManagerPermissions(currentUser,clickedRole.getRoleUser(),
+                    shopProfile.getName(),chosenPermissions);
+            if(res!=null && !res.isSuccess()){
+                Notification.show(res.getMessage());
+            }
+            if(res.isSuccess()){
+                Notification.show("Permissions changes successfully");
+//                clickedRole = res.getData();
+            }
+
+            //manager.setPermissions(chosenPermissions);
+            dialog.close();
+        });
+
+        layout.add(changePermissionsButton);
+        dialog.add(layout);
+        dialog.open();
+    }
+
+
+    public void handleViewPermissionsButtonClick2() {
 
         List<Integer> currentPermissions = clickedRole.getActivatedPermissions();
         Dialog dialog = new Dialog();
@@ -254,6 +303,8 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
                 chosenPermissions.add(permission.getValue());
             }
             SResponseT<MemberRoleInShopModel> res = marketService.changeManagerPermissions(currentUser,clickedRole.getRoleUser(),
+
+//            SResponseT<MemberRoleInShopModel> res = marketService.changeManagerPermissions(currentUser,clickedRole.getRoleUser(),
                     shopProfile.getName(),chosenPermissions);
             if(res!=null && !res.isSuccess()){
                 Notification.show(res.getMessage());
