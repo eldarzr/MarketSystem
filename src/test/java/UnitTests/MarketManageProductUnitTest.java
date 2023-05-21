@@ -3,14 +3,16 @@ package UnitTests;
 import BusinessLayer.Enums.ManagePermissionsEnum;
 import BusinessLayer.ManagePermissions;
 import BusinessLayer.MemberRoleInShop;
-import BusinessLayer.Shops.Product;
-import BusinessLayer.Shops.ProductIntr;
+import BusinessLayer.PersistenceManager;
 import BusinessLayer.Shops.Shop;
 import BusinessLayer.Shops.ShopProduct;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,16 +33,31 @@ class MarketManageProductUnitTest {
 	String[] prodNamesNew = {"newProd1", "newProd2"};
 	String[] descsNew = {"newDesc1", "newDesc2"};
 	double[] pricesNew = {5, 10};
+	EntityManager entityManager;
+	EntityTransaction entityTransaction;
 
 	@BeforeEach
 	void setUp() throws Exception {
 		shop = new Shop(shopNames[0], usersName[0]);
 		memberRoleInShop = Mockito.mock(MemberRoleInShop.class);
 		managePermissions = Mockito.mock(ManagePermissions.class);
+		entityManager = Mockito.mock(EntityManager.class);
+		entityTransaction = Mockito.mock(EntityTransaction.class);
+		PersistenceManager.getInstance().setTestEntityManager(entityManager);
+		Mockito.when(entityManager.getTransaction()).thenReturn(entityTransaction);
+		Mockito.doNothing().when(entityManager).clear();
+		Mockito.doNothing().when(entityManager).close();
+		Mockito.doNothing().when(entityTransaction).commit();
+		Mockito.doNothing().when(entityTransaction).begin();
+		Mockito.when(entityTransaction.isActive()).thenReturn(false);
+		Mockito.when(entityManager.isOpen()).thenReturn(true);
 		Mockito.when(memberRoleInShop.getPermissions()).thenReturn(managePermissions);
 		shop.addRole(usersName[0], memberRoleInShop);
 		for (int i=0; i < prodNames.length; i++) {
 			product[i] = Mockito.mock(ShopProduct.class);
+			Mockito.doNothing().when(entityManager).persist(product[i]);
+			Mockito.when(entityManager.merge(product[i])).thenReturn(product[i]);
+			Mockito.doNothing().when(entityManager).remove(product[i]);
 			Mockito.when(product[i].getName()).thenReturn(prodNames[i]);
 			Mockito.when(product[i].getDescription()).thenReturn(descs[i]);
 			Mockito.when(product[i].getCategory()).thenReturn(cat[i]);
@@ -53,6 +70,7 @@ class MarketManageProductUnitTest {
 	@AfterEach
 	void tearDown() {
 		shop = null;
+		PersistenceManager.getInstance().setRealEntityManager();
 	}
 
 	@Test

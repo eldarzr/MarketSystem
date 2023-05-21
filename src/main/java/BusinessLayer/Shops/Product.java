@@ -10,16 +10,20 @@ import java.util.concurrent.locks.ReentrantLock;
 
 @Entity
 @Table(name = "products")
-@IdClass(ProductId.class)
+//@IdClass(ProductId.class)
 public class Product implements ProductIntr, Serializable {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
 	@Transient
 	Lock productLock = new ReentrantLock();
 
-	@Id
+//	@Id
 	@Column(name = "shopName")
 	protected String shopName;
-	@Id
+//	@Id
 	@Column(name = "productName")
 	protected String name;
 	@Column(name = "category")

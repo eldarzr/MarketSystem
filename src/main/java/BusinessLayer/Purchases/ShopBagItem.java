@@ -17,11 +17,12 @@ public class ShopBagItem implements Serializable {
     private Long id;
 
     @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name="shopName", referencedColumnName="shopName", insertable = false, updatable = false),
-            @JoinColumn(name="productName", referencedColumnName="productName", insertable = false, updatable = false)
-    })
+//    @JoinColumns({
+//            @JoinColumn(name="shopName", referencedColumnName="shopName", insertable = false, updatable = false),
+//            @JoinColumn(name="productName", referencedColumnName="productName", insertable = false, updatable = false)
+//    })
 //    @Transient
+    @JoinColumn(name="product_id", referencedColumnName="id", insertable = false, updatable = false)
     private Product product;
 
 //    @Id
