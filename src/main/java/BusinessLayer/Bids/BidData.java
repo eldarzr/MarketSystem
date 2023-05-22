@@ -23,30 +23,25 @@ public class BidData {
                 bids.add(b);
         return bids;
     }
-    private Collection<Bid> filterByShop(String shopName){
-        List<Bid> bids = new ArrayList<>();
-        for(Bid b : bidMap.values())
-            bids.add(b);
-        return bids;
-    }
-    private Collection<Bid> findBidsByProduct(String productName, String shopName){
+
+    private Collection<Bid> findBidsByProduct(String productName){
         Collection<Bid> bids = new ArrayList<>();
         for(Bid b : bidMap.values())
-            if(b.getProduct().getName().equals(productName) && b.getProduct().getShopName().equals(shopName))
+            if(b.getProduct().getName().equals(productName))
                 bids.add(b);
         return bids;
     }
     public Collection<Bid> getBidsForProduct(String productName, String shopName) {
-        return findBidsByProduct(productName, shopName);
+        return findBidsByProduct(productName);
     }
-    public Collection<Bid> getPendingBids(String shopName){
-        return filterBidsByStatus(filterByShop(shopName),BidStatus.PENDING);
+    public Collection<Bid> getPendingBids(){
+        return filterBidsByStatus(bidMap.values(),BidStatus.PENDING);
     }
-    public Collection<Bid> getApprovedBids(String shopName){
-        return filterBidsByStatus(filterByShop(shopName),BidStatus.APPROVED);
+    public Collection<Bid> getApprovedBids(){
+        return filterBidsByStatus(bidMap.values(),BidStatus.APPROVED);
     }
-    public Collection<Bid> getRejectedBids(String shopName){
-        return filterBidsByStatus(filterByShop(shopName),BidStatus.REJECTED);
+    public Collection<Bid> getRejectedBids(){
+        return filterBidsByStatus(bidMap.values(),BidStatus.REJECTED);
     }
     public void approveBid(int id) throws Exception {
         Bid bid = bidMap.get(id);
@@ -58,8 +53,8 @@ public class BidData {
         if(bid == null)throw new Exception("Bid with id: "+id+" not found");
         bid.reject();
     }
-    public int createNewBid(Product product, double price){
-        Bid bid = new Bid(nextBidId.get(),product,price);
+    public int createNewBid(String userName, Product product, double price) throws Exception {
+        Bid bid = new Bid(userName, nextBidId.get(),product,price);
         bidMap.put(nextBidId.get(),bid);
         nextBidId.getAndAdd(1);
         return bid.getId();

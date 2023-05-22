@@ -98,7 +98,7 @@ public class BidControlView extends BaseView implements BeforeEnterObserver {
             return;
         }
         // Call your service layer function here
-        SResponse res = marketService.rejectBid(userName, selectedBid.getBidId());
+        SResponse res = marketService.rejectBid(userName,shopName, selectedBid.getBidId());
         if(!res.isSuccess()) Notification.show(res.getMessage());
         else Notification.show("Successfully rejected bid");
         updateGrid();
@@ -111,7 +111,7 @@ public class BidControlView extends BaseView implements BeforeEnterObserver {
             return;
         }
         // Call your service layer function here
-        SResponse res = marketService.approveBid(userName, selectedBid.getBidId());
+        SResponse res = marketService.approveBid(userName,shopName, selectedBid.getBidId());
         if(!res.isSuccess()) Notification.show(res.getMessage());
         else Notification.show("Successfully approved bid, bid will be confirmed once all parties will approve it!");
         updateGrid();

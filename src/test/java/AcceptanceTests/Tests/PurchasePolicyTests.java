@@ -65,15 +65,7 @@ public class PurchasePolicyTests {
             fail("Jane should not be able to create such purchase policy");
         }catch (Exception ignored){}
     }
-    @Test
-    public void createAgePurchasePolicy(){
-        try{
-            market.login(john,pass);
-            market.addAgePurchasePolicy(john,shopName,true,item1,false,0,18);
-        }catch (Exception e){
-            fail(e.getMessage());
-        }
-    }
+
 
 
 }

@@ -623,16 +623,16 @@ public class MarketService {
 		else
 			return new SResponseT<Collection<BidDataObj>>(res.getMessage(),false);
 	}
-	public SResponse approveBid(String userName, int bidId){
-		Response res = serviceMarket.approveBid(userName, bidId);
+	public SResponse approveBid(String userName, String shopName, int bidId){
+		Response res = serviceMarket.approveBid(userName,shopName, bidId);
 		if(res.isSuccess()){
 			return new SResponse();
 		}else{
 			return new SResponse(res.getMessage());
 		}
 	}
-	public SResponse rejectBid(String userName, int bidId)  {
-		Response res = serviceMarket.rejectBid(userName, bidId);
+	public SResponse rejectBid(String userName,String shopName, int bidId)  {
+		Response res = serviceMarket.rejectBid(userName,shopName, bidId);
 		if(res.isSuccess()){
 			return new SResponse();
 		}else{

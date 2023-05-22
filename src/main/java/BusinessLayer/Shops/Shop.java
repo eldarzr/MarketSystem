@@ -1,9 +1,13 @@
 package BusinessLayer.Shops;
 
+import BusinessLayer.Bids.Bid;
+import BusinessLayer.Bids.BidManager;
 import BusinessLayer.Enums.ManagePermissionsEnum;
 import BusinessLayer.Enums.ManageType;
 import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.MessageObserver;
+import BusinessLayer.Notifications.Notification;
+import BusinessLayer.Notifications.NotificationPublisher;
 import BusinessLayer.PersistenceManager;
 import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Purchases.ShopBagItem;
@@ -77,6 +81,8 @@ public class Shop implements ShopIntr {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "purchase_policy_manager_id")
 	private PurchasePolicyManager purchasePolicyManager;
+	@Transient
+	private BidManager bidManager;
 
 	public Shop() {
 		this.remLock = new ReentrantLock();
@@ -94,6 +100,7 @@ public class Shop implements ShopIntr {
 		this.discountPolicy = new DiscountPolicy();
 		this.purchasePolicyManager = new PurchasePolicyManager();
 		this.remLock = new ReentrantLock();
+		this.bidManager = new BidManager();
 	}
 
 	public String getName() {
@@ -510,6 +517,13 @@ public class Shop implements ShopIntr {
 				users.add(e.getKey());
 		return users;
 	}
+	public Collection<String> getBidResponsibleUsersForNotification() throws Exception {
+		Collection<String> users = new ArrayList<>();
+		for (Map.Entry<String, MemberRoleInShop> e : roles.entrySet())
+			if (e.getValue().getPermissions().validatePermission(MANAGE_BIDS) || e.getValue().getType().equals(ManageType.OWNER))
+				users.add(e.getKey());
+		return users;
+	}
 
     public MemberRoleInShop changeManageOption(String actor, String actOn, int permission) throws Exception {
 		MemberRoleInShop reqRole = validatePermissionsChangeAllowed(actor, actOn);
@@ -518,6 +532,45 @@ public class Shop implements ShopIntr {
 		return reqRole;
 
     }
+	public int createBid(String userName,String  productName, String shopName, double bidPrice) throws Exception {
+		Product product = getProduct(productName,0);
+		int ret =  bidManager.createNewBid(userName,product,bidPrice);
+		Bid bid = bidManager.getBid(ret);
+		Collection<String> toNotify = getBidResponsibleUsersForNotification();
+		String message=String.format("There is a pending bid for you to approve in for product '%s' in shop '%s'.", bid.getProduct().getName(), bid.getProduct().getShopName());
+		Notification notification=new Notification(userName,message);
+		for(String responsibleToApprove : toNotify){
+			NotificationPublisher.getInstance().notify(responsibleToApprove,notification);
+		}
+		return ret;
+	}
+
+	public void approveBid(User user, int bidId) throws Exception {
+		Bid bid = bidManager.getBid(bidId);
+		Collection<String> shouldApprove = getBidResponsibleUsers(user);
+		bidManager.approveBid(bidId, user.getName(), shouldApprove);
+		String message = String.format("I gave my approval for your bid on product '%s' for '%f'.",bid.getProduct().getName(),(float)bid.getPrice());
+		Notification notification = new Notification(user.getName(),message);
+		NotificationPublisher.getInstance().notify(bid.getUserName(),notification);
+	}
+	public void rejectBid(User user, int bidId) throws Exception {
+		Bid bid = bidManager.getBid(bidId);
+		Collection<String> canReject = getBidResponsibleUsers(user);
+		bidManager.rejectBid(bidId, user.getName(), canReject);
+		//notify bidder
+		String message=String.format("Your bid for product %s in amount %f was rejected.", bid.getProduct().getName(), (float)bid.getProduct().getPrice());
+		Notification notification=new Notification(user.getName(),message);
+		NotificationPublisher.getInstance().notify(bid.getUserName(),notification);
+	}
+	public Collection<Bid> getPendingBids(String shopName) throws Exception {
+		return bidManager.getPendingBids();
+	}
+	public Collection<Bid> getApprovedBids() throws Exception {
+		return bidManager.getApprovedBids();
+	}
+	public Collection<Bid> getRejectedBids() throws Exception {
+		return bidManager.getRejectedBids();
+	}
 
 	public Map<String, MemberRoleInShop> getRoles() {
 		return this.roles;

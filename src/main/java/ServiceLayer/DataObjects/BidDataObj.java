@@ -4,6 +4,7 @@ import BusinessLayer.Bids.Bid;
 import BusinessLayer.Bids.BidStatus;
 
 public class BidDataObj {
+    private String bidOffer;
     private int bidId;
     private String productName;
     private String status;
@@ -12,6 +13,7 @@ public class BidDataObj {
     public static final String pending = "PENDING";
     public static final String rejected = "REJECTED";
     public BidDataObj(Bid bid){
+        bidOffer = bid.getUserName();
         bidId = bid.getId();
         productName = bid.getProduct().getName();
         price = bid.getPrice();
