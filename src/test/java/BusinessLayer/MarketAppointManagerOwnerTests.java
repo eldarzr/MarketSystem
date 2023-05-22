@@ -4,6 +4,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class MarketAppointManagerOwnerTests {
@@ -104,5 +106,13 @@ class MarketAppointManagerOwnerTests {
 //        MemberRoleInShop role = market.checkForShop("shop1").validateUserHasRole("naor");
         Exception exception = assertThrows(Exception.class, () ->   market.appointShopOwner("naor","niv12","shop1"));
         System.out.println(exception.getMessage());
+    }
+
+    @Test
+    void appointShopManager_successValidate() throws Exception {
+        market.appointShopManager("eldar","niv12","shop1");
+        market.appointShopManager("eldar","naor","shop1");
+       List<MemberRoleInShop> naorShops = market.getUserRoles("naor");
+        List<MemberRoleInShop> nivShops = market.getUserRoles("niv");
     }
 }

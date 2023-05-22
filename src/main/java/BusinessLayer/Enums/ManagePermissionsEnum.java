@@ -13,10 +13,10 @@ public enum ManagePermissionsEnum {
 	WATCH_MANAGERS_INFO(7),
 	WATCH_HISTORY(8),
 	MESSAGES_ACCESS(9),
-	CHANGE_MANAGER_PERMISSIONS(14),
-	CLOSE_SHOP(15),
-	OPEN_SHOP(16),
-	MANAGE_BIDS(17);
+	CHANGE_MANAGER_PERMISSIONS(10),
+	CLOSE_SHOP(11),
+	OPEN_SHOP(12),
+	MANAGE_BIDS(13);
 	private final int value;
 
 	private ManagePermissionsEnum(int value) {
