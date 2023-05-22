@@ -63,8 +63,12 @@ public class ShopBag implements Serializable {
         if(productsAndQuantities.containsKey(product.getName())){
             ShopBagItem ExistingShopBagItem = productsAndQuantities.get(product);
             ExistingShopBagItem.setQuantity(ExistingShopBagItem.getQuantity()+quantity);
+            PersistenceManager.getInstance().updateObj(ExistingShopBagItem);
         }
-        productsAndQuantities.put(product.getName(),shopBagItem);
+        else {
+            PersistenceManager.getInstance().persistObj(shopBagItem);
+            productsAndQuantities.put(product.getName(), shopBagItem);
+        }
     }
 
     public void updateProductQuantity(String productName, int newQuantity) {
@@ -82,6 +86,19 @@ public class ShopBag implements Serializable {
         if(!getProductsAndQuantities().containsKey(productName))
             throw new Exception("could not find product "+ productName);
         getProductsAndQuantities().remove(productName);
+    }
+
+    public void removeProductIfExists(String productName) throws Exception {
+        if (!getProductsAndQuantities().containsKey(productName))
+            return;
+        ShopBagItem shopBagItem = getProductsAndQuantities().remove(productName);
+        PersistenceManager.getInstance().removeFromDB(shopBagItem);
+//        EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
+//        entityManager.getTransaction().begin();
+//        ShopBagItem managedShopBagItem = entityManager.find(ShopBagItem.class, shopBagItem.getId());
+//        entityManager.remove(managedShopBagItem);
+//        entityManager.getTransaction().commit();
+
     }
 
     public List<Product> getProducts() {

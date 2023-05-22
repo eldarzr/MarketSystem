@@ -96,6 +96,7 @@ public class User{
 
     public void setName(String name) {
         this.name = name.toLowerCase();
+        updateDB();
     }
 
     public String getEmail() {
@@ -104,6 +105,7 @@ public class User{
 
     public void setEmail(String email) {
         this.email = email;
+        updateDB();
     }
 
     public String getPassword() {
@@ -112,6 +114,7 @@ public class User{
 
     public void setPassword(String password) {
         this.password = password;
+        updateDB();
     }
 
     public boolean isTwoFactorEnabled() {
@@ -124,6 +127,7 @@ public class User{
 
     public void setUserType(UserType userType) {
         this.userType = userType;
+        updateDB();
     }
 
     public List<String> getShopsMessages() {
@@ -132,6 +136,7 @@ public class User{
 
     public void setTwoFactorEnabled(boolean twoFactorEnabled) {
         this.twoFactorEnabled = twoFactorEnabled;
+        updateDB();
     }
 
     public Cart getCart() {
@@ -140,15 +145,23 @@ public class User{
 
     public void addProductToCart(String shopName, Product product, int quantity) throws Exception {
         getCart().addProduct(shopName, product, quantity);
-        PersistenceManager.getInstance().updateObj(getCart());
+//        PersistenceManager.getInstance().updateObj(getCart());
+        updateDB();
     }
 
     public void updateProductsFromCart(String shopName, String productName, int newQuantity) throws Exception {
         getCart().updateProductQuantity(shopName, productName, newQuantity);
+        updateDB();
     }
 
     public void removeProductFromCart(String shopName, String productName) throws Exception {
         getCart().removeProduct(shopName,productName);
+        updateDB();
+    }
+
+    public void removeProductFromCartIfExists(String shopName, String productName) throws Exception {
+        getCart().removeProductIfExists(shopName,productName);
+        updateDB();
     }
 
     public boolean isAdmin() {
@@ -157,6 +170,7 @@ public class User{
     
     public void addInvoice(UserInvoice userInvoice) {
         invoices.add(userInvoice);
+        updateDB();
     }
 
     public List<UserInvoice> getInvoices() {
@@ -168,11 +182,12 @@ public class User{
         currentCart.clear();
 //        PersistenceManager.getInstance().removeFromDB(currentCart);
 //        currentCart = new Cart(name);
+        updateDB();
     }
 
     public void addPendingNotifications(Notification notification) {
         pendingNotifications.add(notification);
-        PersistenceManager.getInstance().updateObj(this);
+        updateDB();
     }
 
     public String getSessionID() {
@@ -181,10 +196,12 @@ public class User{
 
     public void setSessionID(String sessionID) {
         this.sessionID = sessionID.toLowerCase();
+        updateDB();
     }
 	
 	public void setCart(Cart currentCart) {
         this.currentCart = currentCart;
+        updateDB();
     }
 
     public Collection<Notification> getPendingNotification() {
@@ -200,6 +217,7 @@ public class User{
                 break;
             }
         }
+        updateDB();
     }
 
     public LocalDate getBirthDay() {
@@ -209,6 +227,11 @@ public class User{
     public void ReadNotifications() {
         for(Notification notification: pendingNotifications)
             if(!notification.isRead()) notification.Read();
+    }
+
+    private void updateDB(){
+        if (this.getUserType() != UserType.GUEST)
+            PersistenceManager.getInstance().updateObj(this);
     }
 }
 

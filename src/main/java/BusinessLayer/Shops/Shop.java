@@ -167,6 +167,7 @@ public class Shop implements ShopIntr {
 			throwException(String.format("user %s already has role in shop, can't have another.", name));
 		}
 		roles.put(name, role);
+		PersistenceManager.getInstance().updateObj(this);
 	}
 
 	private MemberRoleInShop validatePermissionsChangeAllowed(String actor, String actOn) throws Exception {
@@ -238,7 +239,15 @@ public class Shop implements ShopIntr {
 	public ShopProduct removeProduct(String userName, String productName) throws Exception {
 		validateProductExists(productName);
 		validatePermissionsException(userName, MANAGE_STOCK);
-		return products.remove(productName);
+		ShopProduct shopProduct = products.remove(productName);
+//		EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
+//		entityManager.getTransaction().begin();
+//		Object managedShopProduct = entityManager.merge(shopProduct);
+//		entityManager.remove(managedShopProduct);
+//		entityManager.getTransaction().commit();
+		PersistenceManager.getInstance().removeFromDB(shopProduct);
+		PersistenceManager.getInstance().updateObj(this);
+		return shopProduct;
 	}
 
 //	public void updateProductName(String userName, String productOldName, String productNewName) throws Exception {

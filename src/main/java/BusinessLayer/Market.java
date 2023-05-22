@@ -28,6 +28,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Transient;
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -234,10 +235,12 @@ public class Market implements MarketIntr{
     }
 
     @Override
+    @Transactional
     public void removeProduct(String userName, String shopName, String productName) throws Exception {
         logger.info(String.format("Attempt by user %s to remove product %s from store %s.", userName,productName, shopName));
         validateLoggedInException(userName);
         //TODO: remove product from all carts. relevant for DB
+        usersHandler.removeProductFromAllCarts(shopName, productName);
         shopHandler.removeProduct(userName, shopName, productName);
         logger.info(String.format("User %s removed product %s from store %s.", userName,productName, shopName));
     }

@@ -273,10 +273,14 @@ public class UsersHandler {
         if(!isAdmin(adminName.toLowerCase())){
             throw new Exception(String.format("the user %s is not admin!", adminName));
         }
+        return getAllUsers();
+    }
+
+	private List<User> getAllUsers() {
         return Stream.concat(userRepository.getAllMembers().stream(),
                 userRepository.getAllLoginUsers().stream()).distinct()
                 .collect(Collectors.toList());
-	}
+    }
 
     // Just for notification publisher.
     public List<User> getAllMembers(){
@@ -309,4 +313,10 @@ public class UsersHandler {
     public void removeNotification(String username,Notification notification) {
         findLoginUser(username).removeNotification(notification);
     }
+
+	public void removeProductFromAllCarts(String shopName, String productName) throws Exception {
+        for (User user : getAllUsers()){
+            user.removeProductFromCartIfExists(shopName, productName);
+        }
+	}
 }

@@ -49,6 +49,7 @@ public class Cart implements Serializable {
         if(!cart.containsKey(shopName))
             cart.put(shopName,new ShopBag(shopName, userName));
         ShopBag shopBag = getShoppingBag(shopName);
+        PersistenceManager.getInstance().persistObj(shopBag);
         shopBag.addProduct(product,quantity);
     }
 
@@ -66,6 +67,14 @@ public class Cart implements Serializable {
     public void removeProduct(String shopName, String productName) throws Exception {
         ShopBag shopBag = getShoppingBag(shopName);
         shopBag.removeProduct(productName);
+    }
+
+    public void removeProductIfExists(String shopName, String productName) throws Exception {
+        ShopBag shopBag = cart.get(shopName);
+        if(shopBag == null){
+            return;
+        }
+        shopBag.removeProductIfExists(productName);
     }
 
     public Map<String, ShopBag> getShopsAndProducts() {

@@ -2,6 +2,7 @@ package BusinessLayer.Shops;
 
 import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.PersistenceManager;
+import BusinessLayer.ProductId;
 import BusinessLayer.Purchases.ShopInvoice;
 import BusinessLayer.Search;
 import BusinessLayer.Users.User;
@@ -85,7 +86,17 @@ public class ShopRepository {
     }
 
     public void removeConnectionFromDB(String shopName, ShopProduct shopProduct) {
-        Shop shop = getShop(shopName);
+        PersistenceManager.getInstance().removeFromDB(shopProduct);
+//        EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
+////        PersistenceManager.getInstance().lock();
+//        entityManager.getTransaction().begin();
+//        ShopProduct managedShopProduct = entityManager.find(ShopProduct.class, new ProductId(shopName, shopProduct.getName()));
+//        entityManager.remove(managedShopProduct);
+//        entityManager.getTransaction().commit();
+////        PersistenceManager.getInstance().unlock();
+        updateToDB(shopName);
+
+//        PersistenceManager.getInstance().removeConnectionFromDB(shop, shopProduct);
     }
 
 }
