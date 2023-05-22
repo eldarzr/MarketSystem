@@ -1,7 +1,11 @@
 package ServiceLayer.DataObjects;
 
+import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.Shops.Shop;
 import BusinessLayer.Shops.ShopProduct;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ShopDataObj{
@@ -10,6 +14,7 @@ public class ShopDataObj{
 	private boolean active;
 	private final String founderUserName;
 	//map of user name to role in this shop
+	private Map<String, MemberRoleInShop> roles;
 	private ConcurrentHashMap<String, ProductDataObj> products;
 
 	public ShopDataObj(String name, String founderUserName) {
@@ -18,6 +23,7 @@ public class ShopDataObj{
 		this.founderUserName = founderUserName;
 		this.products = new ConcurrentHashMap<>();
 		this.active = true;
+		this.roles = new HashMap<>();
 	}
 
 	public ShopDataObj(Shop shop) {
@@ -28,6 +34,7 @@ public class ShopDataObj{
 		for (ShopProduct product : shop.getProducts())
 			products.put(product.getName(), new ProductDataObj(product));
 		this.active = true;
+		this.roles = shop.getRoles();
 	}
 
 	public String getName() {
@@ -48,6 +55,10 @@ public class ShopDataObj{
 
 	public ConcurrentHashMap<String, ProductDataObj> getProducts() {
 		return products;
+	}
+
+	public Map<String, MemberRoleInShop> getRoles() {
+		return this.roles;
 	}
 }
 

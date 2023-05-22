@@ -509,5 +509,9 @@ public class Shop implements ShopIntr {
 		return reqRole;
 
     }
+
+	public Map<String, MemberRoleInShop> getRoles() {
+		return this.roles;
+	}
 }
 

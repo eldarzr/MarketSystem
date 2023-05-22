@@ -1,5 +1,6 @@
 package FrontEnd.Views;
 
+import BusinessLayer.Enums.ManageType;
 import FrontEnd.MarketService;
 import FrontEnd.Model.ProductModel;
 import FrontEnd.Model.ShopModel;
@@ -79,6 +80,10 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 		manageRolesButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
 		manageRolesButton.getStyle().set("color", "white");
 		manageRolesButton.addClickListener(e -> navigateToManageRoles());
+		if(shopProfile.getRoles().get(getCurrentUser().getName()).getType().equals(ManageType.MANAGER)) {
+			disableButton(manageRolesButton);
+			manageRolesButton.getStyle().set("opacity", "0");
+		}
 
 		manageDiscount = new Button("Manage Discounts");
 		manageDiscount.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");

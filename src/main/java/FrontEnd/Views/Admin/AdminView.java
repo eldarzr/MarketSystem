@@ -30,6 +30,7 @@ import com.vaadin.flow.server.VaadinSession;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,10 +64,10 @@ public class AdminView extends BaseView {
 			getUI().ifPresent(ui -> ui.navigate(""));
 		}
 		users = userRes.getData();
-		userDataProvider = new ListDataProvider<>(users);
+		userDataProvider = new ListDataProvider<>(users == null ? new ArrayList<>() : users);
 
 		shops = shopRes.getData();
-		shopDataProvider = new ListDataProvider<>(shops);
+		shopDataProvider = new ListDataProvider<>(shops == null ? new ArrayList<>() : shops);
 
 		// Initialize the grid and set its data provider
 		userGrid = new Grid<>();
@@ -159,7 +160,7 @@ public class AdminView extends BaseView {
 				getUI().ifPresent(ui -> ui.navigate(""));
 			}
 			users = userRes.getData();
-			userDataProvider = new ListDataProvider<>(users);
+			userDataProvider = new ListDataProvider<>(users == null ? new ArrayList<>() : users);
 			userGrid.setDataProvider(userDataProvider);
 //			Notification.show(user.getSessionID());
 			if(user.getSessionID() != null) {
