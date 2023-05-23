@@ -1,5 +1,7 @@
 package BusinessLayer.Bids;
 
+import BusinessLayer.Notifications.Notification;
+import BusinessLayer.Notifications.NotificationPublisher;
 import BusinessLayer.Shops.Product;
 import BusinessLayer.Shops.Shop;
 
@@ -16,8 +18,8 @@ public class BidManager {
         bidData = new BidData();
         bidIdToApproves = new ConcurrentHashMap<>();
     }
-    public int createNewBid(Product product, double price){
-        int res =  bidData.createNewBid(product, price);
+    public int createNewBid(String userName, Product product, double price) throws Exception {
+        int res =  bidData.createNewBid(userName,product, price);
         bidIdToApproves.put(res,new ArrayList<>());
         return res;
     }
@@ -38,6 +40,9 @@ public class BidManager {
         boolean fullyApproved = checkFullyApproved(id,shouldApprove);
         if(fullyApproved){
             bidData.approveBid(id);
+            Bid approved = bidData.getBid(id);
+            Notification notification = new Notification(approved.getUserName(), "Your bid has been approved! ");
+            NotificationPublisher.getInstance().notify(userName,notification);
         }
     }
     // This function assumes there is a bid with the given ID !!
@@ -52,14 +57,14 @@ public class BidManager {
             throw new Exception(userName+" isn't authorized to reject bid "+id);
         bidData.rejectBid(id);
     }
-    public Collection<Bid> getPendingBids(String shopName){
-        return bidData.getPendingBids(shopName);
+    public Collection<Bid> getPendingBids(){
+        return bidData.getPendingBids();
     }
-    public Collection<Bid> getApprovedBids(String shopName){
-        return bidData.getApprovedBids(shopName);
+    public Collection<Bid> getApprovedBids(){
+        return bidData.getApprovedBids();
     }
-    public Collection<Bid> getRejectedBids(String shopName){
-        return bidData.getRejectedBids(shopName);
+    public Collection<Bid> getRejectedBids(){
+        return bidData.getRejectedBids();
     }
 
 

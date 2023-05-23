@@ -127,13 +127,8 @@ public interface MarketIntr {
     void purchaseCart(String userName, PaymentDetails paymentDetails, SupplyDetails supplyDetails) throws Exception;
 
     String unregister(String userName);
-    //Bid functions
-    public void createBidOffer (String userName, String productName, String shopName, double bidPrice) throws Exception ;
-    public Collection<Bid> getPendingBids(String userName, String shopName) throws Exception ;
-    public Collection<Bid> getApprovedBids(String userName,String shopName) throws Exception;
-    public Collection<Bid> getRejectedBids(String userName,String shopName) throws Exception ;
-    public void approveBid(String userName, int bidId) throws Exception;
-    public void rejectBid(String userName, int bidId) throws Exception ;
+
+
 
     //Purchase policy functions
     public Map<Integer, PurchasePolicy> getAllPurchasePolicies(String userName, String shopName) throws Exception ;
@@ -147,4 +142,12 @@ public interface MarketIntr {
     public void addOrPurchasePolicy(String userName, String shopName,int pid1, int pid2)throws Exception;
     public void addAndPurchasePolicy(String userName, String shopName,int pid1, int pid2)throws Exception;
     public void addIfPurchasePolicy(String userName, String shopName,int pid1, int pid2)throws Exception;
+    //Bid functions
+    public void createBidOffer (String userName, String productName, String shopName, double bidPrice) throws Exception;
+    public Collection<Bid> getPendingBids(String userName,String shopName) throws Exception;
+    public Collection<Bid> getApprovedBids(String userName,String shopName) throws Exception;
+    public Collection<Bid> getRejectedBids(String userName,String shopName) throws Exception ;
+    public void approveBid(String userName,String shopName, int bidId) throws Exception ;
+    public void rejectBid(String userName,String shopName, int bidId) throws Exception ;
+
 }

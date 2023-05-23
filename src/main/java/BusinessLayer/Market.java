@@ -923,27 +923,29 @@ public class Market implements MarketIntr{
     //Bid functions
     public void createBidOffer (String userName, String productName, String shopName, double bidPrice) throws Exception {
         validateLoggedInException(userName);
-        shopHandler.createBid(productName, shopName, bidPrice);
+        shopHandler.getShop(shopName).createBid(userName,productName, shopName, bidPrice);
+
     }
     public Collection<Bid> getPendingBids(String userName,String shopName) throws Exception {
         validateLoggedInException(userName);
-        return shopHandler.getPendingBids(shopName);
+        return shopHandler.getShop(shopName).getPendingBids(shopName);
     }
     public Collection<Bid> getApprovedBids(String userName,String shopName) throws Exception {
         validateLoggedInException(userName);
-        return shopHandler.getApprovedBids(shopName);
+        return shopHandler.getShop(shopName).getApprovedBids();
     }
     public Collection<Bid> getRejectedBids(String userName,String shopName) throws Exception {
         validateLoggedInException(userName);
-        return shopHandler.getRejectedBids(shopName);
+        return shopHandler.getShop(shopName).getRejectedBids();
     }
-    public void approveBid(String userName, int bidId) throws Exception {
+    public void approveBid(String userName,String shopName, int bidId) throws Exception {
         validateLoggedInException(userName);
-        shopHandler.approveBid(getUser(userName),bidId);
+        shopHandler.getShop(shopName).approveBid(getUser(userName),bidId);
     }
-    public void rejectBid(String userName, int bidId) throws Exception {
+    public void rejectBid(String userName,String shopName, int bidId) throws Exception {
         validateLoggedInException(userName);
-        shopHandler.rejectBid(getUser(userName),bidId);
+        shopHandler.getShop(shopName).rejectBid(getUser(userName),bidId);
+
     }
 
     public void ReadUserNotifications(String username) {
