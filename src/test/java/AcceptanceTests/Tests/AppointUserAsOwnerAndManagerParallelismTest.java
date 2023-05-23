@@ -31,7 +31,7 @@ public class AppointUserAsOwnerAndManagerParallelismTest {
         String shopOwner2 = "shopOwner2";
         String userName = "testUser";
         String shopName = "testShop";
-        system.init();
+        system.init("src/InitFiles/BaseConfig.jason");
         system.register(shopOwner1, "shopowner1@gmail.com", "Passw0rd!!!");
         system.login(shopOwner1, "Passw0rd!!!");
         system.createShop(shopOwner1, shopName);

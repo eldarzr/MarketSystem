@@ -25,7 +25,7 @@ class MarketSearchIntegrationTest {
 	@BeforeEach
 	void setUp() throws Exception {
 		market = new Market();
-		market.init();
+		market.init("src/InitFiles/BaseConfig.jason");
 		for(int i = 0; i < usersName.length; i++) {
 			String guestName = market.startSession();
 			market.register(usersName[i], emails[i], passwords[i]);

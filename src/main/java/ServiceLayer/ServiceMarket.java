@@ -57,9 +57,9 @@ public class ServiceMarket {
 		return new Response();
 	}
 
-	public Response init() {
+	public Response init(String configPath) {
 		try {
-			market.init();
+			market.init(configPath);
 		} catch (Exception exception) {
 			return new Response(exception.getMessage());
 		}

@@ -35,7 +35,7 @@ public class DeliverySystemTests {
         MockitoAnnotations.initMocks(this);
         // Initialize the market system
         market = new MarketSystemRealBridge();
-        market.init();
+        market.init("src/InitFiles/BaseConfig.jason");
 
         // Register and login a user
         userName = "johndoe";

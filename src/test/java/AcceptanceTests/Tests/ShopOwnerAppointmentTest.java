@@ -25,7 +25,7 @@ public class ShopOwnerAppointmentTest {
     @BeforeEach
     public void setUp() throws Exception {
         marketSystem = new MarketSystemRealBridge();
-        marketSystem.init();
+        marketSystem.init("src/InitFiles/BaseConfig.jason");
         marketSystem.register(founderUserName, founderEmail, founderPassword);
         marketSystem.login(founderUserName, founderPassword);
         marketSystem.createShop(founderUserName, shopName);

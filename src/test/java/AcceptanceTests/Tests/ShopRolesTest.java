@@ -23,7 +23,7 @@ public class ShopRolesTest {
     public static void setUpClass() throws Exception {
         // Set up market system
         marketSystem = new MarketSystemRealBridge();
-        marketSystem.init();
+        marketSystem.init("src/InitFiles/BaseConfig.jason");
 
         // Register users
         try {

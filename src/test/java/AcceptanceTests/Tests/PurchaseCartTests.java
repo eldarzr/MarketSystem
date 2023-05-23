@@ -20,7 +20,7 @@ public class PurchaseCartTests {
 
     @BeforeEach
     public void setUp() throws Exception {
-        market.init();
+        market.init("src/InitFiles/BaseConfig.jason");
         String ownerName = "owner";
         String email = "owner@example.com";
         String password = "Passw0rd!!!";

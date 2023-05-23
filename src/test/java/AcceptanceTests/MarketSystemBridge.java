@@ -9,7 +9,7 @@ public interface MarketSystemBridge {
     void unregister(String userName);
 
     //open and initialize the market system
-    void init() throws Exception;
+    void init(String configPath) throws Exception;
 
 
     //guest functions

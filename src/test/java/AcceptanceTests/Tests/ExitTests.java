@@ -27,7 +27,7 @@ public class ExitTests {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         //market = new MarketSystemRealBridge();
-        market.init();
+        market.init("src/InitFiles/BaseConfig.jason");
         market.addPaymentProvider(paymentSystem);
         tempUserName = market.startSession();
 

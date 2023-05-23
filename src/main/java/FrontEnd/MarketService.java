@@ -38,7 +38,7 @@ public class MarketService {
 			synchronized ( (MarketService.class)){
 				if(instance == null){
 					instance =  new MarketService();
-					instance.init();
+					instance.init("src/InitFiles/BaseConfig.jason");
 				}
 			}
 		}
@@ -49,9 +49,9 @@ public class MarketService {
 		serviceMarket = new ServiceMarket();
 	}
 
-	public Response init() {
+	public Response init(String configPath) {
 		try {
-			serviceMarket.init();
+			serviceMarket.init(configPath);
 			if (VaadinService.getCurrent() != null) {
 				VaadinService.getCurrent().addSessionInitListener(event ->
 						startSession(event.getSession().getSession().getId()));

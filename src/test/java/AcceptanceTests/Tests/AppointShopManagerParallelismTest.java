@@ -23,7 +23,7 @@ public class AppointShopManagerParallelismTest {
     @BeforeEach
     public void setUp() throws Exception {
         marketSystem = new MarketSystemRealBridge();
-        marketSystem.init();
+        marketSystem.init("src/InitFiles/BaseConfig.jason");
 
         admin1 = "admin1";
         admin2 = "admin2";

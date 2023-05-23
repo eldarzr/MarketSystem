@@ -22,7 +22,7 @@ public class ShopAndProductCreationAndManipulationTests {
     public static void setUp() throws Exception{
 //        if(setUpComplete)return;
         bridge = new MarketSystemRealBridge();
-        bridge.init();
+        bridge.init("src/InitFiles/BaseConfig.jason");
         String pass = "1234Gabi";
         for(int i=0;i<10;i++){
             String index = Integer.toString(i);

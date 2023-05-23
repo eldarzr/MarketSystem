@@ -26,7 +26,7 @@ public class ShopClosureTest {
     @BeforeEach
     public void setUp() throws Exception {
         // Set up market system
-        marketSystem.init();
+        marketSystem.init("src/InitFiles/BaseConfig.jason");
 
         // Register users
         try {

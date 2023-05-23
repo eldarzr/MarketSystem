@@ -26,7 +26,7 @@ public class GuestShoppingActionsTest {
     public void setUp() throws Exception {
 
         market= new MarketSystemRealBridge();
-        market.init();
+        market.init("src/InitFiles/BaseConfig.jason");
         tempUserName = market.startSession();
 
         // create some shops with products for testing

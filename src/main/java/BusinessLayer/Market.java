@@ -22,13 +22,12 @@ import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
 import BusinessLayer.Users.NotificationCallback;
 import BusinessLayer.Users.User;
 import BusinessLayer.Users.UsersHandler;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.apache.commons.lang3.NotImplementedException;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.Transient;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Collection;
@@ -47,9 +46,6 @@ public class Market implements MarketIntr{
     ShopHandler shopHandler;
     private final int SHOP_DISTANCE_MAX_LIMIT = 2;
     private final int PRODUCT_DISTANCE_MAX_LIMIT = 2;
-    private final String ADMIN_NAME = "admin";
-    private final String ADMIN_MAIL = "admin@gmail.com";
-    private final String ADMIN_PASSWORD = "Aa123456";
 
     public Market() {
         usersHandler = UsersHandler.getInstance();
@@ -57,18 +53,37 @@ public class Market implements MarketIntr{
     }
 
     @Override
-    public void init() throws Exception {
-        logger.info("Starting market init.");
+    public void init(String configPath) throws Exception {
         createLogger();
-        loadAdmin();
-        loadProducts();
+        ConfigInit(configPath);
         logger.info("Market init Finished successfully.");
     }
 
-    private void loadAdmin() throws Exception {
+    private void ConfigInit(String configPath) throws Exception {
+        // Read the configuration file
+        FileReader reader = new FileReader(configPath);
+        Gson gson = new Gson();
+        JsonElement configElement = gson.fromJson(reader, JsonElement.class);
+        JsonObject configData = configElement.getAsJsonObject();
+
+        // Access the system administrator details
+        JsonObject systemAdmin = configData.getAsJsonObject("systemAdmin");
+        String adminUsername = systemAdmin.get("username").getAsString();
+        String adminEmail = systemAdmin.get("email").getAsString();
+        String adminPassword = systemAdmin.get("password").getAsString();
+
+        // Close the file reader
+        reader.close();
+
+        loadAdmin(adminUsername,adminEmail,adminPassword);
+
+        logger.info("Loading init configuration Finished successfully.");
+    }
+
+    private void loadAdmin(String adminUsername,String adminEmail,String adminPassword) throws Exception {
         logger.info("Start loading admin data.");
-        register(ADMIN_NAME, ADMIN_MAIL, ADMIN_PASSWORD);
-        addAdmin(ADMIN_NAME);
+        register(adminUsername, adminEmail, adminPassword);
+        addAdmin(adminUsername);
         logger.info("Loading admin data finished successfully.");
     }
 

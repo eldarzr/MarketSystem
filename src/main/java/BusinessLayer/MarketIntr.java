@@ -13,7 +13,7 @@ import java.util.*;
 public interface MarketIntr {
 
     //open and initialize the market system
-    void init() throws Exception;
+    void init(String configPath) throws Exception;
 
     public void resetAll();
 

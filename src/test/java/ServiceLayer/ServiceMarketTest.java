@@ -41,7 +41,7 @@ class ServiceMarketTest {
     void setUp() throws Exception {
 
         market = new ServiceMarket();
-        market.init();
+        market.init("src/InitFiles/BaseConfig.jason");
         for(int i = 0; i < usersName.length; i++) {
             String guestName = market.startSession().getData();
             market.register(usersName[i], emails[i], passwords[i]);

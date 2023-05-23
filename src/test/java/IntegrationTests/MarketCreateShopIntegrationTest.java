@@ -21,7 +21,7 @@ class MarketCreateShopIntegrationTest {
 	void setUp() throws Exception {
 		market = new Market();
 		market.resetAll();
-		market.init();
+		market.init("src/InitFiles/BaseConfig.jason");
 		guestName = market.startSession();
 	}
 

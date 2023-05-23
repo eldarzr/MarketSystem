@@ -25,8 +25,8 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
         market = new Market();
     }
 
-    public void init() throws Exception {
-        market.init();
+    public void init(String configPath) throws Exception {
+        market.init(configPath);
     }
 
     public String startSession() {
