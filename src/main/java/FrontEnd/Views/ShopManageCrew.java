@@ -85,16 +85,15 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
         updateShopStaff();
 
 
-
         // Buttons
-        promoteButton = new Button("Promote To Owner" , e -> handlePromoteOwnerButtonClick());
+        promoteButton = new Button("Promote To Owner", e -> handlePromoteOwnerButtonClick());
         setDefaultStyle(promoteButton);
 
         removeOwnerButton = new Button("RemoveOwner", e -> handleRemoveOwnerButtonClick());
         setDefaultStyle(removeOwnerButton);
 
 
-        viewPermissionsButton = new Button("ViewPermissions" , e -> handleViewPermissionsButtonClick());
+        viewPermissionsButton = new Button("ViewPermissions", e -> handleViewPermissionsButtonClick2());
         setDefaultStyle(viewPermissionsButton);
 
         add(new HorizontalLayout(promoteButton, removeOwnerButton, viewPermissionsButton));
@@ -113,7 +112,6 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
         add(new HorizontalLayout(setManagerButton, setOwnerButton));
 
 
-
     }
 
     private void setDefaultStyle(Button promoteButton) {
@@ -122,7 +120,7 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
     }
 
     protected void updateShopStaff() {
-        SResponseT<List<MemberRoleInShopModel>> res = marketService.getShopManagersAndPermissions(currentUser,shopProfile.getName());
+        SResponseT<List<MemberRoleInShopModel>> res = marketService.getShopManagersAndPermissions(currentUser, shopProfile.getName());
         if (res.isSuccess()) {
             List<MemberRoleInShopModel> shopRoles = res.getData();
             List<Component> roleComponents = shopRoles.stream()
@@ -156,12 +154,14 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
 
         return roleLayout;
     }
+
     private void handleRemoveOwnerButtonClick() {
-        if(clickedRole.getType() == ManageType.MANAGER) {
+        if (clickedRole.getType() == ManageType.MANAGER) {
             Notification.show("Only an owner can be removed");
             return;
         }
         startVertificationDialog();
+        refreshView();
     }
 
     private void startVertificationDialog() {
@@ -172,11 +172,10 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
         Label message = new Label("Are you sure you want to remove the user? Removing them will remove all their subordinates.");
 
         Button okButton = new Button("Ok", event -> {
-            SResponse res = marketService.removeShopOwner(currentUser,clickedRole.getRoleUser(),shopProfile.getName());
-            if (!res.isSuccess() && res!=null) {
+            SResponse res = marketService.removeShopOwner(currentUser, clickedRole.getRoleUser(), shopProfile.getName());
+            if (!res.isSuccess() && res != null) {
                 Notification.show(res.getMessage());
-            }
-            else {
+            } else {
                 Notification.show(clickedRole.getRoleUser() + " and his subordinates has been removed.");
             }
             dialog.close();
@@ -190,25 +189,28 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
     }
 
     private void setOwner(String actor, String actOn, String shopName) {
-        SResponse res = marketService.appointShopOwner(actor,actOn,shopName);
-        if (!res.isSuccess() && res!=null) {
+        SResponse res = marketService.appointShopOwner(actor, actOn, shopName);
+        if (!res.isSuccess() && res != null) {
             Notification.show(res.getMessage());
-        }
-        else {
-            Notification.show("User : "+actOn + " is an Owner now!");
+        } else {
+            Notification.show("User : " + actOn + " is an Owner now!");
         }
     }
 
     private void setManager(String actor, String actOn, String shopName) {
-        SResponse res = marketService.appointShopManager(actor,actOn,shopName);
+        SResponse res = marketService.appointShopManager(actor, actOn, shopName);
 
-        if (!res.isSuccess() && res!=null) {
+        if (!res.isSuccess() && res != null) {
             Notification.show(res.getMessage());
-        }
-        else {
-            Notification.show("User : "+actOn + " is a Manager now!");
+        } else {
+            Notification.show("User : " + actOn + " is a Manager now!");
         }
 
+    }
+
+    protected void refreshView() {
+        scrollView.removeAll();
+        updateShopStaff();
     }
 
 
@@ -217,21 +219,30 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
         clickedRole = role;
         Notification.show("User: " + role.getRoleUser() + ", Role: " + role.getType());
     }
+
     private void handleSetOwnerButtonClick() {
         String newOwnerUsername = newManagerTextField.getValue();
-        setOwner(getCurrentUser().getName(),newOwnerUsername,shopProfile.getName());
+        setOwner(getCurrentUser().getName(), newOwnerUsername, shopProfile.getName());
+        refreshView();
+
     }
 
     private void handlePromoteOwnerButtonClick() {
-        setOwner(getCurrentUser().getName(),clickedRole.getRoleUser(),shopProfile.getName());
+        setOwner(getCurrentUser().getName(), clickedRole.getRoleUser(), shopProfile.getName());
     }
+
     private void handleSetManagerButtonClick() {
         String newManagerUsername = newManagerTextField.getValue();
-        setManager(getCurrentUser().getName(),newManagerUsername,shopProfile.getName());
+        setManager(getCurrentUser().getName(), newManagerUsername, shopProfile.getName());
+        refreshView();
+
     }
+
+
     public void handleViewPermissionsButtonClick() {
 
         List<Integer> currentPermissions = clickedRole.getActivatedPermissions();
+        int manageAccess = clickedRole.getManageKind().getValue();
         Dialog dialog = new Dialog();
         dialog.setWidth("600px");
 
@@ -253,12 +264,14 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
             for (ManagePermissionsEnum permission : grid.getSelectedItems()) {
                 chosenPermissions.add(permission.getValue());
             }
-            SResponseT<MemberRoleInShopModel> res = marketService.changeManagerPermissions(currentUser,clickedRole.getRoleUser(),
-                    shopProfile.getName(),chosenPermissions);
-            if(res!=null && !res.isSuccess()){
+            SResponseT<MemberRoleInShopModel> res = marketService.changeManagerPermissions(currentUser, clickedRole.getRoleUser(),
+
+//            SResponseT<MemberRoleInShopModel> res = marketService.changeManagerPermissions(currentUser,clickedRole.getRoleUser(),
+                    shopProfile.getName(), chosenPermissions);
+            if (res != null && !res.isSuccess()) {
                 Notification.show(res.getMessage());
             }
-            if(res.isSuccess()){
+            if (res.isSuccess()) {
                 Notification.show("Permissions changes successfully");
 //                clickedRole = res.getData();
             }
@@ -271,4 +284,80 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
         dialog.add(layout);
         dialog.open();
     }
+
+    public void handleViewPermissionsButtonClick2() {
+
+        // Determine the current manage access type from the clickedRole
+        int manageAccess = clickedRole.getManageKind().getValue();
+
+        Dialog dialog = new Dialog();
+        dialog.setWidth("600px");
+
+        Button readOnlyButton = new Button("Read Only");
+        setDefaultStyle(readOnlyButton);
+        Button managePermissionsButton = new Button("Manage Permissions");
+        setDefaultStyle(managePermissionsButton);
+        Button fullAccessButton = new Button("Full Access");
+        setDefaultStyle(fullAccessButton);
+
+        // An array of buttons for easy access
+        Button[] accessButtons = new Button[]{readOnlyButton, managePermissionsButton, fullAccessButton};
+
+        // Set the initial state of the buttons according to the clickedRole
+        for (int i = 0; i < accessButtons.length; i++) {
+            if (i == manageAccess) {
+                accessButtons[i].getStyle().set("opacity", "1");
+            } else {
+                accessButtons[i].getStyle().set("opacity", "0.5");
+            }
+        }
+
+        // Add click listeners to each button
+        readOnlyButton.addClickListener(event -> highlightButton(accessButtons, 0));
+        managePermissionsButton.addClickListener(event -> highlightButton(accessButtons, 1));
+        fullAccessButton.addClickListener(event -> highlightButton(accessButtons, 2));
+
+        HorizontalLayout layout = new HorizontalLayout();
+        layout.add(readOnlyButton, managePermissionsButton, fullAccessButton);
+
+        Button changePermissionsButton = new Button("Change Permissions");
+        setDefaultStyle(changePermissionsButton);
+        changePermissionsButton.addClickListener(event -> {
+            // Determine which button is highlighted and save its index
+            int chosenAccess = -1;
+            for (int i = 0; i < accessButtons.length; i++) {
+                if ("bold".equals(accessButtons[i].getStyle().get("font-weight"))) {
+                    chosenAccess = i;
+                    break;
+                }
+            }
+
+            // Do something with chosenAccess, e.g. save it to the clickedRole
+            SResponseT<MemberRoleInShopModel> res = marketService.changeManagerAccess(currentUser,clickedRole.getRoleUser(), shopProfile.getName(),chosenAccess);
+            if (res != null && !res.isSuccess()) {
+                Notification.show(res.getMessage());
+            }
+            if (res.isSuccess()) {
+                Notification.show("Permissions changes successfully");
+//                clickedRole = res.getData();
+            }
+        dialog.close();
+        });
+
+        layout.add(new VerticalLayout(changePermissionsButton));
+        dialog.add(layout);
+        dialog.open();
+    }
+
+    private void highlightButton(Button[] buttons, int indexToHighlight) {
+        // Highlight the selected button and dim others
+        for (int i = 0; i < buttons.length; i++) {
+            if (i == indexToHighlight) {
+                buttons[i].getStyle().set("opacity", "1");
+            } else {
+                buttons[i].getStyle().set("opacity", "0.5");
+            }
+        }
+    }
+
 }

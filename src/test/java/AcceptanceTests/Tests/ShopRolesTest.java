@@ -62,9 +62,9 @@ public class ShopRolesTest {
     @AfterAll
     public static void tearDownClass() {
         // Unregister users and clear data
-        marketSystem.unregister("shopOwner");
-        marketSystem.unregister("shopManager1");
-        marketSystem.unregister("shopManager2");
+//        marketSystem.unregister("shopOwner");
+//        marketSystem.unregister("shopManager1");
+//        marketSystem.unregister("shopManager2");
         marketSystem.clearData();
     }
 
@@ -77,7 +77,7 @@ public class ShopRolesTest {
     @AfterEach
     public void tearDown() throws Exception {
         // Close shop
-        marketSystem.closeShop(shopOwner, shopName);
+//        marketSystem.closeShop(shopOwner, shopName);
     }
 
     @Test

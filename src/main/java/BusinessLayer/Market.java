@@ -26,9 +26,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.apache.commons.lang3.NotImplementedException;
+
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -66,6 +70,12 @@ public class Market implements MarketIntr{
         JsonElement configElement = gson.fromJson(reader, JsonElement.class);
         JsonObject configData = configElement.getAsJsonObject();
 
+        // Access the database details
+        JsonObject database = configData.getAsJsonObject("database");
+        String database_path = database.get("path").getAsString();
+        String database_admin = database.get("admin").getAsString();
+        String database_password = database.get("password").getAsString();
+
         // Access the system administrator details
         JsonObject systemAdmin = configData.getAsJsonObject("systemAdmin");
         String adminUsername = systemAdmin.get("username").getAsString();
@@ -74,7 +84,7 @@ public class Market implements MarketIntr{
 
         // Close the file reader
         reader.close();
-
+        loadDatabase(database_path, database_admin, database_password);
         loadAdmin(adminUsername,adminEmail,adminPassword);
 
         logger.info("Loading init configuration Finished successfully.");
@@ -85,6 +95,27 @@ public class Market implements MarketIntr{
         register(adminUsername, adminEmail, adminPassword);
         addAdmin(adminUsername);
         logger.info("Loading admin data finished successfully.");
+    }
+
+    private void loadDatabase(String databasePath, String adminName, String adminPassword) throws Exception {
+        logger.info("Start loading database data.");
+        // Read the persistence.xml file
+        File file = new File("src/main/resources/META-INF/persistence.xml");
+        String content = new String(Files.readAllBytes(Paths.get(file.getPath())));
+
+        // Update the values in the XML content
+        String updatedContent = content.replaceAll("<property name=\"javax.persistence.jdbc.url\" value=\"[^\"]*\" />",
+                "<property name=\"javax.persistence.jdbc.url\" value=\"" + databasePath + "\" />");
+        updatedContent = updatedContent.replaceAll("<property name=\"javax.persistence.jdbc.user\" value=\"[^\"]*\" />",
+                "<property name=\"javax.persistence.jdbc.user\" value=\"" + adminName + "\" />");
+        updatedContent = updatedContent.replaceAll("<property name=\"javax.persistence.jdbc.password\" value=\"[^\"]*\" />",
+                "<property name=\"javax.persistence.jdbc.password\" value=\"" + adminPassword + "\" />");
+
+        // Write the updated content back to the persistence.xml file
+        FileWriter writer = new FileWriter(file);
+        writer.write(updatedContent);
+        writer.close();
+        logger.info("Loading database data finished successfully.");
     }
 
     //todo: suggestion - we use logger in most of classes,
@@ -247,6 +278,8 @@ public class Market implements MarketIntr{
     public void removeProduct(String userName, String shopName, String productName) throws Exception {
         logger.info(String.format("Attempt by user %s to remove product %s from store %s.", userName,productName, shopName));
         validateLoggedInException(userName);
+        //TODO: remove product from all carts. relevant for DB
+        usersHandler.removeProductFromAllCarts(shopName, productName);
         shopHandler.removeProduct(userName, shopName, productName);
         logger.info(String.format("User %s removed product %s from store %s.", userName,productName, shopName));
     }
@@ -434,6 +467,22 @@ public class Market implements MarketIntr{
         logger.info(String.format("User %s added to %s permissions in shop %s.", actor,actOn, shopName));
     }
 
+    public MemberRoleInShop changeManagerAccess(String actor, String actOn, String shopName,int permission) throws Exception {
+        logger.info(String.format("Attempt by user %s to add manager permissions of %s as shop-manager of shop %s.", actor,actOn, shopName));
+        validateUserIsntGuest(actor);
+        isLoggedIn(actor);
+        validateUserIsntGuest(actOn);
+        Shop reqShop = checkForShop(shopName);
+        //notify appointee
+        String message=String.format("User %s added to your permissions in shop %s.", actor, shopName);
+        Notification notification=new Notification(actor,message);
+        NotificationPublisher.getInstance().notify(actOn,notification);
+        logger.info(String.format("User %s added to %s permissions in shop %s.", actor,actOn, shopName));
+      return reqShop.changeManageOption(actor,actOn,permission);
+
+    }
+
+
     //todo: naor - talk with eldar
     @Override
     public Collection<MemberRoleInShop> getShopManagersAndPermissions(String userName, String shopName) throws Exception {
@@ -572,42 +621,54 @@ public class Market implements MarketIntr{
         usersHandler.findMemberByName(userName);
         usersHandler.findLoginUser(userName);
         Shop shop = shopHandler.getShop(shopName);
-        return shop.addCategoryDiscount(userName,discountPercentage,category);
+        CategoryDiscount categoryDiscount = shop.addCategoryDiscount(userName,discountPercentage,category);
+        ShopRepository.getInstance().updateToDB(shopName);
+        return categoryDiscount;
     }
 
     public ProductDiscount addProductDiscount(String shopName, String userName, double discountPercentage, String productName) throws Exception {
         usersHandler.findMemberByName(userName);
         usersHandler.findLoginUser(userName);
         Shop shop = shopHandler.getShop(shopName);
-        return shop.addProductDiscount(userName,discountPercentage,productName);
+        ProductDiscount productDiscount =  shop.addProductDiscount(userName,discountPercentage,productName);
+        ShopRepository.getInstance().updateToDB(shopName);
+        return productDiscount;
     }
 
     public ShopDiscount addShopDiscount(String shopName, String userName, double discountPercentage) throws Exception {
         usersHandler.findMemberByName(userName);
         usersHandler.findLoginUser(userName);
         Shop shop = shopHandler.getShop(shopName);
-        return shop.addShopDiscount(userName,discountPercentage);
+        ShopDiscount shopDiscount = shop.addShopDiscount(userName,discountPercentage);
+        ShopRepository.getInstance().updateToDB(shopName);
+        return shopDiscount;
     }
 
     public SumCompoundDiscount addSumDiscount(String shopName, String userName, List<Integer> discountsIds) throws Exception {
         usersHandler.findMemberByName(userName);
         usersHandler.findLoginUser(userName);
         Shop shop = shopHandler.getShop(shopName);
-        return shop.addSumDiscount(userName,discountsIds);
+        SumCompoundDiscount sumCompoundDiscount = shop.addSumDiscount(userName,discountsIds);
+        ShopRepository.getInstance().updateToDB(shopName);
+        return sumCompoundDiscount;
     }
 
     public MaxCompoundDiscount addMaxDiscount(String shopName, String userName, List<Integer> discountsIds) throws Exception {
         usersHandler.findMemberByName(userName);
         usersHandler.findLoginUser(userName);
         Shop shop = shopHandler.getShop(shopName);
-        return shop.addMaxDiscount(userName,discountsIds);
+        MaxCompoundDiscount maxCompoundDiscount = shop.addMaxDiscount(userName,discountsIds);
+        ShopRepository.getInstance().updateToDB(shopName);
+        return maxCompoundDiscount;
     }
 
     public XorCompoundDiscount addXorDiscount(String shopName, String userName, List<Integer> discountsIds, XorDecisionRuleName xorDiscountRule) throws Exception {
         usersHandler.findMemberByName(userName);
         usersHandler.findLoginUser(userName);
         Shop shop = shopHandler.getShop(shopName);
-        return shop.addXorDiscount(userName,discountsIds,xorDiscountRule);
+        XorCompoundDiscount xorCompoundDiscount = shop.addXorDiscount(userName,discountsIds,xorDiscountRule);
+        ShopRepository.getInstance().updateToDB(shopName);
+        return xorCompoundDiscount;
     }
 
     public void addDiscountRule(String shopName, String userName, DiscountRule discountRule, int discountId, String actionWithOldRule) throws Exception {
@@ -616,6 +677,7 @@ public class Market implements MarketIntr{
         Shop shop = shopHandler.getShop(shopName);
         CompoundRuleType actionWithOldRuleE = getEnumValue(actionWithOldRule);
         shop.addDiscountRule(userName,discountRule,discountId,actionWithOldRuleE);
+        ShopRepository.getInstance().updateToDB(shopName);
     }
 
     public void resetDiscountRule(String shopName, String userName, int discountId) throws Exception {
@@ -623,6 +685,7 @@ public class Market implements MarketIntr{
         usersHandler.findLoginUser(userName);
         Shop shop = shopHandler.getShop(shopName);
         shop.resetDiscountRule(discountId);
+        ShopRepository.getInstance().updateToDB(shopName);
     }
 
 
@@ -796,13 +859,17 @@ public class Market implements MarketIntr{
 	public void addAgePurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int startAge, int endAge)throws Exception{
         validateUserIsntGuest(userName);
         isLoggedIn(userName);
-        getShop(shopName).getPurchasePolicyManager(userName).addAgeConstraint(isProduct,toConstraint,positive,startAge,endAge);
+        Shop shop = getShop(shopName);
+        shop.getPurchasePolicyManager(userName).addAgeConstraint(isProduct,toConstraint,positive,startAge,endAge);
+        PersistenceManager.getInstance().updateObj(shop);
     }
 
     public void addQuantityPurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int minQuantity, int maxQuantity)throws Exception{
         validateUserIsntGuest(userName);
         isLoggedIn(userName);
-        getShop(shopName).getPurchasePolicyManager(userName).addQuantityConstraint(isProduct,toConstraint,positive,minQuantity,maxQuantity);
+        Shop shop = getShop(shopName);
+        shop.getPurchasePolicyManager(userName).addQuantityConstraint(isProduct,toConstraint,positive,minQuantity,maxQuantity);
+        PersistenceManager.getInstance().updateObj(shop);
     }
 	
 	public void removeDiscount(String shopName, String userName, int discountId) throws Exception {
@@ -814,30 +881,41 @@ public class Market implements MarketIntr{
     public void addDatePurchasePolicy(String userName, String shopName, boolean isProduct, String toConstraint, boolean positive, LocalDate startDate, LocalDate endDate)throws Exception{
         validateUserIsntGuest(userName);
         isLoggedIn(userName);
-        getShop(shopName).getPurchasePolicyManager(userName).addDateConstraint(isProduct,toConstraint,positive,startDate,endDate);
+        Shop shop = getShop(shopName);
+        shop.getPurchasePolicyManager(userName).addDateConstraint(isProduct,toConstraint,positive,startDate,endDate);
+        PersistenceManager.getInstance().updateObj(shop);
     }
 
     public void addTimePurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int startHour, int endHour)throws Exception{
         validateUserIsntGuest(userName);
         isLoggedIn(userName);
-        getShop(shopName).getPurchasePolicyManager(userName).addTimeConstraint(isProduct,toConstraint,positive,startHour,endHour);
+        Shop shop = getShop(shopName);
+        shop.getPurchasePolicyManager(userName).addTimeConstraint(isProduct,toConstraint,positive,startHour,endHour);
+        PersistenceManager.getInstance().updateObj(shop);
     }
 
     public void addOrPurchasePolicy(String userName, String shopName,int pid1, int pid2)throws Exception{
         validateUserIsntGuest(userName);
         isLoggedIn(userName);
-        getShop(shopName).getPurchasePolicyManager(userName).addComplexConstraint(pid1,pid2, ComplexPolicyType.OR);
+        Shop shop = getShop(shopName);
+        shop.getPurchasePolicyManager(userName).addComplexConstraint(pid1,pid2, ComplexPolicyType.OR);
+        PersistenceManager.getInstance().updateObj(shop);
+
     }
     public void addAndPurchasePolicy(String userName, String shopName,int pid1, int pid2)throws Exception{
         validateUserIsntGuest(userName);
         isLoggedIn(userName);
-        getShop(shopName).getPurchasePolicyManager(userName).addComplexConstraint(pid1,pid2, ComplexPolicyType.AND);
+        Shop shop = getShop(shopName);
+        shop.getPurchasePolicyManager(userName).addComplexConstraint(pid1,pid2, ComplexPolicyType.AND);
+        PersistenceManager.getInstance().updateObj(shop);
     }
 
     public void addIfPurchasePolicy(String userName, String shopName,int pid1, int pid2)throws Exception{
         validateUserIsntGuest(userName);
         isLoggedIn(userName);
-        getShop(shopName).getPurchasePolicyManager(userName).addComplexConstraint(pid1,pid2, ComplexPolicyType.IF);
+        Shop shop = getShop(shopName);
+        shop.getPurchasePolicyManager(userName).addComplexConstraint(pid1,pid2, ComplexPolicyType.IF);
+        PersistenceManager.getInstance().updateObj(shop);
     }
 
     private CompoundRuleType getEnumValue(String actionWithOldRule) {
@@ -859,7 +937,9 @@ public class Market implements MarketIntr{
     public void setActivePurchasePolicy(String userName, String shopName, int policyId) throws Exception {
         validateUserIsntGuest(userName);
         usersHandler.findLoginUser(userName);
-        getShop(shopName).getPurchasePolicyManager(userName).setActivePolicy(policyId);
+        Shop shop = getShop(shopName);
+        shop.getPurchasePolicyManager(userName).setActivePolicy(policyId);
+        PersistenceManager.getInstance().updateObj(shop);
     }
 
     public Integer getActivePurchasePolicyId(String userName, String shopName) throws Exception {

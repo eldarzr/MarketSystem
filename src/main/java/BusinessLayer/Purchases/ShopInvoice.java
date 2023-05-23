@@ -1,6 +1,5 @@
 package BusinessLayer.Purchases;
 
-import BusinessLayer.Shops.Product;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,17 +18,22 @@ public class ShopInvoice extends Invoice {
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "shop_invoice_id")
+//	@Transient
 	private List<ProductInfo> productInfoInShop = new ArrayList<>();
 
+	@Column(name = "shopName")
 	private String shopName;
+
+	public ShopInvoice() {
+	}
 
 	public ShopInvoice(String userName, String paymentMethod, String deliveryMethod, String shopName) {
 		super(userName, paymentMethod, deliveryMethod);
 		this.shopName = shopName;
 	}
 
-	public void addProduct(Product product, int quantity) {
-		productInfoInShop.add(new ProductInfo(product, quantity));
+	public void addProduct(ProductInfo productInfo) {
+		productInfoInShop.add(productInfo);
 	}
 
 	public Collection<String> getProducts() {

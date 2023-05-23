@@ -4,14 +4,21 @@ import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Purchases.ShopBagItem;
 import BusinessLayer.Users.User;
 
+import javax.persistence.*;
 import java.util.Collection;
 
+@Entity
+@DiscriminatorValue("QuantityPurchasePolicy")
 public class QuantityPurchasePolicy extends BasicPolicy{
-
+    @Column(name = "min_quantity")
     int minQuantity;
+    @Column(name = "max_quantity")
     int maxQuantity;
 
-    public QuantityPurchasePolicy(int id, boolean isProduct, String toConstraint, boolean positive,int minQuantity, int maxQuantity) {
+    public QuantityPurchasePolicy() {
+    }
+
+    public QuantityPurchasePolicy(int id, boolean isProduct, String toConstraint, boolean positive, int minQuantity, int maxQuantity) {
         super(id, isProduct, toConstraint, positive);
         this.maxQuantity = maxQuantity;
         this.minQuantity = minQuantity;

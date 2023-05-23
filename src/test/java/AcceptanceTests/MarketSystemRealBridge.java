@@ -1,5 +1,6 @@
 package AcceptanceTests;
 
+import BusinessLayer.Bids.Bid;
 import BusinessLayer.Enums.ManageType;
 import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
@@ -8,12 +9,15 @@ import BusinessLayer.MarketIntr;
 import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.Purchases.*;
 import BusinessLayer.Shops.ProductIntr;
+import BusinessLayer.Shops.PurchasePolicies.PurchasePolicy;
 import BusinessLayer.Shops.Shop;
 import BusinessLayer.Shops.ShopProduct;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public class MarketSystemRealBridge implements MarketSystemBridge {
 
@@ -252,7 +256,7 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
         market.logout(adminUserName);
         Collection<String> ret = new ArrayList<>();
         for(MemberRoleInShop m : memberRoleInShops){
-            if(m.getType().equals(ManageType.OWNER))ret.add(m.getRoleUser());
+            if(m.getType().equals(ManageType.OWNER))ret.add(m.getUserName());
         }
         return ret;
     }
@@ -263,7 +267,7 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
         market.logout(adminUserName);
         Collection<String> ret = new ArrayList<>();
         for(MemberRoleInShop m : memberRoleInShops){
-            if(m.getType().equals(ManageType.MANAGER))ret.add(m.getRoleUser());
+            if(m.getType().equals(ManageType.MANAGER))ret.add(m.getUserName());
         }
         return ret;
     }
@@ -335,7 +339,7 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
         market.logout(adminUserName);
         shopManager=shopManager.toLowerCase();
         for ( MemberRoleInShop m : memberRoleInShops){
-            if(m.getRoleUser().equals(shopManager)){
+            if(m.getUserName().equals(shopManager)){
                 return m.getPermissions().getActivatedPermissions();
             }
         }
@@ -345,5 +349,90 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     @Override
     public void removeShopOwner(String ShopOwner, String shopOwner, String shopName) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void createBidOffer(String userName, String productName, String shopName, double bidPrice) throws Exception {
+        market.createBidOffer(userName, productName, shopName, bidPrice);
+    }
+
+    @Override
+    public Collection<Bid> getPendingBids(String userName, String shopName) throws Exception {
+        return market.getPendingBids(userName, shopName);
+    }
+
+    @Override
+    public Collection<Bid> getApprovedBids(String userName, String shopName) throws Exception {
+        return market.getApprovedBids(userName, shopName);
+    }
+
+    @Override
+    public Collection<Bid> getRejectedBids(String userName, String shopName) throws Exception {
+        return market.getRejectedBids(userName, shopName);
+    }
+
+    @Override
+    public void approveBid(String userName, int bidId) throws Exception {
+        market.approveBid(userName, bidId);
+    }
+
+    @Override
+    public void rejectBid(String userName, int bidId) throws Exception {
+        market.rejectBid(userName, bidId);
+    }
+
+    @Override
+    public Map<Integer, PurchasePolicy> getAllPurchasePolicies(String userName, String shopName) throws Exception {
+        return market.getAllPurchasePolicies(userName, shopName);
+    }
+
+    @Override
+    public void setActivePurchasePolicy(String userName, String shopName, int policyId) throws Exception {
+        market.setActivePurchasePolicy(userName, shopName, policyId);
+    }
+
+    @Override
+    public Integer getActivePurchasePolicyId(String userName, String shopName) throws Exception {
+        return market.getActivePurchasePolicyId(userName, shopName);
+    }
+
+    @Override
+    public void addAgePurchasePolicy(String userName, String shopName, boolean isProduct, String toConstraint, boolean positive, int startAge, int endAge) throws Exception {
+        market.addAgePurchasePolicy(userName, shopName, isProduct, toConstraint, positive, startAge, endAge);
+    }
+
+    @Override
+    public void addQuantityPurchasePolicy(String userName, String shopName, boolean isProduct, String toConstraint, boolean positive, int minQuantity, int maxQuantity) throws Exception {
+        market.addQuantityPurchasePolicy(userName, shopName, isProduct, toConstraint, positive, minQuantity, maxQuantity);
+    }
+
+    @Override
+    public void removeDiscount(String shopName, String userName, int discountId) throws Exception {
+
+    }
+
+    @Override
+    public void addDatePurchasePolicy(String userName, String shopName, boolean isProduct, String toConstraint, boolean positive, LocalDate startDate, LocalDate endDate) throws Exception {
+        market.addDatePurchasePolicy(userName, shopName, isProduct, toConstraint, positive, startDate, endDate);
+    }
+
+    @Override
+    public void addTimePurchasePolicy(String userName, String shopName, boolean isProduct, String toConstraint, boolean positive, int startHour, int endHour) throws Exception {
+        market.addTimePurchasePolicy(userName, shopName, isProduct, toConstraint, positive, startHour, endHour);
+    }
+
+    @Override
+    public void addOrPurchasePolicy(String userName, String shopName, int pid1, int pid2) throws Exception {
+        market.addOrPurchasePolicy(userName, shopName, pid1, pid2);
+    }
+
+    @Override
+    public void addAndPurchasePolicy(String userName, String shopName, int pid1, int pid2) throws Exception {
+        market.addAndPurchasePolicy(userName, shopName, pid1, pid2);
+    }
+
+    @Override
+    public void addIfPurchasePolicy(String userName, String shopName, int pid1, int pid2) throws Exception {
+        market.addIfPurchasePolicy(userName, shopName, pid1, pid2);
     }
 }

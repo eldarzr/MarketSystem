@@ -3,11 +3,20 @@ package BusinessLayer.Shops.PurchasePolicies.BasicPolicies;
 import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Users.User;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@DiscriminatorValue("AgePurchasePolicy")
 public class AgePurchasePolicy extends BasicPolicy{
+    @Column(name = "start_age")
     int startAge;
+    @Column(name = "end_age")
     int endAge;
+
+    public AgePurchasePolicy() {
+    }
+
     public AgePurchasePolicy(int id, boolean isProduct, String toConstraint, boolean positive, int startAge, int endAge) {
         super(id, isProduct, toConstraint, positive);
         this.startAge = startAge;

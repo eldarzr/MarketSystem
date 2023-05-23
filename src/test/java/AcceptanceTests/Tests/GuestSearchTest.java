@@ -42,7 +42,7 @@ public class GuestSearchTest {
 
     @AfterEach
     public void tearDown() {
-        market.logout(tempUserName);
+//        market.logout(tempUserName);
         market.clearData();
     }
 

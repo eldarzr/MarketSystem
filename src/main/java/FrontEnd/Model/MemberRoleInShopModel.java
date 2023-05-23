@@ -1,5 +1,6 @@
 package FrontEnd.Model;
 
+import BusinessLayer.Enums.ManageKindEnum;
 import BusinessLayer.Enums.ManageType;
 import ServiceLayer.DataObjects.MemberRoleInShopDataObj;
 
@@ -13,6 +14,8 @@ public class MemberRoleInShopModel implements Serializable {
     private String grantor;
     private String roleUser;
     private ManageType type;
+
+    private ManageKindEnum manageKind;
     private List<Integer> activatedPermissions = new ArrayList<>();
 
 //    private ManagePermissions permissions;
@@ -32,6 +35,7 @@ public class MemberRoleInShopModel implements Serializable {
         this.roleShop =  new ShopModel(memberRoleInShop.getRoleShop());
         this.roleUser = memberRoleInShop.getRoleUser();
         this.activatedPermissions = memberRoleInShop.getPermissions().getActivatedPermissions();
+        this.manageKind = memberRoleInShop.getManageKind();
     }
 
     public ShopModel getRoleShop() {
@@ -64,6 +68,10 @@ public class MemberRoleInShopModel implements Serializable {
 
     public void setType(ManageType type) {
         this.type = type;
+    }
+
+    public ManageKindEnum getManageKind() {
+        return manageKind;
     }
 
     public List<Integer> getActivatedPermissions() {

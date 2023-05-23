@@ -3,12 +3,21 @@ package BusinessLayer.Shops.PurchasePolicies.BasicPolicies;
 import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Users.User;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+@Entity
+@DiscriminatorValue("TimePurchasePolicy")
 public class TimePurchasePolicy extends BasicPolicy{
+    @Column(name = "start_hour")
     int startHour;
+    @Column(name = "end_hour")
     int endHour;
+
+    public TimePurchasePolicy() {
+    }
+
     public TimePurchasePolicy(int id, boolean isProduct, String toConstraint, boolean positive, int start, int end) {
         super(id, isProduct, toConstraint, positive);
         startHour = start;

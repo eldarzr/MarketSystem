@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -95,7 +96,7 @@ public class ParallelismTest {
         // Add a product with quantity 1
         String productName = "product1";
         marketSystem.addNewProduct(user, shopName, productName, "category","description", 10, 1);
-
+        AtomicBoolean productRemovedB4AddedToCart = new AtomicBoolean(false);
         // Delete the product and try to buy it at the same time
         Runnable task1 = () -> {
             try {
@@ -108,7 +109,7 @@ public class ParallelismTest {
             try{
                 marketSystem.addProductsToCart(user, shopName, productName, 1);
             }catch (Exception e){
-
+                productRemovedB4AddedToCart.set(true);
             }
         };
         executor.submit(task1);
@@ -118,6 +119,7 @@ public class ParallelismTest {
         executor.shutdown();
         executor.awaitTermination(5, TimeUnit.SECONDS);
         // Assert that the product was not purchased
+        int a = marketSystem.getProductQuantityInShop(shopName, productName);
         assertTrue(marketSystem.getProductQuantityInShop(shopName, productName) == -1);
     }
 }

@@ -2,6 +2,7 @@ package BusinessLayer.Shops;
 
 import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.PersistenceManager;
+import BusinessLayer.ProductId;
 import BusinessLayer.Purchases.ShopInvoice;
 import BusinessLayer.Search;
 import BusinessLayer.Users.User;
@@ -16,11 +17,10 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static BusinessLayer.Shops.Shop.entityManager;
 
 public class ShopRepository {
 
-    private static class  ShopRepo {
+	private static class  ShopRepo {
         private static ShopRepository instance = new ShopRepository() ;
     }
 
@@ -36,7 +36,7 @@ public class ShopRepository {
     }
 
     public List<Shop> getAllShops() {
-        TypedQuery<Shop> query = entityManager.createQuery("SELECT s FROM Shop s", Shop.class);
+        TypedQuery<Shop> query = PersistenceManager.getInstance().getEntityManager().createQuery("SELECT s FROM Shop s", Shop.class);
         return query.getResultList();
     }
 
@@ -84,4 +84,19 @@ public class ShopRepository {
         Shop shop = getShop(shopName);
         PersistenceManager.getInstance().updateObj(shop);
     }
+
+    public void removeConnectionFromDB(String shopName, ShopProduct shopProduct) {
+        PersistenceManager.getInstance().removeFromDB(shopProduct);
+//        EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
+////        PersistenceManager.getInstance().lock();
+//        entityManager.getTransaction().begin();
+//        ShopProduct managedShopProduct = entityManager.find(ShopProduct.class, new ProductId(shopName, shopProduct.getName()));
+//        entityManager.remove(managedShopProduct);
+//        entityManager.getTransaction().commit();
+////        PersistenceManager.getInstance().unlock();
+        updateToDB(shopName);
+
+//        PersistenceManager.getInstance().removeConnectionFromDB(shop, shopProduct);
+    }
+
 }

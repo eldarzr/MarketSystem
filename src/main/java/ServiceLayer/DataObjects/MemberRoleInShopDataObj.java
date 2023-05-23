@@ -1,6 +1,7 @@
 package ServiceLayer.DataObjects;
 
 
+import BusinessLayer.Enums.ManageKindEnum;
 import BusinessLayer.Enums.ManageType;
 import BusinessLayer.ManagePermissions;
 import BusinessLayer.MemberRoleInShop;
@@ -12,6 +13,7 @@ public class MemberRoleInShopDataObj {
 	private String grantor;
 	private String roleUser;
 	private ManageType type;
+	private ManageKindEnum manageKind;
 	private ManagePermissions permissions;
 	private List<Integer> activatedPermissions;
 
@@ -30,8 +32,9 @@ public class MemberRoleInShopDataObj {
 		this.type = memberRoleInShop.getType();
 		this.permissions = memberRoleInShop.getPermissions();
 		this.roleShop =  new ShopDataObj(memberRoleInShop.getRoleShop());
-		this.roleUser = memberRoleInShop.getRoleUser();
+		this.roleUser = memberRoleInShop.getUserName();
 		this.activatedPermissions = memberRoleInShop.getPermissions().getActivatedPermissions();
+		this.manageKind = memberRoleInShop.getManageKind();
 	}
 
 	public ShopDataObj getRoleShop() {
@@ -53,4 +56,8 @@ public class MemberRoleInShopDataObj {
 	public ManagePermissions getPermissions() {
 		return permissions;
 	}
+
+    public ManageKindEnum getManageKind() {
+		return manageKind;
+    }
 }

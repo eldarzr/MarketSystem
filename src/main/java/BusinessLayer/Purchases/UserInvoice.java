@@ -24,6 +24,9 @@ public class UserInvoice extends Invoice {
 	@MapKeyColumn(name = "shop_name")
 	private Map<String, ShopInfo> shopInfos;
 
+	public UserInvoice() {
+	}
+
 	public UserInvoice(String userName, String paymentMethod, String deliveryMethod) {
 		super(userName, paymentMethod, deliveryMethod);
 		shopInfos = new HashMap<>();

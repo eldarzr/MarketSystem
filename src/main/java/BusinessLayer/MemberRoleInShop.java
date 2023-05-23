@@ -1,54 +1,76 @@
 package BusinessLayer;
 
-import BusinessLayer.ManagePermissions;
+import BusinessLayer.Enums.ManageKindEnum;
 import BusinessLayer.Enums.ManageType;
 import BusinessLayer.Shops.Shop;
 //import BusinessLayer.Shops.ShopMessageObserver;
-import BusinessLayer.Users.User;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static BusinessLayer.Enums.ManageType.*;
-import static BusinessLayer.Enums.ManagePermissionsEnum.*;
 
-public class MemberRoleInShop {
+@Entity
+	@Table(name = "MemberRoleInShop")
+//	@IdClass(ShopBagId.class) // composite key class
+	public class MemberRoleInShop implements Serializable {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	@ManyToOne
+	@JoinColumn(name = "roleShopName")
 	private Shop roleShop;
 
 	private String grantor;
-	private String roleUser;
+	//		@Id
+	@Column(name = "userName")
+	private String userName;
+	//		@Id
+	@Column(name = "shopName")
+	private String shopName;
 	private ManageType type;
+	//		@Transient
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "permissions_id", referencedColumnName = "id")
 	private ManagePermissions permissions;
-	private List<Integer> activatedPermissions;
 
+	@Transient
 	private Lock lock;
 
-	private MemberRoleInShop(Shop roleShop , String roleUser , String grantor, ManageType type, ManagePermissions permissions) {
+	public MemberRoleInShop() {
+		lock = new ReentrantLock();
+	}
+
+	private MemberRoleInShop(Shop roleShop, String userName, String grantor, ManageType type, ManagePermissions permissions) {
 		this.grantor = grantor;
 		this.type = type;
 		this.permissions = permissions;
-		this.roleShop =  roleShop;
-		this.roleUser = roleUser;
+		this.roleShop = roleShop;
+		this.shopName = roleShop.getName();
+		this.userName = userName;
 		this.lock = new ReentrantLock();
-		this.activatedPermissions =  this.permissions.getActivatedPermissions();
 	}
 
 	public static MemberRoleInShop createFounder(String user, Shop shop, MessageObserver observer) throws Exception {
 		//TODO: add logic to add owner
-		MemberRoleInShop founder= new MemberRoleInShop(shop ,user , null, OWNER, ManagePermissions.getFullAccessPermissions());
-		return adjustRole(founder,observer);
+		MemberRoleInShop founder = new MemberRoleInShop(shop, user, null, OWNER, ManagePermissions.getFullAccessPermissions());
+		return adjustRole(founder, observer);
 	}
 
-	public static MemberRoleInShop createOwner(String roleUser , Shop roleShop , String grantor , MessageObserver observer) throws Exception {
+	public static MemberRoleInShop createOwner(String roleUser, Shop roleShop, String grantor, MessageObserver observer) throws Exception {
 		//TODO: add logic to add owner
-		MemberRoleInShop owner= new MemberRoleInShop(roleShop , roleUser , grantor , OWNER, ManagePermissions.getFullAccessPermissions());
+		MemberRoleInShop owner = new MemberRoleInShop(roleShop, roleUser, grantor, OWNER, ManagePermissions.getFullAccessPermissions());
 		return adjustRole(owner, observer);
 	}
 
-	public static MemberRoleInShop createManager(String roleUser , Shop roleShop , String grantor, MessageObserver observer) throws Exception {
+	public static MemberRoleInShop createManager(String roleUser, Shop roleShop, String grantor, MessageObserver observer) throws Exception {
 		//TODO: add logic to add manager
-		MemberRoleInShop manager= new MemberRoleInShop(roleShop,roleUser,grantor, MANAGER, ManagePermissions.getReadOnlyPermissions());
+		MemberRoleInShop manager = new MemberRoleInShop(roleShop, roleUser, grantor, MANAGER, ManagePermissions.getReadOnlyPermissions());
 		return adjustRole(manager, observer);
 	}
 
@@ -64,12 +86,12 @@ public class MemberRoleInShop {
 		return grantor;
 	}
 
-	public String getRoleUser() {
-		return roleUser;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setRoleUser(String roleUser) {
-		this.roleUser = roleUser;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public ManageType getType() {
@@ -86,35 +108,61 @@ public class MemberRoleInShop {
 
 	public void setPermissions(ManagePermissions permissions) {
 		this.permissions = permissions;
-		this.activatedPermissions = this.permissions.getActivatedPermissions();
 	}
 
 	public void setPermissions(List<Integer> permissions) throws Exception {
+		try {
 		lock.lock();
 		this.permissions.setNewPermissions(permissions);
-		this.activatedPermissions = this.permissions.getActivatedPermissions();
-		lock.unlock();
+		}
+		catch (Exception e){
+			throw e;
+		}
+		finally {
+			lock.unlock();
+		}
 	}
-	private static MemberRoleInShop adjustRole(MemberRoleInShop role , MessageObserver obs) throws Exception {
-		String roleUser = role.roleUser;
+
+	private static MemberRoleInShop adjustRole(MemberRoleInShop role, MessageObserver obs) throws Exception {
+		String roleUser = role.userName;
 		Shop roleShop = role.roleShop;
 //		roleUser.addShopRole(roleShop.getName() ,role);
-		roleShop.addRole(roleUser,role);
+		roleShop.addRole(roleUser, role);
 //		roleShop.addObserver(obs);
 		return role;
 	}
 
 	public void addPermission(int permission) throws Exception {
 		this.permissions.addAnotherPermission(permission);
-		this.activatedPermissions = this.permissions.getActivatedPermissions();
 	}
 
 	public String getRoleInfo() {
 		StringBuilder rolesInfo = new StringBuilder();
-		rolesInfo.append("The user ").append(roleUser).append(" is a ").append(type).append(" in the store\n");
+		rolesInfo.append("The user ").append(userName).append(" is a ").append(type).append(" in the store\n");
 		return rolesInfo.toString();
 	}
 
+	public String getShopName() {
+		return shopName;
+	}
+
+	public void setShopName(String shopName) {
+		this.shopName = shopName;
+	}
+
+	public void promoteAccess(int permission) {
+			this.permissions.promoteAccess(permission);
+
+	}
+
+
+	public int getAccessKind() {
+			return this.permissions.getManageAccess().getValue();
+	}
+
+	public ManageKindEnum getManageKind() {
+			return this.permissions.getManageAccess();
+	}
 
 //	private static MemberRoleInShop adjustRole(MemberRoleInShop role) throws Exception {
 //		String roleUser = role.roleUser;

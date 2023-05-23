@@ -17,6 +17,7 @@ import BusinessLayer.Shops.Discount.DiscountRules.*;
 import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
 import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRuleName;
 
+import BusinessLayer.Users.User;
 import ServiceLayer.DataObjects.*;
 import ServiceLayer.DataObjects.DiscountDataObjects.*;
 import ServiceLayer.DataObjects.DiscountDataObjects.DiscountRulesDataObjects.DiscountRuleServiceInterface;
@@ -316,6 +317,16 @@ public class ServiceMarket {
 			return new ResponseT(exception.getMessage(), false);
 		}
 	}
+
+	public ResponseT<MemberRoleInShopDataObj> changeManagerAccess(String actor, String actOn, String shopName, int permission){
+		try {
+			return new ResponseT<MemberRoleInShopDataObj>(new MemberRoleInShopDataObj(market.changeManagerAccess(actor, actOn, shopName, permission)));
+
+		} catch (Exception exception) {
+			return new ResponseT(exception.getMessage(), false);
+		}
+	}
+
 
 
 	public Response addManagerPermissions(String actor, String actOn, String shopName, int permission) throws Exception {

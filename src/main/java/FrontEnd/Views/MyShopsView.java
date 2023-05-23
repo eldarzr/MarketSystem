@@ -111,6 +111,7 @@ public class MyShopsView extends BaseView {
             Button closeButton = new Button("Close Shop");
             closeButton.addClickListener(e -> onCloseShop(role.getRoleShop().getName()));
             closeButton.setVisible(!isAdmin);
+            enableButton(closeButton);
 
             Button historyButton = new Button("Shop history");
             historyButton.addClickListener(e -> navigateToHistory(shopName));

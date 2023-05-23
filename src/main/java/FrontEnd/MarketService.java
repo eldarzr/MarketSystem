@@ -253,6 +253,11 @@ public class MarketService {
 			return new SResponseT<>(new MemberRoleInShopModel(r.getData()));
 		return new SResponseT<>(r.getMessage(), r.isSuccess());	}
 
+	public SResponseT<MemberRoleInShopModel> changeManagerAccess(String actor, String actOn, String shopName, int permission) {
+		ResponseT<MemberRoleInShopDataObj> r = serviceMarket.changeManagerAccess(actor,actOn,shopName,permission);
+		if (r.isSuccess())
+			return new SResponseT<>(new MemberRoleInShopModel(r.getData()));
+		return new SResponseT<>(r.getMessage(), r.isSuccess());	}
 
 	public Response addManagerPermissions(String actor, String actOn, String shopName, int permission) throws Exception {
 		throw new NotImplementedException();

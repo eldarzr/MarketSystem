@@ -3,11 +3,17 @@ package BusinessLayer.Shops.Discount;
 import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Purchases.ShopBagItem;
 
+import javax.persistence.*;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Entity
+@DiscriminatorValue("SumCompoundDiscount")
 public class SumCompoundDiscount extends CompoundDiscount{
-    public SumCompoundDiscount(List<Discount> discounts,int discountId) {
+    public SumCompoundDiscount() {
+    }
+
+    public SumCompoundDiscount(List<Discount> discounts, int discountId) {
         super(discounts,discountId);
     }
 

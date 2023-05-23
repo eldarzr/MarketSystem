@@ -1,6 +1,11 @@
 package AcceptanceTests;
 
+import BusinessLayer.Bids.Bid;
+import BusinessLayer.Shops.PurchasePolicies.PurchasePolicy;
+
+import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Map;
 
 public interface MarketSystemBridge {
     //Gabi added:
@@ -140,4 +145,24 @@ public interface MarketSystemBridge {
     Collection<Integer> getManagerPermissionsInShop(String shopManager, String shopName) throws Exception;
 
     void removeShopOwner(String ShopOwner, String shopOwner, String shopName);
+
+    //Bid functions
+    public void createBidOffer (String userName, String productName, String shopName, double bidPrice) throws Exception ;
+    public Collection<Bid> getPendingBids(String userName, String shopName) throws Exception ;
+    public Collection<Bid> getApprovedBids(String userName,String shopName) throws Exception ;
+    public Collection<Bid> getRejectedBids(String userName,String shopName) throws Exception;
+    public void approveBid(String userName, int bidId) throws Exception;
+    public void rejectBid(String userName, int bidId) throws Exception;
+    //Purchase policy functions
+    public Map<Integer, PurchasePolicy> getAllPurchasePolicies(String userName, String shopName) throws Exception ;
+    public void setActivePurchasePolicy(String userName, String shopName, int policyId) throws Exception ;
+    public Integer getActivePurchasePolicyId(String userName, String shopName) throws Exception;
+    public void addAgePurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int startAge, int endAge)throws Exception;
+    public void addQuantityPurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int minQuantity, int maxQuantity)throws Exception;
+    public void removeDiscount(String shopName, String userName, int discountId) throws Exception;
+    public void addDatePurchasePolicy(String userName, String shopName, boolean isProduct, String toConstraint, boolean positive, LocalDate startDate, LocalDate endDate)throws Exception;
+    public void addTimePurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int startHour, int endHour)throws Exception;
+    public void addOrPurchasePolicy(String userName, String shopName,int pid1, int pid2)throws Exception;
+    public void addAndPurchasePolicy(String userName, String shopName,int pid1, int pid2)throws Exception;
+    public void addIfPurchasePolicy(String userName, String shopName,int pid1, int pid2)throws Exception;
 }

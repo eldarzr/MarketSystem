@@ -1,11 +1,13 @@
 package FrontEnd.Model;
 
+import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.Shops.Shop;
 import BusinessLayer.Shops.ShopProduct;
 import ServiceLayer.DataObjects.ProductDataObj;
 import ServiceLayer.DataObjects.ShopDataObj;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ShopModel implements Serializable {
@@ -13,6 +15,7 @@ public class ShopModel implements Serializable {
 	private boolean open;
 	private boolean active;
 	private final String founderUserName;
+	private Map<String, MemberRoleInShop> roles;
 	//map of user name to role in this shop
 	private ConcurrentHashMap<String, ProductModel> products;
 
@@ -32,6 +35,7 @@ public class ShopModel implements Serializable {
 		for (ProductDataObj product : shop.getProducts().values())
 			products.put(product.getName(), new ProductModel(product));
 		this.active = true;
+		this.roles = shop.getRoles();
 	}
 
 	public String getName() {
@@ -52,6 +56,10 @@ public class ShopModel implements Serializable {
 
 	public ConcurrentHashMap<String, ProductModel> getProducts() {
 		return products;
+	}
+
+	public Map<String, MemberRoleInShop> getRoles() {
+		return roles;
 	}
 }
 

@@ -1,6 +1,11 @@
 package AcceptanceTests;
 
+import BusinessLayer.Bids.Bid;
+import BusinessLayer.Shops.PurchasePolicies.PurchasePolicy;
+
+import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Map;
 
 public class MarketSystemProxyBridge implements MarketSystemBridge {
     MarketSystemRealBridge realBridge;
@@ -325,6 +330,91 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
 
     @Override
     public void removeShopOwner(String ShopOwner, String shopOwner, String shopName) {
+
+    }
+
+    @Override
+    public void createBidOffer(String userName, String productName, String shopName, double bidPrice) throws Exception {
+
+    }
+
+    @Override
+    public Collection<Bid> getPendingBids(String userName, String shopName) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Collection<Bid> getApprovedBids(String userName, String shopName) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Collection<Bid> getRejectedBids(String userName, String shopName) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void approveBid(String userName, int bidId) throws Exception {
+
+    }
+
+    @Override
+    public void rejectBid(String userName, int bidId) throws Exception {
+
+    }
+
+    @Override
+    public Map<Integer, PurchasePolicy> getAllPurchasePolicies(String userName, String shopName) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void setActivePurchasePolicy(String userName, String shopName, int policyId) throws Exception {
+
+    }
+
+    @Override
+    public Integer getActivePurchasePolicyId(String userName, String shopName) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void addAgePurchasePolicy(String userName, String shopName, boolean isProduct, String toConstraint, boolean positive, int startAge, int endAge) throws Exception {
+
+    }
+
+    @Override
+    public void addQuantityPurchasePolicy(String userName, String shopName, boolean isProduct, String toConstraint, boolean positive, int minQuantity, int maxQuantity) throws Exception {
+
+    }
+
+    @Override
+    public void removeDiscount(String shopName, String userName, int discountId) throws Exception {
+
+    }
+
+    @Override
+    public void addDatePurchasePolicy(String userName, String shopName, boolean isProduct, String toConstraint, boolean positive, LocalDate startDate, LocalDate endDate) throws Exception {
+
+    }
+
+    @Override
+    public void addTimePurchasePolicy(String userName, String shopName, boolean isProduct, String toConstraint, boolean positive, int startHour, int endHour) throws Exception {
+
+    }
+
+    @Override
+    public void addOrPurchasePolicy(String userName, String shopName, int pid1, int pid2) throws Exception {
+
+    }
+
+    @Override
+    public void addAndPurchasePolicy(String userName, String shopName, int pid1, int pid2) throws Exception {
+
+    }
+
+    @Override
+    public void addIfPurchasePolicy(String userName, String shopName, int pid1, int pid2) throws Exception {
 
     }
 }

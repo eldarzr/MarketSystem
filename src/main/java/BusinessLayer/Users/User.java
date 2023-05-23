@@ -13,20 +13,21 @@ import BusinessLayer.Shops.Shop;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Entity
 @Table(name = "users")
 public class User{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
+    @Id
+    @Column(name = "userName")
     private String name;
     private String sessionID;
     private String email;
@@ -34,11 +35,14 @@ public class User{
     @Column(name = "password") // To avoid using a reserved keyword
     private String password;
 
-    @Transient
-    private ConcurrentLinkedQueue<String> shopsMessages = new ConcurrentLinkedQueue<>();
+    @ElementCollection
+    @CollectionTable(name = "shops_messages", joinColumns = @JoinColumn(name = "userName"))
+    @Column(name = "message")
+    private List<String> shopsMessages;
 
-    @Transient
-    private ConcurrentLinkedQueue<UserInvoice> invoices = new ConcurrentLinkedQueue<>();
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "userName")
+    private List<UserInvoice> invoices;
 
     private boolean twoFactorEnabled;
 
@@ -46,9 +50,10 @@ public class User{
     @JoinColumn(name = "cart_id")
 //    @Transient
     Cart currentCart;
-  
-    @Transient
-    private ConcurrentLinkedDeque<Notification> pendingNotifications;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "userName")
+    private List<Notification> pendingNotifications;
     @Transient
     private NotificationCallback callback;
 
@@ -59,8 +64,10 @@ public class User{
         this.sessionID = null;
         userType = UserType.MEMBER;
         currentCart = new Cart(name);
-        pendingNotifications = new ConcurrentLinkedDeque<>();
-        PersistenceManager.getInstance().persistObj(currentCart);
+        pendingNotifications = new CopyOnWriteArrayList<>();
+        shopsMessages = new CopyOnWriteArrayList<>();
+        this.invoices = new CopyOnWriteArrayList<>();
+//        PersistenceManager.getInstance().persistObj(currentCart);
     }
 
     public User(String guestName) {
@@ -68,7 +75,15 @@ public class User{
         sessionID = null;
         userType = UserType.GUEST;
         currentCart = new Cart(guestName);
-        PersistenceManager.getInstance().persistObj(currentCart);
+        pendingNotifications = new CopyOnWriteArrayList<>();
+        shopsMessages = new CopyOnWriteArrayList<>();
+        this.invoices = new CopyOnWriteArrayList<>();
+    }
+
+    public User() {
+        this.invoices = new CopyOnWriteArrayList<>();
+        pendingNotifications = new CopyOnWriteArrayList<>();
+        shopsMessages = new CopyOnWriteArrayList<>();
     }
 
     public void sendMessage(String message) {
@@ -81,6 +96,7 @@ public class User{
 
     public void setName(String name) {
         this.name = name.toLowerCase();
+        updateDB();
     }
 
     public String getEmail() {
@@ -89,6 +105,7 @@ public class User{
 
     public void setEmail(String email) {
         this.email = email;
+        updateDB();
     }
 
     public String getPassword() {
@@ -97,6 +114,7 @@ public class User{
 
     public void setPassword(String password) {
         this.password = password;
+        updateDB();
     }
 
     public boolean isTwoFactorEnabled() {
@@ -109,14 +127,16 @@ public class User{
 
     public void setUserType(UserType userType) {
         this.userType = userType;
+        updateDB();
     }
 
-    public ConcurrentLinkedQueue<String> getShopsMessages() {
+    public List<String> getShopsMessages() {
         return shopsMessages;
     }
 
     public void setTwoFactorEnabled(boolean twoFactorEnabled) {
         this.twoFactorEnabled = twoFactorEnabled;
+        updateDB();
     }
 
     public Cart getCart() {
@@ -125,15 +145,23 @@ public class User{
 
     public void addProductToCart(String shopName, Product product, int quantity) throws Exception {
         getCart().addProduct(shopName, product, quantity);
-        PersistenceManager.getInstance().updateObj(getCart());
+//        PersistenceManager.getInstance().updateObj(getCart());
+        updateDB();
     }
 
     public void updateProductsFromCart(String shopName, String productName, int newQuantity) throws Exception {
         getCart().updateProductQuantity(shopName, productName, newQuantity);
+        updateDB();
     }
 
     public void removeProductFromCart(String shopName, String productName) throws Exception {
         getCart().removeProduct(shopName,productName);
+        updateDB();
+    }
+
+    public void removeProductFromCartIfExists(String shopName, String productName) throws Exception {
+        getCart().removeProductIfExists(shopName,productName);
+        updateDB();
     }
 
     public boolean isAdmin() {
@@ -142,18 +170,24 @@ public class User{
     
     public void addInvoice(UserInvoice userInvoice) {
         invoices.add(userInvoice);
+        updateDB();
     }
 
-    public ConcurrentLinkedQueue<UserInvoice> getInvoices() {
+    public List<UserInvoice> getInvoices() {
         return invoices;
     }
 
     public void clearCart() {
-        currentCart = new Cart(name);
+//        PersistenceManager.getInstance().removeFromDB(currentCart);
+        currentCart.clear();
+//        PersistenceManager.getInstance().removeFromDB(currentCart);
+//        currentCart = new Cart(name);
+        updateDB();
     }
 
     public void addPendingNotifications(Notification notification) {
-        pendingNotifications.push(notification);
+        pendingNotifications.add(notification);
+        updateDB();
     }
 
     public String getSessionID() {
@@ -162,10 +196,12 @@ public class User{
 
     public void setSessionID(String sessionID) {
         this.sessionID = sessionID.toLowerCase();
+        updateDB();
     }
 	
 	public void setCart(Cart currentCart) {
         this.currentCart = currentCart;
+        updateDB();
     }
 
     public Collection<Notification> getPendingNotification() {
@@ -181,6 +217,7 @@ public class User{
                 break;
             }
         }
+        updateDB();
     }
 
     public LocalDate getBirthDay() {
@@ -190,6 +227,11 @@ public class User{
     public void ReadNotifications() {
         for(Notification notification: pendingNotifications)
             if(!notification.isRead()) notification.Read();
+    }
+
+    private void updateDB(){
+        if (this.getUserType() != UserType.GUEST)
+            PersistenceManager.getInstance().updateObj(this);
     }
 }
 

@@ -5,14 +5,21 @@ import BusinessLayer.Purchases.ShopBagItem;
 import BusinessLayer.Shops.PurchasePolicies.PurchasePolicy;
 import BusinessLayer.Users.User;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@DiscriminatorValue("DatePurchasePolicy")
 public class DatePurchasePolicy extends BasicPolicy {
-
+    @Column(name = "start_date")
     LocalDate startDate;
+    @Column(name = "end_date")
     LocalDate endDate;
 
-    public DatePurchasePolicy(int id,boolean isProduct,String toConstraint,boolean positive, LocalDate start, LocalDate end){
+    public DatePurchasePolicy() {
+    }
+
+    public DatePurchasePolicy(int id, boolean isProduct, String toConstraint, boolean positive, LocalDate start, LocalDate end){
         super(id, isProduct, toConstraint,positive);
         startDate = start;
         endDate = end;

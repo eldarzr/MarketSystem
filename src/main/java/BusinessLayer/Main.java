@@ -20,21 +20,12 @@ public class Main {
 		System.out.println(distance.apply("dany", "dani"));
 		System.out.println("hello world!");
 
-//		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("market");
-//		EntityManager entityManager = entityManagerFactory.createEntityManager();
-//
-//		Shop shop = entityManager.find(Shop.class, "Gabi's Goods 1");
-//		System.out.println("aaa");
-//
 		Market market = new Market();
-		market.register("eldar222", "eldar@gmail.com", "Aa123456");
-		String guest = market.startSession();
-		User user = market.login(guest, "eldar222", "Aa123456");
-		market.searchShop(user.getName(), "shopFirst1");
-//		market.resetAll();
-//		market.init();
-//		System.out.println(product.getCategory());
 
+		String guest = market.startSession();
+		User user = market.login(guest, "admin", "Aa123456");
+		List<User> users = market.getAllUsers( "admin");
+		System.out.println("a");
 	}
 
 	public static void getShop(){
@@ -46,6 +37,7 @@ public class Main {
 
 		Shop shop = entityManager.find(Shop.class, shopName);
 
+		//TODO: add to every class default constructor with terenint
 		if (shop != null) {
 			// Shop found in the database
 

@@ -1,8 +1,13 @@
 package BusinessLayer;
 
 
+import BusinessLayer.Enums.ManageKindEnum;
 import BusinessLayer.Enums.ManagePermissionsEnum;
+import BusinessLayer.Enums.ManageType;
+import com.helger.commons.codec.ICharArrayStreamEncoder;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
@@ -10,55 +15,91 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import static BusinessLayer.Enums.ManagePermissionsEnum.*;
 
-public class ManagePermissions {
+@Entity
+@Table(name = "ManagePermissions")
+public class ManagePermissions implements Serializable {
 
-	private boolean[] permissions;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
+	@ElementCollection
+	@OrderColumn(name = "permission_order")
+	private List<Boolean> permissions;
+	private ManageKindEnum manageAccess;
+
+	@Transient
 	private Lock lock;
 	private final int NUM_OF_PERMISSIONS = ManagePermissionsEnum.values().length;
 
 	public ManagePermissions() {
-		permissions = new boolean[NUM_OF_PERMISSIONS];
+		permissions = new ArrayList<>();
+		this.manageAccess = ManageKindEnum.READ_ONLY;
+		initPermissions();
 		this.lock = new ReentrantLock();
 	}
 
 	public void changeToFullAccess() {
 		for (int i = 0; i < NUM_OF_PERMISSIONS; i++)
-			permissions[i] = true;
+			permissions.set(i, true);
+		this.manageAccess = ManageKindEnum.FULL_ACCESS;
 	}
 
 	public void changeToReadOnlyAccess() {
 		resetPermissions();
-		permissions[WATCH_HISTORY.getValue()] = true;
-		permissions[WATCH_MANAGERS_INFO.getValue()] = true;
+		permissions.set(WATCH_HISTORY.getValue(), true);
+		permissions.set(WATCH_MANAGERS_INFO.getValue(), true);
+		permissions.set(MESSAGES_ACCESS.getValue(), true);
+		this.manageAccess = ManageKindEnum.READ_ONLY;
+	}
+
+	public void changeToManageAccess() {
+		changeToReadOnlyAccess();
+		permissions.set(MANAGE_STOCK.getValue(), true);
+		permissions.set(MANAGE_BIDS.getValue(), true);
+		permissions.set(MANAGE_PURCHASE_TYPE.getValue(), true);
+		permissions.set(MANAGE_DISCOUNT_TYPE.getValue(), true);
+		permissions.set(MANAGE_DISCOUNT_CONSTRAINTS.getValue(), true);
+		permissions.set(MANAGE_PURCHASE_CONSTRAINTS.getValue(), true);
+		permissions.set(MANAGE_PURCHASE_POLICY.getValue(), true);
+		permissions.set(MANAGE_DISCOUNT_POLICY.getValue(), true);
+		this.manageAccess = ManageKindEnum.MANAGE_READ_ACCESS;
+
 	}
 
 	public void resetPermissions() {
 		for (int i = 0; i < NUM_OF_PERMISSIONS; i++)
-			permissions[i] = false;
+			permissions.set(i, false);
+	}
+
+	public void initPermissions() {
+		for (int i = 0; i < NUM_OF_PERMISSIONS; i++)
+			permissions.add(false);
 	}
 
 	public void addPermission(ManagePermissionsEnum managePermissionsEnum) {
-		permissions[managePermissionsEnum.getValue()] = true;
+		permissions.set(managePermissionsEnum.getValue(), true);
 	}
 
 	public void removePermission(ManagePermissionsEnum managePermissionsEnum) {
-		permissions[managePermissionsEnum.getValue()] = false;
+		permissions.set(managePermissionsEnum.getValue(), false);
 	}
 
 	public boolean validatePermission(ManagePermissionsEnum permissionsEnum) {
-		return permissions[permissionsEnum.getValue()];
+		return permissions.get(permissionsEnum.getValue());
 	}
 
 	public static ManagePermissions getFullAccessPermissions() {
 		ManagePermissions mp = new ManagePermissions();
 		mp.changeToFullAccess();
+		PersistenceManager.getInstance().updateObj(mp);
 		return mp;
 	}
 
 	public static ManagePermissions getReadOnlyPermissions() {
 		ManagePermissions mp = new ManagePermissions();
 		mp.changeToReadOnlyAccess();
+		PersistenceManager.getInstance().updateObj(mp);
 		return mp;
 	}
 
@@ -69,7 +110,7 @@ public class ManagePermissions {
 					if (!isPermissionInBounds(permType)) {
 						throw new Exception("there is no such permission with the ID:" + permType);
 					}
-			this.permissions[permType] = true;
+			this.permissions.set(permType, true);
 		}
 
 	}
@@ -80,7 +121,7 @@ public class ManagePermissions {
 		lock.lock();
 		try {
 			for (ManagePermissionsEnum permission : ManagePermissionsEnum.values()) {
-				if (permissions[permission.getValue()]) {
+				if (permissions.get(permission.getValue())) {
 					activated.add(permission.getValue());
 				}
 			}
@@ -97,7 +138,7 @@ public class ManagePermissions {
 	public String describePermissions() {
 		StringBuilder sb = new StringBuilder("The following permissions are allowed: ");
 		for (ManagePermissionsEnum permission : ManagePermissionsEnum.values()) {
-			if (permissions[permission.getValue()]) {
+			if (permissions.get(permission.getValue())) {
 				sb.append(permission.name().replace("_", " ")).append(", ");
 			}
 		}
@@ -109,7 +150,22 @@ public class ManagePermissions {
 		if (!isPermissionInBounds(permission)) {
 			throw new Exception("there is no such permission with the ID:" + permission);
 		}
-		permissions[permission] = true;
+		permissions.set(permission, true);
 
+	}
+
+	public ManageKindEnum getManageAccess() {
+		return manageAccess;
+	}
+
+	public void promoteAccess(int permission) {
+		switch (permission){
+			case 0:
+				changeToReadOnlyAccess();
+			case 1:
+				changeToManageAccess();
+			case 2:
+				changeToFullAccess();
+		}
 	}
 }

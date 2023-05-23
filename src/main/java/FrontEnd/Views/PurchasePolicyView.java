@@ -93,6 +93,7 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
                     Notification.show("Error: "+setActiveResponse.getMessage());
                 }
             });
+            enableButton(setActiveButton);
             return setActiveButton;
         }).setHeader("Actions");
 
@@ -102,9 +103,12 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
 
         Button createSimplePolicyButton = new Button("Create Simple Policy");
         createSimplePolicyButton.addClickListener(e -> openCreateSimplePolicyDialog());
+        enableButton(createSimplePolicyButton);
 
         Button createComplexPolicyButton = new Button("Create Complex Policy");
         createComplexPolicyButton.addClickListener(e -> openCreateComplexPolicyDialog());
+        enableButton(createComplexPolicyButton);
+
         Button removeActivePolicyButton = new Button("Remove Active Policy");
         removeActivePolicyButton.addClickListener(e -> {
             SResponse removeActivePolicyResponse = marketService.setActivePurchasePolicy(getCurrentUser().getName(), shopName, -1);
@@ -114,6 +118,7 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
                 // Handle the failure case if needed (e.g., display an error message)
             }
         });
+        enableButton(removeActivePolicyButton);
 
         HorizontalLayout buttonsLayout = new HorizontalLayout(createSimplePolicyButton, createComplexPolicyButton,removeActivePolicyButton);
         add(buttonsLayout);
@@ -143,7 +148,10 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
         policyTypeComboBox.setItems("Age Constraint", "Quantity Constraint", "Date Constraint", "Time Constraint");
         policyTypeComboBox.setRequired(true);
 
-        Button createPolicyButton = new Button("Create Policy", e -> createSimplePolicy(policyTypeComboBox.getValue()));
+        Button createPolicyButton = new Button("Create Policy", e -> {
+            createSimplePolicy(policyTypeComboBox.getValue());
+            dialog.close();
+        });
         createPolicyButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
         createPolicyButton.getStyle().set("color", "white");
 
@@ -227,6 +235,7 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
             else {
                 updatePolicyGrid();
             }
+            dialog.close();
         });
         createPolicyButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
         createPolicyButton.getStyle().set("color", "white");
@@ -283,6 +292,7 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
             else {
                 updatePolicyGrid();
             }
+            dialog.close();
         });
         createPolicyButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
         createPolicyButton.getStyle().set("color", "white");
@@ -341,6 +351,7 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
             else {
                 updatePolicyGrid();
             }
+            dialog.close();
         });
         createPolicyButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
         createPolicyButton.getStyle().set("color", "white");
@@ -400,6 +411,7 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
 
                 updatePolicyGrid();
             }
+            dialog.close();
         });
         createPolicyButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
         createPolicyButton.getStyle().set("color", "white");
@@ -429,7 +441,9 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
             } else if ("IF Policy".equals(selectedType)) {
                 openCreateIfPolicyDialog();
             }
+            dialog.close();
         });
+        enableButton(createPolicyButton);
 
         layout.add(complexPolicyTypeComboBox, createPolicyButton);
         dialog.add(layout);
@@ -459,6 +473,7 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
                 Notification.show("Success!");
                 updatePolicyGrid();
             }
+            dialog.close();
         });
         createPolicyButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
         createPolicyButton.getStyle().set("color", "white");
@@ -491,6 +506,7 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
                 Notification.show("Success!");
                 updatePolicyGrid();
             }
+            dialog.close();
         });
         createPolicyButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
         createPolicyButton.getStyle().set("color", "white");
@@ -522,6 +538,7 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
                 Notification.show("Success!");
                 updatePolicyGrid();
             }
+            dialog.close();
         });
         createPolicyButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
         createPolicyButton.getStyle().set("color", "white");

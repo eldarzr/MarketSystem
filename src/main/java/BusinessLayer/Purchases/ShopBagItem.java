@@ -9,30 +9,31 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "shop_bag_items")
-@IdClass(ShopBagItemId.class)
+//@IdClass(ShopBagItemId.class)
 public class ShopBagItem implements Serializable {
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-//    @ManyToOne
+    @ManyToOne
 //    @JoinColumns({
 //            @JoinColumn(name="shopName", referencedColumnName="shopName", insertable = false, updatable = false),
 //            @JoinColumn(name="productName", referencedColumnName="productName", insertable = false, updatable = false)
 //    })
-    @Transient
+//    @Transient
+    @JoinColumn(name="product_id", referencedColumnName="id", insertable = false, updatable = false)
     private Product product;
 
-    @Id
+//    @Id
     @Column(name = "productName")
     private String productName;
 
-    @Id
+//    @Id
     @Column(name = "shopName")
     private String shopName;
 
-    @Id
+//    @Id
     @Column(name = "userName")
     private String userName;
 
@@ -71,5 +72,17 @@ public class ShopBagItem implements Serializable {
 
     public String getProductName() {
         return productName;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 }

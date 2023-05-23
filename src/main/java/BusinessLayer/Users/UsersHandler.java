@@ -1,7 +1,6 @@
 package BusinessLayer.Users;
 
 import BusinessLayer.Notifications.Notification;
-import BusinessLayer.Notifications.NotificationPublisher;
 import BusinessLayer.Purchases.UserInvoice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -11,7 +10,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -31,11 +29,10 @@ public class UsersHandler {
 
     private static volatile UsersHandler instance;
 
+    private UserRepository userRepository;
+
     private int nextGuestId;
     Object guestIdLock;
-
-    ConcurrentHashMap<String,User> members = new ConcurrentHashMap<>();
-    ConcurrentHashMap<String,User> loginUsers = new ConcurrentHashMap<>();
 
     public static UsersHandler getInstance(){
         if(instance == null){
@@ -50,21 +47,22 @@ public class UsersHandler {
 
     private UsersHandler() {
         this.passwordEncoder = passwordEncoder();
-        guestIdLock = new Object();
+        this.guestIdLock = new Object();
+        this.userRepository = UserRepository.getInstance();
     }
 
     public void register(String guestName,String userName, String email, String password) throws Exception{
         register(userName.toLowerCase(),email,password);
-        User guestUser = loginUsers.remove(guestName.toLowerCase());
+        User guestUser = userRepository.logoutUser(guestName.toLowerCase());
         if(guestUser != null){
             //todo: find new User, and copy guest cart to new user
-            User newUser = members.get(userName.toLowerCase());
+            User newUser = userRepository.getMember(userName.toLowerCase());
             newUser.setCart(guestUser.getCart());
         }
     }
 
     public User register(String userName, String email, String password) throws Exception{
-        if(members.containsKey(userName.toLowerCase()))
+        if(userRepository.getMember(userName.toLowerCase()) != null)
             throw new Exception(String.format("User: %s already exists",userName));
 
         logger.info(String.format("Attempt to validate %s is valid username.",userName));
@@ -86,14 +84,14 @@ public class UsersHandler {
         User nuser = new User(userName,email,encodedPassword);
         logger.info(String.format("User %s created.", userName));
 
-        members.put(userName,nuser);
+        userRepository.addMember(userName,nuser);
         return nuser;
     }
 
     public User login(String guestName, String userName, String password) {
         User user = login(userName,password);
         user.setSessionID(guestName);
-        loginUsers.remove(guestName);
+        userRepository.logoutUser(guestName);
         return user;
     }
 
@@ -104,18 +102,18 @@ public class UsersHandler {
             throwIllegalArgumentException(String.format("User %s already logged in",userName));
         if(!passwordEncoder.matches(password,user.getPassword()))
             throwIllegalArgumentException("Incorrect password");
-        loginUsers.put(user.getName(),user);
+        userRepository.loginUser(user.getName(),user);
         return user;
     }
 
     public String disconnect(String userName){
         userName = userName.toLowerCase();
         User user = findLoginUser(userName);
-        loginUsers.remove(userName);
+        userRepository.logoutUser(userName);
         if (user.getSessionID() == null)
             return null;
         User newUser = new User(user.getSessionID());
-        loginUsers.put(newUser.getName(), newUser);
+        userRepository.loginUser(newUser.getName(), newUser);
 //        user.setName(user.getSessionID());
         return user.getSessionID();
     }
@@ -123,14 +121,14 @@ public class UsersHandler {
     //finds logged in members or guests
     public User findLoginUser(String targetName) {
         //this get method returns null if the key doesn't exist
-        User user = loginUsers.get(targetName.toLowerCase());
+        User user = userRepository.getLoginUser(targetName.toLowerCase());
         if(user == null)
             throwIllegalArgumentException(String.format("User %s doesn't exist or is not currently logged in",targetName));
         return user;
     }
 
     public User findMemberByName(String targetName) {
-        User user = members.get(targetName.toLowerCase());
+        User user = userRepository.getMember(targetName.toLowerCase());
         if(user == null)
             throwIllegalArgumentException(String.format("User %s is unknown",targetName));
         return user;
@@ -138,8 +136,8 @@ public class UsersHandler {
 
     public User findUserByName(String userName) {
         userName = userName.toLowerCase();
-        User userLogin = loginUsers.get(userName);
-        User member = members.get(userName);
+        User userLogin = userRepository.getLoginUser(userName);
+        User member = userRepository.getMember(userName);
         if(userLogin != null)
             return userLogin;
         else if(member != null)
@@ -149,7 +147,7 @@ public class UsersHandler {
     }
 
     public boolean isLoggedIn(String userName){
-        return loginUsers.containsKey(userName.toLowerCase());
+        return userRepository.getLoginUser(userName.toLowerCase()) != null;
     }
 
     public void checkValidPassword(String password) {
@@ -186,7 +184,7 @@ public class UsersHandler {
         String nextGuestName = getNextGuestName().toLowerCase();
         User user = new User(nextGuestName);
         //guest is added only to login users, the reason is that as long as he is connected to the system we want to threat him as a login user
-        loginUsers.put(nextGuestName,user);
+        userRepository.loginUser(nextGuestName,user);
         logger.info(String.format("Session of guest %s started.",nextGuestName));
         return nextGuestName;
     }
@@ -220,7 +218,7 @@ public class UsersHandler {
             throwIllegalArgumentException("Username must start with a letter.");
         }
 
-        if (loginUsers.containsKey(username) || members.containsKey(username))
+        if (userRepository.getLoginUser(username) != null || userRepository.getMember(username) != null)
             throw new Exception(String.format("there is already user with the name %s", username));
     }
 
@@ -230,8 +228,7 @@ public class UsersHandler {
     }
 
     public void reset() {
-        members.clear();
-        loginUsers.clear();
+        userRepository.reset();
     }
 
 	public boolean isAdmin(String userName) {
@@ -251,7 +248,7 @@ public class UsersHandler {
 
     public void unregister(String userName) {
         findMemberByName(userName.toLowerCase());
-        members.remove(userName.toLowerCase());
+        userRepository.removeMember(userName.toLowerCase());
     }
 
     public Collection<UserInvoice> getUserPurchaseHistoryByAdmin(String memberName) {
@@ -266,7 +263,7 @@ public class UsersHandler {
     public String createGuest(String sessionID) {
         User user = new User(sessionID);
         //guest is added only to login users, the reason is that as long as he is connected to the system we want to threat him as a login user
-        loginUsers.put(sessionID,user);
+        userRepository.loginUser(sessionID,user);
         logger.info(String.format("Session of guest %s started.",sessionID));
         return sessionID;
     }
@@ -276,13 +273,18 @@ public class UsersHandler {
         if(!isAdmin(adminName.toLowerCase())){
             throw new Exception(String.format("the user %s is not admin!", adminName));
         }
-        return Stream.concat(members.values().stream(), loginUsers.values().stream()).distinct()
+        return getAllUsers();
+    }
+
+	private List<User> getAllUsers() {
+        return Stream.concat(userRepository.getAllMembers().stream(),
+                userRepository.getAllLoginUsers().stream()).distinct()
                 .collect(Collectors.toList());
-	}
+    }
 
     // Just for notification publisher.
     public List<User> getAllMembers(){
-        return new ArrayList<>(members.values());
+        return new ArrayList<>(userRepository.getAllMembers());
     }
 
     public String removeUser(String adminName, String userName) throws Exception {
@@ -294,8 +296,8 @@ public class UsersHandler {
         if(isAdmin(userName.toLowerCase())){
             throw new Exception(String.format("the user %s is admin! you cant remove them", userName));
         }
-        loginUsers.remove(userName.toLowerCase());
-        members.remove(userName.toLowerCase());
+        userRepository.logoutUser(userName.toLowerCase());
+        userRepository.removeMember(userName.toLowerCase());
         return createGuest(user.getSessionID());
     }
 
@@ -311,4 +313,10 @@ public class UsersHandler {
     public void removeNotification(String username,Notification notification) {
         findLoginUser(username).removeNotification(notification);
     }
+
+	public void removeProductFromAllCarts(String shopName, String productName) throws Exception {
+        for (User user : getAllUsers()){
+            user.removeProductFromCartIfExists(shopName, productName);
+        }
+	}
 }

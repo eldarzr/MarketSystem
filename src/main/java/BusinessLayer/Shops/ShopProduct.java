@@ -1,5 +1,7 @@
 package BusinessLayer.Shops;
 
+import BusinessLayer.PersistenceManager;
+
 import javax.persistence.*;
 
 @Entity
@@ -39,6 +41,7 @@ public class ShopProduct extends Product{
 		product.setDescription(description);
 		product.setPrice(price);
 		product.setShopName(shopName);
+		PersistenceManager.getInstance().persistObj(product);
 		return product;
 	}
 }
