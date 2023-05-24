@@ -23,7 +23,7 @@ public class ParallelismTest {
         // Instantiate the MarketSystem and initialize it
         marketSystem = new MarketSystemRealBridge();
         marketSystem.clearData();
-        marketSystem.init("src/InitFiles/BaseConfig.jason");
+        marketSystem.init();
 
         // Instantiate an executor with 10 threads
         executor = Executors.newFixedThreadPool(10);

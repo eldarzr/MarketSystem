@@ -25,7 +25,7 @@ public class MarketPurchasePolicyTests {
     public void setUp() throws Exception {
 
         market = new Market();
-        market.init();
+        market.init("src/InitFiles/TestsConfig.jason");
         tempUserName = market.startSession();
 
         // create some shops with products for testing

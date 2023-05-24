@@ -16,7 +16,7 @@ class MarketStartCloseSession {
         @BeforeEach
         void setUp() throws Exception {
             market = new Market();
-            market.init("src/InitFiles/BaseConfig.jason");
+            market.init("src/InitFiles/TestsConfig.jason");
         }
 
         @AfterEach

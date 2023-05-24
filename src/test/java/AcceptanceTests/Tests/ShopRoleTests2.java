@@ -25,7 +25,7 @@ public class ShopRoleTests2 {
     public void setUp() throws Exception {
      
         // Set up market system
-        marketSystem.init("src/InitFiles/BaseConfig.jason");
+        marketSystem.init();
 
         // Register users
         try {

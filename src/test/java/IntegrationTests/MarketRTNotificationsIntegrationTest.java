@@ -29,7 +29,7 @@ class MarketRTNotificationsIntegrationTest {
 	@BeforeEach
 	void setUp() throws Exception {
 		market = new Market();
-		market.init("src/InitFiles/BaseConfig.jason");
+		market.init("src/InitFiles/TestsConfig.jason");
 		for(int i = 0; i < usersName.length; i++) {
 			String guestName = market.startSession();
 			market.register(usersName[i], emails[i], passwords[i]);

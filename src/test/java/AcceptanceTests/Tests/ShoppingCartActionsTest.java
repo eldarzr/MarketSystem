@@ -25,7 +25,7 @@ public class ShoppingCartActionsTest {
     @BeforeEach
     public void setUp() throws Exception {
         market = new MarketSystemRealBridge();
-        market.init("src/InitFiles/BaseConfig.jason");
+        market.init();
         tempUserName = market.startSession();
 
         // create a shop with a product for testing

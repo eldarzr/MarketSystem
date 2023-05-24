@@ -17,7 +17,7 @@ public class HWScenario {
     @BeforeEach
     public void setUp() throws Exception {
         marketSystem = new MarketSystemRealBridge();
-        marketSystem.init("src/InitFiles/BaseConfig.jason");
+        marketSystem.init();
     }
 
     @AfterEach

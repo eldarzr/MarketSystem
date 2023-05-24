@@ -15,7 +15,7 @@ public class RegistrationTests {
 
     @BeforeEach
     public void setUp() throws Exception {
-        market.init("src/InitFiles/BaseConfig.jason");
+        market.init();
     }
 
     @AfterEach

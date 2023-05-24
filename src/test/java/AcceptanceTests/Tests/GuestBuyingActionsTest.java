@@ -20,7 +20,7 @@ public class GuestBuyingActionsTest {
     @BeforeEach
     public void setUp() throws Exception {
         market = new MarketSystemRealBridge();
-        market.init("src/InitFiles/BaseConfig.jason");
+        market.init();
         tempUserName = market.startSession();
 
         // create a new shop

@@ -28,7 +28,7 @@ public class BidTests {
     public void setUp() throws Exception {
 
         market= new MarketSystemRealBridge();
-        market.init("src/InitFiles/BaseConfig.jason");
+        market.init();
         tempUserName = market.startSession();
 
         // create some shops with products for testing

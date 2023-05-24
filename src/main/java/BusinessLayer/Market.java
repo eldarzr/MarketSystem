@@ -26,7 +26,16 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.apache.commons.lang3.NotImplementedException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -56,6 +65,7 @@ public class Market implements MarketIntr{
     @Override
     public void init(String configFilePath) throws Exception {
         createLogger();
+        resetAll();
         ConfigInit(configFilePath);
         logger.info("Market init Finished successfully.");
     }
@@ -97,21 +107,43 @@ public class Market implements MarketIntr{
     private void loadDatabase(String databasePath, String adminName, String adminPassword) throws Exception {
         logger.info("Start loading database data.");
         // Read the persistence.xml file
-        File file = new File("D:\\courses\\third_year\\Sadna\\MarketSystem\\src\\main\\resources\\META-INF\\persistence.xml");
-        String content = new String(Files.readAllBytes(Paths.get(file.getPath())));
+        String persistenceXmlPath = "D:\\courses\\third_year\\Sadna\\MarketSystem\\src\\main\\resources\\META-INF\\persistence.xml";
 
-        // Update the values in the XML content
-        String updatedContent = content.replaceAll("<property name=\"javax.persistence.jdbc.url\" value=\"[^\"]*\" />",
-                "<property name=\"javax.persistence.jdbc.url\" value=\"" + databasePath + "\" />");
-        updatedContent = updatedContent.replaceAll("<property name=\"javax.persistence.jdbc.user\" value=\"[^\"]*\" />",
-                "<property name=\"javax.persistence.jdbc.user\" value=\"" + adminName + "\" />");
-        updatedContent = updatedContent.replaceAll("<property name=\"javax.persistence.jdbc.password\" value=\"[^\"]*\" />",
-                "<property name=\"javax.persistence.jdbc.password\" value=\"" + adminPassword + "\" />");
+        // Load the persistence.xml file
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+        Document doc = docBuilder.parse(persistenceXmlPath);
 
-        // Write the updated content back to the persistence.xml file
-        FileWriter writer = new FileWriter(file);
-        writer.write(updatedContent);
-        writer.close();
+        // Get the root element
+        Element rootElement = doc.getDocumentElement();
+
+        // Find the properties element
+        NodeList propertiesList = rootElement.getElementsByTagName("properties");
+        if (propertiesList.getLength() > 0) {
+            Element properties = (Element) propertiesList.item(0);
+
+            // Find the property elements and update the desired fields
+            NodeList propertyList = properties.getElementsByTagName("property");
+            for (int i = 0; i < propertyList.getLength(); i++) {
+                Element property = (Element) propertyList.item(i);
+                String name = property.getAttribute("name");
+
+                // Check the name of the property and update the desired fields
+                switch (name) {
+                    case "javax.persistence.jdbc.url" -> property.setAttribute("value", databasePath);
+                    case "javax.persistence.jdbc.user" -> property.setAttribute("value", adminName);
+                    case "javax.persistence.jdbc.password" -> property.setAttribute("value", adminPassword);
+                }
+            }
+        }
+
+        // Write the updated document back to the persistence.xml file
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        DOMSource source = new DOMSource(doc);
+        StreamResult result = new StreamResult(persistenceXmlPath);
+        transformer.transform(source, result);
+
         logger.info("Loading database data finished successfully.");
     }
 
