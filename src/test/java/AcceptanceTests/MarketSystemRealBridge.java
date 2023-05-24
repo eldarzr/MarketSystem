@@ -435,4 +435,9 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     public void addIfPurchasePolicy(String userName, String shopName, int pid1, int pid2) throws Exception {
         market.addIfPurchasePolicy(userName, shopName, pid1, pid2);
     }
+
+    @Override
+    public void loadState(String stateFilePath) throws Exception {
+        market.loadState(stateFilePath);
+    }
 }

@@ -417,4 +417,10 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
     public void addIfPurchasePolicy(String userName, String shopName, int pid1, int pid2) throws Exception {
 
     }
+
+    @Override
+    public void loadState(String stateFilePath) throws Exception {
+        nullCheck();
+        realBridge.loadState(stateFilePath);
+    }
 }
