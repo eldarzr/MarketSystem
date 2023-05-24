@@ -2,6 +2,9 @@ package BusinessLayer.ExternalSystemsAdapters;
 
 import BusinessLayer.Purchases.Purchase;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class CreditCardPaymentDetails implements PaymentDetails{
 
 
@@ -11,6 +14,8 @@ public class CreditCardPaymentDetails implements PaymentDetails{
     private String holder;
     private String ccv;
     private String id;
+
+    private String transactionID;
 
     public CreditCardPaymentDetails(String card_number, String month, String year, String holder, String ccv, String id) {
         this.card_number = card_number;
@@ -46,12 +51,31 @@ public class CreditCardPaymentDetails implements PaymentDetails{
     }
 
     @Override
-    public void accept(Purchase purchase, double priceAfterDiscount) throws InterruptedException {
+    public void accept(Purchase purchase, double priceAfterDiscount) throws Exception {
         purchase.visit(this, priceAfterDiscount);
     }
 
     @Override
-    public void acceptRevert(Purchase purchase) throws InterruptedException {
+    public void acceptRevert(Purchase purchase) throws Exception {
         purchase.visitRevert(this);
+    }
+
+    public Map<String, String> getMappedInfo() {
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("card_number", getCard_number());
+        parameters.put("month",getMonth());
+        parameters.put("year", getYear());
+        parameters.put("holder", getHolder());
+        parameters.put("ccv", getCcv());
+        parameters.put("id", getId());
+        return parameters;
+    }
+
+    public void setTransactionID(String transactionID) {
+        this.transactionID = transactionID;
+    }
+
+    public String getTransactionID() {
+        return transactionID;
     }
 }
