@@ -151,8 +151,12 @@ public interface MarketSystemBridge {
     public Collection<Bid> getPendingBids(String userName, String shopName) throws Exception ;
     public Collection<Bid> getApprovedBids(String userName,String shopName) throws Exception ;
     public Collection<Bid> getRejectedBids(String userName,String shopName) throws Exception;
-    public void approveBid(String userName, int bidId) throws Exception;
-    public void rejectBid(String userName, int bidId) throws Exception;
+
+
+    void approveBid(String userName, String shopName, int bidId) throws Exception;
+
+    void rejectBid(String userName, String shopName, int bidId) throws Exception;
+
     //Purchase policy functions
     public Map<Integer, PurchasePolicy> getAllPurchasePolicies(String userName, String shopName) throws Exception ;
     public void setActivePurchasePolicy(String userName, String shopName, int policyId) throws Exception ;

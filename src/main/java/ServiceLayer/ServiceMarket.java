@@ -784,17 +784,17 @@ public class ServiceMarket {
 			return new ResponseT<>(e.getMessage(),false);
 		}
 	}
-	public Response approveBid(String userName, int bidId)  {
+	public Response approveBid(String userName,String shopName, int bidId)  {
 		try{
-			market.approveBid(userName, bidId);
+			market.approveBid(userName,shopName, bidId);
 			return new Response();
 		}catch (Exception e){
 			return new Response(e.getMessage());
 		}
 	}
-	public Response rejectBid(String userName, int bidId)  {
+	public Response rejectBid(String userName,String shopName, int bidId)  {
 		try{
-			market.rejectBid(userName, bidId);
+			market.rejectBid(userName,shopName, bidId);
 			return new Response();
 		}catch (Exception e){
 			return new Response(e.getMessage());

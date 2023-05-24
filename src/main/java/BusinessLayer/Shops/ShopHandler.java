@@ -24,7 +24,7 @@ public class ShopHandler {
 
     private static final Logger logger = Logger.getLogger("Market");
 //    ConcurrentHashMap<String,Shop> shops;
-    private BidManager bidManager;
+
     private final int SHOP_DISTANCE_MAX_LIMIT = 2;
     private final int PRODUCT_DISTANCE_MAX_LIMIT = 2;
     private LevenshteinDistance distance = new LevenshteinDistance();
@@ -61,7 +61,6 @@ public class ShopHandler {
         private static ShopHandler  instance = new ShopHandler() ;
     }
     private ShopHandler()  {
-       this.bidManager = new BidManager();
     }
 
 
@@ -255,37 +254,7 @@ public class ShopHandler {
         throw new IllegalArgumentException(errorMsg);
     }
 
-    public int createBid(String productName, String shopName, double bidPrice) throws Exception {
-        Shop shop = getShop(shopName);
-        ProductIntr product = getProduct(shopName,productName,false);
-        return bidManager.createNewBid((Product) product,bidPrice);
-    }
 
-    public void approveBid(User user, int bidId) throws Exception {
-        Bid bid = bidManager.getBid(bidId);
-        Shop shop = getShop(bid.getProduct().getShopName());
-
-        Collection<String> shouldApprove = shop.getBidResponsibleUsers(user);
-        bidManager.approveBid(bidId, user.getName(), shouldApprove);
-    }
-    public void rejectBid(User user, int bidId) throws Exception {
-        Bid bid = bidManager.getBid(bidId);
-        Shop shop = getShop(bid.getProduct().getShopName());
-        Collection<String> canReject = shop.getBidResponsibleUsers(user);
-        bidManager.rejectBid(bidId, user.getName(), canReject);
-    }
-    public Collection<Bid> getPendingBids(String shopName) throws Exception {
-        if(shopRepository.getShop(shopName) == null)throw new Exception("Shop "+shopName+" doesn't exist");
-        return bidManager.getPendingBids(shopName);
-    }
-    public Collection<Bid> getApprovedBids(String shopName) throws Exception {
-        if(shopRepository.getShop(shopName) == null)throw new Exception("Shop "+shopName+" doesn't exist");
-        return bidManager.getApprovedBids(shopName);
-    }
-    public Collection<Bid> getRejectedBids(String shopName) throws Exception {
-        if(shopRepository.getShop(shopName) == null)throw new Exception("Shop "+shopName+" doesn't exist");
-        return bidManager.getRejectedBids(shopName);
-    }
 	
     public void setShopRepositoryForTests(ShopRepository shopRepository){
         this.shopRepository = shopRepository;

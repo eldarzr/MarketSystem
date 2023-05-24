@@ -156,7 +156,7 @@ public class Market implements MarketIntr{
                 case "removeShopOwner" -> removeShopOwner(params[0], params[1], params[2]);
                 case "addProductItems" -> addProductItems(params[0], params[1], params[2], Integer.parseInt(params[3]));
                 case "createBidOffer" -> createBidOffer(params[0], params[1], params[2], Double.parseDouble(params[3]));
-                case "rejectBid" -> rejectBid(params[0], Integer.parseInt(params[1]));
+                case "rejectBid" -> rejectBid(params[0],params[1], Integer.parseInt(params[2]));
                 case "updateProductCategory" -> updateProductCategory(params[0], params[1], params[2], params[3]);
                 case "addIfPurchasePolicy" -> addIfPurchasePolicy(params[0], params[1], Integer.parseInt(params[2]), Integer.parseInt(params[3]));
                 case "updateProductQuantity" -> updateProductQuantity(params[0], params[1], params[2], Integer.parseInt(params[3]));
@@ -173,7 +173,7 @@ public class Market implements MarketIntr{
                 case "addQuantityPurchasePolicy" -> addQuantityPurchasePolicy(params[0], params[1], Boolean.parseBoolean(params[2]), params[3], Boolean.parseBoolean(params[4]), Integer.parseInt(params[5]), Integer.parseInt(params[6]));
                 case "appointShopOwner" -> appointShopOwner(params[0], params[1], params[2]);
                 case "updateCartProductQuantity" -> updateCartProductQuantity(params[0], params[1], params[2], Integer.parseInt(params[3]));
-                case "approveBid" -> approveBid(params[0], Integer.parseInt(params[1]));
+                case "approveBid" -> approveBid(params[0],params[1], Integer.parseInt(params[2]));
                 default -> throw new Exception("Unknown command: " + command);
             }
         }
@@ -975,27 +975,29 @@ public class Market implements MarketIntr{
     //Bid functions
     public void createBidOffer (String userName, String productName, String shopName, double bidPrice) throws Exception {
         validateLoggedInException(userName);
-        shopHandler.createBid(productName, shopName, bidPrice);
+        shopHandler.getShop(shopName).createBid(userName,productName, shopName, bidPrice);
+
     }
     public Collection<Bid> getPendingBids(String userName,String shopName) throws Exception {
         validateLoggedInException(userName);
-        return shopHandler.getPendingBids(shopName);
+        return shopHandler.getShop(shopName).getPendingBids(shopName);
     }
     public Collection<Bid> getApprovedBids(String userName,String shopName) throws Exception {
         validateLoggedInException(userName);
-        return shopHandler.getApprovedBids(shopName);
+        return shopHandler.getShop(shopName).getApprovedBids();
     }
     public Collection<Bid> getRejectedBids(String userName,String shopName) throws Exception {
         validateLoggedInException(userName);
-        return shopHandler.getRejectedBids(shopName);
+        return shopHandler.getShop(shopName).getRejectedBids();
     }
-    public void approveBid(String userName, int bidId) throws Exception {
+    public void approveBid(String userName,String shopName, int bidId) throws Exception {
         validateLoggedInException(userName);
-        shopHandler.approveBid(getUser(userName),bidId);
+        shopHandler.getShop(shopName).approveBid(getUser(userName),bidId);
     }
-    public void rejectBid(String userName, int bidId) throws Exception {
+    public void rejectBid(String userName,String shopName, int bidId) throws Exception {
         validateLoggedInException(userName);
-        shopHandler.rejectBid(getUser(userName),bidId);
+        shopHandler.getShop(shopName).rejectBid(getUser(userName),bidId);
+
     }
 
     public void ReadUserNotifications(String username) {

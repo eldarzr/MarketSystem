@@ -372,13 +372,13 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     }
 
     @Override
-    public void approveBid(String userName, int bidId) throws Exception {
-        market.approveBid(userName, bidId);
+    public void approveBid(String userName,String shopName, int bidId) throws Exception {
+        market.approveBid(userName,shopName, bidId);
     }
 
     @Override
-    public void rejectBid(String userName, int bidId) throws Exception {
-        market.rejectBid(userName, bidId);
+    public void rejectBid(String userName,String shopName, int bidId) throws Exception {
+        market.rejectBid(userName, shopName, bidId);
     }
 
     @Override

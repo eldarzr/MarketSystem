@@ -354,16 +354,6 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
     }
 
     @Override
-    public void approveBid(String userName, int bidId) throws Exception {
-
-    }
-
-    @Override
-    public void rejectBid(String userName, int bidId) throws Exception {
-
-    }
-
-    @Override
     public Map<Integer, PurchasePolicy> getAllPurchasePolicies(String userName, String shopName) throws Exception {
         return null;
     }
@@ -414,13 +404,23 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
     }
 
     @Override
-    public void addIfPurchasePolicy(String userName, String shopName, int pid1, int pid2) throws Exception {
+    public void loadState(String stateFilePath) throws Exception {
+        nullCheck();
+        realBridge.loadState(stateFilePath);
+    }
+
+    @Override
+    public void approveBid(String userName, String shopName, int bidId) throws Exception {
 
     }
 
     @Override
-    public void loadState(String stateFilePath) throws Exception {
-        nullCheck();
-        realBridge.loadState(stateFilePath);
+    public void rejectBid(String userName, String shopName, int bidId) throws Exception {
+
+    }
+
+    @Override
+    public void addIfPurchasePolicy(String userName, String shopName, int pid1, int pid2) throws Exception {
+
     }
 }
