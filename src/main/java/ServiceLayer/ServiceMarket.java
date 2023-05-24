@@ -58,9 +58,9 @@ public class ServiceMarket {
 		return new Response();
 	}
 
-	public Response init(String configPath) {
+	public Response init(String configFilePath) {
 		try {
-			market.init(configPath);
+			market.init(configFilePath);
 		} catch (Exception exception) {
 			return new Response(exception.getMessage());
 		}
@@ -812,4 +812,13 @@ public class ServiceMarket {
     public void ReadUserNotifications(String username) {
 		market.ReadUserNotifications(username);
     }
+
+	public Response loadState(String stateFilePath) {
+		try {
+			market.loadState(stateFilePath);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
+	}
 }

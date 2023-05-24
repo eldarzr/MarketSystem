@@ -27,10 +27,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.apache.commons.lang3.NotImplementedException;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -57,15 +54,15 @@ public class Market implements MarketIntr{
     }
 
     @Override
-    public void init(String configPath) throws Exception {
+    public void init(String configFilePath) throws Exception {
         createLogger();
-        ConfigInit(configPath);
+        ConfigInit(configFilePath);
         logger.info("Market init Finished successfully.");
     }
 
-    private void ConfigInit(String configPath) throws Exception {
+    private void ConfigInit(String configFilePath) throws Exception {
         // Read the configuration file
-        FileReader reader = new FileReader(configPath);
+        FileReader reader = new FileReader(configFilePath);
         Gson gson = new Gson();
         JsonElement configElement = gson.fromJson(reader, JsonElement.class);
         JsonObject configData = configElement.getAsJsonObject();
@@ -100,7 +97,7 @@ public class Market implements MarketIntr{
     private void loadDatabase(String databasePath, String adminName, String adminPassword) throws Exception {
         logger.info("Start loading database data.");
         // Read the persistence.xml file
-        File file = new File("src/main/resources/META-INF/persistence.xml");
+        File file = new File("D:\\courses\\third_year\\Sadna\\MarketSystem\\src\\main\\resources\\META-INF\\persistence.xml");
         String content = new String(Files.readAllBytes(Paths.get(file.getPath())));
 
         // Update the values in the XML content
@@ -118,10 +115,70 @@ public class Market implements MarketIntr{
         logger.info("Loading database data finished successfully.");
     }
 
-    //todo: suggestion - we use logger in most of classes,
-    // mainly at beginning and end of an action but also at throwing exceptions
-    // I think it will be wise to create a static class of logUpdater
-    // which will wrap exception throwing with adding severe logs and will manage the logs.
+    public void loadState(String stateFilePath) throws Exception
+    {
+        BufferedReader reader = new BufferedReader(new FileReader(stateFilePath));
+        String line;
+        while ((line = reader.readLine()) != null)
+        {
+            line = line.trim();
+
+            // Skip empty lines or comments
+            if (line.isEmpty() || line.startsWith("#")) continue;
+
+            // Extract command and parameters
+            String command = line.substring(0, line.indexOf('('));
+            String[] params = line.substring(line.indexOf('(') + 1, line.indexOf(')')).split(",");
+
+            // Trim whitespace for each parameter
+            for (int i = 0; i < params.length; i++) {
+                params[i] = params[i].trim();
+            }
+            // Execute the corresponding function based on the command
+            switch (command) {
+                case "register" -> register(params[0], params[1], params[2]);
+                case "login" -> login(startSession(), params[0], params[1]);
+                case "logout" -> logout(params[0]);
+                case "createShop" -> createShop(params[0], params[1]);
+                case "removeShop" -> removeShop(params[0], params[1], params[2]);
+                case "openShop" -> openShop(params[0], params[1]);
+                case "closeShop" -> closeShop(params[0], params[1]);
+                case "addNewProduct" -> addNewProduct(params[0], params[1], params[2], params[3], params[4], Double.valueOf(params[5]));
+                case "removeProduct" -> removeProduct(params[0], params[1], params[2]);
+                case "addAgePurchasePolicy" -> addAgePurchasePolicy(params[0], params[1], Boolean.parseBoolean(params[2]), params[3], Boolean.parseBoolean(params[4]), Integer.parseInt(params[5]), Integer.parseInt(params[6]));
+                case "appointShopManager" -> appointShopManager(params[0], params[1], params[2]);
+                case "setActivePurchasePolicy" -> setActivePurchasePolicy(params[0], params[1], Integer.parseInt(params[2]));
+                case "addProductDiscount" -> addProductDiscount(params[0], params[1], Double.parseDouble(params[2]), params[3]);
+                case "addManagerPermissions" -> addManagerPermissions(params[0], params[1], params[2], Integer.parseInt(params[3]));
+                case "removeUser" -> removeUser(params[0], params[1]);
+                case "addTimePurchasePolicy" -> addTimePurchasePolicy(params[0], params[1], Boolean.parseBoolean(params[2]), params[3], Boolean.parseBoolean(params[4]), Integer.parseInt(params[5]), Integer.parseInt(params[6]));
+                case "addCategoryDiscount" -> addCategoryDiscount(params[0], params[1], Double.parseDouble(params[2]), params[3]);
+                case "removeShopOwner" -> removeShopOwner(params[0], params[1], params[2]);
+                case "addProductItems" -> addProductItems(params[0], params[1], params[2], Integer.parseInt(params[3]));
+                case "createBidOffer" -> createBidOffer(params[0], params[1], params[2], Double.parseDouble(params[3]));
+                case "rejectBid" -> rejectBid(params[0], Integer.parseInt(params[1]));
+                case "updateProductCategory" -> updateProductCategory(params[0], params[1], params[2], params[3]);
+                case "addIfPurchasePolicy" -> addIfPurchasePolicy(params[0], params[1], Integer.parseInt(params[2]), Integer.parseInt(params[3]));
+                case "updateProductQuantity" -> updateProductQuantity(params[0], params[1], params[2], Integer.parseInt(params[3]));
+                case "blockUser" -> blockUser(params[0], params[1]);
+                case "removeDiscount" -> removeDiscount(params[0], params[1], Integer.parseInt(params[2]));
+                case "updateProductPrice" -> updateProductPrice(params[0], params[1], params[2], Double.parseDouble(params[3]));
+                case "addAndPurchasePolicy" -> addAndPurchasePolicy(params[0], params[1], Integer.parseInt(params[2]), Integer.parseInt(params[3]));
+                case "addOrPurchasePolicy" -> addOrPurchasePolicy(params[0], params[1], Integer.parseInt(params[2]), Integer.parseInt(params[3]));
+                case "addShopDiscount" -> addShopDiscount(params[0], params[1], Double.parseDouble(params[2]));
+                case "resetDiscountRule" -> resetDiscountRule(params[0], params[1], Integer.parseInt(params[2]));
+                case "changeManagerAccess" -> changeManagerAccess(params[0], params[1], params[2], Integer.parseInt(params[3]));
+                case "updateProductDesc" -> updateProductDesc(params[0], params[1], params[2], params[3]);
+                case "addProductsToCart" -> addProductsToCart(params[0], params[1], params[2], Integer.parseInt(params[3]));
+                case "addQuantityPurchasePolicy" -> addQuantityPurchasePolicy(params[0], params[1], Boolean.parseBoolean(params[2]), params[3], Boolean.parseBoolean(params[4]), Integer.parseInt(params[5]), Integer.parseInt(params[6]));
+                case "appointShopOwner" -> appointShopOwner(params[0], params[1], params[2]);
+                case "updateCartProductQuantity" -> updateCartProductQuantity(params[0], params[1], params[2], Integer.parseInt(params[3]));
+                case "approveBid" -> approveBid(params[0], Integer.parseInt(params[1]));
+                default -> throw new Exception("Unknown command: " + command);
+            }
+        }
+    }
+
     private void createLogger() throws IOException {
         // Create a file handler and set its formatter
         try {
@@ -729,50 +786,6 @@ public class Market implements MarketIntr{
     private boolean isAdmin(String userName) {
         logger.info(String.format("Attempt to check if user %s is admin.", userName));
         return usersHandler.isAdmin(userName);
-    }
-
-    private void loadProducts() throws Exception {
-        String[] usersName = {"eldar_first", "niv_first"};
-        String[] passwords = {"Aa123456", "Aa123456"};
-        String[] emails = {"eldarFirst@gmail.com", "nivFirst@gmail.com"};
-        String[] shopNames = {"shopFirst1", "shopFirst2"};
-        String[] prodNames = {"prodFirst1", "prodFirst2"};
-        String[] descs = {"description1 description1 description1", "description2"};
-        String[] cat = {"catFirst1", "catFirst2"};
-        double[] prices = {5, 10};
-
-        for (int i = 0; i < usersName.length; i++) {
-            String guestName = startSession();
-            register(usersName[i], emails[i], passwords[i]);
-            login(guestName, usersName[i], passwords[i]);
-            createShop(usersName[i], shopNames[i]);
-            try {
-                addNewProduct(usersName[i], shopNames[i], prodNames[i], cat[i], descs[i], prices[i]);
-            }
-            catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-            addProductItems(usersName[i], shopNames[i], prodNames[i], 3);
-        }
-        createShop(usersName[0],"The Shop");
-        createShop(usersName[0],"Super Shop");
-        for(int i = 0; i < 6; i++) {
-            addNewProduct(usersName[0], "Super Shop", "product" + i, cat[0], descs[0], prices[0]);
-            addProductItems(usersName[0], "Super Shop", "product" + i, 3);
-        }
-
-        addProductsToCart(usersName[0], shopNames[0], prodNames[0], 1);
-        addProductsToCart(usersName[0], shopNames[1], prodNames[1], 1);
-        PaymentDetails paymentDetails = new CreditCardPaymentDetails("1234123412341234", "10", "28", "eldar", "123", "123456789");
-        SupplyDetails supplyDetails = new SupplyDetails("eldar1", "sa", "dimona", "israel", "123456");
-        purchaseCart(usersName[0], paymentDetails, supplyDetails);
-
-        logout("eldar_first");
-        logout("niv_first");
-
-        loadDataGabi();
-
-
     }
 
     private void loadDataGabi() throws Exception {

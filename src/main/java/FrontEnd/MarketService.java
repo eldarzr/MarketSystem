@@ -38,20 +38,30 @@ public class MarketService {
 			synchronized ( (MarketService.class)){
 				if(instance == null){
 					instance =  new MarketService();
-					instance.init("src/InitFiles/BaseConfig.jason");
+					instance.init("D:\\courses\\third_year\\Sadna\\MarketSystem\\src\\InitFiles\\BaseConfig.jason");
+					instance.loadState("D:\\courses\\third_year\\Sadna\\MarketSystem\\src\\InitFiles\\loadState");
 				}
 			}
 		}
 		return instance;
 	}
 
+	private Response loadState(String stateFilePath) {
+		try {
+			serviceMarket.loadState(stateFilePath);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
+	}
+
 	private MarketService() {
 		serviceMarket = new ServiceMarket();
 	}
 
-	public Response init(String configPath) {
+	public Response init(String configFilePath) {
 		try {
-			serviceMarket.init(configPath);
+			serviceMarket.init(configFilePath);
 			if (VaadinService.getCurrent() != null) {
 				VaadinService.getCurrent().addSessionInitListener(event ->
 						startSession(event.getSession().getSession().getId()));
