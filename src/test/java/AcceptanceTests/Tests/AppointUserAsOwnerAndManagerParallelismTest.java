@@ -19,6 +19,7 @@ public class AppointUserAsOwnerAndManagerParallelismTest {
     @BeforeEach
     public void setUp() throws Exception {
         system = new MarketSystemRealBridge();
+        system.init();
     }
 
     @AfterEach
@@ -33,7 +34,6 @@ public class AppointUserAsOwnerAndManagerParallelismTest {
         String shopOwner2 = "shopOwner2";
         String userName = "testUser";
         String shopName = "testShop";
-        system.init();
         system.register(shopOwner1, "shopowner1@gmail.com", "Passw0rd!!!");
         system.login(shopOwner1, "Passw0rd!!!");
         system.createShop(shopOwner1, shopName);

@@ -3,6 +3,7 @@ package BusinessLayer;
 import BusinessLayer.Bids.Bid;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
+import BusinessLayer.Notifications.Notification;
 import BusinessLayer.Purchases.*;
 import BusinessLayer.Shops.ProductIntr;
 import BusinessLayer.Shops.PurchasePolicies.ComplexPolicyType;
@@ -149,4 +150,6 @@ public interface MarketIntr {
     public void rejectBid(String userName,String shopName, int bidId) throws Exception ;
 
     void loadState(String stateFilePath)throws Exception;
+
+    Collection<Notification> getUserNotifications(String username) throws Exception;
 }

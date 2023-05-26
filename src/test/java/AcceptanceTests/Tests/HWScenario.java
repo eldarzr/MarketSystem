@@ -1,4 +1,4 @@
-package InitLoadTests;
+package AcceptanceTests.Tests;
 
 import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;

@@ -113,6 +113,6 @@ class MarketAppointManagerOwnerTests {
         market.appointShopManager("eldar","niv12","shop1");
         market.appointShopManager("eldar","naor","shop1");
        List<MemberRoleInShop> naorShops = market.getUserRoles("naor");
-        List<MemberRoleInShop> nivShops = market.getUserRoles("niv");
+        List<MemberRoleInShop> nivShops = market.getUserRoles("niv12");
     }
 }

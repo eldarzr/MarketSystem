@@ -65,7 +65,7 @@ public class Market implements MarketIntr{
     @Override
     public void init(String configFilePath) throws Exception {
         createLogger();
-        resetAll();
+        //resetAll();
         ConfigInit(configFilePath);
         logger.info("Market init Finished successfully.");
     }
@@ -91,7 +91,9 @@ public class Market implements MarketIntr{
 
         // Close the file reader
         reader.close();
+
         loadDatabase(database_path, database_admin, database_password);
+        resetAll();
         loadAdmin(adminUsername,adminEmail,adminPassword);
 
         logger.info("Loading init configuration Finished successfully.");
@@ -106,9 +108,7 @@ public class Market implements MarketIntr{
 
     private void loadDatabase(String databasePath, String adminName, String adminPassword) throws Exception {
         logger.info("Start loading database data.");
-        // Read the persistence.xml file
         String persistenceXmlPath = "D:\\courses\\third_year\\Sadna\\MarketSystem\\src\\main\\resources\\META-INF\\persistence.xml";
-
         // Load the persistence.xml file
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -129,10 +129,12 @@ public class Market implements MarketIntr{
                 String name = property.getAttribute("name");
 
                 // Check the name of the property and update the desired fields
-                switch (name) {
-                    case "javax.persistence.jdbc.url" -> property.setAttribute("value", databasePath);
-                    case "javax.persistence.jdbc.user" -> property.setAttribute("value", adminName);
-                    case "javax.persistence.jdbc.password" -> property.setAttribute("value", adminPassword);
+                if ("javax.persistence.jdbc.url".equals(name)) {
+                    property.setAttribute("value", databasePath);
+                } else if ("javax.persistence.jdbc.user".equals(name)) {
+                    property.setAttribute("value", adminName);
+                } else if ("javax.persistence.jdbc.password".equals(name)) {
+                    property.setAttribute("value", adminPassword);
                 }
             }
         }
@@ -144,70 +146,78 @@ public class Market implements MarketIntr{
         StreamResult result = new StreamResult(persistenceXmlPath);
         transformer.transform(source, result);
 
+        String[] pathParts =  databasePath.split("/");
+        PersistenceManager.set_table_scheme(pathParts[pathParts.length-1]);
         logger.info("Loading database data finished successfully.");
     }
 
     public void loadState(String stateFilePath) throws Exception
     {
-        BufferedReader reader = new BufferedReader(new FileReader(stateFilePath));
-        String line;
-        while ((line = reader.readLine()) != null)
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(stateFilePath));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+
+                // Skip empty lines or comments
+                if (line.isEmpty() || line.startsWith("#")) continue;
+
+                // Extract command and parameters
+                String command = line.substring(0, line.indexOf('('));
+                String[] params = line.substring(line.indexOf('(') + 1, line.indexOf(')')).split(",");
+
+                // Trim whitespace for each parameter
+                for (int i = 0; i < params.length; i++) {
+                    params[i] = params[i].trim();
+                }
+                // Execute the corresponding function based on the command
+                switch (command) {
+                    case "register" -> register(params[0], params[1], params[2]);
+                    case "login" -> login(startSession(), params[0], params[1]);
+                    case "logout" -> logout(params[0]);
+                    case "createShop" -> createShop(params[0], params[1]);
+                    case "removeShop" -> removeShop(params[0], params[1], params[2]);
+                    case "openShop" -> openShop(params[0], params[1]);
+                    case "closeShop" -> closeShop(params[0], params[1]);
+                    case "addNewProduct" -> addNewProduct(params[0], params[1], params[2], params[3], params[4], Double.valueOf(params[5]));
+                    case "removeProduct" -> removeProduct(params[0], params[1], params[2]);
+                    case "addAgePurchasePolicy" -> addAgePurchasePolicy(params[0], params[1], Boolean.parseBoolean(params[2]), params[3], Boolean.parseBoolean(params[4]), Integer.parseInt(params[5]), Integer.parseInt(params[6]));
+                    case "appointShopManager" -> appointShopManager(params[0], params[1], params[2]);
+                    case "setActivePurchasePolicy" -> setActivePurchasePolicy(params[0], params[1], Integer.parseInt(params[2]));
+                    case "addProductDiscount" -> addProductDiscount(params[0], params[1], Double.parseDouble(params[2]), params[3]);
+                    case "addManagerPermissions" -> addManagerPermissions(params[0], params[1], params[2], Integer.parseInt(params[3]));
+                    case "removeUser" -> removeUser(params[0], params[1]);
+                    case "addTimePurchasePolicy" -> addTimePurchasePolicy(params[0], params[1], Boolean.parseBoolean(params[2]), params[3], Boolean.parseBoolean(params[4]), Integer.parseInt(params[5]), Integer.parseInt(params[6]));
+                    case "addCategoryDiscount" -> addCategoryDiscount(params[0], params[1], Double.parseDouble(params[2]), params[3]);
+                    case "removeShopOwner" -> removeShopOwner(params[0], params[1], params[2]);
+                    case "addProductItems" -> addProductItems(params[0], params[1], params[2], Integer.parseInt(params[3]));
+                    case "createBidOffer" -> createBidOffer(params[0], params[1], params[2], Double.parseDouble(params[3]));
+                    case "rejectBid" -> rejectBid(params[0], params[1], Integer.parseInt(params[2]));
+                    case "updateProductCategory" -> updateProductCategory(params[0], params[1], params[2], params[3]);
+                    case "addIfPurchasePolicy" -> addIfPurchasePolicy(params[0], params[1], Integer.parseInt(params[2]), Integer.parseInt(params[3]));
+                    case "updateProductQuantity" -> updateProductQuantity(params[0], params[1], params[2], Integer.parseInt(params[3]));
+                    case "blockUser" -> blockUser(params[0], params[1]);
+                    case "removeDiscount" -> removeDiscount(params[0], params[1], Integer.parseInt(params[2]));
+                    case "updateProductPrice" -> updateProductPrice(params[0], params[1], params[2], Double.parseDouble(params[3]));
+                    case "addAndPurchasePolicy" -> addAndPurchasePolicy(params[0], params[1], Integer.parseInt(params[2]), Integer.parseInt(params[3]));
+                    case "addOrPurchasePolicy" -> addOrPurchasePolicy(params[0], params[1], Integer.parseInt(params[2]), Integer.parseInt(params[3]));
+                    case "addShopDiscount" -> addShopDiscount(params[0], params[1], Double.parseDouble(params[2]));
+                    case "resetDiscountRule" -> resetDiscountRule(params[0], params[1], Integer.parseInt(params[2]));
+                    case "changeManagerAccess" -> changeManagerAccess(params[0], params[1], params[2], Integer.parseInt(params[3]));
+                    case "updateProductDesc" -> updateProductDesc(params[0], params[1], params[2], params[3]);
+                    case "addProductsToCart" -> addProductsToCart(params[0], params[1], params[2], Integer.parseInt(params[3]));
+                    case "addQuantityPurchasePolicy" -> addQuantityPurchasePolicy(params[0], params[1], Boolean.parseBoolean(params[2]), params[3], Boolean.parseBoolean(params[4]), Integer.parseInt(params[5]), Integer.parseInt(params[6]));
+                    case "appointShopOwner" -> appointShopOwner(params[0], params[1], params[2]);
+                    case "updateCartProductQuantity" -> updateCartProductQuantity(params[0], params[1], params[2], Integer.parseInt(params[3]));
+                    case "approveBid" -> approveBid(params[0], params[1], Integer.parseInt(params[2]));
+                    default -> throw new Exception("Unknown command: " + command);
+                }
+            }
+        }
+        catch (Exception e)
         {
-            line = line.trim();
-
-            // Skip empty lines or comments
-            if (line.isEmpty() || line.startsWith("#")) continue;
-
-            // Extract command and parameters
-            String command = line.substring(0, line.indexOf('('));
-            String[] params = line.substring(line.indexOf('(') + 1, line.indexOf(')')).split(",");
-
-            // Trim whitespace for each parameter
-            for (int i = 0; i < params.length; i++) {
-                params[i] = params[i].trim();
-            }
-            // Execute the corresponding function based on the command
-            switch (command) {
-                case "register" -> register(params[0], params[1], params[2]);
-                case "login" -> login(startSession(), params[0], params[1]);
-                case "logout" -> logout(params[0]);
-                case "createShop" -> createShop(params[0], params[1]);
-                case "removeShop" -> removeShop(params[0], params[1], params[2]);
-                case "openShop" -> openShop(params[0], params[1]);
-                case "closeShop" -> closeShop(params[0], params[1]);
-                case "addNewProduct" -> addNewProduct(params[0], params[1], params[2], params[3], params[4], Double.valueOf(params[5]));
-                case "removeProduct" -> removeProduct(params[0], params[1], params[2]);
-                case "addAgePurchasePolicy" -> addAgePurchasePolicy(params[0], params[1], Boolean.parseBoolean(params[2]), params[3], Boolean.parseBoolean(params[4]), Integer.parseInt(params[5]), Integer.parseInt(params[6]));
-                case "appointShopManager" -> appointShopManager(params[0], params[1], params[2]);
-                case "setActivePurchasePolicy" -> setActivePurchasePolicy(params[0], params[1], Integer.parseInt(params[2]));
-                case "addProductDiscount" -> addProductDiscount(params[0], params[1], Double.parseDouble(params[2]), params[3]);
-                case "addManagerPermissions" -> addManagerPermissions(params[0], params[1], params[2], Integer.parseInt(params[3]));
-                case "removeUser" -> removeUser(params[0], params[1]);
-                case "addTimePurchasePolicy" -> addTimePurchasePolicy(params[0], params[1], Boolean.parseBoolean(params[2]), params[3], Boolean.parseBoolean(params[4]), Integer.parseInt(params[5]), Integer.parseInt(params[6]));
-                case "addCategoryDiscount" -> addCategoryDiscount(params[0], params[1], Double.parseDouble(params[2]), params[3]);
-                case "removeShopOwner" -> removeShopOwner(params[0], params[1], params[2]);
-                case "addProductItems" -> addProductItems(params[0], params[1], params[2], Integer.parseInt(params[3]));
-                case "createBidOffer" -> createBidOffer(params[0], params[1], params[2], Double.parseDouble(params[3]));
-                case "rejectBid" -> rejectBid(params[0],params[1], Integer.parseInt(params[2]));
-                case "updateProductCategory" -> updateProductCategory(params[0], params[1], params[2], params[3]);
-                case "addIfPurchasePolicy" -> addIfPurchasePolicy(params[0], params[1], Integer.parseInt(params[2]), Integer.parseInt(params[3]));
-                case "updateProductQuantity" -> updateProductQuantity(params[0], params[1], params[2], Integer.parseInt(params[3]));
-                case "blockUser" -> blockUser(params[0], params[1]);
-                case "removeDiscount" -> removeDiscount(params[0], params[1], Integer.parseInt(params[2]));
-                case "updateProductPrice" -> updateProductPrice(params[0], params[1], params[2], Double.parseDouble(params[3]));
-                case "addAndPurchasePolicy" -> addAndPurchasePolicy(params[0], params[1], Integer.parseInt(params[2]), Integer.parseInt(params[3]));
-                case "addOrPurchasePolicy" -> addOrPurchasePolicy(params[0], params[1], Integer.parseInt(params[2]), Integer.parseInt(params[3]));
-                case "addShopDiscount" -> addShopDiscount(params[0], params[1], Double.parseDouble(params[2]));
-                case "resetDiscountRule" -> resetDiscountRule(params[0], params[1], Integer.parseInt(params[2]));
-                case "changeManagerAccess" -> changeManagerAccess(params[0], params[1], params[2], Integer.parseInt(params[3]));
-                case "updateProductDesc" -> updateProductDesc(params[0], params[1], params[2], params[3]);
-                case "addProductsToCart" -> addProductsToCart(params[0], params[1], params[2], Integer.parseInt(params[3]));
-                case "addQuantityPurchasePolicy" -> addQuantityPurchasePolicy(params[0], params[1], Boolean.parseBoolean(params[2]), params[3], Boolean.parseBoolean(params[4]), Integer.parseInt(params[5]), Integer.parseInt(params[6]));
-                case "appointShopOwner" -> appointShopOwner(params[0], params[1], params[2]);
-                case "updateCartProductQuantity" -> updateCartProductQuantity(params[0], params[1], params[2], Integer.parseInt(params[3]));
-                case "approveBid" -> approveBid(params[0],params[1], Integer.parseInt(params[2]));
-                default -> throw new Exception("Unknown command: " + command);
-            }
+            resetAll();
+            throw new Exception("Loading system state failed due to "+e.getMessage());
         }
     }
 

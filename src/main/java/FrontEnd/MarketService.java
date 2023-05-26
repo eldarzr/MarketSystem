@@ -39,7 +39,7 @@ public class MarketService {
 				if(instance == null){
 					instance =  new MarketService();
 					instance.init("D:\\courses\\third_year\\Sadna\\MarketSystem\\src\\InitFiles\\BaseConfig.jason");
-					instance.loadState("D:\\courses\\third_year\\Sadna\\MarketSystem\\src\\InitFiles\\loadState");
+					instance.loadState("D:\\courses\\third_year\\Sadna\\MarketSystem\\src\\InitFiles\\loadTempState");
 				}
 			}
 		}

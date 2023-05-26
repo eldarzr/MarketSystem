@@ -1,6 +1,7 @@
 package AcceptanceTests;
 
 import BusinessLayer.Bids.Bid;
+import BusinessLayer.Notifications.Notification;
 import BusinessLayer.Shops.PurchasePolicies.PurchasePolicy;
 
 import java.time.LocalDate;

@@ -7,6 +7,7 @@ import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.Market;
 import BusinessLayer.MarketIntr;
 import BusinessLayer.MemberRoleInShop;
+import BusinessLayer.Notifications.Notification;
 import BusinessLayer.Purchases.*;
 import BusinessLayer.Shops.ProductIntr;
 import BusinessLayer.Shops.PurchasePolicies.PurchasePolicy;
@@ -440,4 +441,5 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     public void loadState(String stateFilePath) throws Exception {
         market.loadState(stateFilePath);
     }
+
 }

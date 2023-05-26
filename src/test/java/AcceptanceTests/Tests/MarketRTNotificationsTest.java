@@ -1,21 +1,19 @@
-package IntegrationTests;
+package AcceptanceTests.Tests;
 
+import AcceptanceTests.ExternalToolsFactory;
 import BusinessLayer.Market;
 import BusinessLayer.Notifications.Notification;
-import BusinessLayer.Shops.ProductIntr;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 
-import static BusinessLayer.Search.IGNORED_INT;
-import static BusinessLayer.Search.IGNORED_STRING;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-class MarketRTNotificationsIntegrationTest {
+class MarketRTNotificationsTest {
 	Market market;
 	String[] usersName = {"eldar", "niv12","idan"};
 	String[] passwords = {"Aa123456", "Aa123456","Aa123456"};
@@ -24,6 +22,7 @@ class MarketRTNotificationsIntegrationTest {
 	String[] prodNames = {"prod1", "prod11", "prod111"};
 	String[] descs = {"desc1", "desc2", "desc3"};
 	String[] cats = {"cat1", "cat2", "cat3"};
+	int[] quantities = {10, 10, 10};
 	double[] prices = {5, 7, 10};
 
 	@BeforeEach
@@ -150,7 +149,6 @@ class MarketRTNotificationsIntegrationTest {
 		}
 		fail();
 	}
-
 	@Test
 	void openShopFail() throws Exception {
 		market.appointShopOwner(usersName[0],usersName[1],shopNames[0]);
@@ -329,6 +327,29 @@ class MarketRTNotificationsIntegrationTest {
 		notificationThread.join();
 	}
 
+	@Test
+	public void PurchaseNotificationTest(){
+		try
+		{
+			market.addNewProduct(usersName[0], shopNames[0],prodNames[0], cats[0],descs[0],prices[0],quantities[0]);
+			//Add products to cart
+			market.addProductsToCart(usersName[1],shopNames[0],prodNames[0],2);
 
+			//Purchase the cart
+			market.purchaseCart(usersName[1], ExternalToolsFactory.createMockPaymentDetails(),ExternalToolsFactory.createMockSupplyDetails());
+			Collection<Notification> notifications=market.getUserNotifications(usersName[0]);
+			for(Notification notification: notifications)
+			{
+				System.out.println(notification.getMessage());
+				if(notification.getMessage().equals(usersName[1]+" purchased 2 "+prodNames[0]+" in shop "+shopNames[0]))
+				{
+					assertTrue(true);
+				}
+			}
+		} catch (Exception e)
+		{
+			fail("Purchase should be executed successfully");
+		}
+	}
 
 }
