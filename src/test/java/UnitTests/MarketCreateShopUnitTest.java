@@ -26,7 +26,8 @@ class MarketCreateShopUnitTest {
 
 	@BeforeAll
 	static void configInit() throws Exception {
-		new Market().init("src/InitFiles/TestsConfig.jason");
+		Market market = new Market();
+		market.init("src/InitFiles/TestsConfig.jason");
 	}
 
 	@BeforeEach

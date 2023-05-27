@@ -93,7 +93,6 @@ public class Market implements MarketIntr{
         reader.close();
 
         loadDatabase(database_path, database_admin, database_password);
-        resetAll();
         loadAdmin(adminUsername,adminEmail,adminPassword);
 
         logger.info("Loading init configuration Finished successfully.");
@@ -101,14 +100,26 @@ public class Market implements MarketIntr{
 
     private void loadAdmin(String adminUsername,String adminEmail,String adminPassword) throws Exception {
         logger.info("Start loading admin data.");
-        register(adminUsername, adminEmail, adminPassword);
-        addAdmin(adminUsername);
+        try
+        {
+            usersHandler.findMemberByName(adminUsername);
+        }
+        catch (Exception e)
+        {
+            register(adminUsername, adminEmail, adminPassword);
+            addAdmin(adminUsername);
+        }
         logger.info("Loading admin data finished successfully.");
     }
 
     private void loadDatabase(String databasePath, String adminName, String adminPassword) throws Exception {
         logger.info("Start loading database data.");
-        String persistenceXmlPath = "D:\\courses\\third_year\\Sadna\\MarketSystem\\src\\main\\resources\\META-INF\\persistence.xml";
+        String persistenceXmlPath="src\\main\\resources\\META-INF\\persistence.xml";
+        try {
+            String deploymentFolder = System.getProperty("catalina.home").split("Tomcat")[0];
+            persistenceXmlPath = deploymentFolder + persistenceXmlPath;
+        }
+        catch (Exception ignored) {}
         // Load the persistence.xml file
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -919,12 +930,13 @@ public class Market implements MarketIntr{
         PersistenceManager.getInstance().updateObj(shop);
     }
 
-    public void addQuantityPurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int minQuantity, int maxQuantity)throws Exception{
+    public int addQuantityPurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int minQuantity, int maxQuantity)throws Exception{
         validateUserIsntGuest(userName);
         isLoggedIn(userName);
         Shop shop = getShop(shopName);
-        shop.getPurchasePolicyManager(userName).addQuantityConstraint(isProduct,toConstraint,positive,minQuantity,maxQuantity);
+        int pid=shop.getPurchasePolicyManager(userName).addQuantityConstraint(isProduct,toConstraint,positive,minQuantity,maxQuantity);
         PersistenceManager.getInstance().updateObj(shop);
+        return pid;
     }
 	
 	public void removeDiscount(String shopName, String userName, int discountId) throws Exception {

@@ -134,7 +134,7 @@ public interface MarketIntr {
     public void setActivePurchasePolicy(String userName, String shopName, int policyId) throws Exception ;
     public Integer getActivePurchasePolicyId(String userName, String shopName) throws Exception;
     public void addAgePurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int startAge, int endAge)throws Exception;
-    public void addQuantityPurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int minQuantity, int maxQuantity)throws Exception;
+    public int addQuantityPurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int minQuantity, int maxQuantity)throws Exception;
     public void removeDiscount(String shopName, String userName, int discountId) throws Exception;
     public void addDatePurchasePolicy(String userName, String shopName, boolean isProduct, String toConstraint, boolean positive, LocalDate startDate, LocalDate endDate)throws Exception;
     public void addTimePurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int startHour, int endHour)throws Exception;
