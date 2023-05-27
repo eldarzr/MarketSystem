@@ -3,6 +3,7 @@ package BusinessLayer;
 import BusinessLayer.Bids.Bid;
 import BusinessLayer.Enums.UserType;
 import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
+import BusinessLayer.ExternalSystemsAdapters.ExternalSystemAPI;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Notifications.Notification;
@@ -89,11 +90,16 @@ public class Market implements MarketIntr{
         String adminEmail = systemAdmin.get("email").getAsString();
         String adminPassword = systemAdmin.get("password").getAsString();
 
+        // Access the system administrator details
+        JsonObject externalSystems = configData.getAsJsonObject("externalSystems");
+        String webAddress = externalSystems.get("webAddress").getAsString();
+
         // Close the file reader
         reader.close();
 
         loadDatabase(database_path, database_admin, database_password);
         loadAdmin(adminUsername,adminEmail,adminPassword);
+        ExternalSystemAPI.setURL(webAddress);
 
         logger.info("Loading init configuration Finished successfully.");
     }

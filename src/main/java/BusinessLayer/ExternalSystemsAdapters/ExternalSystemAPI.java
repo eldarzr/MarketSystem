@@ -13,7 +13,12 @@ import java.util.stream.Collectors;
 
 public class ExternalSystemAPI {
     private static HttpClient client = HttpClient.newHttpClient();
-    private String serverUrl = "https://php-server-try.000webhostapp.com/";
+    private static String serverUrl;
+
+    public static void setURL(String url)
+    {
+        serverUrl=url;
+    }
 
     public ExternalSystemAPI() {
     }
