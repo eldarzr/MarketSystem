@@ -1,6 +1,7 @@
 package BusinessLayer.Purchases;
 
 import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
+import BusinessLayer.ExternalSystemsAdapters.ExternalSystemAPI;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Notifications.Notification;
@@ -24,6 +25,7 @@ public class Purchase implements PurchaseIntr{
     SupplyDetails supplyDetails;
     UserInvoice userInvoice;
     List<ShopInvoice> shopInvoices;
+    ExternalSystemAPI externalSystem;
 
     public Purchase(User user, List<Shop> shops, PaymentDetails paymentDetails, SupplyDetails supplyDetails) {
         this.user = user;
@@ -33,6 +35,7 @@ public class Purchase implements PurchaseIntr{
         if(paymentDetails != null && supplyDetails != null)
             this.userInvoice = new UserInvoice(user.getName(), paymentDetails.toString(), paymentDetails.toString());
         this.shopInvoices = new ArrayList<>();
+        this.externalSystem = new ExternalSystemAPI();
     }
 
     @Override
@@ -74,7 +77,7 @@ public class Purchase implements PurchaseIntr{
         }
     }
 
-    private void revertPay() throws InterruptedException {
+    private void revertPay() throws Exception {
         paymentDetails.acceptRevert(this);
     }
 
@@ -192,20 +195,33 @@ public class Purchase implements PurchaseIntr{
         }
     }
 
-    private void supply() throws InterruptedException {
+    private void supply() throws Exception {
         //connect to supply system
         Thread.sleep(20);
+        if(!externalSystem.supply(supplyDetails))
+            throw new Exception("Supply failed");
+    }
+
+    private void cancelSupply() throws Exception {
+        //connect to supply system
+        Thread.sleep(20);
+        if(!externalSystem.cancelSupply(supplyDetails))
+            throw new Exception("Cancel Supply failed");
     }
 
 
-    public void visit(CreditCardPaymentDetails creditCardPaymentDetails,double priceAfterDiscount) throws InterruptedException {
+    public void visit(CreditCardPaymentDetails creditCardPaymentDetails,double priceAfterDiscount) throws Exception {
         //connect to credit Card Company
         Thread.sleep(20);
+        if(!externalSystem.pay(creditCardPaymentDetails))
+            throw new Exception("Payment failed");
     }
 
-    public void visitRevert(CreditCardPaymentDetails creditCardPaymentDetails) throws InterruptedException {
+    public void visitRevert(CreditCardPaymentDetails creditCardPaymentDetails) throws Exception {
         //connect to credit card company for revert
         Thread.sleep(20);
+        if(!externalSystem.cancelPay(creditCardPaymentDetails))
+            throw new Exception("Revert Payment failed");
     }
 
     public void addProductsToInvoices(Map<String, ShopBag> shopsAndProducts) {

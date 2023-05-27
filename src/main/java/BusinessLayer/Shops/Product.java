@@ -150,4 +150,8 @@ public class Product implements ProductIntr, Serializable {
 	public Product deepClone() {
 		return new Product(this);
 	}
+
+	public Long getId() {
+		return id;
+	}
 }
