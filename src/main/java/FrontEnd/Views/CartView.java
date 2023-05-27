@@ -76,15 +76,6 @@ public class CartView extends BaseView {
                 AccordionPanel shopPanel = createShopPanel(shop, itemGrid);
                 shopAccordion.add(shopPanel);
             }
-
-            //totalPurchasePrice = cart.entrySet().stream()
-//                    .mapToDouble(entry -> {
-//                        Map<String, ShopBagItemDataObj> productNameToItem = entry.getValue().getProductsAndQuantities();
-//                        return productNameToItem.values().stream()
-//                                .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
-//                                .sum();
-//                    })
-//                    .sum();
         }
         else {
             Notification.show(cart_res.getMessage());

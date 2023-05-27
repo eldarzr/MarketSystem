@@ -67,11 +67,6 @@ public class Shop implements ShopIntr {
 	private Map<String, ShopProduct> products;
 	@Transient
 	private ConcurrentLinkedQueue<MessageObserver> observers;
-	//	@OneToMany(cascade = CascadeType.ALL)
-//	@JoinColumns({
-//			@JoinColumn(name="shopName", referencedColumnName="shopName")
-//	})
-//	@MapKeyColumn(name = "shopName") // specify the index column
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "shopName")
 	private List<ShopInvoice> invoices;
@@ -81,7 +76,8 @@ public class Shop implements ShopIntr {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "purchase_policy_manager_id")
 	private PurchasePolicyManager purchasePolicyManager;
-	@Transient
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "bid_manager_id")
 	private BidManager bidManager;
 
 	public Shop() {

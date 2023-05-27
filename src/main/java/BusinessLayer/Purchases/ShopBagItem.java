@@ -9,7 +9,6 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "shop_bag_items")
-//@IdClass(ShopBagItemId.class)
 public class ShopBagItem implements Serializable {
 
     @Id
@@ -17,23 +16,15 @@ public class ShopBagItem implements Serializable {
     private Long id;
 
     @ManyToOne
-//    @JoinColumns({
-//            @JoinColumn(name="shopName", referencedColumnName="shopName", insertable = false, updatable = false),
-//            @JoinColumn(name="productName", referencedColumnName="productName", insertable = false, updatable = false)
-//    })
-//    @Transient
-    @JoinColumn(name="product_id", referencedColumnName="id", insertable = false, updatable = false)
+    @JoinColumn(name="product_id", referencedColumnName="id")
     private Product product;
 
-//    @Id
     @Column(name = "productName")
     private String productName;
 
-//    @Id
     @Column(name = "shopName")
     private String shopName;
 
-//    @Id
     @Column(name = "userName")
     private String userName;
 

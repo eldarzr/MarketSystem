@@ -3,15 +3,38 @@ package BusinessLayer.Bids;
 
 import BusinessLayer.Shops.Product;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "bids")
 public class Bid {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    @Column(name = "user_name")
     private final String userName;
-    private final int id;
+    @Column(name = "b_id")
+    private final int b_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
     private final Product product;
+    @Column(name = "price")
     private final double price;
+
+    @Enumerated(EnumType.STRING)
     private BidStatus status;
+
+    public Bid() {
+        userName = null;
+        b_id = 0;
+        product = null;
+        price = 0.0;
+    }
+
     public Bid(String userName, int id, Product product, double price) throws Exception {
         this.userName = userName;
-        this.id = id;
+        this.b_id = id;
         this.status = BidStatus.PENDING;
         this.price = price;
         this.product = product;
@@ -51,7 +74,7 @@ public class Bid {
         return status;
     }
     public int getId() {
-        return id;
+        return b_id;
     }
 
     public String getUserName() {

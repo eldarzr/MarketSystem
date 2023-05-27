@@ -78,8 +78,6 @@ public class ParallelismTest {
         executor.shutdown();
         executor.awaitTermination(5, TimeUnit.SECONDS);
 
-        //todo: this assert is not true, both of the users can add the product to their cart but only one can buy it (as long that this is the quantity provided)
-        // Assert that only one user was able to buy the product
         assertTrue(marketSystem.getProductQuantityInShop(shopName, productName) == 1);
     }
 
