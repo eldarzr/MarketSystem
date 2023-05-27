@@ -1,10 +1,12 @@
 package UnitTests;
 
+import BusinessLayer.Market;
 import BusinessLayer.Shops.Shop;
 import BusinessLayer.Shops.ShopHandler;
 import BusinessLayer.Shops.ShopIntr;
 import BusinessLayer.Shops.ShopRepository;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,6 +23,13 @@ class MarketCreateShopUnitTest {
 	String[] shopNames = {"shop1", "shop2"};
 
 	String guestName;
+
+	@BeforeAll
+	static void configInit() throws Exception {
+		Market market = new Market();
+		market.init("src/InitFiles/TestsConfig.jason");
+	}
+
 	@BeforeEach
 	void setUp() throws Exception {
 		shopHandler = ShopHandler.getInstance();

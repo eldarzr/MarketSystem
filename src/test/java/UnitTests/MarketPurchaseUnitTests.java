@@ -3,6 +3,7 @@ package UnitTests;
 import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
+import BusinessLayer.Market;
 import BusinessLayer.ManagePermissions;
 import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.PersistenceManager;
@@ -14,6 +15,7 @@ import BusinessLayer.Shops.ShopProduct;
 import BusinessLayer.Users.User;
 import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -56,8 +58,15 @@ class MarketPurchaseUnitTests {
 
     LinkedList<ShopProduct> plist;
 
+
+    @BeforeAll
+    static void configInit() throws Exception {
+        new Market().init("src/InitFiles/TestsConfig.jason");
+    }
+
     EntityManager entityManager;
     EntityTransaction entityTransaction;
+
 
     @BeforeEach
     void setUp() throws Exception {

@@ -1,14 +1,15 @@
 package UnitTests;
 
 import BusinessLayer.ManagePermissions;
+import BusinessLayer.Market;
 import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.Shops.*;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,6 +32,11 @@ class MarketSearchUnitTest {
 	String[] descs = {"desc1", "desc2", "desc3"};
 	String[] cats = {"cat1", "cat2", "cat3"};
 	double[] prices = {5, 7, 10};
+
+	@BeforeAll
+	static void configInit() throws Exception {
+		new Market().init("src/InitFiles/TestsConfig.jason");
+	}
 
 	@BeforeEach
 	void setUp() throws Exception {

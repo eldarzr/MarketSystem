@@ -4,6 +4,8 @@ import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.ExternalSystemAPI;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
+import BusinessLayer.Notifications.Notification;
+import BusinessLayer.Notifications.NotificationPublisher;
 import BusinessLayer.PersistenceManager;
 import BusinessLayer.Shops.*;
 import BusinessLayer.Users.User;
@@ -64,6 +66,11 @@ public class Purchase implements PurchaseIntr{
             Shop shop = getShopByName(shopInvoice.getShopName());
             if (shop != null) {
                 shop.addInvoice(shopInvoice);
+                for(ProductInfo productInfo :shopInvoice.getProductInfoInShop())
+                {
+                    Notification notification = new Notification(user.getName(),user.getName()+" purchased "+productInfo.getQuantity()+" "+productInfo.getName()+" in shop "+shop.getName());
+                    NotificationPublisher.getInstance().notifyShopManagement(user.getName(),shop.getName(),notification);
+                }
                 System.out.println("!@!@!@!@!@!@!@!@!@!" + shopInvoice);
                 ShopRepository.getInstance().updateToDB(shop.getName());
             }

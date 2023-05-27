@@ -1,7 +1,9 @@
 package UnitTests;
 
+import BusinessLayer.Market;
 import BusinessLayer.Users.UsersHandler;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -11,6 +13,11 @@ public class MarketRegisterLoginUnitTests {
 
     UsersHandler usersHandler = UsersHandler.getInstance();
     String guestName;
+
+    @BeforeAll
+    static void configInit() throws Exception {
+        new Market().init("src/InitFiles/TestsConfig.jason");
+    }
 
     @BeforeEach
     void setUp() throws Exception {

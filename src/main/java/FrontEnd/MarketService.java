@@ -17,6 +17,7 @@ import ServiceLayer.ResponseT;
 import ServiceLayer.ServiceMarket;
 import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.VaadinSession;
+import org.apache.catalina.util.ContextName;
 import org.apache.commons.lang3.NotImplementedException;
 
 import java.time.LocalDate;
@@ -38,20 +39,33 @@ public class MarketService {
 			synchronized ( (MarketService.class)){
 				if(instance == null){
 					instance =  new MarketService();
-					instance.init();
+					String contextPath = "/your-application-context-path"; // Replace with your actual context path
+
+					String deploymentFolder = System.getProperty("catalina.home").split("Tomcat")[0];
+					instance.init(deploymentFolder+"src\\InitFiles\\BaseConfig.jason");
+					instance.loadState(deploymentFolder+"src\\InitFiles\\loadTempState");
 				}
 			}
 		}
 		return instance;
 	}
 
+	private Response loadState(String stateFilePath) {
+		try {
+			serviceMarket.loadState(stateFilePath);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
+	}
+
 	private MarketService() {
 		serviceMarket = new ServiceMarket();
 	}
 
-	public Response init() {
+	public Response init(String configFilePath) {
 		try {
-			serviceMarket.init();
+			serviceMarket.init(configFilePath);
 			if (VaadinService.getCurrent() != null) {
 				VaadinService.getCurrent().addSessionInitListener(event ->
 						startSession(event.getSession().getSession().getId()));

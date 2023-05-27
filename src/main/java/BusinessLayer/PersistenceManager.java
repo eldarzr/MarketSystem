@@ -12,17 +12,19 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class PersistenceManager {
-	private final EntityManagerFactory entityManagerFactory;
+	private EntityManagerFactory entityManagerFactory;
 	private EntityManager entityManager;
 	private static final PersistenceManager instance = new PersistenceManager();
 	private Lock lock = new ReentrantLock();
 
-
+	private static String table_scheme;
 	private PersistenceManager() {
 		entityManagerFactory = Persistence.createEntityManagerFactory("market");
 		entityManager = entityManagerFactory.createEntityManager();
@@ -35,6 +37,8 @@ public class PersistenceManager {
 	public void setRealEntityManager() {
 		this.entityManager = entityManagerFactory.createEntityManager();
 	}
+
+	public static void set_table_scheme(String ts) {table_scheme=ts;}
 
 	public void reset() {
 		int tries = 5;
@@ -87,8 +91,8 @@ public class PersistenceManager {
 			lock.lock();
 			entityManager.getTransaction().begin();
 			 tableNames = entityManager.createNativeQuery(
-					"SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'market'"
-			).getResultList();
+					 String.format("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '%s'", table_scheme)
+					).getResultList();
 			entityManager.getTransaction().commit();
 //		entityManager.close();
 		}

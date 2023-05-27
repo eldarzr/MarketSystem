@@ -3,6 +3,7 @@ package BusinessLayer;
 import BusinessLayer.Bids.Bid;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
+import BusinessLayer.Notifications.Notification;
 import BusinessLayer.Purchases.*;
 import BusinessLayer.Shops.ProductIntr;
 import BusinessLayer.Shops.PurchasePolicies.ComplexPolicyType;
@@ -17,7 +18,7 @@ import java.util.*;
 public interface MarketIntr {
 
     //open and initialize the market system
-    void init() throws Exception;
+    void init(String configPath) throws Exception;
 
     public void resetAll();
 
@@ -128,14 +129,12 @@ public interface MarketIntr {
 
     String unregister(String userName);
 
-
-
     //Purchase policy functions
     public Map<Integer, PurchasePolicy> getAllPurchasePolicies(String userName, String shopName) throws Exception ;
     public void setActivePurchasePolicy(String userName, String shopName, int policyId) throws Exception ;
     public Integer getActivePurchasePolicyId(String userName, String shopName) throws Exception;
     public void addAgePurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int startAge, int endAge)throws Exception;
-    public void addQuantityPurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int minQuantity, int maxQuantity)throws Exception;
+    public int addQuantityPurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int minQuantity, int maxQuantity)throws Exception;
     public void removeDiscount(String shopName, String userName, int discountId) throws Exception;
     public void addDatePurchasePolicy(String userName, String shopName, boolean isProduct, String toConstraint, boolean positive, LocalDate startDate, LocalDate endDate)throws Exception;
     public void addTimePurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int startHour, int endHour)throws Exception;
@@ -150,4 +149,7 @@ public interface MarketIntr {
     public void approveBid(String userName,String shopName, int bidId) throws Exception ;
     public void rejectBid(String userName,String shopName, int bidId) throws Exception ;
 
+    void loadState(String stateFilePath)throws Exception;
+
+    Collection<Notification> getUserNotifications(String username) throws Exception;
 }

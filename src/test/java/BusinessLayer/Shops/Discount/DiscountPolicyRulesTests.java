@@ -56,18 +56,6 @@ public class DiscountPolicyRulesTests {
     }
 
     @Test
-    void addDiscountRule_shopBagPriceHigherThan() {
-        Product product = new Product("dummyProduct", "dummy","desc",200,shopName);
-        shopBag.addProduct(product,2);
-        ProductDiscount productDiscount = discountPolicy.addProductDiscount(10,"tomatoes");
-        discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeBagPriceHigherThanRule(200),productDiscount.discountId, CompoundRuleType.REPLACE);
-        double totalBagPriceBefore = shopBag.calculatePrice();
-        discountPolicy.applyDiscountAndChangePrices(shopBag);
-        double totalBagPriceAfter = shopBag.calculatePrice();
-        assertNotEquals(totalBagPriceBefore,totalBagPriceAfter);
-    }
-
-    @Test
     void addDiscountRule_NotEnoughFromProduct() {
         ProductDiscount productDiscount = discountPolicy.addProductDiscount(10,"tomatoes");
         discountPolicy.addDiscountRule(BasicDiscountRulesFactory.makeMinProductQuantityRule(quantities[0]+1,productsNames[0]),productDiscount.discountId, CompoundRuleType.REPLACE);

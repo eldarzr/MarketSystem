@@ -6,17 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="b632bc94-40ae-4fc8-ad09-f0a6a998ea35" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Market.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Market.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Notifications/Notification.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Notifications/Notification.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Users/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Users/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Users/UsersHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Users/UsersHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FrontEnd/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/Application.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FrontEnd/MarketService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/MarketService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/Admin/AdminProfileView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/Admin/AdminProfileView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/Admin/AdminUserMessagesView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/Admin/AdminUserMessagesView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/BaseView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/BaseView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/ProfileView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/ProfileView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ServiceLayer/ServiceMarket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ServiceLayer/ServiceMarket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MarketSystem.iml" beforeDir="false" afterPath="$PROJECT_DIR$/MarketSystem.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Notifications/NotificationPublisher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Notifications/NotificationPublisher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/IntegrationTests/MarketRTNotificationsIntegrationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/IntegrationTests/MarketRTNotificationsIntegrationTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,6 +27,22 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JpbToolWindowState">
+    <option name="myId2FirstActivated">
+      <map>
+        <entry key="com.haulmont.jpb.jpaInspector" value="true" />
+        <entry key="com.haulmont.jpb.jpaPalette" value="true" />
+        <entry key="com.haulmont.jpb.jpaStructure" value="true" />
+      </map>
+    </option>
+    <option name="myId2Visible">
+      <map>
+        <entry key="com.haulmont.jpb.jpaInspector" value="false" />
+        <entry key="com.haulmont.jpb.jpaPalette" value="false" />
+        <entry key="com.haulmont.jpb.jpaStructure" value="false" />
+      </map>
+    </option>
   </component>
   <component name="LogFilters">
     <option name="FILTER_ERRORS" value="false" />
@@ -60,17 +68,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/courses/third_year/Sadna/MarketSystem",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "spring.configuration.checksum": "032134b5102ef5c550f340eb223534b9"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/courses/third_year/Sadna/MarketSystem&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;032134b5102ef5c550f340eb223534b9&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
@@ -99,7 +107,7 @@
       <command value="mvn clean install" />
     </option>
   </component>
-  <component name="RunManager" selected="Smart Tomcat.tomcat">
+  <component name="RunManager" selected="JUnit.All in MarketSystem">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="BusinessLayer.Main" />
       <module name="MarketSystem" />
@@ -109,6 +117,14 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="All in MarketSystem" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="MarketSystem" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -124,22 +140,6 @@
       <option name="PACKAGE_NAME" value="BusinessLayer" />
       <option name="MAIN_CLASS_NAME" value="BusinessLayer.MarketCreateShopTest" />
       <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MarketCreateShopTest.createShopFailDoubleName" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="MarketSystem" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="BusinessLayer.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="BusinessLayer" />
-      <option name="MAIN_CLASS_NAME" value="BusinessLayer.MarketCreateShopTest" />
-      <option name="METHOD_NAME" value="createShopFailDoubleName" />
-      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -217,9 +217,6 @@
       <predefined_log_file id="Tomcat Host Manager Log" />
       <option name="contextPath" value="/market" />
       <option name="docBase" value="D:\courses\third_year\Sadna\MarketSystem\target" />
-      <option name="envOptions">
-        <map />
-      </option>
       <option name="extraClassPath" value="" />
       <option name="tomcatInfo">
         <TomcatInfo>
@@ -236,8 +233,8 @@
     </configuration>
     <list>
       <item itemvalue="Application.Main" />
+      <item itemvalue="JUnit.All in MarketSystem" />
       <item itemvalue="JUnit.MarketCreateShopTest" />
-      <item itemvalue="JUnit.MarketCreateShopTest.createShopFailDoubleName" />
       <item itemvalue="JUnit.MarketCreateShopTest.createShopFailNotRegistered (1)" />
       <item itemvalue="JUnit.MarketgetShopTest" />
       <item itemvalue="Maven.MarketSystem [mvn,exec:java]" />
@@ -246,11 +243,11 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.All in MarketSystem" />
         <item itemvalue="JUnit.MarketgetShopTest" />
         <item itemvalue="Application.Main" />
         <item itemvalue="JUnit.MarketCreateShopTest" />
         <item itemvalue="JUnit.MarketCreateShopTest.createShopFailNotRegistered (1)" />
-        <item itemvalue="JUnit.MarketCreateShopTest.createShopFailDoubleName" />
       </list>
     </recent_temporary>
   </component>

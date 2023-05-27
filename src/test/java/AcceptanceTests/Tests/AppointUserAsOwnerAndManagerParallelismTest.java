@@ -4,6 +4,7 @@ import AcceptanceTests.MarketSystemBridge;
 import AcceptanceTests.MarketSystemRealBridge;
 import AcceptanceTests.ShopBridge;
 import BusinessLayer.Shops.Shop;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,12 +19,14 @@ public class AppointUserAsOwnerAndManagerParallelismTest {
     @BeforeEach
     public void setUp() throws Exception {
         system = new MarketSystemRealBridge();
+        system.init();
     }
 
     @AfterEach
     public void tearDown() {
         system.clearData();
     }
+
     @Test
     public void testAppointUserAsOwnerAndManager() throws Exception {
         // Arrange
@@ -31,7 +34,6 @@ public class AppointUserAsOwnerAndManagerParallelismTest {
         String shopOwner2 = "shopOwner2";
         String userName = "testUser";
         String shopName = "testShop";
-        system.init();
         system.register(shopOwner1, "shopowner1@gmail.com", "Passw0rd!!!");
         system.login(shopOwner1, "Passw0rd!!!");
         system.createShop(shopOwner1, shopName);

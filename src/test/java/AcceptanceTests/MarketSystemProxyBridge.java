@@ -1,6 +1,7 @@
 package AcceptanceTests;
 
 import BusinessLayer.Bids.Bid;
+import BusinessLayer.Notifications.Notification;
 import BusinessLayer.Shops.PurchasePolicies.PurchasePolicy;
 
 import java.time.LocalDate;
@@ -275,7 +276,8 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
 
     @Override
     public void clearData() {
-
+        nullCheck();
+        realBridge.clearData();
     }
 
     @Override
@@ -354,18 +356,6 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
     }
 
     @Override
-    public void approveBid(String userName, String shopName, int bidId) throws Exception {
-
-    }
-
-    @Override
-    public void rejectBid(String userName, String shopName, int bidId) throws Exception {
-
-    }
-
-
-
-    @Override
     public Map<Integer, PurchasePolicy> getAllPurchasePolicies(String userName, String shopName) throws Exception {
         return null;
     }
@@ -412,6 +402,22 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
 
     @Override
     public void addAndPurchasePolicy(String userName, String shopName, int pid1, int pid2) throws Exception {
+
+    }
+
+    @Override
+    public void loadState(String stateFilePath) throws Exception {
+        nullCheck();
+        realBridge.loadState(stateFilePath);
+    }
+
+    @Override
+    public void approveBid(String userName, String shopName, int bidId) throws Exception {
+
+    }
+
+    @Override
+    public void rejectBid(String userName, String shopName, int bidId) throws Exception {
 
     }
 
