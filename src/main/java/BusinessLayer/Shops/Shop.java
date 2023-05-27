@@ -498,6 +498,7 @@ public class Shop implements ShopIntr {
 
 	public void removeDiscount(int discountId) {
 		discountPolicy.removeDiscount(discountId);
+		PersistenceManager.getInstance().updateObj(this);
 	}
 
 	public void evaluatePurchasePolicy(ShopBag shopBag, User user) throws Exception {

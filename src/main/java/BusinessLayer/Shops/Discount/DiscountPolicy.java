@@ -1,5 +1,6 @@
 package BusinessLayer.Shops.Discount;
 
+import BusinessLayer.PersistenceManager;
 import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Shops.Discount.DiscountRules.CompoundRuleType;
 import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
@@ -159,6 +160,7 @@ public class DiscountPolicy {
 
     public void removeDiscount(int discountId) {
         Discount discount = discountsById.remove(discountId);
+        PersistenceManager.getInstance().removeConnectionFromDB(discount, discount.discountRule);
         if(discount == null)
             throw new IllegalArgumentException(String.format("could not find discount with discount id: %d",discountId));
     }
