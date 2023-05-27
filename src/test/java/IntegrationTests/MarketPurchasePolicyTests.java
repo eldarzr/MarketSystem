@@ -82,7 +82,11 @@ public class MarketPurchasePolicyTests {
             market.addProductsToCart(jane,shopName,item1,4);
             market.purchaseCart(jane,new CreditCardPaymentDetails("1234123412341234","11","2025","Gabi Rich","666","123321123"),new SupplyDetails("Gabi Richmond","100 and Charming","New York","United States","90210"));
 
-        }catch (Exception ignored){fail("Jane was not be able to purchase this quantity of item 1");}
+        }catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            fail("Jane was not be able to purchase this quantity of item 1");
+        }
     }
 
 
