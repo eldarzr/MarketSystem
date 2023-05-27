@@ -37,7 +37,7 @@ class MarketPurchsae {
     @BeforeEach
     void setUp() throws Exception {
         market = new Market();
-        market.init();
+        market.init("src/InitFiles/TestsConfig.jason");
 
         //managers
         for(int i = 0; i < usersName.length; i++) {

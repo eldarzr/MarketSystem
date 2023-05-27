@@ -1,6 +1,7 @@
 package AcceptanceTests;
 
 import BusinessLayer.Bids.Bid;
+import BusinessLayer.Notifications.Notification;
 import BusinessLayer.Shops.PurchasePolicies.PurchasePolicy;
 
 import java.time.LocalDate;
@@ -169,4 +170,6 @@ public interface MarketSystemBridge {
     public void addOrPurchasePolicy(String userName, String shopName,int pid1, int pid2)throws Exception;
     public void addAndPurchasePolicy(String userName, String shopName,int pid1, int pid2)throws Exception;
     public void addIfPurchasePolicy(String userName, String shopName,int pid1, int pid2)throws Exception;
+
+    public void loadState(String stateFilePath) throws Exception;
 }

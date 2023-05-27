@@ -7,6 +7,7 @@ import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.Market;
 import BusinessLayer.MarketIntr;
 import BusinessLayer.MemberRoleInShop;
+import BusinessLayer.Notifications.Notification;
 import BusinessLayer.Purchases.*;
 import BusinessLayer.Shops.ProductIntr;
 import BusinessLayer.Shops.PurchasePolicies.PurchasePolicy;
@@ -30,7 +31,7 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     }
 
     public void init() throws Exception {
-        market.init();
+        market.init("src/InitFiles/TestsConfig.jason");
     }
 
     public String startSession() {
@@ -435,4 +436,10 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     public void addIfPurchasePolicy(String userName, String shopName, int pid1, int pid2) throws Exception {
         market.addIfPurchasePolicy(userName, shopName, pid1, pid2);
     }
+
+    @Override
+    public void loadState(String stateFilePath) throws Exception {
+        market.loadState(stateFilePath);
+    }
+
 }

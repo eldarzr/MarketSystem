@@ -22,15 +22,23 @@ import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
 import BusinessLayer.Users.NotificationCallback;
 import BusinessLayer.Users.User;
 import BusinessLayer.Users.UsersHandler;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.apache.commons.lang3.NotImplementedException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.Transient;
-import javax.transaction.Transactional;
-import java.io.File;
-import java.io.IOException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -48,9 +56,6 @@ public class Market implements MarketIntr{
     ShopHandler shopHandler;
     private final int SHOP_DISTANCE_MAX_LIMIT = 2;
     private final int PRODUCT_DISTANCE_MAX_LIMIT = 2;
-    private final String ADMIN_NAME = "admin";
-    private final String ADMIN_MAIL = "admin@gmail.com";
-    private final String ADMIN_PASSWORD = "Aa123456";
 
     public Market() {
         usersHandler = UsersHandler.getInstance();
@@ -58,30 +63,175 @@ public class Market implements MarketIntr{
     }
 
     @Override
-    public void init() throws Exception {
-        logger.info("Starting market init.");
+    public void init(String configFilePath) throws Exception {
         createLogger();
-        loadData();
+        //resetAll();
+        ConfigInit(configFilePath);
         logger.info("Market init Finished successfully.");
     }
 
-    private void loadData() throws Exception {
-        resetAll();
-        loadAdmin();
-        loadProducts();
+    private void ConfigInit(String configFilePath) throws Exception {
+        // Read the configuration file
+        FileReader reader = new FileReader(configFilePath);
+        Gson gson = new Gson();
+        JsonElement configElement = gson.fromJson(reader, JsonElement.class);
+        JsonObject configData = configElement.getAsJsonObject();
+
+        // Access the database details
+        JsonObject database = configData.getAsJsonObject("database");
+        String database_path = database.get("path").getAsString();
+        String database_admin = database.get("admin").getAsString();
+        String database_password = database.get("password").getAsString();
+
+        // Access the system administrator details
+        JsonObject systemAdmin = configData.getAsJsonObject("systemAdmin");
+        String adminUsername = systemAdmin.get("username").getAsString();
+        String adminEmail = systemAdmin.get("email").getAsString();
+        String adminPassword = systemAdmin.get("password").getAsString();
+
+        // Close the file reader
+        reader.close();
+
+        loadDatabase(database_path, database_admin, database_password);
+        loadAdmin(adminUsername,adminEmail,adminPassword);
+
+        logger.info("Loading init configuration Finished successfully.");
     }
 
-    private void loadAdmin() throws Exception {
+    private void loadAdmin(String adminUsername,String adminEmail,String adminPassword) throws Exception {
         logger.info("Start loading admin data.");
-        register(ADMIN_NAME, ADMIN_MAIL, ADMIN_PASSWORD);
-        addAdmin(ADMIN_NAME);
+        try
+        {
+            usersHandler.findMemberByName(adminUsername);
+        }
+        catch (Exception e)
+        {
+            register(adminUsername, adminEmail, adminPassword);
+            addAdmin(adminUsername);
+        }
         logger.info("Loading admin data finished successfully.");
     }
 
-    //todo: suggestion - we use logger in most of classes,
-    // mainly at beginning and end of an action but also at throwing exceptions
-    // I think it will be wise to create a static class of logUpdater
-    // which will wrap exception throwing with adding severe logs and will manage the logs.
+    private void loadDatabase(String databasePath, String adminName, String adminPassword) throws Exception {
+        logger.info("Start loading database data.");
+        String persistenceXmlPath="src\\main\\resources\\META-INF\\persistence.xml";
+        try {
+            String deploymentFolder = System.getProperty("catalina.home").split("Tomcat")[0];
+            persistenceXmlPath = deploymentFolder + persistenceXmlPath;
+        }
+        catch (Exception ignored) {}
+        // Load the persistence.xml file
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+        Document doc = docBuilder.parse(persistenceXmlPath);
+
+        // Get the root element
+        Element rootElement = doc.getDocumentElement();
+
+        // Find the properties element
+        NodeList propertiesList = rootElement.getElementsByTagName("properties");
+        if (propertiesList.getLength() > 0) {
+            Element properties = (Element) propertiesList.item(0);
+
+            // Find the property elements and update the desired fields
+            NodeList propertyList = properties.getElementsByTagName("property");
+            for (int i = 0; i < propertyList.getLength(); i++) {
+                Element property = (Element) propertyList.item(i);
+                String name = property.getAttribute("name");
+
+                // Check the name of the property and update the desired fields
+                if ("javax.persistence.jdbc.url".equals(name)) {
+                    property.setAttribute("value", databasePath);
+                } else if ("javax.persistence.jdbc.user".equals(name)) {
+                    property.setAttribute("value", adminName);
+                } else if ("javax.persistence.jdbc.password".equals(name)) {
+                    property.setAttribute("value", adminPassword);
+                }
+            }
+        }
+
+        // Write the updated document back to the persistence.xml file
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        DOMSource source = new DOMSource(doc);
+        StreamResult result = new StreamResult(persistenceXmlPath);
+        transformer.transform(source, result);
+
+        String[] pathParts =  databasePath.split("/");
+        PersistenceManager.set_table_scheme(pathParts[pathParts.length-1]);
+        logger.info("Loading database data finished successfully.");
+    }
+
+    public void loadState(String stateFilePath) throws Exception
+    {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(stateFilePath));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+
+                // Skip empty lines or comments
+                if (line.isEmpty() || line.startsWith("#")) continue;
+
+                // Extract command and parameters
+                String command = line.substring(0, line.indexOf('('));
+                String[] params = line.substring(line.indexOf('(') + 1, line.indexOf(')')).split(",");
+
+                // Trim whitespace for each parameter
+                for (int i = 0; i < params.length; i++) {
+                    params[i] = params[i].trim();
+                }
+                // Execute the corresponding function based on the command
+                switch (command) {
+                    case "register" -> register(params[0], params[1], params[2]);
+                    case "login" -> login(startSession(), params[0], params[1]);
+                    case "logout" -> logout(params[0]);
+                    case "createShop" -> createShop(params[0], params[1]);
+                    case "removeShop" -> removeShop(params[0], params[1], params[2]);
+                    case "openShop" -> openShop(params[0], params[1]);
+                    case "closeShop" -> closeShop(params[0], params[1]);
+                    case "addNewProduct" -> addNewProduct(params[0], params[1], params[2], params[3], params[4], Double.valueOf(params[5]));
+                    case "removeProduct" -> removeProduct(params[0], params[1], params[2]);
+                    case "addAgePurchasePolicy" -> addAgePurchasePolicy(params[0], params[1], Boolean.parseBoolean(params[2]), params[3], Boolean.parseBoolean(params[4]), Integer.parseInt(params[5]), Integer.parseInt(params[6]));
+                    case "appointShopManager" -> appointShopManager(params[0], params[1], params[2]);
+                    case "setActivePurchasePolicy" -> setActivePurchasePolicy(params[0], params[1], Integer.parseInt(params[2]));
+                    case "addProductDiscount" -> addProductDiscount(params[0], params[1], Double.parseDouble(params[2]), params[3]);
+                    case "addManagerPermissions" -> addManagerPermissions(params[0], params[1], params[2], Integer.parseInt(params[3]));
+                    case "removeUser" -> removeUser(params[0], params[1]);
+                    case "addTimePurchasePolicy" -> addTimePurchasePolicy(params[0], params[1], Boolean.parseBoolean(params[2]), params[3], Boolean.parseBoolean(params[4]), Integer.parseInt(params[5]), Integer.parseInt(params[6]));
+                    case "addCategoryDiscount" -> addCategoryDiscount(params[0], params[1], Double.parseDouble(params[2]), params[3]);
+                    case "removeShopOwner" -> removeShopOwner(params[0], params[1], params[2]);
+                    case "addProductItems" -> addProductItems(params[0], params[1], params[2], Integer.parseInt(params[3]));
+                    case "createBidOffer" -> createBidOffer(params[0], params[1], params[2], Double.parseDouble(params[3]));
+                    case "rejectBid" -> rejectBid(params[0], params[1], Integer.parseInt(params[2]));
+                    case "updateProductCategory" -> updateProductCategory(params[0], params[1], params[2], params[3]);
+                    case "addIfPurchasePolicy" -> addIfPurchasePolicy(params[0], params[1], Integer.parseInt(params[2]), Integer.parseInt(params[3]));
+                    case "updateProductQuantity" -> updateProductQuantity(params[0], params[1], params[2], Integer.parseInt(params[3]));
+                    case "blockUser" -> blockUser(params[0], params[1]);
+                    case "removeDiscount" -> removeDiscount(params[0], params[1], Integer.parseInt(params[2]));
+                    case "updateProductPrice" -> updateProductPrice(params[0], params[1], params[2], Double.parseDouble(params[3]));
+                    case "addAndPurchasePolicy" -> addAndPurchasePolicy(params[0], params[1], Integer.parseInt(params[2]), Integer.parseInt(params[3]));
+                    case "addOrPurchasePolicy" -> addOrPurchasePolicy(params[0], params[1], Integer.parseInt(params[2]), Integer.parseInt(params[3]));
+                    case "addShopDiscount" -> addShopDiscount(params[0], params[1], Double.parseDouble(params[2]));
+                    case "resetDiscountRule" -> resetDiscountRule(params[0], params[1], Integer.parseInt(params[2]));
+                    case "changeManagerAccess" -> changeManagerAccess(params[0], params[1], params[2], Integer.parseInt(params[3]));
+                    case "updateProductDesc" -> updateProductDesc(params[0], params[1], params[2], params[3]);
+                    case "addProductsToCart" -> addProductsToCart(params[0], params[1], params[2], Integer.parseInt(params[3]));
+                    case "addQuantityPurchasePolicy" -> addQuantityPurchasePolicy(params[0], params[1], Boolean.parseBoolean(params[2]), params[3], Boolean.parseBoolean(params[4]), Integer.parseInt(params[5]), Integer.parseInt(params[6]));
+                    case "appointShopOwner" -> appointShopOwner(params[0], params[1], params[2]);
+                    case "updateCartProductQuantity" -> updateCartProductQuantity(params[0], params[1], params[2], Integer.parseInt(params[3]));
+                    case "approveBid" -> approveBid(params[0], params[1], Integer.parseInt(params[2]));
+                    default -> throw new Exception("Unknown command: " + command);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            resetAll();
+            throw new Exception("Loading system state failed due to "+e.getMessage());
+        }
+    }
+
     private void createLogger() throws IOException {
         // Create a file handler and set its formatter
         try {
@@ -235,7 +385,6 @@ public class Market implements MarketIntr{
     }
 
     @Override
-    @Transactional
     public void removeProduct(String userName, String shopName, String productName) throws Exception {
         logger.info(String.format("Attempt by user %s to remove product %s from store %s.", userName,productName, shopName));
         validateLoggedInException(userName);
@@ -691,50 +840,6 @@ public class Market implements MarketIntr{
         return usersHandler.isAdmin(userName);
     }
 
-    private void loadProducts() throws Exception {
-        String[] usersName = {"eldar_first", "niv_first"};
-        String[] passwords = {"Aa123456", "Aa123456"};
-        String[] emails = {"eldarFirst@gmail.com", "nivFirst@gmail.com"};
-        String[] shopNames = {"shopFirst1", "shopFirst2"};
-        String[] prodNames = {"prodFirst1", "prodFirst2"};
-        String[] descs = {"description1 description1 description1", "description2"};
-        String[] cat = {"catFirst1", "catFirst2"};
-        double[] prices = {5, 10};
-
-        for (int i = 0; i < usersName.length; i++) {
-            String guestName = startSession();
-            register(usersName[i], emails[i], passwords[i]);
-            login(guestName, usersName[i], passwords[i]);
-            createShop(usersName[i], shopNames[i]);
-            try {
-                addNewProduct(usersName[i], shopNames[i], prodNames[i], cat[i], descs[i], prices[i]);
-            }
-            catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-            addProductItems(usersName[i], shopNames[i], prodNames[i], 3);
-        }
-        createShop(usersName[0],"The Shop");
-        createShop(usersName[0],"Super Shop");
-        for(int i = 0; i < 6; i++) {
-            addNewProduct(usersName[0], "Super Shop", "product" + i, cat[0], descs[0], prices[0]);
-            addProductItems(usersName[0], "Super Shop", "product" + i, 3);
-        }
-
-        addProductsToCart(usersName[0], shopNames[0], prodNames[0], 1);
-        addProductsToCart(usersName[0], shopNames[1], prodNames[1], 1);
-        PaymentDetails paymentDetails = new CreditCardPaymentDetails("1234123412341234", "10", "28", "eldar", "123", "123456789");
-        SupplyDetails supplyDetails = new SupplyDetails("eldar1", "sa", "dimona", "israel", "123456");
-        purchaseCart(usersName[0], paymentDetails, supplyDetails);
-
-        logout("eldar_first");
-        logout("niv_first");
-
-        loadDataGabi();
-
-
-    }
-
     private void loadDataGabi() throws Exception {
         String userName = "gabi99";
         String password = "Aa123456";
@@ -824,12 +929,13 @@ public class Market implements MarketIntr{
         PersistenceManager.getInstance().updateObj(shop);
     }
 
-    public void addQuantityPurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int minQuantity, int maxQuantity)throws Exception{
+    public int addQuantityPurchasePolicy(String userName, String shopName,boolean isProduct, String toConstraint,boolean positive,int minQuantity, int maxQuantity)throws Exception{
         validateUserIsntGuest(userName);
         isLoggedIn(userName);
         Shop shop = getShop(shopName);
-        shop.getPurchasePolicyManager(userName).addQuantityConstraint(isProduct,toConstraint,positive,minQuantity,maxQuantity);
+        int pid=shop.getPurchasePolicyManager(userName).addQuantityConstraint(isProduct,toConstraint,positive,minQuantity,maxQuantity);
         PersistenceManager.getInstance().updateObj(shop);
+        return pid;
     }
 	
 	public void removeDiscount(String shopName, String userName, int discountId) throws Exception {

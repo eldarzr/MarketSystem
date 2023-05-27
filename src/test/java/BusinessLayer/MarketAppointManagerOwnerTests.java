@@ -20,7 +20,7 @@ class MarketAppointManagerOwnerTests {
     @BeforeEach
     void setUp() throws Exception {
         market = new Market();
-        market.init();
+        market.init("src/InitFiles/TestsConfig.jason");
         for(int i = 0; i < usersName.length-1; i++) {
             String guestName = market.startSession();
             market.register(usersName[i], emails[i], passwords[i]);
@@ -113,6 +113,6 @@ class MarketAppointManagerOwnerTests {
         market.appointShopManager("eldar","niv12","shop1");
         market.appointShopManager("eldar","naor","shop1");
        List<MemberRoleInShop> naorShops = market.getUserRoles("naor");
-        List<MemberRoleInShop> nivShops = market.getUserRoles("niv");
+        List<MemberRoleInShop> nivShops = market.getUserRoles("niv12");
     }
 }

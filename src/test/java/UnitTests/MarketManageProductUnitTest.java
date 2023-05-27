@@ -2,11 +2,13 @@ package UnitTests;
 
 import BusinessLayer.Enums.ManagePermissionsEnum;
 import BusinessLayer.ManagePermissions;
+import BusinessLayer.Market;
 import BusinessLayer.MemberRoleInShop;
 import BusinessLayer.PersistenceManager;
 import BusinessLayer.Shops.Shop;
 import BusinessLayer.Shops.ShopProduct;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -35,6 +37,11 @@ class MarketManageProductUnitTest {
 	double[] pricesNew = {5, 10};
 	EntityManager entityManager;
 	EntityTransaction entityTransaction;
+
+	@BeforeAll
+	static void configInit() throws Exception {
+		new Market().init("src/InitFiles/TestsConfig.jason");
+	}
 
 	@BeforeEach
 	void setUp() throws Exception {

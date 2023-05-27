@@ -5,6 +5,7 @@ import AcceptanceTests.MarketSystemRealBridge;
 import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Market;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +26,7 @@ public class MarketPurchasePolicyTests {
     public void setUp() throws Exception {
 
         market = new Market();
-        market.init();
+        market.init("src/InitFiles/TestsConfig.jason");
         tempUserName = market.startSession();
 
         // create some shops with products for testing
@@ -45,13 +46,19 @@ public class MarketPurchasePolicyTests {
         market.logout("janedoe");
     }
 
+    @AfterEach
+    public void teardown() {
+        market.resetAll();
+    }
+
 
     @Test
     public void quantityPolicyFailPurchase(){
         try {
             tempUserName = market.startSession();
             market.login(tempUserName, john, pass);
-            market.addQuantityPurchasePolicy(john, shopName, true, item1, false, 0, 2);
+            int pid=market.addQuantityPurchasePolicy(john, shopName, true, item1, false, 0, 2);
+            market.setActivePurchasePolicy(john,shopName,pid);
             // now you can only buy 3 or more of item 1
             tempUserName = market.startSession();
             market.login(tempUserName, jane, pass);
@@ -67,14 +74,19 @@ public class MarketPurchasePolicyTests {
         try {
             tempUserName = market.startSession();
             market.login(tempUserName, john, pass);
-            market.addQuantityPurchasePolicy(john, shopName, true, item1, false, 0, 2);
+            int pid=market.addQuantityPurchasePolicy(john, shopName, true, item1, false, 0, 2);
+            market.setActivePurchasePolicy(john,shopName,pid);
             // now you can only buy 3 or more of item 1
             tempUserName = market.startSession();
             market.login(tempUserName, jane, pass);
             market.addProductsToCart(jane,shopName,item1,4);
             market.purchaseCart(jane,new CreditCardPaymentDetails("1234123412341234","11","2025","Gabi Rich","666","123321123"),new SupplyDetails("Gabi Richmond","100 and Charming","New York","United States","90210"));
-            fail("Jane should not be able to purchase this quantity of item 1");
-        }catch (Exception ignored){}
+
+        }catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+            fail("Jane was not be able to purchase this quantity of item 1");
+        }
     }
 
 

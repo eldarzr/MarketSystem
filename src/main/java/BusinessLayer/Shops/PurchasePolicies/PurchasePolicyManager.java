@@ -1,7 +1,6 @@
 package BusinessLayer.Shops.PurchasePolicies;
 
 import BusinessLayer.Purchases.ShopBag;
-import BusinessLayer.Shops.Discount.Discount;
 import BusinessLayer.Shops.PurchasePolicies.BasicPolicies.AgePurchasePolicy;
 import BusinessLayer.Shops.PurchasePolicies.BasicPolicies.DatePurchasePolicy;
 import BusinessLayer.Shops.PurchasePolicies.BasicPolicies.QuantityPurchasePolicy;
@@ -12,7 +11,6 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Entity
 @Table(name = "purchase_policy")
@@ -86,11 +84,12 @@ public class PurchasePolicyManager {
         policiesById.put(p.getPolicyId(),p);
     }
 
-    public void addQuantityConstraint(boolean isProduct, String toConstraint, boolean positive, int minQuantity, int maxQuantity) throws Exception {
+    public int addQuantityConstraint(boolean isProduct, String toConstraint, boolean positive, int minQuantity, int maxQuantity) throws Exception {
         if(minQuantity < 0)throw new Exception("quantity can't be negative");
         if(maxQuantity < minQuantity)throw new Exception("max quantity can't be smaller than min quantity");
         PurchasePolicy p = new QuantityPurchasePolicy(policyIdIndexer.getAndAdd(1),isProduct,toConstraint,positive,minQuantity,maxQuantity);
         policiesById.put(p.getPolicyId(),p);
+        return p.getPolicyId();
     }
 
 
