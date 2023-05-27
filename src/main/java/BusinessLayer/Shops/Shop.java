@@ -144,6 +144,7 @@ public class Shop implements ShopIntr {
 			return;
 		}
 		MemberRoleInShop.createOwner(actOn, this, actor, sendMessage);
+		PersistenceManager.getInstance().updateObj(this);
 	}
 
 	public void setShopManager(String actor, String actOn, MessageObserver sendMessage) throws Exception {
@@ -155,6 +156,7 @@ public class Shop implements ShopIntr {
 			throwException("the user :" + actOn + "is already have a role in the store");
 		}
 		MemberRoleInShop.createManager(actOn, this, actor, sendMessage);
+		PersistenceManager.getInstance().updateObj(this);
 	}
 
 	public MemberRoleInShop validateUserHasRole(String actorUserName) throws Exception {
@@ -199,6 +201,7 @@ public class Shop implements ShopIntr {
 	public void addManageOption(String actor, String actOn, int permission) throws Exception {
 		MemberRoleInShop reqRole = validatePermissionsChangeAllowed(actor, actOn);
 		reqRole.addPermission(permission);
+		PersistenceManager.getInstance().updateObj(this);
 	}
 
 	/// TODO : ADD / SET - CONCURRENCY ETC
@@ -220,6 +223,7 @@ public class Shop implements ShopIntr {
 		if (!this.founderUserName.equals(userName))
 			throwException("Only the founder can open a store.");
 		this.active = true;
+		PersistenceManager.getInstance().updateObj(this);
 	}
 
 	public List<ShopProduct> getProducts() {
@@ -369,6 +373,7 @@ public class Shop implements ShopIntr {
 
 	public void addInvoice(ShopInvoice shopInvoice) {
 		invoices.add(shopInvoice);
+		PersistenceManager.getInstance().updateObj(this);
 	}
 
 	public Collection<ShopInvoice> getInvoices(String userName) throws Exception {
@@ -417,6 +422,7 @@ public class Shop implements ShopIntr {
 		} finally {
 			remLock.unlock();
 		}
+		PersistenceManager.getInstance().updateObj(this);
 	}
 
 	private void removeSubordinates(String ownerToRemove) {

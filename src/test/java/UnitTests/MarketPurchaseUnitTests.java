@@ -3,7 +3,9 @@ package UnitTests;
 import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
+import BusinessLayer.ManagePermissions;
 import BusinessLayer.MemberRoleInShop;
+import BusinessLayer.PersistenceManager;
 import BusinessLayer.Purchases.Cart;
 import BusinessLayer.Purchases.Purchase;
 import BusinessLayer.Shops.Product;
@@ -18,6 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.mockito.Mockito;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -52,6 +56,9 @@ class MarketPurchaseUnitTests {
 
     LinkedList<ShopProduct> plist;
 
+    EntityManager entityManager;
+    EntityTransaction entityTransaction;
+
     @BeforeEach
     void setUp() throws Exception {
         //managers
@@ -61,6 +68,16 @@ class MarketPurchaseUnitTests {
             Mockito.when(user.getEmail()).thenReturn(emails[i]);
             Mockito.when(user.getPassword()).thenReturn(passwords[i]);
             users.add(user);
+            entityManager = Mockito.mock(EntityManager.class);
+            entityTransaction = Mockito.mock(EntityTransaction.class);
+            PersistenceManager.getInstance().setTestEntityManager(entityManager);
+            Mockito.when(entityManager.getTransaction()).thenReturn(entityTransaction);
+            Mockito.doNothing().when(entityManager).clear();
+            Mockito.doNothing().when(entityManager).close();
+            Mockito.doNothing().when(entityTransaction).commit();
+            Mockito.doNothing().when(entityTransaction).begin();
+            Mockito.when(entityTransaction.isActive()).thenReturn(false);
+            Mockito.when(entityManager.isOpen()).thenReturn(true);
             ShopProduct product = Mockito.mock(ShopProduct.class);
             Mockito.when(product.getName()).thenReturn(prodNames[i]);
             Mockito.when(product.getCategory()).thenReturn(cat[i]);
@@ -85,6 +102,7 @@ class MarketPurchaseUnitTests {
 
     @AfterEach
     void tearDown() {
+        PersistenceManager.getInstance().setRealEntityManager();
         purchase = null;
     }
 
