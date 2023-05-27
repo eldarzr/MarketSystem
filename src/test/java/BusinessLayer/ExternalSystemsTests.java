@@ -26,7 +26,7 @@ public class ExternalSystemsTests {
     void setUp() throws Exception {
        market = new Market();
        externalSystem = new ExternalSystemAPI();
-       market.init();
+       market.init("src/InitFiles/TestsConfig.jason");
 //        for (int i = 0; i < usersName.length; i++) {
 //            market.register(usersName[i], emails[i], passwords[0]);
 //        }
