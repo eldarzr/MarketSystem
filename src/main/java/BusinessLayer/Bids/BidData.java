@@ -2,18 +2,39 @@ package BusinessLayer.Bids;
 
 import BusinessLayer.Shops.Product;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
+@Entity
+@Table(name = "bid_datas")
 public class BidData {
-    private AtomicInteger nextBidId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "next_bid_id_id")
+    private BidDataIdIndexer nextBidId;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "bid_data_id")
     private Map<Integer,Bid> bidMap;
+
+    public BidDataIdIndexer getNextBidId() {
+        return nextBidId;
+    }
+
+    public void setNextBidId(BidDataIdIndexer nextBidId) {
+        this.nextBidId = nextBidId;
+    }
+
     public BidData(){
-        nextBidId = new AtomicInteger(0);
+        nextBidId = new BidDataIdIndexer();
         bidMap = new ConcurrentHashMap<>();
     }
     private Collection<Bid> filterBidsByStatus(Collection<Bid> toFilter, BidStatus status){

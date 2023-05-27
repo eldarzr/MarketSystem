@@ -534,7 +534,6 @@ public class Market implements MarketIntr{
     }
 
 
-    //todo: niv
     @Override
     public void updateCartProductQuantity(String userName, String shopName, String productName, int newQuantity) throws Exception {
         logger.info(String.format("Attempt by user %s to update product %s quantity to %d from shop %s in cart.", userName,productName,newQuantity,shopName));
@@ -923,8 +922,9 @@ public class Market implements MarketIntr{
     //Bid functions
     public void createBidOffer (String userName, String productName, String shopName, double bidPrice) throws Exception {
         validateLoggedInException(userName);
-        shopHandler.getShop(shopName).createBid(userName,productName, shopName, bidPrice);
-
+        Shop shop = shopHandler.getShop(shopName);
+        shop.createBid(userName,productName, shopName, bidPrice);
+        PersistenceManager.getInstance().updateObj(shop);
     }
     public Collection<Bid> getPendingBids(String userName,String shopName) throws Exception {
         validateLoggedInException(userName);
@@ -940,12 +940,15 @@ public class Market implements MarketIntr{
     }
     public void approveBid(String userName,String shopName, int bidId) throws Exception {
         validateLoggedInException(userName);
-        shopHandler.getShop(shopName).approveBid(getUser(userName),bidId);
+        Shop shop = shopHandler.getShop(shopName);
+        shop.approveBid(getUser(userName),bidId);
+        PersistenceManager.getInstance().updateObj(shop);
     }
     public void rejectBid(String userName,String shopName, int bidId) throws Exception {
         validateLoggedInException(userName);
-        shopHandler.getShop(shopName).rejectBid(getUser(userName),bidId);
-
+        Shop shop = shopHandler.getShop(shopName);
+        shop.rejectBid(getUser(userName),bidId);
+        PersistenceManager.getInstance().updateObj(shop);
     }
 
     public void ReadUserNotifications(String username) {

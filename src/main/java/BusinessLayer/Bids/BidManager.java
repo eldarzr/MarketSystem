@@ -5,15 +5,28 @@ import BusinessLayer.Notifications.NotificationPublisher;
 import BusinessLayer.Shops.Product;
 import BusinessLayer.Shops.Shop;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Entity
+@Table(name = "bid_managers")
 public class BidManager {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "bid_data_id", referencedColumnName = "id")
     private BidData bidData;
+
+    @Convert(converter = BidIdToApprovesConverter.class)
     private Map<Integer, List<String>> bidIdToApproves;
+
     public BidManager(){
         bidData = new BidData();
         bidIdToApproves = new ConcurrentHashMap<>();
