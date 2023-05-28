@@ -153,7 +153,7 @@ public class PersistenceManager {
 			lock.lock();
 			entityManager.getTransaction().begin();
 			entityManager.remove(needToRemove);
-			entityManager.merge(holder);
+			entityManager.remove(holder);
 			entityManager.getTransaction().commit();
 		}
 		finally {
