@@ -131,8 +131,10 @@ public class CartView extends BaseView {
                     handleSumbitBid(cartItem, bidPrice);
                     bidDialog.close();
                 });
+                enableButton(submitButton);
 
                 Button cancelButton = new Button("Cancel", event -> bidDialog.close());
+                enableButton(cancelButton);
 
                 bidDialog.add(new VerticalLayout(priceField, new HorizontalLayout(submitButton, cancelButton)));
                 bidDialog.open();

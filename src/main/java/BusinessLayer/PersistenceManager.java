@@ -152,8 +152,10 @@ public class PersistenceManager {
 			EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
 			lock.lock();
 			entityManager.getTransaction().begin();
-			entityManager.remove(needToRemove);
-			entityManager.remove(holder);
+			if(needToRemove != null)
+				entityManager.remove(needToRemove);
+			if(holder != null)
+				entityManager.remove(holder);
 			entityManager.getTransaction().commit();
 		}
 		finally {

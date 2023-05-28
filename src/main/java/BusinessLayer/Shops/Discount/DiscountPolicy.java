@@ -160,8 +160,8 @@ public class DiscountPolicy {
 
     public void removeDiscount(int discountId) {
         Discount discount = discountsById.remove(discountId);
-        PersistenceManager.getInstance().removeConnectionFromDB(discount, discount.discountRule);
         if(discount == null)
             throw new IllegalArgumentException(String.format("could not find discount with discount id: %d",discountId));
+        PersistenceManager.getInstance().removeConnectionFromDB(discount, discount.discountRule);
     }
 }
