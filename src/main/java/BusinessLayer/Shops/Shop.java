@@ -247,11 +247,6 @@ public class Shop implements ShopIntr {
 		validateProductExists(productName);
 		validatePermissionsException(userName, MANAGE_STOCK);
 		ShopProduct shopProduct = products.remove(productName);
-//		EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
-//		entityManager.getTransaction().begin();
-//		Object managedShopProduct = entityManager.merge(shopProduct);
-//		entityManager.remove(managedShopProduct);
-//		entityManager.getTransaction().commit();
 		PersistenceManager.getInstance().removeFromDB(shopProduct);
 		PersistenceManager.getInstance().updateObj(this);
 		return shopProduct;

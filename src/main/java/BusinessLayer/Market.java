@@ -1,6 +1,7 @@
 package BusinessLayer;
 
 import BusinessLayer.Bids.Bid;
+import BusinessLayer.Enums.Initialize;
 import BusinessLayer.Enums.UserType;
 import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.ExternalSystemAPI;
@@ -31,6 +32,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import javax.transaction.Transactional;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -49,6 +51,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+import static BusinessLayer.Enums.Initialize.*;
+
 public class Market implements MarketIntr{
 
     private static final Logger logger = Logger.getLogger("Market");
@@ -57,6 +61,7 @@ public class Market implements MarketIntr{
     ShopHandler shopHandler;
     private final int SHOP_DISTANCE_MAX_LIMIT = 2;
     private final int PRODUCT_DISTANCE_MAX_LIMIT = 2;
+    private Initialize init = NOT_INITIALIZED;
 
     public Market() {
         usersHandler = UsersHandler.getInstance();
@@ -65,10 +70,17 @@ public class Market implements MarketIntr{
 
     @Override
     public void init(String configFilePath) throws Exception {
-        createLogger();
-        //resetAll();
-        ConfigInit(configFilePath);
-        logger.info("Market init Finished successfully.");
+        try {
+            createLogger();
+            //resetAll();
+            ConfigInit(configFilePath);
+            init = SUCCESS;
+            logger.info("Market init Finished successfully.");
+        }
+        catch (Exception e){
+            init = FAIL;
+            throw e;
+        }
     }
 
     private void ConfigInit(String configFilePath) throws Exception {
@@ -390,6 +402,7 @@ public class Market implements MarketIntr{
         updateProductQuantity(userName,shopName,productName,productQuantity);
     }
 
+    @Transactional
     @Override
     public void removeProduct(String userName, String shopName, String productName) throws Exception {
         logger.info(String.format("Attempt by user %s to remove product %s from store %s.", userName,productName, shopName));
@@ -483,6 +496,7 @@ public class Market implements MarketIntr{
         return shopHandler.extendedSearch(productName, minPrice, maxPrice, category, isAdmin(userName));
     }
 
+    @Transactional
     @Override
     public void appointShopOwner(String appointedBy, String appointee, String shopName) throws Exception {
         logger.info(String.format("Attempt by user %s to appoint %s as shop-owner of shop %s.", appointedBy,appointee, shopName));
@@ -505,6 +519,7 @@ public class Market implements MarketIntr{
         return shopHandler.getShop(shopName);
     }
 
+    @Transactional
     @Override
     public void appointShopManager(String appointedBy, String appointee, String shopName) throws Exception {
         logger.info(String.format("Attempt by user %s to appoint %s as shop-manager of shop %s.", appointedBy,appointee, shopName));
@@ -522,12 +537,14 @@ public class Market implements MarketIntr{
         logger.info(String.format("User %s appointed %s as shop-manager of shop %s.", appointedBy,appointee, shopName));
     }
 
+    @Transactional
     @Override
     public void removeShopManager(String managerName, String userToRemove, String shopName) throws Exception {
         throw new NotImplementedException();
     }
 
     //next version
+    @Transactional
     @Override
     public void removeShopOwner(String managerName, String userToRemove, String shopName) throws Exception {
         managerName = managerName.toLowerCase();
@@ -632,11 +649,13 @@ public class Market implements MarketIntr{
         usersHandler.addAdmin(adminName);
     }
 
+    @Transactional
     @Override
     public void removeShop(String adminName, String userName, String shopName) {
         throw new NotImplementedException();
     }
 
+    @Transactional
     @Override
     public void blockUser(String adminName, String UserName) {
         throw new NotImplementedException();
@@ -710,6 +729,7 @@ public class Market implements MarketIntr{
 
     //I'm setting the basic logic behind this, we need to sit together and decide what to do with thread safety
     //I know this is a big function, I don't mean to leave it that way it's just what I had in mind when trying to write this function
+    @Transactional
     @Override
     public void purchaseCart(String userName, PaymentDetails paymentDetails, SupplyDetails supplyDetails) throws Exception {
         logger.info(String.format("Attempt by user %s to purchase cart.", userName));
@@ -874,6 +894,7 @@ public class Market implements MarketIntr{
         return usersHandler.getAllUsers(adminName);
     }
 
+    @Transactional
     public String removeUser(String adminName, String userName) throws Exception {
         //check if user- userName has roles in some shops
         if(shopHandler.isUserHasRoleInAnyShops(userName))
@@ -943,7 +964,7 @@ public class Market implements MarketIntr{
         PersistenceManager.getInstance().updateObj(shop);
         return pid;
     }
-	
+
 	public void removeDiscount(String shopName, String userName, int discountId) throws Exception {
         usersHandler.findLoginUser(userName);
         Shop shop = shopHandler.getShop(shopName);
@@ -1065,5 +1086,9 @@ public class Market implements MarketIntr{
 
     public void ReadUserNotifications(String username) {
         usersHandler.getUser(username).ReadNotifications();
+    }
+
+    public Initialize getInitState() {
+        return init;
     }
 }

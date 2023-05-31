@@ -36,14 +36,25 @@ public class ShopRepository {
     }
 
     public List<Shop> getAllShops() {
-        TypedQuery<Shop> query = PersistenceManager.getInstance().getEntityManager().createQuery("SELECT s FROM Shop s", Shop.class);
-        return query.getResultList();
+        try {
+            TypedQuery<Shop> query = PersistenceManager.getInstance().getEntityManager().createQuery("SELECT s FROM Shop s", Shop.class);
+            return query.getResultList();
+        }
+        catch (Exception e){
+            return shops.values().stream().toList();
+        }
     }
 
     public void addShop(String shopName, Shop shop) throws Exception {
         if(shops.containsKey(shopName))
             throwException("There is already shop with that name");
-        Shop shopFromDB = PersistenceManager.getInstance().getEntityManager().find(Shop.class, shopName);
+        Shop shopFromDB;
+        try {
+            shopFromDB = PersistenceManager.getInstance().getEntityManager().find(Shop.class, shopName);
+        }
+        catch (Exception e){
+            shopFromDB = null;
+        }
         if (shopFromDB != null) {
             shops.put(shopName, shopFromDB);
             throwException("There is already shop with that name");
@@ -55,7 +66,13 @@ public class ShopRepository {
     public Shop getShop(String shopName) {
         if (shops.containsKey(shopName))
             return shops.get(shopName);
-        Shop shop = PersistenceManager.getInstance().getEntityManager().find(Shop.class, shopName);
+        Shop shop;
+        try {
+            shop = PersistenceManager.getInstance().getEntityManager().find(Shop.class, shopName);
+        }
+        catch (Exception e){
+            shop = null;
+        }
         if (shop == null)
             return null;
         shops.put(shopName, shop);
@@ -87,16 +104,7 @@ public class ShopRepository {
 
     public void removeConnectionFromDB(String shopName, ShopProduct shopProduct) {
         PersistenceManager.getInstance().removeFromDB(shopProduct);
-//        EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
-////        PersistenceManager.getInstance().lock();
-//        entityManager.getTransaction().begin();
-//        ShopProduct managedShopProduct = entityManager.find(ShopProduct.class, new ProductId(shopName, shopProduct.getName()));
-//        entityManager.remove(managedShopProduct);
-//        entityManager.getTransaction().commit();
-////        PersistenceManager.getInstance().unlock();
         updateToDB(shopName);
-
-//        PersistenceManager.getInstance().removeConnectionFromDB(shop, shopProduct);
     }
 
 }
