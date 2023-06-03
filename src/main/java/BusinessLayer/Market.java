@@ -44,12 +44,14 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+import java.util.stream.Collectors;
 
 import static BusinessLayer.Enums.Initialize.*;
 
@@ -1090,5 +1092,13 @@ public class Market implements MarketIntr{
 
     public Initialize getInitState() {
         return init;
+    }
+
+    public List<Product> getShopProducts(String userName, String shopName) throws Exception {
+        validateLoggedInException(userName);
+        Shop shop = shopHandler.getShop(shopName);
+        return shop.getProducts().stream()
+                .map(product -> (Product) product)
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 }
