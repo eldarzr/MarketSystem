@@ -1,6 +1,7 @@
 package ServiceLayer;
 
 import BusinessLayer.Bids.Bid;
+import BusinessLayer.Enums.Initialize;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Market;
@@ -820,5 +821,9 @@ public class ServiceMarket {
 			return new Response(exception.getMessage());
 		}
 		return new Response();
+	}
+
+	public ResponseT<Initialize> getInitState() {
+		return new ResponseT<>(market.getInitState());
 	}
 }

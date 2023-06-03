@@ -93,11 +93,6 @@ public class ShopBag implements Serializable {
             return;
         ShopBagItem shopBagItem = getProductsAndQuantities().remove(productName);
         PersistenceManager.getInstance().removeFromDB(shopBagItem);
-//        EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
-//        entityManager.getTransaction().begin();
-//        ShopBagItem managedShopBagItem = entityManager.find(ShopBagItem.class, shopBagItem.getId());
-//        entityManager.remove(managedShopBagItem);
-//        entityManager.getTransaction().commit();
 
     }
 
@@ -126,25 +121,6 @@ public class ShopBag implements Serializable {
 
     public boolean isEmpty(){
         return productsAndQuantities.isEmpty();
-    }
-
-    public void clear() {
-        for (ShopBagItem shopBagItem : productsAndQuantities.values()){
-//            PersistenceManager.getInstance().removeFromDB(shopBagItem);
-
-//            ShopBagItemId shopBagItemId = new ShopBagItemId(shopName, userName, shopBagItem.getProductName());
-//            EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
-//            entityManager.getTransaction().begin();
-//            ShopBagItem managedShopBagItem = entityManager.find(ShopBagItem.class, shopBagItem.getId());
-//            entityManager.remove(managedShopBagItem);
-//            entityManager.getTransaction().commit();
-
-//            entityManager.getTransaction().begin();
-//            ShopBagItem managedShopBagItem = entityManager.merge(shopBagItem);
-//            entityManager.remove(managedShopBagItem);
-//            entityManager.flush();
-//            entityManager.getTransaction().commit();
-        }
     }
 
     public Long getId() {

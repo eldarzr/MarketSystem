@@ -32,6 +32,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static BusinessLayer.Enums.Initialize.FAIL;
+
 @Route("base")
 public abstract class BaseView extends VerticalLayout{
 
@@ -48,7 +50,8 @@ public abstract class BaseView extends VerticalLayout{
 	private HorizontalLayout logoutLayout;
 
 	public BaseView() {
-
+		if (marketService.getInitState().getData() == FAIL)
+			getUI().ifPresent(ui -> ui.navigate("fail_init"));
 		String sessionID = VaadinSession.getCurrent().getSession().getId();
 		UserModel userModel = VaadinSession.getCurrent().getAttribute(UserModel.class);
 		if (userModel == null) {

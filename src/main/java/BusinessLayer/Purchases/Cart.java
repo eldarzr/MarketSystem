@@ -92,14 +92,6 @@ public class Cart implements Serializable {
     public void clear() {
         for (String shopBagName : cart.keySet()){
             ShopBag shopBag = getShoppingBag(shopBagName);
-            shopBag.clear();
-//            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("market");
-//            EntityManager entityManager = entityManagerFactory.createEntityManager();
-//            entityManager.getTransaction().begin();
-//            ShopBag managedShopBagItem = entityManager.find(ShopBag.class, shopBag.getId());
-//            entityManager.remove(managedShopBagItem);
-//            entityManager.getTransaction().commit();
-//            PersistenceManager.getInstance().removeFromDB(shopBag);
             PersistenceManager.getInstance().removeFromDB(shopBag);
         }
         cart.clear();

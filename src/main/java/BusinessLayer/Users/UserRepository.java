@@ -5,10 +5,7 @@ import BusinessLayer.Shops.Shop;
 import BusinessLayer.Shops.ShopProduct;
 
 import javax.persistence.TypedQuery;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
@@ -34,14 +31,25 @@ public class UserRepository {
     }
 
     public List<User> getAllMembers() {
-        TypedQuery<User> query = PersistenceManager.getInstance().getEntityManager().createQuery("SELECT s FROM User s", User.class);
-        return query.getResultList();
+        try {
+            TypedQuery<User> query = PersistenceManager.getInstance().getEntityManager().createQuery("SELECT s FROM User s", User.class);
+            return query.getResultList();
+        }
+        catch (Exception e){
+            return members.values().stream().toList();
+        }
     }
 
     public void addMember(String userName, User user) throws Exception {
         if(members.containsKey(userName))
             throwException("There is already user with that name");
-        User userFromDB = PersistenceManager.getInstance().getEntityManager().find(User.class, userName);
+        User userFromDB;
+        try {
+            userFromDB = PersistenceManager.getInstance().getEntityManager().find(User.class, userName);
+        }
+        catch (Exception e){
+            userFromDB = null;
+        }
         if (userFromDB != null) {
             members.put(userName, userFromDB);
             throwException("There is already user with that name");
@@ -53,7 +61,13 @@ public class UserRepository {
     public User getMember(String userName) {
         if (members.containsKey(userName))
             return members.get(userName);
-        User user = PersistenceManager.getInstance().getEntityManager().find(User.class, userName);
+        User user;
+        try {
+            user = PersistenceManager.getInstance().getEntityManager().find(User.class, userName);
+        }
+        catch (Exception e){
+            user = null;
+        }
         if (user == null)
             return null;
         members.put(userName, user);

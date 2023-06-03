@@ -1,6 +1,7 @@
 package FrontEnd;
 
 import BusinessLayer.Bids.Bid;
+import BusinessLayer.Enums.Initialize;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Users.NotificationCallback;
@@ -660,4 +661,7 @@ public class MarketService {
 		else return new SResponseT<>(res.getMessage(),false);
 	}
 
+	public SResponseT<Initialize> getInitState() {
+		return new SResponseT<>(serviceMarket.getInitState().getData());
+	}
 }
