@@ -664,4 +664,14 @@ public class MarketService {
 	public SResponseT<Initialize> getInitState() {
 		return new SResponseT<>(serviceMarket.getInitState().getData());
 	}
+
+	public SResponseT<List<ProductModel>> getShopProducts(String username, String shopName) {
+		ResponseT<List<ProductDataObj>> res = serviceMarket.getShopProducts(username,shopName);
+		if(res.isSuccess())
+		{
+			List<ProductModel> shopProductsModel = res.getData().stream().map(ProductModel::new).collect(Collectors.toList());
+			return new SResponseT<List<ProductModel>>(shopProductsModel);
+		}
+		else return new SResponseT<>(res.getMessage(),false);
+	}
 }

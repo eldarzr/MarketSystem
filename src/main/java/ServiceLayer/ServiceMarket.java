@@ -7,6 +7,7 @@ import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Market;
 import BusinessLayer.Notifications.Notification;
 import BusinessLayer.Shops.FinalCartPriceResult;
+import BusinessLayer.Shops.Product;
 import BusinessLayer.Shops.PurchasePolicies.ComplexPolicyType;
 import BusinessLayer.Shops.PurchasePolicies.PurchasePolicy;
 import BusinessLayer.Shops.Shop;
@@ -825,5 +826,14 @@ public class ServiceMarket {
 
 	public ResponseT<Initialize> getInitState() {
 		return new ResponseT<>(market.getInitState());
+	}
+
+	public ResponseT<List<ProductDataObj>> getShopProducts(String username, String shopName) {
+		try{
+			List<Product> result = market.getShopProducts(username,shopName);
+			return new ResponseT<List<ProductDataObj>>(result.stream().map(ProductDataObj::new).collect(Collectors.toList()));
+		}catch (Exception e){
+			return new ResponseT<List<ProductDataObj>>(e.getMessage(),false);
+		}
 	}
 }

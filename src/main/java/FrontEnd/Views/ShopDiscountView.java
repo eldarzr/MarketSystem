@@ -115,13 +115,22 @@ public class ShopDiscountView extends BaseView implements HasUrlParameter<String
         });
 
         // Add the appropriate input fields based on the sub type
-        TextField subTypeField = new TextField();
+        ComboBox<String> subTypeField = new ComboBox<>();
         subTypeField.setLabel("Name");
         subTypeField.setVisible(false);
         subTypeSelect.addValueChangeListener(event -> {
             selectedSubType = event.getValue();
             subTypeField.setLabel(selectedSubType + " Name");
             subTypeField.setVisible(!event.getValue().equals("Shop"));
+            if (selectedSubType.equalsIgnoreCase("Product")) {
+                // Populate the ComboBox with the list of products from the shop
+                List<String> productList = getProductListFromShop();
+                subTypeField.setItems(productList);
+            }else if(selectedSubType.equalsIgnoreCase("Category"))
+            {
+                List<String> CategoriesList = getShopCategories();
+                subTypeField.setItems(CategoriesList);
+            }
         });
         formLayout.add(subTypeField);
 
@@ -394,6 +403,22 @@ public class ShopDiscountView extends BaseView implements HasUrlParameter<String
 
         add(horizontalLayout);
 
+    }
+
+    private List<String> getShopCategories() {
+        SResponseT<List<ProductModel>> r = marketService.getShopProducts(getCurrentUser().getName(),shopModel.getName());
+        if(!r.isSuccess())
+            Notification.show(r.getMessage());
+        List<String> productsName = r.getData().stream().map(ProductModel::getCategory).collect(Collectors.toList());
+        return productsName;
+    }
+
+    private List<String> getProductListFromShop() {
+        SResponseT<List<ProductModel>> r = marketService.getShopProducts(getCurrentUser().getName(),shopModel.getName());
+        if(!r.isSuccess())
+            Notification.show(r.getMessage());
+        List<String> productsName = r.getData().stream().map(ProductModel::getName).collect(Collectors.toList());
+        return productsName;
     }
 
     private void handleRemoveDiscount(int discountId) {
