@@ -5,18 +5,76 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b632bc94-40ae-4fc8-ad09-f0a6a998ea35" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Market.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Market.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Notifications/Notification.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Notifications/Notification.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Users/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Users/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Users/UsersHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Users/UsersHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FrontEnd/Application.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/Application.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FrontEnd/MarketService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/MarketService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/Admin/AdminProfileView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/Admin/AdminProfileView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/Admin/AdminUserMessagesView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/Admin/AdminUserMessagesView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/BaseView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/BaseView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/ProfileView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/ProfileView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ServiceLayer/ServiceMarket.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ServiceLayer/ServiceMarket.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market.war" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market.war" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/META-INF/maven/com.example.application/market/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/META-INF/maven/com.example.application/market/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Enums/ManagePermissionsEnum.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Enums/ManagePermissionsEnum.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Enums/ManageType.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Enums/ManageType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Enums/UserType.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Enums/UserType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/ExternalSystemsAdapters/CreditCardPaymentDetails.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/ExternalSystemsAdapters/CreditCardPaymentDetails.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/ExternalSystemsAdapters/PaymentDetails.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/ExternalSystemsAdapters/PaymentDetails.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/ExternalSystemsAdapters/SupplyDetails.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/ExternalSystemsAdapters/SupplyDetails.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/ManagePermissions.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/ManagePermissions.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Market.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Market.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/MarketIntr.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/MarketIntr.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/MemberRoleInShop.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/MemberRoleInShop.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/MessageObserver.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/MessageObserver.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Purchases/Cart.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Purchases/Cart.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Purchases/Invoice.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Purchases/Invoice.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Purchases/Purchase$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Purchases/Purchase$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Purchases/Purchase$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Purchases/Purchase$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Purchases/Purchase.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Purchases/Purchase.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Purchases/PurchaseIntr.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Purchases/PurchaseIntr.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Purchases/ShopBag.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Purchases/ShopBag.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Purchases/ShopBagItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Purchases/ShopBagItem.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Purchases/ShopInvoice.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Purchases/ShopInvoice.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Purchases/UserInvoice.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Purchases/UserInvoice.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Search.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Search.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Shops/Product.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Shops/Product.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Shops/ProductIntr.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Shops/ProductIntr.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Shops/Shop.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Shops/Shop.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Shops/ShopHandler$ShopHolder.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Shops/ShopHandler$ShopHolder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Shops/ShopHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Shops/ShopHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Shops/ShopIntr.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Shops/ShopIntr.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Shops/ShopProduct.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Shops/ShopProduct.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Users/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Users/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Users/UserIntr.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Users/UserIntr.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Users/UsersHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/BusinessLayer/Users/UsersHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/FrontEnd/Application.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/FrontEnd/Application.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/FrontEnd/MarketService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/FrontEnd/MarketService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/FrontEnd/Model/UserModel.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/FrontEnd/Model/UserModel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/FrontEnd/SResponse.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/FrontEnd/SResponse.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/FrontEnd/SResponseT.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/FrontEnd/SResponseT.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/FrontEnd/views/main/LoginView.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/FrontEnd/views/main/MainView.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/FrontEnd/views/main/RegisterView.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/META-INF/VAADIN/config/flow-build-info.json" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/META-INF/VAADIN/config/flow-build-info.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/META-INF/VAADIN/config/stats.json" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/META-INF/VAADIN/config/stats.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/META-INF/VAADIN/webapp/VAADIN/build/generated-flow-imports-8fa8e918.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/META-INF/VAADIN/webapp/VAADIN/build/generated-flow-imports-8fa8e918.js.br" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/META-INF/VAADIN/webapp/VAADIN/build/generated-flow-imports-fallback-41d70f2a.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/META-INF/VAADIN/webapp/VAADIN/build/generated-flow-imports-fallback-41d70f2a.js.br" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/META-INF/VAADIN/webapp/VAADIN/build/indexhtml-e434339c.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/META-INF/VAADIN/webapp/VAADIN/build/indexhtml-e434339c.js.br" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/META-INF/VAADIN/webapp/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/META-INF/VAADIN/webapp/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/META-INF/VAADIN/webapp/index.html.br" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/META-INF/VAADIN/webapp/index.html.br" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/ServiceLayer/DataObjects/CartDataObj.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/ServiceLayer/DataObjects/CartDataObj.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/ServiceLayer/DataObjects/InvoiceDataObj.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/ServiceLayer/DataObjects/InvoiceDataObj.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/ServiceLayer/DataObjects/MemberRoleInShopDataObj.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/ServiceLayer/DataObjects/MemberRoleInShopDataObj.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/ServiceLayer/DataObjects/ProductDataObj.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/ServiceLayer/DataObjects/ProductDataObj.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/ServiceLayer/DataObjects/ShopBagDataObj.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/ServiceLayer/DataObjects/ShopBagDataObj.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/ServiceLayer/DataObjects/ShopDataObj.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/ServiceLayer/DataObjects/ShopDataObj.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/ServiceLayer/DataObjects/ShopInvoiceDataObj.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/ServiceLayer/DataObjects/ShopInvoiceDataObj.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/ServiceLayer/DataObjects/UserDataObj.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/ServiceLayer/DataObjects/UserDataObj.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/ServiceLayer/DataObjects/UserInvoiceDataObj.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/ServiceLayer/DataObjects/UserInvoiceDataObj.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/ServiceLayer/Response.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/ServiceLayer/Response.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/ServiceLayer/ResponseT.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/ServiceLayer/ResponseT.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/ServiceLayer/ServiceMarket.class" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classes/ServiceLayer/ServiceMarket.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classpath.idx" beforeDir="false" afterPath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/classpath.idx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tomcat 10.1/webapps/market/WEB-INF/lib/javassist-3.28.0-GA.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/CartView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/CartView.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,8 +85,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="JUnit5 Test Class" />
-        <option value="Enum" />
         <option value="Interface" />
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -60,18 +118,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/courses/third_year/Sadna/MarketSystem",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "spring.configuration.checksum": "032134b5102ef5c550f340eb223534b9"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/courses/third_year/Sadna/MarketSystem&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;032134b5102ef5c550f340eb223534b9&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="BusinessLayer.Bids" />
+    </key>
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
     </key>
@@ -97,9 +158,10 @@
       <command value="mvn clean compile" />
       <command value="mvn install:install-file -Dfile=commons-text-1.10.0.jar -DgroupId=org.apache.commons -DartifactId=commons-text -Dversion=1.10.0 -Dpackaging=jar" />
       <command value="mvn clean install" />
+      <command value="mvn clean package -P production" />
     </option>
   </component>
-  <component name="RunManager" selected="Smart Tomcat.tomcat">
+  <component name="RunManager" selected="JUnit.MarketBidTests">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="BusinessLayer.Main" />
       <module name="MarketSystem" />
@@ -109,6 +171,21 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MarketBidTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="MarketSystem" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="IntegrationTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="IntegrationTests" />
+      <option name="MAIN_CLASS_NAME" value="IntegrationTests.MarketBidTests" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -124,22 +201,6 @@
       <option name="PACKAGE_NAME" value="BusinessLayer" />
       <option name="MAIN_CLASS_NAME" value="BusinessLayer.MarketCreateShopTest" />
       <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="MarketCreateShopTest.createShopFailDoubleName" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="MarketSystem" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="BusinessLayer.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="BusinessLayer" />
-      <option name="MAIN_CLASS_NAME" value="BusinessLayer.MarketCreateShopTest" />
-      <option name="METHOD_NAME" value="createShopFailDoubleName" />
-      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -217,9 +278,6 @@
       <predefined_log_file id="Tomcat Host Manager Log" />
       <option name="contextPath" value="/market" />
       <option name="docBase" value="D:\courses\third_year\Sadna\MarketSystem\target" />
-      <option name="envOptions">
-        <map />
-      </option>
       <option name="extraClassPath" value="" />
       <option name="tomcatInfo">
         <TomcatInfo>
@@ -229,28 +287,26 @@
         </TomcatInfo>
       </option>
       <option name="vmOptions" value="" />
-      <module name="MarketSystem" />
       <method v="2">
         <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="clean package -P production" />
       </method>
     </configuration>
     <list>
       <item itemvalue="Application.Main" />
+      <item itemvalue="JUnit.MarketBidTests" />
       <item itemvalue="JUnit.MarketCreateShopTest" />
-      <item itemvalue="JUnit.MarketCreateShopTest.createShopFailDoubleName" />
       <item itemvalue="JUnit.MarketCreateShopTest.createShopFailNotRegistered (1)" />
       <item itemvalue="JUnit.MarketgetShopTest" />
       <item itemvalue="Maven.MarketSystem [mvn,exec:java]" />
       <item itemvalue="Smart Tomcat.tomcat" />
-      <item itemvalue="Spring Boot.Application" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.MarketBidTests" />
         <item itemvalue="JUnit.MarketgetShopTest" />
         <item itemvalue="Application.Main" />
         <item itemvalue="JUnit.MarketCreateShopTest" />
         <item itemvalue="JUnit.MarketCreateShopTest.createShopFailNotRegistered (1)" />
-        <item itemvalue="JUnit.MarketCreateShopTest.createShopFailDoubleName" />
       </list>
     </recent_temporary>
   </component>

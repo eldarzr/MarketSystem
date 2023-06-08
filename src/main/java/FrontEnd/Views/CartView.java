@@ -58,7 +58,7 @@ public class CartView extends BaseView {
             totalPurchasePrice = res.getData().getPriceBeforeDiscount();
             totalPriceAfterDiscount = res.getData().getPriceAfterDiscount();
         }
-        
+
         // Fetch cart data
         SResponseT<CartDataObj> cart_res = marketService.getCart(userModel.getName());
         if(cart_res.isSuccess()) {
