@@ -43,10 +43,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,6 +60,20 @@ public class Market implements MarketIntr{
     ShopHandler shopHandler;
     private final int SHOP_DISTANCE_MAX_LIMIT = 2;
     private final int PRODUCT_DISTANCE_MAX_LIMIT = 2;
+
+    static Map<String, String> persistenceMap;  //todo: Temp fix
+    static String table_scheme; //todo: Temp fix
+
+    public static void set_database_data(String database_path,String database_admin,String database_password,String table_name) //todo: Temp fix
+    {
+        Map<String, String> map = new HashMap<>();
+
+        map.put("javax.persistence.jdbc.url", database_path);
+        map.put("javax.persistence.jdbc.user", database_admin);
+        map.put("javax.persistence.jdbc.password", database_password);
+        persistenceMap=map;
+        table_scheme=table_name;
+    }
     private Initialize init = NOT_INITIALIZED;
 
     public Market() {
@@ -74,7 +85,6 @@ public class Market implements MarketIntr{
     public void init(String configFilePath) throws Exception {
         try {
             createLogger();
-            //resetAll();
             ConfigInit(configFilePath);
             init = SUCCESS;
             logger.info("Market init Finished successfully.");
@@ -95,6 +105,7 @@ public class Market implements MarketIntr{
         // Access the database details
         JsonObject database = configData.getAsJsonObject("database");
         String database_path = database.get("path").getAsString();
+        String table_scheme = database.get("table_scheme").getAsString();
         String database_admin = database.get("admin").getAsString();
         String database_password = database.get("password").getAsString();
 
@@ -111,7 +122,8 @@ public class Market implements MarketIntr{
         // Close the file reader
         reader.close();
 
-        loadDatabase(database_path, database_admin, database_password);
+        set_database_data(database_path, database_admin, database_password,table_scheme);
+        resetAll(); //todo: temp fix
         loadAdmin(adminUsername,adminEmail,adminPassword);
         ExternalSystemAPI.setURL(webAddress);
 
@@ -120,66 +132,13 @@ public class Market implements MarketIntr{
 
     private void loadAdmin(String adminUsername,String adminEmail,String adminPassword) throws Exception {
         logger.info("Start loading admin data.");
-        try
-        {
-            usersHandler.findMemberByName(adminUsername);
-        }
+        try { usersHandler.findMemberByName(adminUsername);}
         catch (Exception e)
         {
             register(adminUsername, adminEmail, adminPassword);
             addAdmin(adminUsername);
         }
         logger.info("Loading admin data finished successfully.");
-    }
-
-    private void loadDatabase(String databasePath, String adminName, String adminPassword) throws Exception {
-        logger.info("Start loading database data.");
-        String persistenceXmlPath="src\\main\\resources\\META-INF\\persistence.xml";
-        try {
-            String deploymentFolder = System.getProperty("catalina.home").split("Tomcat")[0];
-            persistenceXmlPath = deploymentFolder + persistenceXmlPath;
-        }
-        catch (Exception ignored) {}
-        // Load the persistence.xml file
-        DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-        Document doc = docBuilder.parse(persistenceXmlPath);
-
-        // Get the root element
-        Element rootElement = doc.getDocumentElement();
-
-        // Find the properties element
-        NodeList propertiesList = rootElement.getElementsByTagName("properties");
-        if (propertiesList.getLength() > 0) {
-            Element properties = (Element) propertiesList.item(0);
-
-            // Find the property elements and update the desired fields
-            NodeList propertyList = properties.getElementsByTagName("property");
-            for (int i = 0; i < propertyList.getLength(); i++) {
-                Element property = (Element) propertyList.item(i);
-                String name = property.getAttribute("name");
-
-                // Check the name of the property and update the desired fields
-                if ("javax.persistence.jdbc.url".equals(name)) {
-                    property.setAttribute("value", databasePath);
-                } else if ("javax.persistence.jdbc.user".equals(name)) {
-                    property.setAttribute("value", adminName);
-                } else if ("javax.persistence.jdbc.password".equals(name)) {
-                    property.setAttribute("value", adminPassword);
-                }
-            }
-        }
-
-        // Write the updated document back to the persistence.xml file
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        DOMSource source = new DOMSource(doc);
-        StreamResult result = new StreamResult(persistenceXmlPath);
-        transformer.transform(source, result);
-
-        String[] pathParts =  databasePath.split("/");
-        PersistenceManager.set_table_scheme(pathParts[pathParts.length-1]);
-        logger.info("Loading database data finished successfully.");
     }
 
     public void loadState(String stateFilePath) throws Exception
@@ -210,7 +169,7 @@ public class Market implements MarketIntr{
                     case "removeShop" -> removeShop(params[0], params[1], params[2]);
                     case "openShop" -> openShop(params[0], params[1]);
                     case "closeShop" -> closeShop(params[0], params[1]);
-                    case "addNewProduct" -> addNewProduct(params[0], params[1], params[2], params[3], params[4], Double.valueOf(params[5]));
+                    case "addNewProduct" -> addNewProduct(params[0], params[1], params[2], params[3], params[4], Double.parseDouble(params[5]));
                     case "removeProduct" -> removeProduct(params[0], params[1], params[2]);
                     case "addAgePurchasePolicy" -> addAgePurchasePolicy(params[0], params[1], Boolean.parseBoolean(params[2]), params[3], Boolean.parseBoolean(params[4]), Integer.parseInt(params[5]), Integer.parseInt(params[6]));
                     case "appointShopManager" -> appointShopManager(params[0], params[1], params[2]);
@@ -259,9 +218,7 @@ public class Market implements MarketIntr{
             File file = new File(logDirectory);
 
             // Create directory if it does not exist
-            if (!file.exists()) {
-                file.mkdir();
-            }
+            if (!file.exists()) {file.mkdir();}
             if (logger.getHandlers().length == 0) {
                 FileHandler fileHandler = new FileHandler(logDirectory + "/MarketLog.log");
                 SimpleFormatter formatter = new SimpleFormatter();
