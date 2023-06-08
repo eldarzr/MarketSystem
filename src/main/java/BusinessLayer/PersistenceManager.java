@@ -30,10 +30,8 @@ public class PersistenceManager {
 	private ReentrantLock lock = new ReentrantLock();
 	private boolean programIsRunning = true;
 
-	private static String table_scheme;
-
 	private PersistenceManager() {
-		entityManagerFactory = Persistence.createEntityManagerFactory("market");
+		entityManagerFactory = Persistence.createEntityManagerFactory("market",Market.persistenceMap);
 		entityManager = entityManagerFactory.createEntityManager();
 		thread = new Thread(this::handleUnsavedQueries);
 		thread.start();
@@ -45,10 +43,6 @@ public class PersistenceManager {
 
 	public void setRealEntityManager() {
 		this.entityManager = entityManagerFactory.createEntityManager();
-	}
-
-	public static void set_table_scheme(String ts) {
-		table_scheme = ts;
 	}
 
 	public void reset() {
@@ -106,7 +100,7 @@ public class PersistenceManager {
 			lock.lock();
 			entityManager.getTransaction().begin();
 			tableNames = entityManager.createNativeQuery(
-					String.format("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '%s'", table_scheme)
+					String.format("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '%s'", Market.table_scheme)
 			).getResultList();
 			entityManager.getTransaction().commit();
 //		entityManager.close();

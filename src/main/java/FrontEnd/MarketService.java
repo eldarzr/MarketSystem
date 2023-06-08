@@ -40,8 +40,6 @@ public class MarketService {
 			synchronized ( (MarketService.class)){
 				if(instance == null){
 					instance =  new MarketService();
-					String contextPath = "/your-application-context-path"; // Replace with your actual context path
-
 					String deploymentFolder = System.getProperty("catalina.home").split("Tomcat")[0];
 					instance.init(deploymentFolder+"src\\InitFiles\\BaseConfig.jason");
 					instance.loadState(deploymentFolder+"src\\InitFiles\\loadTempState");

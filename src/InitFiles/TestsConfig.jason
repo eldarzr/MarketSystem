@@ -2,6 +2,7 @@
     "database":
     {
         "path" : "jdbc:mysql://localhost:3306/tests",
+        "table_scheme": "tests",
         "admin" : "admin",
         "password" : "admin"
     },
