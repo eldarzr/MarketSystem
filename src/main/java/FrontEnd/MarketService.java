@@ -672,4 +672,12 @@ public class MarketService {
 		}
 		else return new SResponseT<>(res.getMessage(),false);
 	}
+
+	public SResponse updateUserBirthDay(String userName, LocalDate bDay){
+		Response res = serviceMarket.updateUserBirthDay(userName, bDay);
+		if(res.isSuccess()){
+			return new SResponse();
+		}
+		return new SResponse(res.getMessage());
+	}
 }
