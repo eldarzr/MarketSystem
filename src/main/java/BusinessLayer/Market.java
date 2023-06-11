@@ -1058,4 +1058,9 @@ public class Market implements MarketIntr{
                 .map(product -> (Product) product)
                 .collect(Collectors.toCollection(LinkedList::new));
     }
+
+    public void updateUserBirthDay(String userName, LocalDate bDay) throws Exception {
+        validateLoggedInException(userName);
+        usersHandler.updateUserBirthDay(userName,bDay);
+    }
 }

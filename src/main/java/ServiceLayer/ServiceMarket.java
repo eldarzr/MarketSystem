@@ -836,4 +836,13 @@ public class ServiceMarket {
 			return new ResponseT<List<ProductDataObj>>(e.getMessage(),false);
 		}
 	}
+
+	public Response updateUserBirthDay(String userName, LocalDate bDay){
+		try{
+			market.updateUserBirthDay(userName,bDay);
+			return new Response();
+		}catch (Exception e){
+			return new Response(e.getMessage());
+		}
+	}
 }
