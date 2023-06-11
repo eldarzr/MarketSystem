@@ -54,7 +54,6 @@ public class Shop implements ShopIntr {
 	private Lock remLock;
 	private String founderUserName;
 	//map of user name to role in this shop
-//	@Transient
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "shopName", referencedColumnName = "shopName")
 	@MapKeyColumn(name = "userName")
