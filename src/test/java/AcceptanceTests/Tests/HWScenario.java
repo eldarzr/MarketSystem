@@ -29,7 +29,7 @@ public class HWScenario {
     public void testHWSuccess() {
         try
         {
-            marketSystem.loadState("src/InitFiles/loadHWStateSuccess");
+            marketSystem.loadState("src/StateFiles/loadHWStateSuccess");
             Collection<String> owners=marketSystem.getShopOwners("shop1");
             for(String ownerName : owners)
             {
@@ -46,7 +46,7 @@ public class HWScenario {
     public void testHWFail() {
         try
         {
-            marketSystem.loadState("src/InitFiles/loadHWStateFail");
+            marketSystem.loadState("src/StateFiles/loadHWStateFail");
             fail();
         } catch (Exception e) {
             System.out.println(e.getMessage());

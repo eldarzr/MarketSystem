@@ -11,6 +11,7 @@ import BusinessLayer.Shops.PurchasePolicies.PurchasePolicy;
 import BusinessLayer.Shops.Shop;
 import BusinessLayer.Users.User;
 
+import java.io.BufferedReader;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -149,7 +150,7 @@ public interface MarketIntr {
     public void approveBid(String userName,String shopName, int bidId) throws Exception ;
     public void rejectBid(String userName,String shopName, int bidId) throws Exception ;
 
-    void loadState(String stateFilePath)throws Exception;
-
     Collection<Notification> getUserNotifications(String username) throws Exception;
+
+    void loadState(BufferedReader StateReader) throws Exception;
 }

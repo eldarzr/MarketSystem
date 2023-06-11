@@ -422,6 +422,11 @@ public class Shop implements ShopIntr {
 			if (role.getGrantor() != null && role.getGrantor().equals(ownerToRemove)) {
 				removeSubordinates(role.getUserName());
 				roles.remove(role.getUserName());
+
+				//notify removed shop owner/manager.
+				String message=String.format("I was removed as owner in shop %s, so you are removed too.", name);
+				Notification notification=new Notification(ownerToRemove,message);
+				NotificationPublisher.getInstance().notify(role.getUserName(),notification);
 			}
 		}
 	}
