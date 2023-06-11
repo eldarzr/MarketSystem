@@ -1,8 +1,11 @@
 package FrontEnd.Views;
 
+import BusinessLayer.Enums.ManageKindEnum;
+import BusinessLayer.Enums.ManageType;
 import BusinessLayer.Enums.UserType;
 
 import FrontEnd.Model.ProductModel;
+import FrontEnd.Model.ShopModel;
 import FrontEnd.SResponse;
 import FrontEnd.SResponseT;
 import ServiceLayer.DataObjects.PurchasePolicyDataObj;
@@ -46,6 +49,11 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
     private  UserModel currentUser;
     private  Grid<PurchasePolicyDataObj> policyGrid;
     private String shopName;
+    private ShopModel shopProfile;
+    private Button createSimplePolicyButton;
+    private Button createComplexPolicyButton;
+    private Button removeActivePolicyButton;
+
 
 
     @Override
@@ -94,20 +102,25 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
         add(policyGrid);
         updatePolicyGrid();
 
-        Button createSimplePolicyButton = new Button("Create Simple Policy");
+        createSimplePolicyButton = new Button("Create Simple Policy");
         createSimplePolicyButton.addClickListener(e -> openCreateSimplePolicyDialog());
         enableButton(createSimplePolicyButton);
 
-        Button createComplexPolicyButton = new Button("Create Complex Policy");
+        createComplexPolicyButton = new Button("Create Complex Policy");
         createComplexPolicyButton.addClickListener(e -> openCreateComplexPolicyDialog());
         enableButton(createComplexPolicyButton);
 
-        Button removeActivePolicyButton = new Button("Remove Active Policy");
+        removeActivePolicyButton = new Button("Remove Active Policy");
         removeActivePolicyButton.addClickListener(e -> {
             SResponse removeActivePolicyResponse = marketService.setActivePurchasePolicy(getCurrentUser().getName(), shopName, -1);
             updatePolicyGrid();
         });
         enableButton(removeActivePolicyButton);
+        SResponseT<ShopModel> res = marketService.getShop(shopName);
+        if(res.isSuccess()){
+            shopProfile = res.getData();
+        }
+        updateButtons();
 
         HorizontalLayout buttonsLayout = new HorizontalLayout(createSimplePolicyButton, createComplexPolicyButton, removeActivePolicyButton);
         add(buttonsLayout);
@@ -115,6 +128,19 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
         // Add custom CSS styles
         getStyle().set("padding", "1rem");
         buttonsLayout.getStyle().set("margin-top", "1rem");
+    }
+
+    private void updateButtons() {
+        if(shopProfile != null && shopProfile.getRoles().get(getCurrentUser().getName()).getType().equals(ManageType.MANAGER) && shopProfile.getRoles().get(getCurrentUser().getName()).getPermissions().getManageAccess() == ManageKindEnum.READ_ONLY) {
+            disableButton(createComplexPolicyButton);
+            disableButton(createSimplePolicyButton);
+            disableButton(removeActivePolicyButton);
+        }
+        else{
+            enableButton(createComplexPolicyButton);
+            enableButton(createSimplePolicyButton);
+            enableButton(removeActivePolicyButton);
+        }
     }
 
 
