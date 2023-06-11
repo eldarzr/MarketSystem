@@ -40,7 +40,7 @@ public class User{
     @Column(name = "message")
     private List<String> shopsMessages;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "userName")
     private List<UserInvoice> invoices;
 
@@ -51,7 +51,7 @@ public class User{
 //    @Transient
     Cart currentCart;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "userName")
     private List<Notification> pendingNotifications;
     @Transient

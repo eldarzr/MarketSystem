@@ -16,7 +16,7 @@ public class Bid {
     private final String userName;
     @Column(name = "b_id")
     private final int b_id;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id")
     private final Product product;
     @Column(name = "price")

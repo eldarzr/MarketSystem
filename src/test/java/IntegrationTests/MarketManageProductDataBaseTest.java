@@ -10,6 +10,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.persistence.EntityManager;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class MarketManageProductDataBaseTest {
@@ -49,7 +51,9 @@ class MarketManageProductDataBaseTest {
 		for(int i = 0; i < usersName.length; i++) {
 			market.addNewProduct(usersName[i], shopNames[i], prodNames[i], cat[i], descs[i], prices[i]);
 			Product product = (Product) market.getProduct(usersName[i], shopNames[i], prodNames[i]);
-			Product productFromDB = PersistenceManager.getInstance().getEntityManager().find(Product.class, product.getId());
+			EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
+			Product productFromDB = entityManager.find(Product.class, product.getId());
+			entityManager.close();
 			assertTrue(productFromDB.getName().equals(prodNames[i]));
 		}
 	}
@@ -60,7 +64,9 @@ class MarketManageProductDataBaseTest {
 		Product product = (Product) market.getProduct(usersName[0], shopNames[0], prodNames[0]);
 		assertTrue(product.getName().equals(prodNames[0]));
 		market.removeProduct(usersName[0], shopNames[0], prodNames[0]);
-		Product productFromDB = PersistenceManager.getInstance().getEntityManager().find(Product.class, product.getId());
+		EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
+		Product productFromDB = entityManager.find(Product.class, product.getId());
+		entityManager.close();
 		assertNull(productFromDB);
 	}
 
@@ -70,7 +76,9 @@ class MarketManageProductDataBaseTest {
 			market.addNewProduct(usersName[i], shopNames[i], prodNames[i], cat[i], descs[i], prices[i]);
 			market.updateProductDesc(usersName[i], shopNames[i], prodNames[i], descsNew[i]);
 			Product product = (Product) market.getProduct(usersName[i], shopNames[i], prodNames[i]);
-			Product productFromDB = PersistenceManager.getInstance().getEntityManager().find(Product.class, product.getId());
+			EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
+			Product productFromDB = entityManager.find(Product.class, product.getId());
+			entityManager.close();
 			assertTrue(productFromDB.getDescription().equals(descsNew[i]));
 		}
 	}
@@ -81,7 +89,9 @@ class MarketManageProductDataBaseTest {
 			market.addNewProduct(usersName[i], shopNames[i], prodNames[i], cat[i], descs[i], prices[i]);
 			market.updateProductPrice(usersName[i], shopNames[i], prodNames[i], pricesNew[i]);
 			Product product = (Product) market.getProduct(usersName[i], shopNames[i], prodNames[i]);
-			Product productFromDB = PersistenceManager.getInstance().getEntityManager().find(Product.class, product.getId());
+			EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
+			Product productFromDB = entityManager.find(Product.class, product.getId());
+			entityManager.close();
 			assertTrue(productFromDB.getPrice() == pricesNew[i]);
 		}
 	}
@@ -91,7 +101,9 @@ class MarketManageProductDataBaseTest {
 			market.addNewProduct(usersName[i], shopNames[i], prodNames[i], cat[i], descs[i], prices[i]);
 			market.updateProductQuantity(usersName[i], shopNames[i], prodNames[i], quantity[i]);
 			ShopProduct product = (ShopProduct) market.getProduct(usersName[i], shopNames[i], prodNames[i]);
-			ShopProduct productFromDB = PersistenceManager.getInstance().getEntityManager().find(ShopProduct.class, product.getId());
+			EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
+			ShopProduct productFromDB = entityManager.find(ShopProduct.class, product.getId());
+			entityManager.close();
 			assertTrue(productFromDB.getQuantity() == quantity[i]);
 		}
 	}
