@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 
-public class ShoppingCartActionsTest {
+public class UpdateCartTest {
     private MarketSystemBridge market= new MarketSystemRealBridge();
     private String tempUserName;
     private String category = "category";
@@ -55,50 +55,7 @@ public class ShoppingCartActionsTest {
     }
 
     @Test
-    public void testAddProductToCart() {
-        try {
-            ShoppingCartBridge cart = market.getCart(tempUserName);
-
-            Collection<ProductBridge> products = market.basicSearch(tempUserName, "item1");
-            ProductBridge product = products.iterator().next();
-
-            market.addProductsToCart(tempUserName, shopName, product.getProductName(), 1);
-
-            assertFalse(cart.isEmpty(), "Cart is empty");
-
-            assertTrue(cart.getProductNames().contains(product.getProductName()), "Product not in cart");
-            assertEquals("Incorrect quantity of product in cart", 1, cart.getQuantityOfProduct(product.getProductName()));
-            //todo: this assert is not true , again you have a different cart object
-
-        } catch (Exception e) {
-            fail("Exception thrown while testing add product to cart: " + e.getMessage());
-        }
-    }
-
-//    @Test
-//    public void testRemoveProductFromCart() {
-//        try {
-//            ShoppingCartBridge cart = market.getCart(tempUserName);
-//
-//            Collection<ProductBridge> products = market.basicSearch(tempUserName, "item1");
-//            ProductBridge product = products.iterator().next();
-//
-//            market.addProductsToCart(tempUserName, shopName, product.getProductName(), 1);
-//
-//            //todo: product doesn't suppose to be in cart
-//            assertTrue("Product not in cart", cart.getProductNames().contains(product.getProductName()));
-//            market.removeProductsFromCart(tempUserName, shopName, product.getProductName());
-//
-//            assertFalse("Product still in cart", cart.getProductNames().contains(product.getProductName()));
-//            assertEquals("Incorrect quantity of product in cart", 0, cart.getQuantityOfProduct(product.getProductName()));
-//
-//        } catch (Exception e) {
-//            fail("Exception thrown while testing remove product from cart: " + e.getMessage());
-//        }
-//    }todo: uncomment
-
-    @Test
-    public void testUpdateProductQuantityInCart() {
+    public void testAddProductQuantityInCart() {
         try {
 
             Collection<ProductBridge> products = market.basicSearch(tempUserName, "item1");
@@ -117,6 +74,46 @@ public class ShoppingCartActionsTest {
 
         } catch (Exception e) {
             fail("Exception thrown while testing update product quantity in cart: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testReduceProductQuantityInCart() {
+        try {
+
+            Collection<ProductBridge> products = market.basicSearch(tempUserName, "item1");
+            ProductBridge product = products.iterator().next();
+
+            // add one item to the cart
+            market.addProductsToCart(tempUserName, shopName, product.getProductName(), 5);
+
+            // update the quantity to 3
+            market.updateProductQuantityInCart(tempUserName, shopName, product.getProductName(), 3);
+
+            // check that the product is in the cart and has the correct quantity
+            assertTrue(market.getCart(tempUserName).getProductNames().contains(product.getProductName()), "Product not in cart");
+            int amount = market.getCart(tempUserName).getQuantityOfProduct(product.getProductName());
+            assertEquals("Incorrect quantity of product in cart", 3,amount);
+
+        } catch (Exception e) {
+            fail("Exception thrown while testing update product quantity in cart: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testAddTooMuchProductQuantityInCart() {
+        try {
+
+            Collection<ProductBridge> products = market.basicSearch(tempUserName, "item1");
+            ProductBridge product = products.iterator().next();
+
+            // add one item to the cart
+            market.addProductsToCart(tempUserName, shopName, product.getProductName(), 1);
+
+            // update the quantity to 2
+            market.updateProductQuantityInCart(tempUserName, shopName, product.getProductName(), 200);
+            fail("Added way too much product.");
+        } catch (Exception ignored) {
         }
     }
 }

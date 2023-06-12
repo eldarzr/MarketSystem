@@ -13,7 +13,7 @@ import java.util.LinkedList;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-class MarketRTNotificationsTest {
+class NotificationsTest {
 	Market market;
 	String[] usersName = {"eldar", "niv12","idan"};
 	String[] passwords = {"Aa123456", "Aa123456","Aa123456"};
@@ -74,6 +74,23 @@ class MarketRTNotificationsTest {
 	@Test
 	void appointShopOwnerSuccess() throws Exception {
 		market.appointShopOwner(usersName[0],usersName[1],shopNames[0]);
+		Collection<Notification> notifications=market.getUserNotifications(usersName[1]);
+		for(Notification notification: notifications)
+		{
+			if(notification.getMessage().equals(String.format("User %s appointed you as shop-owner of shop %s.", usersName[0], shopNames[0])))
+			{
+				assertTrue(true);
+				return;
+			}
+		}
+		fail();
+	}
+
+	@Test
+	void appointNotLoggedinShopOwnerSuccess() throws Exception {
+		market.logout(usersName[1]);
+		market.appointShopOwner(usersName[0],usersName[1],shopNames[0]);
+		market.login(usersName[1],passwords[1]);
 		Collection<Notification> notifications=market.getUserNotifications(usersName[1]);
 		for(Notification notification: notifications)
 		{
@@ -340,7 +357,6 @@ class MarketRTNotificationsTest {
 			Collection<Notification> notifications=market.getUserNotifications(usersName[0]);
 			for(Notification notification: notifications)
 			{
-				System.out.println(notification.getMessage());
 				if(notification.getMessage().equals(usersName[1]+" purchased 2 "+prodNames[0]+" in shop "+shopNames[0]))
 				{
 					assertTrue(true);
