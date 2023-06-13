@@ -20,6 +20,8 @@ import java.util.stream.Stream;
 
 public class ShopRepository {
 
+    private static final int MAX_SHOPS_IN_MEMORY = 5;
+
 	private static class  ShopRepo {
         private static ShopRepository instance = new ShopRepository() ;
     }
@@ -29,10 +31,10 @@ public class ShopRepository {
     }
 
     private static final Logger logger = Logger.getLogger("Market");
-    private Map<String,Shop> shops;
+    private LinkedList<Shop> shops;
 
     private ShopRepository()  {
-        this.shops = new ConcurrentHashMap<>();
+        this.shops = new LinkedList<>();
     }
 
     public List<Shop> getAllShops() {
@@ -41,12 +43,12 @@ public class ShopRepository {
             return query.getResultList();
         }
         catch (Exception e){
-            return shops.values().stream().toList();
+            return shops;
         }
     }
 
     public void addShop(String shopName, Shop shop) throws Exception {
-        if(shops.containsKey(shopName))
+        if(getFromCache(shopName) != null)
             throwException("There is already shop with that name");
         Shop shopFromDB;
         try {
@@ -56,17 +58,18 @@ public class ShopRepository {
             shopFromDB = null;
         }
         if (shopFromDB != null) {
-            shops.put(shopName, shopFromDB);
+            storeInCache(shopFromDB);
             throwException("There is already shop with that name");
         }
-        shops.put(shopName, shop);
+        storeInCache(shop);
         PersistenceManager.getInstance().persistObj(shop);
     }
 
     public Shop getShop(String shopName) {
-        if (shops.containsKey(shopName))
-            return shops.get(shopName);
         Shop shop;
+        shop = getFromCache(shopName);
+        if (shop != null)
+            return shop;
         try {
             shop = PersistenceManager.getInstance().getEntityManager().find(Shop.class, shopName);
         }
@@ -75,16 +78,16 @@ public class ShopRepository {
         }
         if (shop == null)
             return null;
-        shops.put(shopName, shop);
+        storeInCache(shop);
         return shop;
     }
 
-	public List<Shop> getShops(List<String> shopsNames) throws Exception {
-        List<Shop> shops = new LinkedList<>();
+    public List<Shop> getShops(List<String> shopsNames) throws Exception {
+        List<Shop> ret = new LinkedList<>();
         for(String shopName : shopsNames){
-            shops.add(getShop(shopName));
+            ret.add(getShop(shopName));
         }
-        return shops;
+        return ret;
     }
 
     public void reset() {
@@ -107,4 +110,25 @@ public class ShopRepository {
         updateToDB(shopName);
     }
 
+    private void storeInCache(Shop shop) {
+        synchronized (shops){
+            if(shops.size() > MAX_SHOPS_IN_MEMORY)
+                shops.removeLast();
+            shops.addFirst(shop);
+        }
+    }
+
+    private Shop getFromCache(String shopName) {
+        synchronized (shops){
+            Shop shop = null;
+            for(int i = 0; i < shops.size(); i++){
+                if(shops.get(i).getName().equalsIgnoreCase(shopName))
+                    shop = shops.remove(i);
+            }
+            if(shop == null)
+                return null;
+            shops.addFirst(shop);
+            return shop;
+        }
+    }
 }

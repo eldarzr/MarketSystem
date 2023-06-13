@@ -12,7 +12,10 @@ import java.util.logging.Logger;
 
 public class UserRepository {
 
-	private static class  UserRepo {
+    private static final int MAX_USERS_IN_MEMORY = 5;
+
+
+    private static class  UserRepo {
         private static UserRepository instance = new UserRepository() ;
     }
 
@@ -21,12 +24,12 @@ public class UserRepository {
     }
 
     private static final Logger logger = Logger.getLogger("Market");
-    private Map<String,User> members;
+    private LinkedList<User> members;
     private Map<String,User> loginUsers;
 
 
     private UserRepository()  {
-        this.members = new ConcurrentHashMap<>();
+        this.members = new LinkedList<>();
         this.loginUsers = new ConcurrentHashMap<>();
     }
 
@@ -36,14 +39,14 @@ public class UserRepository {
             return query.getResultList();
         }
         catch (Exception e){
-            return members.values().stream().toList();
+            return members;
         }
     }
 
     public void addMember(String userName, User user) throws Exception {
-        if(members.containsKey(userName))
+        User userFromDB = getUserFromCache(userName);
+        if(userFromDB != null)
             throwException("There is already user with that name");
-        User userFromDB;
         try {
             userFromDB = PersistenceManager.getInstance().getEntityManager().find(User.class, userName);
         }
@@ -51,17 +54,18 @@ public class UserRepository {
             userFromDB = null;
         }
         if (userFromDB != null) {
-            members.put(userName, userFromDB);
+            storeInCache(userFromDB);
             throwException("There is already user with that name");
         }
-        members.put(userName, user);
+        storeInCache(user);
         PersistenceManager.getInstance().persistObj(user);
     }
 
     public User getMember(String userName) {
-        if (members.containsKey(userName))
-            return members.get(userName);
         User user;
+        user = getUserFromCache(userName);
+        if (user != null)
+            return user;
         try {
             user = PersistenceManager.getInstance().getEntityManager().find(User.class, userName);
         }
@@ -70,7 +74,7 @@ public class UserRepository {
         }
         if (user == null)
             return null;
-        members.put(userName, user);
+
         return user;
     }
 
@@ -124,4 +128,24 @@ public class UserRepository {
         PersistenceManager.getInstance().removeFromDB(user);
     }
 
+    private User getUserFromCache(String userName) {
+        synchronized (members){
+            User user = null;
+            for(int i = 0; i < members.size(); i++){
+                if(members.get(i).getName().equalsIgnoreCase(userName))
+                    user = members.remove(i);
+            }
+            if(user == null)
+                return null;
+            members.addFirst(user);
+            return user;
+        }
+    }
+    private void storeInCache(User user) {
+        synchronized (members){
+            if(members.size() > MAX_USERS_IN_MEMORY)
+                members.removeLast();
+            members.addFirst(user);
+        }
+    }
 }
