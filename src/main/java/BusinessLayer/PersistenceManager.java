@@ -1,22 +1,8 @@
 package BusinessLayer;
 
-import BusinessLayer.Shops.ShopRepository;
-import BusinessLayer.Users.User;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.metamodel.EntityType;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import javax.persistence.*;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import static java.lang.Thread.sleep;
@@ -31,7 +17,7 @@ public class PersistenceManager {
 	private boolean programIsRunning = true;
 
 	private PersistenceManager() {
-		entityManagerFactory = Persistence.createEntityManagerFactory("market",Market.persistenceMap);
+		entityManagerFactory = Persistence.createEntityManagerFactory("market",SysConfig.persistenceMap);
 		entityManager = entityManagerFactory.createEntityManager();
 		thread = new Thread(this::handleUnsavedQueries);
 		thread.start();
@@ -100,7 +86,7 @@ public class PersistenceManager {
 			lock.lock();
 			entityManager.getTransaction().begin();
 			tableNames = entityManager.createNativeQuery(
-					String.format("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '%s'", Market.table_scheme)
+					String.format("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '%s'", SysConfig.table_scheme)
 			).getResultList();
 			entityManager.getTransaction().commit();
 //		entityManager.close();
@@ -205,9 +191,8 @@ public class PersistenceManager {
 					needToBeSaveQueue.peek().saveToDB();
 					needToBeSaveQueue.remove();
 				}
-			} catch (Exception e) {
+			} catch (Exception ignored) {
 			}
 		}
 	}
-
 }

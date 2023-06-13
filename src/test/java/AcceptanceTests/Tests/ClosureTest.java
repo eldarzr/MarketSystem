@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 
-public class ShopClosureTest {
+public class ClosureTest {
 
     private static MarketSystemBridge marketSystem = new MarketSystemRealBridge();
     private static String shopOwner;
