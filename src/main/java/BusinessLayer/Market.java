@@ -56,13 +56,18 @@ public class Market implements MarketIntr{
         try {
             createLogger();
             new SysConfig(this).config(configFilePath);
-            init = SUCCESS;
+            SetInitState(SUCCESS);
             logger.info("Market init Finished successfully.");
         }
         catch (Exception e){
-            init = FAIL;
+            SetInitState(FAIL);
             throw e;
         }
+    }
+
+    public void SetInitState(Initialize state)
+    {
+        init = state;
     }
 
     private void createLogger() throws IOException {
@@ -422,11 +427,6 @@ public class Market implements MarketIntr{
         isLoggedIn(actor);
         validateUserIsntGuest(actOn);
         Shop reqShop = checkForShop(shopName);
-        //notify appointee
-        String message=String.format("User %s added to your permissions in shop %s.", actor, shopName);
-        Notification notification=new Notification(actor,message);
-        NotificationPublisher.getInstance().notify(actOn,notification);
-        logger.info(String.format("User %s added to %s permissions in shop %s.", actor,actOn, shopName));
       return reqShop.changeManageOption(actor,actOn,permission);
 
     }
@@ -758,7 +758,7 @@ public class Market implements MarketIntr{
     public void loadState(BufferedReader StateReader) throws Exception {
         try{new StateLoader(this).loadState(StateReader);}
         catch (Exception e){
-            init = FAIL;
+            SetInitState(FAIL);
             throw e;
         }
     }

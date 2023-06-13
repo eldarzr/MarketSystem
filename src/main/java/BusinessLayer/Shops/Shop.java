@@ -532,6 +532,11 @@ public class Shop implements ShopIntr {
 		MemberRoleInShop reqRole = validatePermissionsChangeAllowed(actor, actOn);
 //		int accessKind = reqRole.getAccessKind();
 		reqRole.promoteAccess(permission);
+		//notify appointee
+		String message=String.format("User %s added to your permissions in shop %s.", actor, this.name);
+		Notification notification=new Notification(actor,message);
+		NotificationPublisher.getInstance().notify(actOn,notification);
+		logger.info(String.format("User %s added to %s permissions in shop %s.", actor,actOn, this.name));
 		return reqRole;
 
     }
