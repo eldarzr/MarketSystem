@@ -1,16 +1,14 @@
 package FrontEnd.Views;
 
-import BusinessLayer.Enums.ManagePermissionsEnum;
 import BusinessLayer.Enums.ManageType;
 import FrontEnd.Model.MemberRoleInShopModel;
+import FrontEnd.Model.PendingOwnerModel;
 import FrontEnd.Model.ShopModel;
 import FrontEnd.Model.UserModel;
 import FrontEnd.SResponse;
 import FrontEnd.SResponseT;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H3;
@@ -24,18 +22,23 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Route(value = "manage_roles")
 public class ShopManageCrew extends BaseView implements HasUrlParameter<String> {
+    protected Button approvalsButton;
+//    protected ListBox<String> pendingOwnersList;
+    private Grid<String> pendingOwnersGrid;
+    private List<String> pendingOwnersList;
+
 
     protected ShopModel shopProfile;
     protected Button promoteButton;
@@ -109,7 +112,11 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
         setOwnerButton = new Button("Set Owner", e -> handleSetOwnerButtonClick());
         setDefaultStyle(setOwnerButton);
 
-        add(new HorizontalLayout(setManagerButton, setOwnerButton));
+        approvalsButton = new Button("Approvals", e -> handleApprovalsButtonClick());
+        setDefaultStyle(approvalsButton);
+
+        // Add it to your layout
+        add(new HorizontalLayout(setManagerButton, setOwnerButton, approvalsButton));
 
 
     }
@@ -239,52 +246,6 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
     }
 
 
-    public void handleViewPermissionsButtonClick() {
-
-        List<Integer> currentPermissions = clickedRole.getActivatedPermissions();
-        int manageAccess = clickedRole.getManageKind().getValue();
-        Dialog dialog = new Dialog();
-        dialog.setWidth("600px");
-
-        Grid<ManagePermissionsEnum> grid = new Grid<>();
-        grid.setItems(Arrays.asList(ManagePermissionsEnum.values()));
-        grid.addColumn(ManagePermissionsEnum::name).setHeader("Permission");
-        grid.addComponentColumn(permission -> {
-            Checkbox checkBox = new Checkbox();
-            checkBox.setValue(currentPermissions.contains(permission.getValue()));
-            return checkBox;
-        }).setHeader("Activated");
-
-        VerticalLayout layout = new VerticalLayout();
-        layout.add(grid);
-
-        Button changePermissionsButton = new Button("Change Permissions");
-        changePermissionsButton.addClickListener(event -> {
-            List<Integer> chosenPermissions = new ArrayList<>();
-            for (ManagePermissionsEnum permission : grid.getSelectedItems()) {
-                chosenPermissions.add(permission.getValue());
-            }
-            SResponseT<MemberRoleInShopModel> res = marketService.changeManagerPermissions(currentUser, clickedRole.getRoleUser(),
-
-//            SResponseT<MemberRoleInShopModel> res = marketService.changeManagerPermissions(currentUser,clickedRole.getRoleUser(),
-                    shopProfile.getName(), chosenPermissions);
-            if (res != null && !res.isSuccess()) {
-                Notification.show(res.getMessage());
-            }
-            if (res.isSuccess()) {
-                Notification.show("Permissions changes successfully");
-//                clickedRole = res.getData();
-            }
-
-            //manager.setPermissions(chosenPermissions);
-            dialog.close();
-        });
-
-        layout.add(changePermissionsButton);
-        dialog.add(layout);
-        dialog.open();
-    }
-
     public void handleViewPermissionsButtonClick2() {
 
         // Determine the current manage access type from the clickedRole
@@ -359,5 +320,107 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
             }
         }
     }
+
+    private void handleApprovalsButtonClick() {
+        SResponseT<List<PendingOwnerModel>> res = marketService.getPendingsOwners(getCurrentUser().getName(),shopProfile.getName());
+        if (res.isSuccess()) {
+            List<PendingOwnerModel> pendingOwners = res.getData();
+            openApprovalsDialog(pendingOwners);
+        } else {
+            Notification.show(res.getMessage());
+        }
+    }
+
+
+
+    private void openApprovalsDialog(List<PendingOwnerModel> pendingOwners) {
+        Dialog dialog = new Dialog();
+        dialog.setWidth("600px");
+        pendingOwnersGrid = new Grid<>();
+//        pendingOwnersList = new ArrayList<>(pendingOwners);
+        pendingOwnersList = acheivePendingOwnersName(pendingOwners);
+        pendingOwnersGrid.setItems(pendingOwnersList);
+
+        pendingOwnersGrid.addColumn(new ComponentRenderer<>(owner -> {
+            HorizontalLayout layout = new HorizontalLayout();
+            layout.setWidth("100%");
+            layout.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
+            layout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
+
+            Span ownerSpan = new Span(owner);
+            Button approveButton = new Button("Approve", event -> handleApproveButtonClick(owner));
+            setDefaultStyle(approveButton);
+
+
+            layout.add(ownerSpan, approveButton);
+            return layout;
+        }));
+
+        dialog.add(pendingOwnersGrid);
+        dialog.open();
+    }
+
+    private List<String> acheivePendingOwnersName(List<PendingOwnerModel> pendingOwners) {
+        List<String> list = new ArrayList<>();
+        for(PendingOwnerModel p : pendingOwners){
+            if(!p.getOwnerNames().contains(getCurrentUser().getName()));
+                list.add(p.getPendingOwner());
+        }
+        return list;
+    }
+
+    private void handleApproveButtonClick(String ownerToApprove) {
+        SResponse res = marketService.approveOwner(currentUser, ownerToApprove, shopProfile.getName());
+        if (!res.isSuccess() && res != null) {
+            Notification.show(res.getMessage());
+        } else {
+            Notification.show("You have been approved : "+ ownerToApprove + "to be an owner");
+            pendingOwnersList.remove(ownerToApprove);  // Remove approved owner from the list
+            pendingOwnersGrid.setItems(pendingOwnersList);  // Update the items in the Grid
+        }
+    }
+
+
+
+//
+//    private void handleApprovalsButtonClick() {
+//        SResponseT<List<String>> res = marketService.getPendingsOwners(getCurrentUser().getName(),shopProfile.getName());
+//        if (res.isSuccess()) {
+//            List<String> pendingOwners = res.getData();
+//            openApprovalsDialog(pendingOwners);
+//        } else {
+//            Notification.show(res.getMessage());
+//        }
+//    }
+//
+//    private void openApprovalsDialog(List<String> pendingOwners) {
+//        Dialog dialog = new Dialog();
+//        dialog.setWidth("600px");
+//        VerticalLayout layout = new VerticalLayout();
+//
+//        pendingOwnersList = new ListBox<>();
+//        pendingOwnersList.setItems(pendingOwners);
+//
+//        pendingOwnersList.addComponentAsFirst(new Span("Pending owners"));
+//
+//        for (String pendingOwner : pendingOwners) {
+//            Button approveButton = new Button("Approve", e -> handleApproveButtonClick(pendingOwner));
+//            setDefaultStyle(approveButton);
+//            layout.add(new HorizontalLayout(new Label(pendingOwner), approveButton));
+//        }
+//
+//        dialog.add(layout);
+//        dialog.open();
+//    }
+//
+//    private void handleApproveButtonClick(String ownerToApprove) {
+//        SResponse res = marketService.approveOwner(currentUser, ownerToApprove, shopProfile.getName());
+//        if (!res.isSuccess() && res != null) {
+//            Notification.show(res.getMessage());
+//        } else {
+//            Notification.show(ownerToApprove + " has been approved as an owner.");
+//            refreshView();
+//        }
+//    }
 
 }

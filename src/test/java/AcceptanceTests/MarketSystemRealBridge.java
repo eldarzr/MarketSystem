@@ -88,7 +88,12 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
         market.closeShop(userName, shopName);
     }
 
-    public void addNewProduct(String userName, String shopName, String productName, String category, String desc, double price) throws Exception {
+
+    public boolean approveOwner(String appointedBy,String appointee , String shopName ) throws Exception {
+        return market.approveOwner(appointedBy,appointee,shopName);
+    }
+
+        public void addNewProduct(String userName, String shopName, String productName, String category, String desc, double price) throws Exception {
         market.addNewProduct(userName, shopName, productName, category, desc, price);
     }
 

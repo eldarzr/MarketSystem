@@ -3,6 +3,8 @@ package BusinessLayer;
 import BusinessLayer.Bids.Bid;
 import BusinessLayer.Enums.Initialize;
 import BusinessLayer.Enums.UserType;
+import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
+import BusinessLayer.ExternalSystemsAdapters.ExternalSystemAPI;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
 import BusinessLayer.Notifications.Notification;
@@ -22,10 +24,24 @@ import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
 import BusinessLayer.Users.NotificationCallback;
 import BusinessLayer.Users.User;
 import BusinessLayer.Users.UsersHandler;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.apache.commons.lang3.NotImplementedException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import javax.transaction.Transactional;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.logging.FileHandler;
@@ -328,11 +344,13 @@ public class Market implements MarketIntr{
         User user = usersHandler.findMemberByName(appointee);
         Shop reqShop = checkForShop(shopName);
         reqShop.setShopOwner(appointedBy,appointee , user::sendMessage);
+		ShopRepository.getInstance().updateToDB(shopName);
         //notify appointee
         String message=String.format("User %s appointed you as shop-owner of shop %s.", appointedBy, shopName);
         Notification notification=new Notification(appointedBy,message);
         NotificationPublisher.getInstance().notify(appointee,notification);
         logger.info(String.format("User %s appointed %s as shop-owner of shop %s.", appointedBy,appointee, shopName));
+		
     }
 
     public Shop checkForShop(String shopName) throws Exception {
@@ -356,6 +374,19 @@ public class Market implements MarketIntr{
         Notification notification=new Notification(appointedBy,message);
         NotificationPublisher.getInstance().notify(appointee,notification);
         logger.info(String.format("User %s appointed %s as shop-manager of shop %s.", appointedBy,appointee, shopName));
+    }
+    @Transactional
+    public boolean approveOwner(String appointedBy,String appointee , String shopName ) throws Exception {
+        appointedBy = appointedBy.toLowerCase();
+        appointee = appointee.toLowerCase();
+        usersHandler.findMemberByName(appointedBy);
+        validateLoggedInException(appointedBy);
+        User user = usersHandler.findMemberByName(appointee);
+        Shop reqShop = checkForShop(shopName);
+        boolean res = false;
+        res = reqShop.approveOwner(appointedBy,appointee);
+        ShopRepository.getInstance().updateToDB(shopName);
+        return res;
     }
 
     @Transactional
@@ -449,7 +480,7 @@ public class Market implements MarketIntr{
 
     public String getRolesInformation(String userName, String shopName) throws Exception {
         logger.info(String.format("Attempt by user %s to get roles information of shop %s.", userName, shopName));
-        return searchShop(userName,shopName).getRolesInfo();
+        return shopHandler.getShop(shopName).getRolesInfo();
     }
 
     //todo: naor
@@ -928,5 +959,11 @@ public class Market implements MarketIntr{
     public void updateUserBirthDay(String userName, LocalDate bDay) throws Exception {
         validateLoggedInException(userName);
         usersHandler.updateUserBirthDay(userName,bDay);
+    }
+	
+	public List<PendingOwner> getPendingOwners(String actor , String shopName) throws Exception {
+        validateLoggedInException(actor);
+        Shop reqShop = shopHandler.getShop(shopName);
+        return reqShop.getPendingsOwners(actor);
     }
 }

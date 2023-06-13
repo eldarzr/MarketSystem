@@ -43,7 +43,9 @@ public interface MarketSystemBridge {
 
     void closeShop(String userName, String shopName) throws Exception;
 
-    void addNewProduct(String userName, String shopName, String productName, String category, String desc, double price) throws Exception;
+    public boolean approveOwner(String appointedBy,String appointee , String shopName ) throws Exception ;
+
+        void addNewProduct(String userName, String shopName, String productName, String category, String desc, double price) throws Exception;
 
     void removeProduct(String userName, String shopName, String productName) throws Exception;
 

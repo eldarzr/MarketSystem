@@ -153,4 +153,6 @@ public interface MarketIntr {
     Collection<Notification> getUserNotifications(String username) throws Exception;
 
     void loadState(BufferedReader StateReader) throws Exception;
+	
+	public boolean approveOwner(String appointedBy,String appointee , String shopName ) throws Exception;
 }
