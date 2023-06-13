@@ -12,7 +12,7 @@ import static com.helger.commons.mock.CommonsAssert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class GuestSearchTest {
+public class SearchTests {
 
     private MarketSystemBridge market= new MarketSystemRealBridge();
     private String tempUserName;
@@ -42,20 +42,26 @@ public class GuestSearchTest {
 
     @AfterEach
     public void tearDown() {
-//        market.logout(tempUserName);
         market.clearData();
     }
 
     @Test
-    public void testBasicSearch() {
+    public void testBasicSearchSuccess() {
         try {
             // Search for product by name
             Collection<ProductBridge> results = market.basicSearch(tempUserName, "item1");
             assertEquals("Incorrect number of products returned by basic search", 4, results.size());
             assertTrue(results.stream().anyMatch(p -> p.getProductName().equals("item1")), "Product not found in search results");
+        } catch (Exception e) {
+            fail("Exception thrown while testing basic search: " + e.getMessage());
+        }
+    }
 
+    @Test
+    public void testBasicSearchFail() {
+        try {
             // Search for non-existing product
-            results = market.basicSearch(tempUserName, "non-existing product");
+            Collection<ProductBridge> results = market.basicSearch(tempUserName, "non-existing product");
             assertTrue(results.isEmpty(), "Search for non-existing product returned results");
 
         } catch (Exception e) {
@@ -64,7 +70,7 @@ public class GuestSearchTest {
     }
 
     @Test
-    public void testExtendedSearch() {
+    public void testExtendedSearchSuccess() {
         try {
             // Search for product by name and category
             Collection<ProductBridge> results = market.extendedSearch(tempUserName, "item", 0.0, 100.0, "category");
@@ -80,8 +86,16 @@ public class GuestSearchTest {
                     results.size());
             assertTrue(results.stream().anyMatch(p -> p.getProductName().equals("item2")), "Product not found in search results");
             assertTrue(results.stream().anyMatch(p -> p.getProductName().equals("item3")), "Product not found in search results");
+        } catch (Exception e) {
+            fail("Exception thrown while testing extended search: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testExtendedSearchFail() {
+        try {
             // Search for non-existing product
-            results = market.extendedSearch(tempUserName, "non-existing product", 0.0, 100.0, "");
+            Collection<ProductBridge> results = market.extendedSearch(tempUserName, "non-existing product", 0.0, 100.0, "");
             assertTrue(results.isEmpty(), "Search for non-existing product returned results");
 
             // Search for product in non-existing category

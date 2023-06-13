@@ -40,14 +40,21 @@ public class Purchase implements PurchaseIntr{
 
     @Override
     public void process() throws Exception {
-        try{
-            acquireProductsLocks();
-            FinalCartPriceResult finalPrice = handleStock();
-            paymentDetails.accept(this,finalPrice.getTotalPriceAfterDiscount());
+        acquireProductsLocks();
+        FinalCartPriceResult finalPrice;
+        try {
+            finalPrice = handleStock();
+        }catch (Exception e){
+          revert();
+          throw new Exception(String.format("Error: %s",e.getMessage()));
+        }
+        try {
+            paymentDetails.accept(this, finalPrice.getTotalPriceAfterDiscount());
         }catch (Exception e){
             revert();
-            throw new Exception(String.format("problem with payment, error message: %s",e.getMessage()));
+            throw new Exception("Error with payment!");
         }
+
         try{
             supply();
         }catch (Exception e){

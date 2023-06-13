@@ -14,6 +14,8 @@ import BusinessLayer.Shops.PurchasePolicies.PurchasePolicy;
 import BusinessLayer.Shops.Shop;
 import BusinessLayer.Shops.ShopProduct;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -444,7 +446,8 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
 
     @Override
     public void loadState(String stateFilePath) throws Exception {
-        market.loadState(stateFilePath);
+        BufferedReader reader = new BufferedReader(new FileReader(stateFilePath));
+        market.loadState(reader);
     }
 
 }

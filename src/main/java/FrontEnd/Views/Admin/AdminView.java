@@ -15,24 +15,32 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.upload.Upload;
+import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteParameters;
 import com.vaadin.flow.router.internal.HasUrlParameterFormat;
+import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.VaadinSession;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 
 @Route("admin")
 public class AdminView extends BaseView {
@@ -49,6 +57,10 @@ public class AdminView extends BaseView {
 	private Button userHistoryButton;
 	private Button shopHistoryButton;
 	private Button userProfileButton;
+
+	private Button uploadButton;
+
+	private Button resetButton;
 
 	public AdminView() {
 		// Initialize the data provider for the grid
@@ -142,6 +154,7 @@ public class AdminView extends BaseView {
 				getUI().ifPresent(ui -> ui.navigate("admin_shop_history?userName=" + userModel.getName() +
 						"&shopName=" + selectedShop.getName()));
 		});
+
 		// Add the components to the layout
 		VerticalLayout userLayout = new VerticalLayout(userGrid,
 				new HorizontalLayout(removeButton, userHistoryButton, userProfileButton));
@@ -149,6 +162,7 @@ public class AdminView extends BaseView {
 		shopLayout.setWidth(userLayout.getWidth());
 		add(new HorizontalLayout(userLayout, shopLayout));
 	}
+
 
 	private void removeUser(UserModel user) {
 		UserModel userModel = getCurrentUser();

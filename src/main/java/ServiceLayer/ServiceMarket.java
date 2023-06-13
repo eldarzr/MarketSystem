@@ -19,6 +19,7 @@ import ServiceLayer.DataObjects.DiscountDataObjects.*;
 import ServiceLayer.DataObjects.DiscountDataObjects.DiscountRulesDataObjects.SimpleDiscountRuleDataObj;
 
 
+import java.io.BufferedReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -61,7 +62,6 @@ public class ServiceMarket {
 		}
 		return new Response();
 	}
-
 
 	public Response resetAll() {
 		try {
@@ -808,9 +808,9 @@ public class ServiceMarket {
 		market.ReadUserNotifications(username);
     }
 
-	public Response loadState(String stateFilePath) {
+	public Response loadState(BufferedReader StateReader) {
 		try {
-			market.loadState(stateFilePath);
+			market.loadState(StateReader);
 		} catch (Exception exception) {
 			return new Response(exception.getMessage());
 		}
@@ -847,6 +847,15 @@ public class ServiceMarket {
 
 		} catch (Exception exception) {
 			return new ResponseT(exception.getMessage(), false);
+		}
+	}
+	
+	public Response updateUserBirthDay(String userName, LocalDate bDay){
+		try{
+			market.updateUserBirthDay(userName,bDay);
+			return new Response();
+		}catch (Exception e){
+			return new Response(e.getMessage());
 		}
 	}
 }

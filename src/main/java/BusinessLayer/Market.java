@@ -60,20 +60,6 @@ public class Market implements MarketIntr{
     ShopHandler shopHandler;
     private final int SHOP_DISTANCE_MAX_LIMIT = 2;
     private final int PRODUCT_DISTANCE_MAX_LIMIT = 2;
-
-    static Map<String, String> persistenceMap;  //todo: Temp fix
-    static String table_scheme; //todo: Temp fix
-
-    public static void set_database_data(String database_path,String database_admin,String database_password,String table_name) //todo: Temp fix
-    {
-        Map<String, String> map = new HashMap<>();
-
-        map.put("javax.persistence.jdbc.url", database_path);
-        map.put("javax.persistence.jdbc.user", database_admin);
-        map.put("javax.persistence.jdbc.password", database_password);
-        persistenceMap=map;
-        table_scheme=table_name;
-    }
     private Initialize init = NOT_INITIALIZED;
 
     public Market() {
@@ -85,130 +71,19 @@ public class Market implements MarketIntr{
     public void init(String configFilePath) throws Exception {
         try {
             createLogger();
-            ConfigInit(configFilePath);
-            init = SUCCESS;
+            new SysConfig(this).config(configFilePath);
+            SetInitState(SUCCESS);
             logger.info("Market init Finished successfully.");
         }
         catch (Exception e){
-            init = FAIL;
+            SetInitState(FAIL);
             throw e;
         }
     }
 
-    private void ConfigInit(String configFilePath) throws Exception {
-        // Read the configuration file
-        FileReader reader = new FileReader(configFilePath);
-        Gson gson = new Gson();
-        JsonElement configElement = gson.fromJson(reader, JsonElement.class);
-        JsonObject configData = configElement.getAsJsonObject();
-
-        // Access the database details
-        JsonObject database = configData.getAsJsonObject("database");
-        String database_path = database.get("path").getAsString();
-        String table_scheme = database.get("table_scheme").getAsString();
-        String database_admin = database.get("admin").getAsString();
-        String database_password = database.get("password").getAsString();
-
-        // Access the system administrator details
-        JsonObject systemAdmin = configData.getAsJsonObject("systemAdmin");
-        String adminUsername = systemAdmin.get("username").getAsString();
-        String adminEmail = systemAdmin.get("email").getAsString();
-        String adminPassword = systemAdmin.get("password").getAsString();
-
-        // Access the system administrator details
-        JsonObject externalSystems = configData.getAsJsonObject("externalSystems");
-        String webAddress = externalSystems.get("webAddress").getAsString();
-
-        // Close the file reader
-        reader.close();
-
-        set_database_data(database_path, database_admin, database_password,table_scheme);
-        resetAll(); //todo: temp fix
-        loadAdmin(adminUsername,adminEmail,adminPassword);
-        ExternalSystemAPI.setURL(webAddress);
-
-        logger.info("Loading init configuration Finished successfully.");
-    }
-
-    private void loadAdmin(String adminUsername,String adminEmail,String adminPassword) throws Exception {
-        logger.info("Start loading admin data.");
-        try { usersHandler.findMemberByName(adminUsername);}
-        catch (Exception e)
-        {
-            register(adminUsername, adminEmail, adminPassword);
-            addAdmin(adminUsername);
-        }
-        logger.info("Loading admin data finished successfully.");
-    }
-
-    public void loadState(String stateFilePath) throws Exception
+    public void SetInitState(Initialize state)
     {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(stateFilePath));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                line = line.trim();
-
-                // Skip empty lines or comments
-                if (line.isEmpty() || line.startsWith("#")) continue;
-
-                // Extract command and parameters
-                String command = line.substring(0, line.indexOf('('));
-                String[] params = line.substring(line.indexOf('(') + 1, line.indexOf(')')).split(",");
-
-                // Trim whitespace for each parameter
-                for (int i = 0; i < params.length; i++) {
-                    params[i] = params[i].trim();
-                }
-                // Execute the corresponding function based on the command
-                switch (command) {
-                    case "register" -> register(params[0], params[1], params[2]);
-                    case "login" -> login(startSession(), params[0], params[1]);
-                    case "logout" -> logout(params[0]);
-                    case "createShop" -> createShop(params[0], params[1]);
-                    case "removeShop" -> removeShop(params[0], params[1], params[2]);
-                    case "openShop" -> openShop(params[0], params[1]);
-                    case "closeShop" -> closeShop(params[0], params[1]);
-                    case "addNewProduct" -> addNewProduct(params[0], params[1], params[2], params[3], params[4], Double.parseDouble(params[5]));
-                    case "removeProduct" -> removeProduct(params[0], params[1], params[2]);
-                    case "addAgePurchasePolicy" -> addAgePurchasePolicy(params[0], params[1], Boolean.parseBoolean(params[2]), params[3], Boolean.parseBoolean(params[4]), Integer.parseInt(params[5]), Integer.parseInt(params[6]));
-                    case "appointShopManager" -> appointShopManager(params[0], params[1], params[2]);
-                    case "setActivePurchasePolicy" -> setActivePurchasePolicy(params[0], params[1], Integer.parseInt(params[2]));
-                    case "addProductDiscount" -> addProductDiscount(params[0], params[1], Double.parseDouble(params[2]), params[3]);
-                    case "addManagerPermissions" -> addManagerPermissions(params[0], params[1], params[2], Integer.parseInt(params[3]));
-                    case "removeUser" -> removeUser(params[0], params[1]);
-                    case "addTimePurchasePolicy" -> addTimePurchasePolicy(params[0], params[1], Boolean.parseBoolean(params[2]), params[3], Boolean.parseBoolean(params[4]), Integer.parseInt(params[5]), Integer.parseInt(params[6]));
-                    case "addCategoryDiscount" -> addCategoryDiscount(params[0], params[1], Double.parseDouble(params[2]), params[3]);
-                    case "removeShopOwner" -> removeShopOwner(params[0], params[1], params[2]);
-                    case "addProductItems" -> addProductItems(params[0], params[1], params[2], Integer.parseInt(params[3]));
-                    case "createBidOffer" -> createBidOffer(params[0], params[1], params[2], Double.parseDouble(params[3]));
-                    case "rejectBid" -> rejectBid(params[0], params[1], Integer.parseInt(params[2]));
-                    case "updateProductCategory" -> updateProductCategory(params[0], params[1], params[2], params[3]);
-                    case "addIfPurchasePolicy" -> addIfPurchasePolicy(params[0], params[1], Integer.parseInt(params[2]), Integer.parseInt(params[3]));
-                    case "updateProductQuantity" -> updateProductQuantity(params[0], params[1], params[2], Integer.parseInt(params[3]));
-                    case "blockUser" -> blockUser(params[0], params[1]);
-                    case "removeDiscount" -> removeDiscount(params[0], params[1], Integer.parseInt(params[2]));
-                    case "updateProductPrice" -> updateProductPrice(params[0], params[1], params[2], Double.parseDouble(params[3]));
-                    case "addAndPurchasePolicy" -> addAndPurchasePolicy(params[0], params[1], Integer.parseInt(params[2]), Integer.parseInt(params[3]));
-                    case "addOrPurchasePolicy" -> addOrPurchasePolicy(params[0], params[1], Integer.parseInt(params[2]), Integer.parseInt(params[3]));
-                    case "addShopDiscount" -> addShopDiscount(params[0], params[1], Double.parseDouble(params[2]));
-                    case "resetDiscountRule" -> resetDiscountRule(params[0], params[1], Integer.parseInt(params[2]));
-                    case "changeManagerAccess" -> changeManagerAccess(params[0], params[1], params[2], Integer.parseInt(params[3]));
-                    case "updateProductDesc" -> updateProductDesc(params[0], params[1], params[2], params[3]);
-                    case "addProductsToCart" -> addProductsToCart(params[0], params[1], params[2], Integer.parseInt(params[3]));
-                    case "addQuantityPurchasePolicy" -> addQuantityPurchasePolicy(params[0], params[1], Boolean.parseBoolean(params[2]), params[3], Boolean.parseBoolean(params[4]), Integer.parseInt(params[5]), Integer.parseInt(params[6]));
-                    case "appointShopOwner" -> appointShopOwner(params[0], params[1], params[2]);
-                    case "updateCartProductQuantity" -> updateCartProductQuantity(params[0], params[1], params[2], Integer.parseInt(params[3]));
-                    case "approveBid" -> approveBid(params[0], params[1], Integer.parseInt(params[2]));
-                    default -> throw new Exception("Unknown command: " + command);
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            resetAll();
-            throw new Exception("Loading system state failed due to "+e.getMessage());
-        }
+        init = state;
     }
 
     private void createLogger() throws IOException {
@@ -272,6 +147,9 @@ public class Market implements MarketIntr{
         return logout(userName);
     }
 
+    public User login(String userName, String password) {
+        return login(startSession(),userName,password);
+    }
     @Override
     public User login(String guestName, String userName, String password) {
         logger.info(String.format("Attempt to login user %s.", userName));
@@ -466,8 +344,13 @@ public class Market implements MarketIntr{
         User user = usersHandler.findMemberByName(appointee);
         Shop reqShop = checkForShop(shopName);
         reqShop.setShopOwner(appointedBy,appointee , user::sendMessage);
-        ShopRepository.getInstance().updateToDB(shopName);
-
+		ShopRepository.getInstance().updateToDB(shopName);
+        //notify appointee
+        String message=String.format("User %s appointed you as shop-owner of shop %s.", appointedBy, shopName);
+        Notification notification=new Notification(appointedBy,message);
+        NotificationPublisher.getInstance().notify(appointee,notification);
+        logger.info(String.format("User %s appointed %s as shop-owner of shop %s.", appointedBy,appointee, shopName));
+		
     }
 
     public Shop checkForShop(String shopName) throws Exception {
@@ -524,7 +407,7 @@ public class Market implements MarketIntr{
         Shop reqShop = checkForShop(shopName);
         reqShop.removeOwner(managerName,userToRemove);
 
-       //notify removed owner
+        //notify removed owner
         String message=String.format("Manager %s removed you as shop-manager of shop %s.", managerName, shopName);
         Notification notification=new Notification(managerName,message);
         NotificationPublisher.getInstance().notify(userToRemove,notification);
@@ -575,11 +458,6 @@ public class Market implements MarketIntr{
         isLoggedIn(actor);
         validateUserIsntGuest(actOn);
         Shop reqShop = checkForShop(shopName);
-        //notify appointee
-        String message=String.format("User %s added to your permissions in shop %s.", actor, shopName);
-        Notification notification=new Notification(actor,message);
-        NotificationPublisher.getInstance().notify(actOn,notification);
-        logger.info(String.format("User %s added to %s permissions in shop %s.", actor,actOn, shopName));
       return reqShop.changeManageOption(actor,actOn,permission);
 
     }
@@ -907,6 +785,15 @@ public class Market implements MarketIntr{
         return usersHandler.getUserNotifications(userName);
     }
 
+    @Override
+    public void loadState(BufferedReader StateReader) throws Exception {
+        try{new StateLoader(this).loadState(StateReader);}
+        catch (Exception e){
+            SetInitState(FAIL);
+            throw e;
+        }
+    }
+
     public void removeNotification(String username,Notification notification) {
         usersHandler.removeNotification(username, notification);
     }
@@ -1069,12 +956,12 @@ public class Market implements MarketIntr{
                 .collect(Collectors.toCollection(LinkedList::new));
     }
 
-//    public List<String> getPendingOwners(String actor , String shopName) throws Exception {
-//        validateLoggedInException(actor);
-//        Shop reqShop = shopHandler.getShop(shopName);
-//        return reqShop.getPendings(actor);
-//    }
-    public List<PendingOwner> getPendingOwners(String actor , String shopName) throws Exception {
+    public void updateUserBirthDay(String userName, LocalDate bDay) throws Exception {
+        validateLoggedInException(userName);
+        usersHandler.updateUserBirthDay(userName,bDay);
+    }
+	
+	public List<PendingOwner> getPendingOwners(String actor , String shopName) throws Exception {
         validateLoggedInException(actor);
         Shop reqShop = shopHandler.getShop(shopName);
         return reqShop.getPendingsOwners(actor);

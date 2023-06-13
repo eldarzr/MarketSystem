@@ -1,4 +1,4 @@
-package BusinessLayer;
+package AcceptanceTests.Tests;
 import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.ExternalSystemAPI;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
