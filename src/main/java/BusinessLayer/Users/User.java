@@ -31,6 +31,7 @@ public class User{
     private String name;
     private String sessionID;
     private String email;
+    private LocalDate birthday;
 
     @Column(name = "password") // To avoid using a reserved keyword
     private String password;
@@ -62,6 +63,7 @@ public class User{
         this.email = email;
         this.password = password;
         this.sessionID = null;
+        this.birthday = LocalDate.of(1999,9,4);
         userType = UserType.MEMBER;
         currentCart = new Cart(name);
         pendingNotifications = new CopyOnWriteArrayList<>();
@@ -221,7 +223,7 @@ public class User{
     }
 
     public LocalDate getBirthDay() {
-        return LocalDate.of(1999,9,4);
+        return birthday;
     }
 
     public void ReadNotifications() {
@@ -232,6 +234,12 @@ public class User{
     private void updateDB(){
         if (this.getUserType() != UserType.GUEST)
             PersistenceManager.getInstance().updateObj(this);
+    }
+
+    public void setBirthday(LocalDate bDay) throws Exception {
+        if (bDay.isAfter(LocalDate.now()))throw new Exception("Birthday cannot be in the future!!");
+        if (bDay.isBefore(LocalDate.ofYearDay(1900,1)))throw new Exception("You're too old, 1900 and above only");
+        birthday = bDay;
     }
 }
 

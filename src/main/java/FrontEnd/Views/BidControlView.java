@@ -1,5 +1,8 @@
 package FrontEnd.Views;
 
+import BusinessLayer.Enums.ManageKindEnum;
+import BusinessLayer.Enums.ManageType;
+import FrontEnd.Model.ShopModel;
 import FrontEnd.Model.UserModel;
 import FrontEnd.SResponse;
 import FrontEnd.SResponseT;
@@ -26,6 +29,7 @@ import java.util.Collection;
 @PageTitle("Bid Control")
 public class BidControlView extends BaseView implements BeforeEnterObserver {
     private String shopName;
+    private ShopModel shopProfile;
     private String userName;
     private Grid<BidDataObj> grid;
     private Collection<BidDataObj> bids;
@@ -59,6 +63,9 @@ public class BidControlView extends BaseView implements BeforeEnterObserver {
         counterBidField.setStep(0.01);
         counterBidDialog.add(counterBidField);
         counterBidDialog.add(new Button("Submit Offer", click -> submitCounterBid()));
+        if(shopName == null){
+            System.out.println("shopname is null");
+        }
         HorizontalLayout buttonsLayout = new HorizontalLayout(approveButton,counterButton,rejectButton);
         VerticalLayout layout = new VerticalLayout(select, grid, buttonsLayout);
         add(layout);
@@ -141,15 +148,38 @@ public class BidControlView extends BaseView implements BeforeEnterObserver {
     protected void updateAfterUserNameChange(UserModel userModel) {
         if (shopName == null) return;
         userName = userModel.getName();
+        updateButtons();
         updateGrid();
     }
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
+        //Notification.show("before enter");
         event.getRouteParameters().get("shopName").ifPresent(shopName -> {
+            //Notification.show("Updating shopName");
             this.shopName = shopName;
+
+            SResponseT<ShopModel> res = marketService.getShop(shopName);
+            if(res.isSuccess()){
+                //Notification.show("Got here");
+                shopProfile = res.getData();
+            }
+            // Disable editing product buttons for managers who have read only permissions
+            updateButtons();
             //updateAfterUserNameChange(getCurrentUser());
         });
+    }
+    public void updateButtons(){
+        if(shopProfile != null && shopProfile.getRoles().get(getCurrentUser().getName()).getType().equals(ManageType.MANAGER) && shopProfile.getRoles().get(getCurrentUser().getName()).getPermissions().getManageAccess() == ManageKindEnum.READ_ONLY) {
+            disableButton(approveButton);
+            disableButton(rejectButton);
+            disableButton(counterButton);
+        }
+        else{
+            enableButton(approveButton);
+            enableButton(rejectButton);
+            enableButton(counterButton);
+        }
     }
 }
 
