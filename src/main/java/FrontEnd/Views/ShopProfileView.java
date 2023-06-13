@@ -1,5 +1,6 @@
 package FrontEnd.Views;
 
+import BusinessLayer.Enums.ManageKindEnum;
 import BusinessLayer.Enums.ManageType;
 import FrontEnd.MarketService;
 import FrontEnd.Model.ProductModel;
@@ -53,12 +54,12 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 
 	@Override
 	protected void updateAfterUserNameChange(UserModel userModel) {
-
+			updateButtons();
 	}
 
 	@Override
 	public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
-		Notification.show("aaa");
+		//Notification.show("aaa");
 		if (parameter != null && !parameter.isEmpty()) {
 			SResponseT<ShopModel> res = marketService.getShop(parameter);
 			if (res.isSuccess()) {
@@ -84,6 +85,7 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 			disableButton(manageRolesButton);
 			manageRolesButton.getStyle().set("opacity", "0");
 		}
+
 
 		manageDiscount = new Button("Manage Discounts");
 		manageDiscount.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
@@ -248,10 +250,15 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 				dialog.close();
 			});
 
+
 			cancel.addClickListener(cancelEvent -> dialog.close());
 
 			dialog.open();
 		});
+		// Disable editing product buttons for managers who have read only permissions
+		//Notification.show("Permissions : "+shopProfile.getRoles().get(getCurrentUser().getName()).getPermissions().getManageAccess());
+		updateButtons();
+
 
 		//TODO: implement click listener that navigate to edit screen for selected products.
 		// for reference, take a look at AdminView.class
@@ -263,6 +270,21 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 		add(horizontalLayout);
 
 
+	}
+
+	private void updateButtons() {
+		if(shopProfile == null)return;
+		if(shopProfile.getRoles().get(getCurrentUser().getName()).getType().equals(ManageType.MANAGER) && shopProfile.getRoles().get(getCurrentUser().getName()).getPermissions().getManageAccess() == ManageKindEnum.READ_ONLY) {
+			//Notification.show("Read Only Manager");
+			disableButton(editProductButton);
+			disableButton(addProductButton);
+			disableButton(removeProductButton);
+		}
+		else{
+			enableButton(editProductButton);
+			enableButton(addProductButton);
+			enableButton(removeProductButton);
+		}
 	}
 
 	private void addProduct(String productName, String productCategory, String productDescription, Double productPrice, Integer productQuantity) {

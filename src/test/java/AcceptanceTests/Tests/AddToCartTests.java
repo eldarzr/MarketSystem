@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 
-public class GuestShoppingActionsTest {
+public class AddToCartTests {
 
     private MarketSystemBridge market= new MarketSystemRealBridge();
     private String tempUserName;
@@ -125,5 +125,4 @@ public class GuestShoppingActionsTest {
             fail("Exception thrown while testing add product to cart with zero quantity: " + e.getMessage());
         }
     }
-
 }

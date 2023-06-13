@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -319,4 +320,9 @@ public class UsersHandler {
             user.removeProductFromCartIfExists(shopName, productName);
         }
 	}
+
+    public void updateUserBirthDay(String userName, LocalDate bDay) throws Exception{
+        User user = findLoginUser(userName);
+        user.setBirthday(bDay);
+    }
 }

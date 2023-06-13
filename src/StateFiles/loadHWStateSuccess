@@ -1,0 +1,9 @@
+register(user1, u1@gmail.com, Aa123456);
+register(user2, u2@gmail.com, Aa123456);
+register(user3, u3@gmail.com, Aa123456);
+login(user1, Aa123456);
+createShop(user1, shop1);
+appointShopOwner(user1, user2, shop1);
+login(user2, Aa123456);
+appointShopOwner(user2, user3, shop1);
+removeShopOwner(user1, user2, shop1);

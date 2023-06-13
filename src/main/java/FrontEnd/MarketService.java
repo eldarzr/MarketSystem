@@ -21,10 +21,14 @@ import com.vaadin.flow.server.VaadinSession;
 import org.apache.catalina.util.ContextName;
 import org.apache.commons.lang3.NotImplementedException;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -41,17 +45,27 @@ public class MarketService {
 				if(instance == null){
 					instance =  new MarketService();
 					String deploymentFolder = System.getProperty("catalina.home").split("Tomcat")[0];
-					instance.init(deploymentFolder+"src\\InitFiles\\BaseConfig.jason");
-					instance.loadState(deploymentFolder+"src\\InitFiles\\loadTempState");
+					instance.init(deploymentFolder+System.getProperty("configFilePath"));
+					if (System.getProperty("resetAll") != null && Objects.equals(System.getProperty("resetAll"), "True"))
+					{
+						instance.resetAll();
+						instance.init(deploymentFolder + System.getProperty("configFilePath"));
+					}
+					String stateFilePath=System.getProperty("stateFilePath");
+					if (stateFilePath != null)
+					{
+						try {instance.loadState(new BufferedReader(new FileReader(deploymentFolder+stateFilePath)));}
+						catch (Exception ignored) {}
+					}
 				}
 			}
 		}
 		return instance;
 	}
 
-	private Response loadState(String stateFilePath) {
+	public Response loadState(BufferedReader StateReader) {
 		try {
-			serviceMarket.loadState(stateFilePath);
+			serviceMarket.loadState(StateReader);
 		} catch (Exception exception) {
 			return new Response(exception.getMessage());
 		}
@@ -671,5 +685,13 @@ public class MarketService {
 			return new SResponseT<List<ProductModel>>(shopProductsModel);
 		}
 		else return new SResponseT<>(res.getMessage(),false);
+	}
+
+	public SResponse updateUserBirthDay(String userName, LocalDate bDay){
+		Response res = serviceMarket.updateUserBirthDay(userName, bDay);
+		if(res.isSuccess()){
+			return new SResponse();
+		}
+		return new SResponse(res.getMessage());
 	}
 }
