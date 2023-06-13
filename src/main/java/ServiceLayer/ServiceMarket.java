@@ -8,21 +8,14 @@ import BusinessLayer.Market;
 import BusinessLayer.Notifications.Notification;
 import BusinessLayer.Shops.FinalCartPriceResult;
 import BusinessLayer.Shops.Product;
-import BusinessLayer.Shops.PurchasePolicies.ComplexPolicyType;
 import BusinessLayer.Shops.PurchasePolicies.PurchasePolicy;
-import BusinessLayer.Shops.Shop;
-import BusinessLayer.Shops.Discount.DiscountRules.CompoundRuleType;
 import BusinessLayer.Shops.Discount.DiscountRules.DiscountRule;
-import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
 import BusinessLayer.Users.NotificationCallback;
 import BusinessLayer.Shops.Discount.DiscountRules.*;
-import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRule;
 import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRuleName;
 
-import BusinessLayer.Users.User;
 import ServiceLayer.DataObjects.*;
 import ServiceLayer.DataObjects.DiscountDataObjects.*;
-import ServiceLayer.DataObjects.DiscountDataObjects.DiscountRulesDataObjects.DiscountRuleServiceInterface;
 import ServiceLayer.DataObjects.DiscountDataObjects.DiscountRulesDataObjects.SimpleDiscountRuleDataObj;
 
 
@@ -837,6 +830,26 @@ public class ServiceMarket {
 		}
 	}
 
+    public Response approveOwner(String currentUser, String ownerToApprove, String shopName) {
+		try {
+			market.approveOwner(currentUser,ownerToApprove,shopName);
+		} catch (Exception exception) {
+			return new Response(exception.getMessage());
+		}
+		return new Response();
+    }
+
+	public ResponseT<List<PendingOwnerDataObj>> getPendingOwners(String actor, String shopName) {
+
+		try {
+			return new ResponseT<>(market.getPendingOwners(actor,shopName).stream()
+					.map(PendingOwnerDataObj::new).collect(Collectors.toList()));
+
+		} catch (Exception exception) {
+			return new ResponseT(exception.getMessage(), false);
+		}
+	}
+	
 	public Response updateUserBirthDay(String userName, LocalDate bDay){
 		try{
 			market.updateUserBirthDay(userName,bDay);

@@ -50,6 +50,7 @@ public class ShopOwnerAppointmentTest {
 
         marketSystem.login(ownerUserName, ownerPassword);
         marketSystem.appointShopOwner(ownerUserName, appointeeUserName, shopName);
+        marketSystem.approveOwner(founderUserName,appointeeUserName,shopName);
         assertTrue(marketSystem.isShopOwner(appointeeUserName, shopName));
         marketSystem.logout(appointeeUserName);
     }

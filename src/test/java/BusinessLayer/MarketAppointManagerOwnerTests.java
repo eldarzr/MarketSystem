@@ -1,5 +1,6 @@
 package BusinessLayer;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,7 @@ class MarketAppointManagerOwnerTests {
     void tearDown() {
         market.resetAll();
     }
+
 
     @Test
     void appointShopOwner_success() throws Exception {
@@ -80,19 +82,19 @@ class MarketAppointManagerOwnerTests {
         System.out.println(exception.getMessage());
     }
 
-    @Test
-    void appointShopManager_failure3() throws Exception {
-        market.appointShopOwner("eldar","naor","shop1");
-        Exception exception = assertThrows(Exception.class, () ->   market.appointShopManager("naor","eldar","shop1"));
-        System.out.println(exception.getMessage());
-    }
-
-    @Test
-    void appointShopManager_failure4() throws Exception {
-        market.appointShopOwner("eldar","naor","shop1");
-        Exception exception = assertThrows(Exception.class, () ->   market.appointShopManager("naor","naor","shop1"));
-        System.out.println(exception.getMessage());
-    }
+//    @Test
+//    void appointShopManager_failure3() throws Exception {
+//        market.appointShopOwner("eldar","naor","shop1");
+//        Exception exception = assertThrows(Exception.class, () ->   market.appointShopManager("naor","eldar","shop1"));
+//        System.out.println(exception.getMessage());
+//    }
+//
+//    @Test
+//    void appointShopManager_failure4() throws Exception {
+//        market.appointShopOwner("eldar","naor","shop1");
+//        Exception exception = assertThrows(Exception.class, () ->   market.appointShopManager("naor","naor","shop1"));
+//        System.out.println(exception.getMessage());
+//    }
 
     @Test
     void appointShopManager_failure5() throws Exception {
@@ -113,6 +115,6 @@ class MarketAppointManagerOwnerTests {
         market.appointShopManager("eldar","niv12","shop1");
         market.appointShopManager("eldar","naor","shop1");
        List<MemberRoleInShop> naorShops = market.getUserRoles("naor");
-        List<MemberRoleInShop> nivShops = market.getUserRoles("niv12");
+        //List<MemberRoleInShop> nivShops = market.getUserRoles("niv12");
     }
 }

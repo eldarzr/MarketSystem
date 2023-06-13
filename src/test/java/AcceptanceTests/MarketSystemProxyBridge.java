@@ -87,7 +87,12 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
         realBridge.closeShop(userName, shopName);
     }
 
-    @Override
+    public boolean approveOwner(String appointedBy,String appointee , String shopName ) throws Exception {
+        nullCheck();
+        return realBridge.approveOwner(appointedBy,appointee,shopName);
+    }
+
+        @Override
     public void addNewProduct(String userName, String shopName, String productName, String category, String desc, double price) throws Exception {
         nullCheck();
         realBridge.addNewProduct(userName, shopName, productName, category, desc, price);

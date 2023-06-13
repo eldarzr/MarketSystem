@@ -1,6 +1,5 @@
 package FrontEnd;
 
-import BusinessLayer.Bids.Bid;
 import BusinessLayer.Enums.Initialize;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
@@ -18,7 +17,6 @@ import ServiceLayer.ResponseT;
 import ServiceLayer.ServiceMarket;
 import com.vaadin.flow.server.VaadinService;
 import com.vaadin.flow.server.VaadinSession;
-import org.apache.catalina.util.ContextName;
 import org.apache.commons.lang3.NotImplementedException;
 
 import java.io.BufferedReader;
@@ -687,6 +685,26 @@ public class MarketService {
 		else return new SResponseT<>(res.getMessage(),false);
 	}
 
+    public SResponse approveOwner(String currentUser, String ownerToApprove, String shopName) {
+
+		Response res = serviceMarket.approveOwner(currentUser,ownerToApprove,shopName);
+		if(res.isSuccess())return new SResponse();
+		else return new SResponse(res.getMessage());
+    }
+
+	public SResponseT<List<PendingOwnerModel>> getPendingsOwners(String actor , String shopName) {
+
+		ResponseT<List<PendingOwnerDataObj>> r = null;
+		try {
+			r = serviceMarket.getPendingOwners(actor,shopName);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		if (r.isSuccess())
+			return new SResponseT<>(r.getData().stream().map(PendingOwnerModel::new).collect(Collectors.toList()));
+		return new SResponseT<>(r.getMessage(), r.isSuccess());
+	}
+	
 	public SResponse updateUserBirthDay(String userName, LocalDate bDay){
 		Response res = serviceMarket.updateUserBirthDay(userName, bDay);
 		if(res.isSuccess()){

@@ -153,6 +153,9 @@ public class ShopAndProductCreationAndManipulationTests {
             String userName = "gabi1";
             String shopName = "Gabi's Goods";
             bridge.appointShopOwner(founderName,userName,shopName);
+            bridge.login("gabi5","1234Gabi");
+            bridge.approveOwner("gabi5",userName,shopName);
+            bridge.logout("gabi5");
             String productName = "Football";
             double price = 210;
             String desc = "Nike NFL football";
