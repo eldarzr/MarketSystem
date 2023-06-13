@@ -39,31 +39,40 @@ public class ScenarioTests {
         market.appointShopManager("Eldar", "Emanuel", "shopEldar");
         guestName = market.startSession();
         market.login(guestName,usersName[1], passwords[0]);
+        //market.appointShopManager("Niv12","Naor","shopEldar");
         market.appointShopOwner("Niv12", "Naor", "shopEldar");
+        market.approveOwner("Eldar","Naor","shopEldar");
         market.appointShopManager("Niv12", "Idan", "shopEldar");
         guestName = market.startSession();
         market.login(guestName,usersName[2], passwords[0]);
         market.appointShopManager("Naor", "Gabi", "shopEldar");
         market.removeShopOwner("Eldar","Niv12","shopEldar");
-        System.out.println(market.getRolesInformation("Eldar","ShopEldar"));
+        System.out.println(market.getRolesInformation("Eldar","shopEldar"));
     }
 
     @Test
     void fromCreationToAppoints_removeOne() throws Exception {
         String guestName = market.startSession();
         market.login(guestName,usersName[0], passwords[0]);
+
         market.createShop(usersName[0], shopNames[0]);
         market.appointShopOwner("Eldar", "Niv12", "shopEldar");
         market.appointShopOwner("Eldar", "Emanuel", "shopEldar");
         guestName = market.startSession();
         market.login(guestName,usersName[1], passwords[0]);
+
+        String guestName5 = market.startSession();
+        market.login(guestName5,usersName[5], passwords[0]);
+        market.approveOwner("Niv12","Emanuel","shopEldar");
         market.appointShopOwner("Niv12", "Naor", "shopEldar");
+        market.approveOwner("Eldar","Naor","shopEldar");
+        market.approveOwner("Emanuel","Naor","shopEldar");
         market.appointShopManager("Niv12", "Idan", "shopEldar");
         guestName = market.startSession();
         market.login(guestName,usersName[2], passwords[0]);
         market.appointShopManager("Naor", "Gabi", "shopEldar");
         market.removeShopOwner("Eldar","Emanuel","shopEldar");
-        System.out.println(market.getRolesInformation("Eldar","ShopEldar"));
+        System.out.println(market.getRolesInformation("Eldar","shopEldar"));
     }
 
     @Test
@@ -76,6 +85,7 @@ public class ScenarioTests {
         guestName = market.startSession();
         market.login(guestName,usersName[1], passwords[0]);
         market.appointShopOwner("Niv12", "Naor", "shopEldar");
+        market.approveOwner("Eldar","Naor","shopEldar");
         market.appointShopManager("Niv12", "Idan", "shopEldar");
         guestName = market.startSession();
         market.login(guestName,usersName[2], passwords[0]);
@@ -95,6 +105,7 @@ public class ScenarioTests {
         guestName = market.startSession();
         market.login(guestName,usersName[1], passwords[0]);
         market.appointShopOwner("Niv12", "Naor", "shopEldar");
+        market.approveOwner("Eldar","Naor","shopEldar");
         market.appointShopManager("Niv12", "Idan", "shopEldar");
         guestName = market.startSession();
         market.login(guestName,usersName[2], passwords[0]);
@@ -115,6 +126,7 @@ public class ScenarioTests {
         guestName = market.startSession();
         market.login(guestName,usersName[1], passwords[0]);
         market.appointShopOwner("Niv12", "Naor", "shopEldar");
+        market.approveOwner("Eldar","Naor","shopEldar");
         market.appointShopManager("Niv12", "Idan", "shopEldar");
         guestName=market.startSession();
         market.login(guestName,usersName[2], passwords[0]);
@@ -123,7 +135,7 @@ public class ScenarioTests {
         Exception exception = assertThrows(Exception.class, () ->
                 market.removeShopOwner("Niv12","Idan","shopEldar"));
         System.out.println(exception.getMessage());
-        //System.out.println(market.getRolesInformation("Eldar","ShopEldar"));
+        //System.out.println(market.getRolesInformation("Eldar","shopEldar"));
     }
 
     @Test
@@ -136,6 +148,7 @@ public class ScenarioTests {
         guestName = market.startSession();
         market.login(guestName,usersName[1], passwords[0]);
         market.appointShopOwner("Niv12", "Naor", "shopEldar");
+        market.approveOwner("Eldar","Naor","shopEldar");
         market.appointShopManager("Niv12", "Idan", "shopEldar");
         guestName = market.startSession();
         market.login(guestName,usersName[2], passwords[0]);
@@ -145,7 +158,7 @@ public class ScenarioTests {
         market.login(guestName,"Emanuel",passwords[0]);
         market.appointShopOwner("Emanuel","Idan","shopEldar");
         market.removeShopOwner("Eldar","Niv12","shopEldar");
-        System.out.println(market.getRolesInformation("Eldar","ShopEldar"));
+        System.out.println(market.getRolesInformation("Eldar","shopEldar"));
     }
 
     @Test
@@ -157,17 +170,24 @@ public class ScenarioTests {
         market.appointShopManager("Eldar", "Emanuel", "shopEldar");
         guestName = market.startSession();
         market.login(guestName,usersName[1], passwords[0]);
+        //market.approveOwner("Niv12","Emanuel","shopEldar");
         market.appointShopOwner("Niv12", "Naor", "shopEldar");
+        market.approveOwner("Eldar","Naor","shopEldar");
+
         market.appointShopManager("Niv12", "Idan", "shopEldar");
         guestName = market.startSession();
         market.login(guestName,usersName[2], passwords[0]);
         market.appointShopManager("Naor", "Gabi", "shopEldar");
         guestName = market.startSession();
         market.appointShopOwner("Eldar","Emanuel","shopEldar");
+//        market.approveOwner("Eldar","Emanuel","shopEldar");
+//        market.approveOwner("Naor","Emanuel","shopEldar");
         market.login(guestName,"Emanuel",passwords[0]);
         market.appointShopOwner("Emanuel","Idan","shopEldar");
+//        market.approveOwner("Eldar","Idan","shopEldar");
+//        market.approveOwner("Naor","Idan","shopEldar");
         market.removeShopOwner("Emanuel","Idan","shopEldar");
         market.removeShopOwner("Eldar","Emanuel","shopEldar");
-        System.out.println(market.getRolesInformation("Eldar","ShopEldar"));
+        System.out.println(market.getRolesInformation("Eldar","shopEldar"));
     }
 }

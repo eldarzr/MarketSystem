@@ -118,6 +118,6 @@ public class ParallelismTest {
         executor.awaitTermination(5, TimeUnit.SECONDS);
         // Assert that the product was not purchased
         int a = marketSystem.getProductQuantityInShop(shopName, productName);
-        assertTrue(marketSystem.getProductQuantityInShop(shopName, productName) == -1);
+        assertTrue(a == -1);
     }
 }

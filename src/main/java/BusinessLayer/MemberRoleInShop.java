@@ -3,7 +3,6 @@ package BusinessLayer;
 import BusinessLayer.Enums.ManageKindEnum;
 import BusinessLayer.Enums.ManageType;
 import BusinessLayer.Shops.Shop;
-//import BusinessLayer.Shops.ShopMessageObserver;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -68,11 +67,23 @@ import static BusinessLayer.Enums.ManageType.*;
 		return adjustRole(owner, observer);
 	}
 
+	public static MemberRoleInShop createOwner(String roleUser, Shop roleShop, String grantor) throws Exception {
+		//TODO: add logic to add owner
+		MemberRoleInShop owner = new MemberRoleInShop(roleShop, roleUser, grantor, OWNER, ManagePermissions.getFullAccessPermissions());
+		return adjustRole(owner);
+	}
+
 	public static MemberRoleInShop createManager(String roleUser, Shop roleShop, String grantor, MessageObserver observer) throws Exception {
 		//TODO: add logic to add manager
 		MemberRoleInShop manager = new MemberRoleInShop(roleShop, roleUser, grantor, MANAGER, ManagePermissions.getReadOnlyPermissions());
 		return adjustRole(manager, observer);
 	}
+
+    public static MemberRoleInShop createDemiOwner(String actOn, Shop shop, String actor) {
+		MemberRoleInShop owner = new MemberRoleInShop(shop, actOn , actor , OWNER, ManagePermissions.getFullAccessPermissions());
+		return owner;
+	}
+
 
 	public void setGrantor(String grantor) {
 		this.grantor = grantor;
@@ -131,6 +142,15 @@ import static BusinessLayer.Enums.ManageType.*;
 //		roleShop.addObserver(obs);
 		return role;
 	}
+
+
+	private static MemberRoleInShop adjustRole(MemberRoleInShop role) throws Exception {
+		String roleUser = role.userName;
+		Shop roleShop = role.roleShop;
+		roleShop.addRole(roleUser, role);
+		return role;
+	}
+
 
 	public void addPermission(int permission) throws Exception {
 		this.permissions.addAnotherPermission(permission);

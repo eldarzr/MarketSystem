@@ -2,6 +2,7 @@ package BusinessLayer.Shops;
 
 import BusinessLayer.Bids.Bid;
 import BusinessLayer.Bids.BidManager;
+import BusinessLayer.Enums.ManageKindEnum;
 import BusinessLayer.Enums.ManagePermissionsEnum;
 import BusinessLayer.Enums.ManageType;
 import BusinessLayer.MemberRoleInShop;
@@ -53,8 +54,13 @@ public class Shop implements ShopIntr {
 	@Transient
 	private Lock remLock;
 	private String founderUserName;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "shopName", referencedColumnName = "shopName")
+	private OwnersHandler ownersHandler;
+
 	//map of user name to role in this shop
-//	@Transient
+	//@Transient
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "shopName", referencedColumnName = "shopName")
 	@MapKeyColumn(name = "userName")
@@ -97,6 +103,7 @@ public class Shop implements ShopIntr {
 		this.purchasePolicyManager = new PurchasePolicyManager();
 		this.remLock = new ReentrantLock();
 		this.bidManager = new BidManager();
+		this.ownersHandler = new OwnersHandler(this);
 	}
 
 	public String getName() {
@@ -123,7 +130,7 @@ public class Shop implements ShopIntr {
 		return founderUserName;
 	}
 
-	public void setShopOwner(String actor, String actOn, MessageObserver sendMessage) throws Exception {
+	public boolean setShopOwner(String actor, String actOn, MessageObserver sendMessage) throws Exception {
 
 		validateUserHasRole(actor);
 		MemberRoleInShop actorMRIS = roles.get(actor);
@@ -137,10 +144,49 @@ public class Shop implements ShopIntr {
 				throwException(actOn + " is already an owner");
 			actOnMRIS.setType(ManageType.OWNER);
 			actOnMRIS.setGrantor(actor);
-			return;
+			return true;
 		}
-		MemberRoleInShop.createOwner(actOn, this, actor, sendMessage);
-		PersistenceManager.getInstance().updateObj(this);
+//		ownersHandler.addOwner(actOn,this,actor);
+		ownersHandler.addOwner(actOn,this,actor);
+		notifyOwnersOnApproveRequest(actOn);
+		return approveOwner(actor,actOn);
+
+//		MemberRoleInShop.createOwner(actOn, this, actor, sendMessage);
+//		PersistenceManager.getInstance().updateObj(this);
+	}
+
+	private void notifyOwnersOnApproveRequest(String actOn) {
+
+				for (String owner : getOwnersNames()) {
+					String message = String.format("User %s as appointed as an owner of shop  : %s  and wait for you approval.", actOn, this.name);
+					Notification notification = new Notification(owner, message);
+					NotificationPublisher.getInstance().notify(owner, notification);
+				}
+
+	}
+
+	public boolean approveOwner(String actor, String actOn) throws Exception {
+		//validate actor exists and is an owner
+		validateUserHasRole(actor);
+		MemberRoleInShop actorMRIS = roles.get(actor);
+		if (actorMRIS.getType() != ManageType.OWNER)
+			throwException("only owners can set new owners to a store");
+
+		//validate the actOn is not an owner
+		if (roles.containsKey(actOn)) {
+			MemberRoleInShop actOnMRIS = roles.get(actOn);
+			if (actOnMRIS.getType() == ManageType.OWNER)
+				throwException(actOn + " is already an owner");
+		}
+
+		boolean res = ownersHandler.approveOwner(actor,actOn);
+		if(res) {
+			String message = String.format("User %s appointed you as shop-owner of shop %s.", actor, this.name);
+			Notification notification = new Notification(actor, message);
+			NotificationPublisher.getInstance().notify(actOn, notification);
+			logger.info(String.format("User %s appointed %s as shop-owner of shop %s.", actor, actOn, this.name));
+		}
+		return res;
 	}
 
 	public void setShopManager(String actor, String actOn, MessageObserver sendMessage) throws Exception {
@@ -572,6 +618,33 @@ public class Shop implements ShopIntr {
 
 	public Map<String, MemberRoleInShop> getRoles() {
 		return this.roles;
+	}
+
+	public List<String> getOwnersNames() {
+			List<String> usernames = new ArrayList<>();
+			for (MemberRoleInShop role : roles.values())
+				if(role.getType() == ManageType.OWNER)
+					usernames.add(role.getUserName());
+			return usernames;
+	}
+
+
+	public List<MemberRoleInShop> getOwners() {
+		List<MemberRoleInShop> usernames = new ArrayList<>();
+		for (MemberRoleInShop role : roles.values())
+			if(role.getType() == ManageType.OWNER)
+				usernames.add(role);
+		return usernames;
+	}
+
+//	public List<String> getPendings(String actor) throws Exception {
+//		MemberRoleInShop reqRole =  validateUserHasRole(actor);
+//		return ownersHandler.getPendings();
+//	}
+
+	public List<PendingOwner> getPendingsOwners(String actor) throws Exception {
+		MemberRoleInShop reqRole =  validateUserHasRole(actor);
+		return ownersHandler.getPendingsOwnersObj();
 	}
 }
 

@@ -466,11 +466,8 @@ public class Market implements MarketIntr{
         User user = usersHandler.findMemberByName(appointee);
         Shop reqShop = checkForShop(shopName);
         reqShop.setShopOwner(appointedBy,appointee , user::sendMessage);
-        //notify appointee
-        String message=String.format("User %s appointed you as shop-owner of shop %s.", appointedBy, shopName);
-        Notification notification=new Notification(appointedBy,message);
-        NotificationPublisher.getInstance().notify(appointee,notification);
-        logger.info(String.format("User %s appointed %s as shop-owner of shop %s.", appointedBy,appointee, shopName));
+        ShopRepository.getInstance().updateToDB(shopName);
+
     }
 
     public Shop checkForShop(String shopName) throws Exception {
@@ -494,6 +491,19 @@ public class Market implements MarketIntr{
         Notification notification=new Notification(appointedBy,message);
         NotificationPublisher.getInstance().notify(appointee,notification);
         logger.info(String.format("User %s appointed %s as shop-manager of shop %s.", appointedBy,appointee, shopName));
+    }
+    @Transactional
+    public boolean approveOwner(String appointedBy,String appointee , String shopName ) throws Exception {
+        appointedBy = appointedBy.toLowerCase();
+        appointee = appointee.toLowerCase();
+        usersHandler.findMemberByName(appointedBy);
+        validateLoggedInException(appointedBy);
+        User user = usersHandler.findMemberByName(appointee);
+        Shop reqShop = checkForShop(shopName);
+        boolean res = false;
+        res = reqShop.approveOwner(appointedBy,appointee);
+        ShopRepository.getInstance().updateToDB(shopName);
+        return res;
     }
 
     @Transactional
@@ -592,7 +602,7 @@ public class Market implements MarketIntr{
 
     public String getRolesInformation(String userName, String shopName) throws Exception {
         logger.info(String.format("Attempt by user %s to get roles information of shop %s.", userName, shopName));
-        return searchShop(userName,shopName).getRolesInfo();
+        return shopHandler.getShop(shopName).getRolesInfo();
     }
 
     //todo: naor
@@ -1057,5 +1067,16 @@ public class Market implements MarketIntr{
         return shop.getProducts().stream()
                 .map(product -> (Product) product)
                 .collect(Collectors.toCollection(LinkedList::new));
+    }
+
+//    public List<String> getPendingOwners(String actor , String shopName) throws Exception {
+//        validateLoggedInException(actor);
+//        Shop reqShop = shopHandler.getShop(shopName);
+//        return reqShop.getPendings(actor);
+//    }
+    public List<PendingOwner> getPendingOwners(String actor , String shopName) throws Exception {
+        validateLoggedInException(actor);
+        Shop reqShop = shopHandler.getShop(shopName);
+        return reqShop.getPendingsOwners(actor);
     }
 }

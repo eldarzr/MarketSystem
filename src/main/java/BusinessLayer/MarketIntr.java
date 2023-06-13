@@ -152,4 +152,6 @@ public interface MarketIntr {
     void loadState(String stateFilePath)throws Exception;
 
     Collection<Notification> getUserNotifications(String username) throws Exception;
+
+    public boolean approveOwner(String appointedBy,String appointee , String shopName ) throws Exception;
 }
