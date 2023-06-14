@@ -21,6 +21,8 @@ import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.*;
@@ -35,7 +37,7 @@ import java.util.stream.Collectors;
 import static BusinessLayer.Enums.Initialize.FAIL;
 
 @Route("base")
-public abstract class BaseView extends VerticalLayout{
+public abstract class BaseView extends VerticalLayout implements BeforeEnterObserver {
 
 	protected MarketService marketService = MarketService.getInstance();
 	private HorizontalLayout horizontalLayout;
@@ -49,9 +51,23 @@ public abstract class BaseView extends VerticalLayout{
 	private HorizontalLayout loginLayout;
 	private HorizontalLayout logoutLayout;
 
+	@Override
+	public void beforeEnter(BeforeEnterEvent event) {
+		if (marketService.getInitState().getData() == FAIL) {
+			event.getUI().navigate("fail_init");
+			event.rerouteTo("fail_init");
+		}
+		else {
+			Object isUserInit = VaadinSession.getCurrent().getAttribute("isUserInit");
+			if (!(isUserInit instanceof Boolean) || !((Boolean) isUserInit)) {
+				VaadinSession.getCurrent().setAttribute("isUserInit", true);
+				event.getUI().navigate("");
+				event.rerouteTo("");
+			}
+		}
+	}
+
 	public BaseView() {
-		if (marketService.getInitState().getData() == FAIL)
-			getUI().ifPresent(ui -> ui.navigate("fail_init"));
 		String sessionID = VaadinSession.getCurrent().getSession().getId();
 		UserModel userModel = VaadinSession.getCurrent().getAttribute(UserModel.class);
 		if (userModel == null) {

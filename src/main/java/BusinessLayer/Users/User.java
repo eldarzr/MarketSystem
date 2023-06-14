@@ -172,6 +172,7 @@ public class User{
     
     public void addInvoice(UserInvoice userInvoice) {
         invoices.add(userInvoice);
+        PersistenceManager.getInstance().persistObj(userInvoice);
         updateDB();
     }
 
