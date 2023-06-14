@@ -17,7 +17,7 @@ public class AgePurchasePolicy extends BasicPolicy{
     public AgePurchasePolicy() {
     }
 
-    public AgePurchasePolicy(int id, boolean isProduct, String toConstraint, boolean positive, int startAge, int endAge) {
+    public AgePurchasePolicy(int id, boolean isProduct, String toConstraint, boolean positive, int startAge, int endAge) throws Exception {
         super(id, isProduct, toConstraint, positive);
         this.startAge = startAge;
         this.endAge = endAge;

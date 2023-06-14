@@ -21,8 +21,9 @@ public abstract class BasicPolicy extends PurchasePolicy {
     protected BasicPolicy() {
     }
 
-    public BasicPolicy(int id, boolean isProduct, String toConstraint, boolean positive){
+    public BasicPolicy(int id, boolean isProduct, String toConstraint, boolean positive) throws Exception{
         super(id);
+        if(toConstraint == null | toConstraint.length() == 0)throw new Exception("Empty name");
         this.isProduct = isProduct;
         this.toConstraint = toConstraint;
         this.positive = positive;

@@ -91,6 +91,7 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
                 SResponse setActiveResponse = marketService.setActivePurchasePolicy(getCurrentUser().getName(), shopName, policy.getId());
                 if (setActiveResponse.isSuccess()) {
                     updatePolicyGrid();
+                    updateButtons();
                 } else {
                     Notification.show("Error: "+setActiveResponse.getMessage());
                 }
@@ -132,18 +133,6 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
 
     private void updateButtons() {
         SResponseT<Integer> activePolicyResponse = marketService.getActivePurchasePolicyId(getCurrentUser().getName(), shopName);
-        if (activePolicyResponse.isSuccess()) {
-            int index = activePolicyResponse.getData();
-            if(index == -1){
-                disableButton(removeActivePolicyButton);
-            }
-            else{
-                enableButton(removeActivePolicyButton);
-            }
-        }
-        else{
-            enableButton(removeActivePolicyButton);
-        }
         if(shopProfile != null && shopProfile.getRoles().get(getCurrentUser().getName()).getType().equals(ManageType.MANAGER) && shopProfile.getRoles().get(getCurrentUser().getName()).getPermissions().getManageAccess() == ManageKindEnum.READ_ONLY) {
             disableButton(createComplexPolicyButton);
             disableButton(createSimplePolicyButton);
@@ -153,6 +142,12 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
             enableButton(createComplexPolicyButton);
             enableButton(createSimplePolicyButton);
             enableButton(removeActivePolicyButton);
+        }
+        if (activePolicyResponse.isSuccess()) {
+            int index = activePolicyResponse.getData();
+            if(index == -1){
+                disableButton(removeActivePolicyButton);
+            }
         }
     }
 
