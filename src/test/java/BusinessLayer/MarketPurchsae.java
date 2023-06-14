@@ -3,10 +3,11 @@ package BusinessLayer;
 import BusinessLayer.ExternalSystemsAdapters.CreditCardPaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.PaymentDetails;
 import BusinessLayer.ExternalSystemsAdapters.SupplyDetails;
+import jakarta.validation.constraints.AssertTrue;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 class MarketPurchsae {
@@ -79,8 +80,17 @@ class MarketPurchsae {
         market.purchaseCart(cNames[0],paymentDetails,supplyDetails);
         market.addProductsToCart(cNames[0],shopNames[0],prodNames[0],1);
         market.purchaseCart(cNames[0],paymentDetails,supplyDetails);
-        while(true){
+    }
 
+    @org.junit.jupiter.api.Test
+    void purchaseMoreThanProductQuantityInShop() throws Exception {
+        try{
+            market.addProductsToCart(cNames[0],shopNames[0],prodNames[0],quantity[0]);
+            market.addProductsToCart(cNames[0],shopNames[0],prodNames[0],quantity[0]);
+            market.purchaseCart(cNames[0],paymentDetails,supplyDetails);
+            fail("should not be able to buy more than shop quantity");
+        }catch (Exception e){
+            assertNotEquals(e.getMessage() ,null);
         }
     }
 

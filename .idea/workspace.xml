@@ -6,7 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="b632bc94-40ae-4fc8-ad09-f0a6a998ea35" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/AcceptanceTests/Tests/ParallelismTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/AcceptanceTests/Tests/ParallelismTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Purchases/Purchase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Purchases/Purchase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/BusinessLayer/MarketPurchsae.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/BusinessLayer/MarketPurchsae.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,6 +67,9 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
@@ -116,22 +120,23 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MarketCreateShopTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="MarketPurchasePolicyTests.quantityPolicyFailPurchase" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="MarketSystem" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="BusinessLayer.*" />
+          <option name="PATTERN" value="IntegrationTests.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="BusinessLayer" />
-      <option name="MAIN_CLASS_NAME" value="BusinessLayer.MarketCreateShopTest" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="PACKAGE_NAME" value="IntegrationTests" />
+      <option name="MAIN_CLASS_NAME" value="IntegrationTests.MarketPurchasePolicyTests" />
+      <option name="METHOD_NAME" value="quantityPolicyFailPurchase" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MarketCreateShopTest.createShopFailNotRegistered (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="MarketPurchsae.purchaseMoreThanProductQuantityInShop" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="MarketSystem" />
       <extension name="coverage">
         <pattern>
@@ -140,8 +145,8 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="BusinessLayer" />
-      <option name="MAIN_CLASS_NAME" value="BusinessLayer.MarketCreateShopTest" />
-      <option name="METHOD_NAME" value="createShopFailNotRegistered" />
+      <option name="MAIN_CLASS_NAME" value="BusinessLayer.MarketPurchsae" />
+      <option name="METHOD_NAME" value="purchaseMoreThanProductQuantityInShop" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -203,7 +208,10 @@
       <predefined_log_file id="Tomcat Manager Log" />
       <predefined_log_file id="Tomcat Host Manager Log" />
       <option name="contextPath" value="/market" />
-      <option name="docBase" value="D:\courses\third_year\Sadna\MarketSystem\target" />
+      <option name="docBase" value="C:\University\סמסטר ו\סדנא\MarketSystem" />
+      <option name="envOptions">
+        <map />
+      </option>
       <option name="extraClassPath" value="" />
       <option name="tomcatInfo">
         <TomcatInfo>
@@ -212,7 +220,7 @@
           <option name="version" value="10.1.8.0" />
         </TomcatInfo>
       </option>
-      <option name="vmOptions" value="" />
+      <option name="vmOptions" value="-DconfigFilePath=&quot;src/InitFiles/BaseConfig.jason&quot; -DstateFilePath=&quot;src/StateFiles/loadTempState&quot; -DresetAll=&quot;True&quot;" />
       <module name="MarketSystem" />
       <method v="2">
         <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="clean package -P production" />
@@ -221,19 +229,19 @@
     <list>
       <item itemvalue="Application.Main" />
       <item itemvalue="JUnit.All in MarketSystem" />
-      <item itemvalue="JUnit.MarketCreateShopTest" />
-      <item itemvalue="JUnit.MarketCreateShopTest.createShopFailNotRegistered (1)" />
       <item itemvalue="JUnit.MarketgetShopTest" />
+      <item itemvalue="JUnit.MarketPurchasePolicyTests.quantityPolicyFailPurchase" />
       <item itemvalue="Maven.MarketSystem [mvn,exec:java]" />
       <item itemvalue="Smart Tomcat.tomcat" />
+      <item itemvalue="JUnit.MarketPurchsae.purchaseMoreThanProductQuantityInShop" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.All in MarketSystem" />
+        <item itemvalue="JUnit.MarketPurchsae.purchaseMoreThanProductQuantityInShop" />
+        <item itemvalue="JUnit.MarketPurchasePolicyTests.quantityPolicyFailPurchase" />
         <item itemvalue="JUnit.MarketgetShopTest" />
         <item itemvalue="Application.Main" />
-        <item itemvalue="JUnit.MarketCreateShopTest" />
-        <item itemvalue="JUnit.MarketCreateShopTest.createShopFailNotRegistered (1)" />
       </list>
     </recent_temporary>
   </component>
@@ -267,6 +275,47 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/IntegrationTests/MarketPurchasePolicyTests.java</url>
+          <line>65</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/BusinessLayer/Purchases/Purchase.java</url>
+          <line>177</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/BusinessLayer/Purchases/Purchase.java</url>
+          <line>165</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/BusinessLayer/Purchases/Purchase.java</url>
+          <line>97</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/BusinessLayer/Purchases/Purchase.java</url>
+          <line>125</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/BusinessLayer/MarketPurchsae.java</url>
+          <line>92</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/BusinessLayer/MarketPurchsae.java</url>
+          <line>89</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

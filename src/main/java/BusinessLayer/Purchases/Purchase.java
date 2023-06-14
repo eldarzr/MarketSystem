@@ -144,12 +144,7 @@ public class Purchase implements PurchaseIntr{
     private void checkProductsAvailability(Map<String, ShopBag> shopsAndProducts) throws Exception {
         for(String shopName : shopsAndProducts.keySet()){
             Shop currentShop = getShopByName(shopName);
-            try {
-                currentShop.validateAvailability(shopsAndProducts.get(shopName).getProductsAndQuantities());
-            }catch (Exception e){
-                releaseProductsLocks();
-                throw new Exception(String.format("ERROR: unable to purchase cart because: %s",e.getMessage()));
-            }
+            currentShop.validateAvailability(shopsAndProducts.get(shopName).getProductsAndQuantities());
         }
     }
 
