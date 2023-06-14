@@ -19,7 +19,7 @@ public class DatePurchasePolicy extends BasicPolicy {
     public DatePurchasePolicy() {
     }
 
-    public DatePurchasePolicy(int id, boolean isProduct, String toConstraint, boolean positive, LocalDate start, LocalDate end){
+    public DatePurchasePolicy(int id, boolean isProduct, String toConstraint, boolean positive, LocalDate start, LocalDate end) throws Exception {
         super(id, isProduct, toConstraint,positive);
         startDate = start;
         endDate = end;

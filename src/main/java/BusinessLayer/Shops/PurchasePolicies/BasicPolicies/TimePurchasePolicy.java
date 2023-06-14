@@ -18,7 +18,7 @@ public class TimePurchasePolicy extends BasicPolicy{
     public TimePurchasePolicy() {
     }
 
-    public TimePurchasePolicy(int id, boolean isProduct, String toConstraint, boolean positive, int start, int end) {
+    public TimePurchasePolicy(int id, boolean isProduct, String toConstraint, boolean positive, int start, int end) throws Exception {
         super(id, isProduct, toConstraint, positive);
         startHour = start;
         endHour = end;

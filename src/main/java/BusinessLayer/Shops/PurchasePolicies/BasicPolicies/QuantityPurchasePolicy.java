@@ -18,7 +18,7 @@ public class QuantityPurchasePolicy extends BasicPolicy{
     public QuantityPurchasePolicy() {
     }
 
-    public QuantityPurchasePolicy(int id, boolean isProduct, String toConstraint, boolean positive, int minQuantity, int maxQuantity) {
+    public QuantityPurchasePolicy(int id, boolean isProduct, String toConstraint, boolean positive, int minQuantity, int maxQuantity) throws Exception {
         super(id, isProduct, toConstraint, positive);
         this.maxQuantity = maxQuantity;
         this.minQuantity = minQuantity;
