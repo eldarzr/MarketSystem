@@ -147,19 +147,21 @@ public class Shop implements ShopIntr {
 		}
 //		ownersHandler.addOwner(actOn,this,actor);
 		ownersHandler.addOwner(actOn,this,actor);
-		notifyOwnersOnApproveRequest(actOn);
+		notifyOwnersOnApproveRequest(actor,actOn);
 		return approveOwner(actor,actOn);
 
 //		MemberRoleInShop.createOwner(actOn, this, actor, sendMessage);
 //		PersistenceManager.getInstance().updateObj(this);
 	}
 
-	private void notifyOwnersOnApproveRequest(String actOn) {
-
+	private void notifyOwnersOnApproveRequest(String actor, String actOn) {
 				for (String owner : getOwnersNames()) {
-					String message = String.format("User %s as appointed as an owner of shop  : %s  and wait for you approval.", actOn, this.name);
-					Notification notification = new Notification(owner, message);
-					NotificationPublisher.getInstance().notify(owner, notification);
+					if(!owner.equalsIgnoreCase(actor))
+					{
+						String message = String.format("User %s was suggested to be appointed as an owner of shop %s and waits for you approval.", actOn, this.name);
+						Notification notification = new Notification(owner, message);
+						NotificationPublisher.getInstance().notify(owner, notification);
+					}
 				}
 
 	}

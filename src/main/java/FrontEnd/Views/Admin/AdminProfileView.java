@@ -28,7 +28,7 @@ public class AdminProfileView extends ProfileView implements HasUrlParameter<Str
                         ui.navigate(ADMIN_PREFIX + PURCHASE_HISTORY + "/" + visitedUser.getName()))
         );
 
-        viewMessagesButton.addClickListener(e ->
+        viewNotificationsButton.addClickListener(e ->
                 getUI().ifPresent(ui -> ui.navigate(
                         ADMIN_PREFIX + MY_NOTIFICATIONS + "/" + visitedUser.getName()))
         );
@@ -44,7 +44,7 @@ public class AdminProfileView extends ProfileView implements HasUrlParameter<Str
 
     protected void setButtonsNames(){
         purchaseHistoryButton.setText(String.format("View %s Purchase History", visitedUser.getName()));
-        viewMessagesButton.setText(String.format("View %s Messages", visitedUser.getName()));
+        viewNotificationsButton.setText(String.format("View %s Messages", visitedUser.getName()));
         viewMyShopsButton.setText(String.format("View %s Shops", visitedUser.getName()));
 
         searchButton.setVisible(false);

@@ -33,17 +33,17 @@ public class MyNotificationView extends BaseView {
 
     public MyNotificationView() {
         this.GetNotifications();
-        this.setupGrid(getCurrentUser().getUserType() == UserType.ADMIN);
+        this.setupGrid();
         this.refreshGrid();
     }
 
 
-    private void setupGrid(boolean isAdmin) {
+    private void setupGrid() {
         notificationGrid = new Grid<>(NotificationModel.class, false);
         notificationGrid.setAllRowsVisible(true);
-        notificationGrid.addColumn(NotificationModel::getSource).setHeader("Sender");
-        notificationGrid.addColumn(NotificationModel::getMessage).setHeader("message");
-        notificationGrid.addColumn(NotificationModel::getCreationTime).setHeader("time");
+        notificationGrid.addColumn(NotificationModel::getSource).setHeader("Sender").setAutoWidth(true);
+        notificationGrid.addColumn(NotificationModel::getMessage).setHeader("message").setAutoWidth(true);
+        notificationGrid.addColumn(NotificationModel::getCreationTime).setHeader("time").setAutoWidth(true);
 
         notificationGrid.addColumn(
                 new ComponentRenderer<>(Button::new, (button, notification) -> {
@@ -52,7 +52,7 @@ public class MyNotificationView extends BaseView {
                             ButtonVariant.LUMO_TERTIARY);
                     button.addClickListener(e -> this.removeNotification(notification));
                     button.setIcon(new Icon(VaadinIcon.TRASH));
-                    button.setVisible(isAdmin);
+                    button.setVisible(true);
                 })).setHeader("Manage");
 
         notificationGrid.setItems(notifications);

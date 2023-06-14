@@ -60,6 +60,7 @@ public record StateLoader(Market market) {
                     case "addCategoryDiscount" -> market.addCategoryDiscount(params[0], params[1], Double.parseDouble(params[2]), params[3]);
                     case "addProductDiscount" -> market.addProductDiscount(params[0], params[1], Double.parseDouble(params[2]), params[3]);
                     case "changeManagerAccess" -> market.changeManagerAccess(params[0], params[1], params[2], Integer.parseInt(params[3]));
+
                     // Admin API
                     case "removeUser" -> market.removeUser(params[0], params[1]);
                     case "removeShop" -> market.removeShop(params[0], params[1], params[2]);

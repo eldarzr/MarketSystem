@@ -22,7 +22,7 @@ import java.time.LocalDate;
 public class ProfileView extends BaseView {
 
     protected Button purchaseHistoryButton;
-    protected Button viewMessagesButton;
+    protected Button viewNotificationsButton;
     protected Button viewMyShopsButton;
     protected Button updateBirthdayButton;
     protected Button searchButton;
@@ -37,8 +37,8 @@ public class ProfileView extends BaseView {
         purchaseHistoryButton = new Button("Purchase History");
         enableButton(purchaseHistoryButton);
 
-        viewMessagesButton = new Button("View Messages");
-        enableButton(viewMessagesButton);
+        viewNotificationsButton = new Button("View My Notifications");
+        enableButton(viewNotificationsButton);
 
         viewMyShopsButton = new Button("View My Shops");
         enableButton(viewMyShopsButton);
@@ -56,7 +56,7 @@ public class ProfileView extends BaseView {
         adminButton.getStyle().set("background-color", "#FF8C00");
         adminButton.getStyle().set("color", "white");
 
-        HorizontalLayout buttonsLayout = new HorizontalLayout(purchaseHistoryButton, viewMessagesButton, viewMyShopsButton,updateBirthdayButton, searchButton, adminButton);
+        HorizontalLayout buttonsLayout = new HorizontalLayout(purchaseHistoryButton, viewNotificationsButton, viewMyShopsButton,updateBirthdayButton, searchButton, adminButton);
         buttonsLayout.setWidthFull();
         buttonsLayout.setMargin(true);
         buttonsLayout.setSpacing(true);
@@ -73,8 +73,8 @@ public class ProfileView extends BaseView {
                 purchaseHistoryButton.getUI().ifPresent(ui ->
                         ui.navigate(PURCHASE_HISTORY))
         );
-        viewMessagesButton.addClickListener(e ->
-                viewMessagesButton.getUI().ifPresent(ui ->
+        viewNotificationsButton.addClickListener(e ->
+                viewNotificationsButton.getUI().ifPresent(ui ->
                         ui.navigate(MY_NOTIFICATIONS))
         );
         viewMyShopsButton.addClickListener(e ->

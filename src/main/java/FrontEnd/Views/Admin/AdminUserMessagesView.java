@@ -1,23 +1,17 @@
 package FrontEnd.Views.Admin;
 
 import BusinessLayer.Enums.UserType;
-import FrontEnd.Model.MessageModel;
 import FrontEnd.Model.NotificationModel;
 import FrontEnd.Model.UserModel;
 import FrontEnd.SResponseT;
-import FrontEnd.Views.BaseView;
 import FrontEnd.Views.MyNotificationView;
-import FrontEnd.Views.UserMessagesView;
 import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Route(value = "admin_user_notifications")

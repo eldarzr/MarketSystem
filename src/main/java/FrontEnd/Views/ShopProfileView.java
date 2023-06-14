@@ -117,8 +117,6 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 		NumberField productPrice = new NumberField("Product Price");
 		IntegerField productQuantity = new IntegerField("Product Quantity");
 
-		productName.setEnabled(false);
-
 		editProductButton = new Button("Edit Product");
 		editProductButton.getStyle().set("color", "white");
 		disableButton(editProductButton);
@@ -296,7 +294,7 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 
 	private void updateProduct(ProductModel currentProduct, String productName, String productCategory, String productDescription, Double productPrice, Integer productQuantity) {
 		if(!productCategory.equals(currentProduct.getCategory())){
-			SResponse res = marketService.updateProductCategory(getCurrentUser().getName(), shopProfile.getName(),currentProduct.getName(),productCategory);
+			SResponse res = marketService.updateProductCategory(getCurrentUser().getName(), shopProfile.getName(),productName,productCategory);
 			if(!res.isSuccess())
 				Notification.show(res.getMessage());
 			else Notification.show("Updated category successfully");
