@@ -147,7 +147,6 @@ public class User{
 
     public void addProductToCart(String shopName, Product product, int quantity) throws Exception {
         getCart().addProduct(shopName, product, quantity);
-//        PersistenceManager.getInstance().updateObj(getCart());
         updateDB();
     }
 

@@ -542,7 +542,6 @@ public class Market implements MarketIntr{
         Shop shop = shopHandler.getShop(shopName);
         Product product = shop.getProduct(productName,quantity);
         user.addProductToCart(shop.getName(),product,quantity);
-//        PersistenceManager.getInstance().updateObj(user);
         logger.info(String.format("User %s added %d %s from shop %s.", userName,quantity,productName,shopName));
     }
 

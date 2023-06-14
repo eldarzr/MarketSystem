@@ -61,7 +61,7 @@ public class ShopBag implements Serializable {
     public void addProduct(Product product, int quantity) {
         ShopBagItem shopBagItem = new ShopBagItem(product,quantity, userName);
         if(productsAndQuantities.containsKey(product.getName())){
-            ShopBagItem ExistingShopBagItem = productsAndQuantities.get(product);
+            ShopBagItem ExistingShopBagItem = productsAndQuantities.get(product.getName());
             ExistingShopBagItem.setQuantity(ExistingShopBagItem.getQuantity()+quantity);
             PersistenceManager.getInstance().updateObj(ExistingShopBagItem);
         }

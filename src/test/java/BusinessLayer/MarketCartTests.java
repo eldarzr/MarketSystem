@@ -44,6 +44,13 @@ class MarketCartTests {
     }
 
     @Test
+    void addItemToCartTwice() throws Exception {
+        market.addProductsToCart(usersName[0], shopNames[0], prodNames[0], 1);
+        market.addProductsToCart(usersName[0], shopNames[0], prodNames[0], 1);
+        assertEquals(market.getCart(usersName[0]).getShoppingBag(shopNames[0]).getProductsAndQuantities().get(prodNames[0]).getQuantity(),2);
+    }
+
+    @Test
     void addProductToCartSuccess() throws Exception {
         market.addProductsToCart(usersName[0], shopNames[0], prodNames[0], quantity[0]);
         assertEquals(prodNames[0], market.getCart(usersName[0]).getAllProducts().get(0).getName());
