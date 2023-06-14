@@ -16,7 +16,7 @@ public class OwnersHandler {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "ownersHandler")
+    @OneToOne
     private Shop shop;
 
     @ElementCollection
