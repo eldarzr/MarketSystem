@@ -46,10 +46,12 @@ public class Cart implements Serializable {
     }
 
     public void addProduct(String shopName, Product product, int quantity) throws Exception {
-        if(!cart.containsKey(shopName))
+        boolean alreadyExists = cart.containsKey(shopName);
+        if(!alreadyExists)
             cart.put(shopName,new ShopBag(shopName, userName));
         ShopBag shopBag = getShoppingBag(shopName);
-        PersistenceManager.getInstance().persistObj(shopBag);
+        if(!alreadyExists)
+            PersistenceManager.getInstance().persistObj(shopBag);
         shopBag.addProduct(product,quantity);
     }
 
