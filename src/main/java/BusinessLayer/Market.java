@@ -345,10 +345,6 @@ public class Market implements MarketIntr{
         Shop reqShop = checkForShop(shopName);
         reqShop.setShopOwner(appointedBy,appointee , user::sendMessage);
 		ShopRepository.getInstance().updateToDB(shopName);
-        //notify appointee
-        String message=String.format("User %s appointed you as shop-owner of shop %s.", appointedBy, shopName);
-        Notification notification=new Notification(appointedBy,message);
-        NotificationPublisher.getInstance().notify(appointee,notification);
         logger.info(String.format("User %s appointed %s as shop-owner of shop %s.", appointedBy,appointee, shopName));
 		
     }
