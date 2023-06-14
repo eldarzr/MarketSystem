@@ -10,6 +10,7 @@ import BusinessLayer.PersistenceManager;
 import BusinessLayer.Shops.*;
 import BusinessLayer.Users.User;
 
+import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -79,7 +80,7 @@ public class Purchase implements PurchaseIntr{
                     NotificationPublisher.getInstance().notifyShopManagement(user.getName(),shop.getName(),notification);
                 }
                 System.out.println("!@!@!@!@!@!@!@!@!@!" + shopInvoice);
-                ShopRepository.getInstance().updateToDB(shop.getName());
+//                ShopRepository.getInstance().updateToDB(shop.getName());
             }
         }
     }
@@ -235,6 +236,7 @@ public class Purchase implements PurchaseIntr{
         for(String shopName : shopsAndProducts.keySet()){
             ShopInvoice shopInvoice = new ShopInvoice
                     (user.getName(), paymentDetails.toString(), supplyDetails.toString(), shopName);
+            PersistenceManager.getInstance().persistObj(shopInvoice);
             ShopBag shopBag = shopsAndProducts.get(shopName);
             for (ShopBagItem shopBagItem : shopBag.getProductsAndQuantities().values()){
                 System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + shopBagItem.getProduct());
