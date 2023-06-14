@@ -131,6 +131,19 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
     }
 
     private void updateButtons() {
+        SResponseT<Integer> activePolicyResponse = marketService.getActivePurchasePolicyId(getCurrentUser().getName(), shopName);
+        if (activePolicyResponse.isSuccess()) {
+            int index = activePolicyResponse.getData();
+            if(index == -1){
+                disableButton(removeActivePolicyButton);
+            }
+            else{
+                enableButton(removeActivePolicyButton);
+            }
+        }
+        else{
+            enableButton(removeActivePolicyButton);
+        }
         if(shopProfile != null && shopProfile.getRoles().get(getCurrentUser().getName()).getType().equals(ManageType.MANAGER) && shopProfile.getRoles().get(getCurrentUser().getName()).getPermissions().getManageAccess() == ManageKindEnum.READ_ONLY) {
             disableButton(createComplexPolicyButton);
             disableButton(createSimplePolicyButton);
@@ -143,9 +156,7 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
         }
     }
 
-
     private void updatePolicyGrid() {
-
         SResponseT<Collection<PurchasePolicyDataObj>> policiesResponse = marketService.getAllPurchasePolicies(currentUser.getName(), shopName);
         if (policiesResponse.isSuccess()) {
             policyGrid.setItems(policiesResponse.getData());
@@ -303,7 +314,7 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
             int min = minQuantity.getValue();
             int max = maxQuantity.getValue();
             SResponse res = marketService.addQuantityPurchasePolicy(getCurrentUser().getName(),shopName,isProduct,toConstraint,positive,min,max);
-            if(!res.isSuccess())Notification.show(res.getMessage());
+            if(!res.isSuccess())Notification.show("Error "+res.getMessage());
             else {
                 updatePolicyGrid();
             }
@@ -362,7 +373,7 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
             LocalDate sDate = startDate.getValue();
             LocalDate eDate = endDate.getValue();
             SResponse res = marketService.addDatePurchasePolicy(getCurrentUser().getName(),shopName,isProduct,toConstraint,positive,sDate,eDate);
-            if(!res.isSuccess())Notification.show(res.getMessage());
+            if(!res.isSuccess())Notification.show("Error "+res.getMessage());
             else {
                 updatePolicyGrid();
             }
@@ -421,9 +432,8 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
             int sTime = startTime.getValue().getHour();
             int eTime = endTime.getValue().getHour();
             SResponse res = marketService.addTimePurchasePolicy(getCurrentUser().getName(),shopName,isProduct,toConstraint,positive,sTime,eTime);
-            if(!res.isSuccess())Notification.show(res.getMessage());
+            if(!res.isSuccess())Notification.show("Error "+res.getMessage());
             else {
-
                 updatePolicyGrid();
             }
             dialog.close();
@@ -483,7 +493,7 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
             int pid1 = firstPolicy.getValue();
             int pid2 = secondPolicy.getValue();
             SResponse res = marketService.addIfPurchasePolicy(getCurrentUser().getName(),shopName,pid1,pid2);
-            if(!res.isSuccess())Notification.show(res.getMessage());
+            if(!res.isSuccess())Notification.show("Error "+res.getMessage());
             else {
                 Notification.show("Success!");
                 updatePolicyGrid();
@@ -516,7 +526,7 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
             int pid1 = firstPolicy.getValue();
             int pid2 = secondPolicy.getValue();
             SResponse res = marketService.addAndPurchasePolicy(getCurrentUser().getName(),shopName,pid1,pid2);
-            if(!res.isSuccess())Notification.show(res.getMessage());
+            if(!res.isSuccess())Notification.show("Error "+res.getMessage());
             else {
                 Notification.show("Success!");
                 updatePolicyGrid();
@@ -548,7 +558,7 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
             int pid1 = firstPolicy.getValue();
             int pid2 = secondPolicy.getValue();
             SResponse res = marketService.addOrPurchasePolicy(getCurrentUser().getName(),shopName,pid1,pid2);
-            if(!res.isSuccess())Notification.show(res.getMessage());
+            if(!res.isSuccess())Notification.show("Error "+res.getMessage());
             else {
                 Notification.show("Success!");
                 updatePolicyGrid();
