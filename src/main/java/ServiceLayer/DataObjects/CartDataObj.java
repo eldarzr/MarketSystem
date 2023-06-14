@@ -29,4 +29,8 @@ public class CartDataObj {
     public void setCart(ConcurrentHashMap<String, ShopBagDataObj> cart) {
         this.cart = cart;
     }
+
+    public boolean isEmpty() {
+        return cart.isEmpty();
+    }
 }

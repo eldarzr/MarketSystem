@@ -74,6 +74,17 @@ class MarketPurchsae {
     }
 
     @org.junit.jupiter.api.Test
+    void addProductToCartAndBuyItTwice() throws Exception {
+        market.addProductsToCart(cNames[0],shopNames[0],prodNames[0],1);
+        market.purchaseCart(cNames[0],paymentDetails,supplyDetails);
+        market.addProductsToCart(cNames[0],shopNames[0],prodNames[0],1);
+        market.purchaseCart(cNames[0],paymentDetails,supplyDetails);
+        while(true){
+
+        }
+    }
+
+    @org.junit.jupiter.api.Test
     void purchaseByGuest() throws Exception {
         String guestName = market.startSession();
         market.addProductsToCart(guestName,shopNames[0],prodNames[0],quantity[0]-1);
