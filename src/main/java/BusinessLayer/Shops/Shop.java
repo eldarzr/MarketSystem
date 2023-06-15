@@ -326,6 +326,8 @@ public class Shop implements ShopIntr {
 	}
 
 	public void updateProductQuantity(String userName, String productName, int quantity) throws Exception {
+		if(quantity < PRODUCT_MIN_QUANTITY)
+			throw new IllegalArgumentException("product quantity cannot be negative");
 		validateProductExists(productName);
 		validatePermissionsException(userName, MANAGE_STOCK);
 		products.get(productName).setQuantity(quantity);
