@@ -37,6 +37,7 @@ public class CartView extends BaseView {
 
     private Accordion shopAccordion;
     private DecimalFormat priceFormat = new DecimalFormat("#,##0.00");
+    CartDataObj cartDataObj = null;
 
     public CartView() {
 
@@ -62,8 +63,8 @@ public class CartView extends BaseView {
         // Fetch cart data
         SResponseT<CartDataObj> cart_res = marketService.getCart(userModel.getName());
         if(cart_res.isSuccess()) {
-            CartDataObj c = cart_res.getData();
-            Map<String, ShopBagDataObj> cart = c.getCart();
+            cartDataObj = cart_res.getData();
+            Map<String, ShopBagDataObj> cart = cartDataObj.getCart();
 
 
             // Populate accordion with shop panels
@@ -95,6 +96,8 @@ public class CartView extends BaseView {
                 getUI().ifPresent(ui ->
                     ui.navigate("payment"));
         });
+        if(cartDataObj != null)
+            checkoutButton.setVisible(!cartDataObj.isEmpty());
         checkoutButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
         checkoutButton.getStyle().set("color", "white");
         checkoutButton.getStyle().set("margin-top", "1rem");

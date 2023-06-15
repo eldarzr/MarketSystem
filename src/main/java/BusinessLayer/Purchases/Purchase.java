@@ -27,6 +27,7 @@ public class Purchase implements PurchaseIntr{
     UserInvoice userInvoice;
     List<ShopInvoice> shopInvoices;
     ExternalSystemAPI externalSystem;
+    boolean productsReducedFromShop;
 
     public Purchase(User user, List<Shop> shops, PaymentDetails paymentDetails, SupplyDetails supplyDetails) {
         this.user = user;
@@ -37,6 +38,7 @@ public class Purchase implements PurchaseIntr{
             this.userInvoice = new UserInvoice(user.getName(), paymentDetails.toString(), paymentDetails.toString());
         this.shopInvoices = new ArrayList<>();
         this.externalSystem = new ExternalSystemAPI();
+        productsReducedFromShop = false;
     }
 
     @Override
@@ -79,8 +81,6 @@ public class Purchase implements PurchaseIntr{
                     Notification notification = new Notification(user.getName(),user.getName()+" purchased "+productInfo.getQuantity()+" "+productInfo.getName()+" in shop "+shop.getName());
                     NotificationPublisher.getInstance().notifyShopManagement(user.getName(),shop.getName(),notification);
                 }
-                System.out.println("!@!@!@!@!@!@!@!@!@!" + shopInvoice);
-//                ShopRepository.getInstance().updateToDB(shop.getName());
             }
         }
     }
@@ -98,6 +98,7 @@ public class Purchase implements PurchaseIntr{
         checkProductsAvailability(shopsAndProducts);
         FinalCartPriceResult finalPriceResultResult = computeCartPrice();
         reduceProductsQuantity(shopsAndProducts);
+        productsReducedFromShop = true;
         addProductsToInvoices(shopsAndProducts);
         return finalPriceResultResult;
     }
@@ -143,12 +144,7 @@ public class Purchase implements PurchaseIntr{
     private void checkProductsAvailability(Map<String, ShopBag> shopsAndProducts) throws Exception {
         for(String shopName : shopsAndProducts.keySet()){
             Shop currentShop = getShopByName(shopName);
-            try {
-                currentShop.validateAvailability(shopsAndProducts.get(shopName).getProductsAndQuantities());
-            }catch (Exception e){
-                releaseProductsLocks();
-                throw new Exception(String.format("ERROR: unable to purchase cart because: %s",e.getMessage()));
-            }
+            currentShop.validateAvailability(shopsAndProducts.get(shopName).getProductsAndQuantities());
         }
     }
 
@@ -173,7 +169,7 @@ public class Purchase implements PurchaseIntr{
 
     private void releaseProductsLocks(){
         Cart cart = user.getCart();
-//        List<Product> products = cart.getAllProducts();
+        products = cart.getAllProducts();
         products.sort(new Comparator<Product>() {
             public int compare(Product p1, Product p2) {
                 return p1.getName().compareTo(p2.getName());
@@ -185,9 +181,11 @@ public class Purchase implements PurchaseIntr{
 
     private void revert() throws Exception {
 //        acquireProductsLocks();
-        Cart cart = user.getCart();
-        Map<String, ShopBag>  shopsAndProducts = cart.getShopsAndProducts();
-        revertProductsReduce(shopsAndProducts);
+        if(productsReducedFromShop){
+            Cart cart = user.getCart();
+            Map<String, ShopBag>  shopsAndProducts = cart.getShopsAndProducts();
+            revertProductsReduce(shopsAndProducts);
+        }
         releaseProductsLocks();
     }
 
@@ -239,15 +237,10 @@ public class Purchase implements PurchaseIntr{
             PersistenceManager.getInstance().persistObj(shopInvoice);
             ShopBag shopBag = shopsAndProducts.get(shopName);
             for (ShopBagItem shopBagItem : shopBag.getProductsAndQuantities().values()){
-                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + shopBagItem.getProduct());
-                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + shopName);
                 userInvoice.addProduct(shopName, shopBagItem.getProduct(), shopBagItem.getQuantity());
                 shopInvoice.addProduct(new ProductInfo(shopBagItem.getProduct(), shopBagItem.getQuantity()));
             }
             shopInvoices.add(shopInvoice);
-//            PersistenceManager.getInstance().persistObj(shopInvoice);
         }
-
-//        PersistenceManager.getInstance().persistObj(userInvoice);
     }
 }
