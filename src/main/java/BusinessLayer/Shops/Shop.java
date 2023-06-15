@@ -448,6 +448,10 @@ public class Shop implements ShopIntr {
 	public void removeOwner(String grantorName, String ownerToRemove) throws Exception {
 		remLock.lock();
 		try {
+			if(ownerToRemove.equals(this.founderUserName))
+			{
+				throw new Exception("Can't fire the shop founder");
+			}
 			MemberRoleInShop ownerToRemoveRole = validateUserHasRole(ownerToRemove);
 			if (ownerToRemoveRole.getGrantor() != null && !ownerToRemoveRole.getGrantor().equals(grantorName)) {
 				throw new Exception("only the grantor of an owner can remove him from his role");
