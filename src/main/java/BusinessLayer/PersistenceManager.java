@@ -38,11 +38,11 @@ public class PersistenceManager {
 		needToBeSaveQueue = new ConcurrentLinkedQueue<>();
 		programIsRunning = false;
 		thread.interrupt();
+		EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
 		while (!success && tries > 0) {
 			try {
 				List<String> tableNames = getAllTableNames();
 
-				EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
 				lock.lock();
 				entityManager.getTransaction().begin();
 				// Disable foreign key checks
@@ -58,9 +58,8 @@ public class PersistenceManager {
 				entityManager.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();
 
 				entityManager.getTransaction().commit();
-
-				entityManager.close();
-				resetEntityManager();
+//				entityManager.close();
+//				resetEntityManager();
 				success = true;
 				if (lock.isHeldByCurrentThread())
 					lock.unlock();
@@ -71,9 +70,11 @@ public class PersistenceManager {
 				if (tries == 0)
 					throw e;
 			}
-//			finally {
-//				lock.unlock();
-//			}
+			finally {
+				entityManager.close();
+				if (lock.isHeldByCurrentThread())
+					lock.unlock();
+			}
 		}
 
 	}
@@ -81,16 +82,16 @@ public class PersistenceManager {
 
 	public List<String> getAllTableNames() {
 		List<String> tableNames;
+		EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
 		try {
-			EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
 			lock.lock();
 			entityManager.getTransaction().begin();
 			tableNames = entityManager.createNativeQuery(
 					String.format("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '%s'", SysConfig.table_scheme)
 			).getResultList();
 			entityManager.getTransaction().commit();
-//		entityManager.close();
 		} finally {
+			entityManager.close();
 			if (lock.isHeldByCurrentThread())
 				lock.unlock();
 		}
@@ -107,11 +108,12 @@ public class PersistenceManager {
 
 
 	public EntityManager getEntityManager() {
-		if (entityManager.getTransaction().isActive())
-			entityManager.getTransaction().commit();
-		if (!entityManager.isOpen())
-			entityManager = entityManagerFactory.createEntityManager();
-		return entityManager;
+//		if (entityManager.getTransaction().isActive())
+//			entityManager.getTransaction().commit();
+//		if (!entityManager.isOpen())
+//			entityManager = entityManagerFactory.createEntityManager();
+//		return entityManager;
+		return entityManagerFactory.createEntityManager();
 	}
 
 	public void resetEntityManager() {
@@ -119,8 +121,8 @@ public class PersistenceManager {
 	}
 
 	public void persistObj(Object obj) {
+		EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
 		try {
-			EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
 			lock.lock();
 			entityManager.getTransaction().begin();
 			entityManager.persist(obj);
@@ -128,14 +130,15 @@ public class PersistenceManager {
 		} catch (Exception e) {
 			needToBeSaveQueue.add(() -> persistObj(obj));
 		} finally {
+			entityManager.close();
 			if (lock.isHeldByCurrentThread())
 				lock.unlock();
 		}
 	}
 
 	public void updateObj(Object obj) {
+		EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
 		try {
-			EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
 			lock.lock();
 			entityManager.getTransaction().begin();
 			entityManager.merge(obj);
@@ -143,14 +146,15 @@ public class PersistenceManager {
 		} catch (Exception e) {
 			needToBeSaveQueue.add(() -> updateObj(obj));
 		} finally {
+			entityManager.close();
 			if (lock.isHeldByCurrentThread())
 				lock.unlock();
 		}
 	}
 
 	public void removeConnectionFromDB(Object holder, Object needToRemove) {
+		EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
 		try {
-			EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
 			lock.lock();
 			entityManager.getTransaction().begin();
 			if (needToRemove != null)
@@ -161,14 +165,15 @@ public class PersistenceManager {
 		} catch (Exception e) {
 			needToBeSaveQueue.add(() -> removeConnectionFromDB(holder, needToRemove));
 		} finally {
+			entityManager.close();
 			if (lock.isHeldByCurrentThread())
 				lock.unlock();
 		}
 	}
 
 	public void removeFromDB(Object needToRemove) {
+		EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
 		try {
-			EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
 			lock.lock();
 			entityManager.clear();
 			entityManager.getTransaction().begin();
@@ -178,6 +183,7 @@ public class PersistenceManager {
 		} catch (Exception e) {
 			needToBeSaveQueue.add(() -> removeFromDB(needToRemove));
 		} finally {
+			entityManager.close();
 			if (lock.isHeldByCurrentThread())
 				lock.unlock();
 		}

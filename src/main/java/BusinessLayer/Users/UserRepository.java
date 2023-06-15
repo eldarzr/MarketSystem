@@ -4,6 +4,7 @@ import BusinessLayer.PersistenceManager;
 import BusinessLayer.Shops.Shop;
 import BusinessLayer.Shops.ShopProduct;
 
+import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,24 +35,32 @@ public class UserRepository {
     }
 
     public List<User> getAllMembers() {
+        EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
         try {
-            TypedQuery<User> query = PersistenceManager.getInstance().getEntityManager().createQuery("SELECT s FROM User s", User.class);
+            TypedQuery<User> query = entityManager.createQuery("SELECT s FROM User s", User.class);
             return query.getResultList();
         }
         catch (Exception e){
             return members;
         }
+        finally {
+            entityManager.close();
+        }
     }
 
     public void addMember(String userName, User user) throws Exception {
+        EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
         User userFromDB = getUserFromCache(userName);
         if(userFromDB != null)
             throwException("There is already user with that name");
         try {
-            userFromDB = PersistenceManager.getInstance().getEntityManager().find(User.class, userName);
+            userFromDB = entityManager.find(User.class, userName);
         }
         catch (Exception e){
             userFromDB = null;
+        }
+        finally {
+            entityManager.close();
         }
         if (userFromDB != null) {
             storeInCache(userFromDB);
@@ -62,16 +71,21 @@ public class UserRepository {
     }
 
     public User getMember(String userName) {
+        EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
         User user;
         user = getUserFromCache(userName);
         if (user != null)
             return user;
         try {
-            user = PersistenceManager.getInstance().getEntityManager().find(User.class, userName);
+            user = entityManager.find(User.class, userName);
         }
         catch (Exception e){
             user = null;
         }
+        finally {
+            entityManager.close();
+        }
+
         if (user == null)
             return null;
 

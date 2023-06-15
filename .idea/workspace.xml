@@ -6,7 +6,59 @@
   <component name="ChangeListManager">
     <list default="true" id="b632bc94-40ae-4fc8-ad09-f0a6a998ea35" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/AcceptanceTests/Tests/ParallelismTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/AcceptanceTests/Tests/ParallelismTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/Flow.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/Flow.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/Flow.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/Flow.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/FlowBootstrap.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/FlowBootstrap.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/FlowBootstrap.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/FlowBootstrap.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/FlowClient.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/FlowClient.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/FlowClient.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/FlowClient.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/comboBoxConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/comboBoxConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/contextMenuConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/contextMenuConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/contextMenuTargetConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/contextMenuTargetConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/cookieConsentConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/cookieConsentConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/datepickerConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/datepickerConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/dndConnector-es6.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/dndConnector-es6.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/dndConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/dndConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/flow-component-directive.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/flow-component-directive.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/flow-component-renderer.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/flow-component-renderer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/gridConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/gridConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/gridProConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/gridProConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/index.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/index.d.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/lit-renderer.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/lit-renderer.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/lumo-includes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/lumo-includes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/material-includes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/material-includes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/menubarConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/menubarConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/messageListConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/messageListConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/selectConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/selectConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/tooltip.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/tooltip.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-big-decimal-field.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-big-decimal-field.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-grid-flow-selection-column.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-grid-flow-selection-column.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/mapConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/mapConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/synchronization/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/synchronization/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/synchronization/layers.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/synchronization/layers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/synchronization/sources.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/synchronization/sources.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/synchronization/styles.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/synchronization/styles.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/synchronization/util.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/synchronization/util.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/util.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-map/util.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-time-picker/helpers.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-time-picker/helpers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-time-picker/timepickerConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/vaadin-time-picker/timepickerConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/generated/jar-resources/virtualListConnector.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/generated/jar-resources/virtualListConnector.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/StateFiles/loadTempState" beforeDir="false" afterPath="$PROJECT_DIR$/src/StateFiles/loadTempState" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Bids/Bid.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Bids/Bid.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/PersistenceManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/PersistenceManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Purchases/Cart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Purchases/Cart.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Purchases/ShopBag.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Purchases/ShopBag.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Purchases/UserInvoice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Purchases/UserInvoice.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Shops/Shop.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Shops/Shop.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Shops/ShopRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Shops/ShopRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Users/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Users/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Users/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Users/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Users/UsersHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Users/UsersHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/Admin/AdminView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/Admin/AdminView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/persistence.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/IntegrationTests/MarketCreateShopDataBaseTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/IntegrationTests/MarketCreateShopDataBaseTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/IntegrationTests/MarketManageProductDataBaseTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/IntegrationTests/MarketManageProductDataBaseTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,7 +111,7 @@
     <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectId" id="2NsDd5esnsqHzi2PVet5h88KmtH" />
-  <component name="ProjectLevelVcsManager">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
   </component>
   <component name="ProjectViewState">
@@ -94,8 +146,8 @@
       <command value="mvn clean install" />
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.All in MarketSystem">
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Smart Tomcat.tomcat">
+    <configuration name="Main" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="BusinessLayer.Main" />
       <module name="MarketSystem" />
       <extension name="coverage">
@@ -110,7 +162,10 @@
     </configuration>
     <configuration name="All in MarketSystem" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="MarketSystem" />
+      <shortenClasspath name="MANIFEST" />
       <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="package" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -203,7 +258,7 @@
       <predefined_log_file id="Tomcat Manager Log" />
       <predefined_log_file id="Tomcat Host Manager Log" />
       <option name="contextPath" value="/market" />
-      <option name="docBase" value="D:\courses\third_year\Sadna\MarketSystem\target" />
+      <option name="docBase" value="C:\Users\אלדר זריהן\Documents\לימודים\סמסטר ו'\סדנא\MarketSystem\target" />
       <option name="extraClassPath" value="" />
       <option name="tomcatInfo">
         <TomcatInfo>
@@ -212,7 +267,7 @@
           <option name="version" value="10.1.8.0" />
         </TomcatInfo>
       </option>
-      <option name="vmOptions" value="" />
+      <option name="vmOptions" value="-DconfigFilePath=&quot;src/InitFiles/BaseConfig.jason&quot; -DstateFilePath=&quot;src/StateFiles/loadTempState&quot; -DresetAll=&quot;True&quot;" />
       <module name="MarketSystem" />
       <method v="2">
         <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/pom.xml" goal="clean package -P production" />
@@ -227,15 +282,6 @@
       <item itemvalue="Maven.MarketSystem [mvn,exec:java]" />
       <item itemvalue="Smart Tomcat.tomcat" />
     </list>
-    <recent_temporary>
-      <list>
-        <item itemvalue="JUnit.All in MarketSystem" />
-        <item itemvalue="JUnit.MarketgetShopTest" />
-        <item itemvalue="Application.Main" />
-        <item itemvalue="JUnit.MarketCreateShopTest" />
-        <item itemvalue="JUnit.MarketCreateShopTest.createShopFailNotRegistered (1)" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -267,6 +313,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

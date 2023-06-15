@@ -24,7 +24,7 @@ public class Cart implements Serializable {
     @Column(name = "userName")
     private String userName;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @MapKeyColumn(name = "shopName") // specify the index column
     @JoinColumn(name = "cart_id") // specify the join column in ShopBag table
     private Map<String, ShopBag> cart = new ConcurrentHashMap<>();

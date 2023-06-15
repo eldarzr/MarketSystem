@@ -8,6 +8,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.persistence.EntityManager;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -38,7 +40,9 @@ class MarketCreateShopDataBaseTest {
 			market.register(usersName[i], emails[i], passwords[i]);
 			market.login(guestName,usersName[i], passwords[i]);
 			market.createShop(usersName[i], shopNames[i]);
-			Shop shopFromDB = PersistenceManager.getInstance().getEntityManager().find(Shop.class, shopNames[i]);
+			EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
+			Shop shopFromDB = entityManager.find(Shop.class, shopNames[i]);
+			entityManager.close();
 			assertTrue(shopFromDB.getName().equals(shopNames[i]));
 		}
 	}

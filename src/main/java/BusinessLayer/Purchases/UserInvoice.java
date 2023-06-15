@@ -16,7 +16,7 @@ public class UserInvoice extends Invoice {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinTable(
 			name = "user_invoice_shop_info",
 			joinColumns = @JoinColumn(name = "user_invoice_id"),

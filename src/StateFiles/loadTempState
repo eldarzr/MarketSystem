@@ -38,7 +38,7 @@ addProductItems(gabi99,Gabi's Goods 1,Item 2,10);
 addNewProduct(gabi99, Gabi's Goods 1, Item 3, Category 1, Good product, 5);
 addProductItems(gabi99,Gabi's Goods 1,Item 3,10);
 addNewProduct(gabi99, Gabi's Goods 1, Item 4, Category 2, Good product, 5);
-addProductItems(gabi99,Gabi's Goods 1,Item 4,10);
+addProductItems(gabi99,Gabi's Goods 1,Item 4,100000);
 createShop(gabi99, Gabi's Goods 2);
 addNewProduct(gabi99, Gabi's Goods 2, Item 1, Category 1, Good product, 10);
 addProductItems(gabi99,Gabi's Goods 2,Item 1,10);

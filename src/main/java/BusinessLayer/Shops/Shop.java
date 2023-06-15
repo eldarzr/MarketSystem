@@ -60,11 +60,11 @@ public class Shop implements ShopIntr {
 	private OwnersHandler ownersHandler;
 
 	//map of user name to role in this shop
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "shopName", referencedColumnName = "shopName")
 	@MapKeyColumn(name = "userName")
 	private Map<String, MemberRoleInShop> roles;
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumns({
 			@JoinColumn(name = "shopName", referencedColumnName = "shopName")
 	})
@@ -72,7 +72,7 @@ public class Shop implements ShopIntr {
 	private Map<String, ShopProduct> products;
 	@Transient
 	private ConcurrentLinkedQueue<MessageObserver> observers;
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "shopName")
 	private List<ShopInvoice> invoices;
 	@OneToOne(cascade = CascadeType.ALL)

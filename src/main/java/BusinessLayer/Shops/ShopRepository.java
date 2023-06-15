@@ -38,24 +38,32 @@ public class ShopRepository {
     }
 
     public List<Shop> getAllShops() {
+        EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
         try {
-            TypedQuery<Shop> query = PersistenceManager.getInstance().getEntityManager().createQuery("SELECT s FROM Shop s", Shop.class);
+            TypedQuery<Shop> query = entityManager.createQuery("SELECT s FROM Shop s", Shop.class);
             return query.getResultList();
         }
         catch (Exception e){
             return shops;
         }
+        finally {
+            entityManager.close();
+        }
     }
 
     public void addShop(String shopName, Shop shop) throws Exception {
+		EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
         if(getFromCache(shopName) != null)
             throwException("There is already shop with that name");
         Shop shopFromDB;
         try {
-            shopFromDB = PersistenceManager.getInstance().getEntityManager().find(Shop.class, shopName);
+            shopFromDB = entityManager.find(Shop.class, shopName);
         }
         catch (Exception e){
             shopFromDB = null;
+        }
+        finally {
+            entityManager.close();
         }
         if (shopFromDB != null) {
             storeInCache(shopFromDB);
@@ -66,15 +74,19 @@ public class ShopRepository {
     }
 
     public Shop getShop(String shopName) {
+        EntityManager entityManager = PersistenceManager.getInstance().getEntityManager();
         Shop shop;
         shop = getFromCache(shopName);
         if (shop != null)
             return shop;
         try {
-            shop = PersistenceManager.getInstance().getEntityManager().find(Shop.class, shopName);
+            shop = entityManager.find(Shop.class, shopName);
         }
         catch (Exception e){
             shop = null;
+        }
+        finally {
+            entityManager.close();
         }
         if (shop == null)
             return null;

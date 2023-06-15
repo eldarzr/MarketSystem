@@ -177,7 +177,7 @@ public class AdminView extends BaseView {
 			userDataProvider = new ListDataProvider<>(users == null ? new ArrayList<>() : users);
 			userGrid.setDataProvider(userDataProvider);
 //			Notification.show(user.getSessionID());
-			if(user.getSessionID() != null) {
+			if(res.getData() != null) {
 				VaadinSession session = marketService.getSession(user.getSessionID());
 				if(session != null) {
 					UserModel userModelNew = new UserModel(res.getData(), res.getData());

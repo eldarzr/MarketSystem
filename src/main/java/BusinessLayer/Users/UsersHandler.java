@@ -297,9 +297,13 @@ public class UsersHandler {
         if(isAdmin(userName.toLowerCase())){
             throw new Exception(String.format("the user %s is admin! you cant remove them", userName));
         }
-        userRepository.logoutUser(userName.toLowerCase());
+        String newUserName = null;
+        if (isLoggedIn(userName.toLowerCase())) {
+            userRepository.logoutUser(userName.toLowerCase());
+            newUserName = createGuest(user.getSessionID());
+        }
         userRepository.removeMember(userName.toLowerCase());
-        return createGuest(user.getSessionID());
+        return newUserName;
     }
 
     public User getUser(String userName) {

@@ -34,7 +34,7 @@ public class ShopBag implements Serializable {
     private String userName;
 
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @MapKeyColumn(name = "productName") // specify the index column
     @JoinColumn(name = "shop_bag_id") // specify the join column in ShopBag table
     private Map<String, ShopBagItem> productsAndQuantities = new ConcurrentHashMap<>();
