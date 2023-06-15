@@ -34,7 +34,7 @@ public class ShopModel implements Serializable {
 		this.products = new ConcurrentHashMap<>();
 		for (ProductDataObj product : shop.getProducts().values())
 			products.put(product.getName(), new ProductModel(product));
-		this.active = true;
+		this.active = shop.isActive();
 		this.roles = shop.getRoles();
 	}
 
