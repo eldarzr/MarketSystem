@@ -1,5 +1,6 @@
 package FrontEnd.Views;
 
+import BusinessLayer.Enums.ManageType;
 import FrontEnd.Model.MemberRoleInShopModel;
 import FrontEnd.Model.ShopModel;
 import FrontEnd.Model.UserModel;
@@ -114,15 +115,20 @@ public class MyShopsView extends BaseView {
             enableButton(historyButton);
 
             Label closed_shop_label= new Label("Closed");
+            Button closeButton = new Button("Close Shop");
+
+            if(!(role.getGrantor() == null && role.getType() == ManageType.OWNER)){
+                closeButton.getStyle().set("opacity", "0");
+            }
+
             if(role.getRoleShop().isActive())
             {
-                Button closeButton = new Button("Close Shop");
                 closeButton.addClickListener(e -> onCloseShop(role.getRoleShop().getName(),()->shopLayout.replace(closeButton,closed_shop_label)));
                 closeButton.setVisible(!isAdmin);
                 enableButton(closeButton);
-                shopLayout.add(shopNameLabel, roleLabel, enterButton,closeButton, historyButton);
+                shopLayout.add(shopNameLabel, roleLabel, enterButton, historyButton ,closeButton);
             }
-            else shopLayout.add(shopNameLabel, roleLabel, enterButton,closed_shop_label, historyButton);
+            else shopLayout.add(shopNameLabel, roleLabel, enterButton, historyButton ,closed_shop_label);
             shopLayout.setFlexGrow(1, shopNameLabel, roleLabel);
             myShopsLayout.add(shopLayout);
         }
