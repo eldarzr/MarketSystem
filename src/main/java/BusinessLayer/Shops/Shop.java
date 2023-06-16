@@ -56,7 +56,7 @@ public class Shop implements ShopIntr {
 	private String founderUserName;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "shopName", referencedColumnName = "shopName")
+	@JoinColumn(name = "owners_handler_id", referencedColumnName = "id")
 	private OwnersHandler ownersHandler;
 
 	//map of user name to role in this shop
