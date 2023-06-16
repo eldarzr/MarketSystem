@@ -166,9 +166,10 @@ public class CartView extends BaseView {
                     editDialog.close();
                     Notification.show("Save");
                 });
+                enableButton(saveButton);
 
                 Button cancelButton = new Button("Cancel", event -> editDialog.close());
-
+                enableButton(cancelButton);
                 editDialog.add(new VerticalLayout(quantityField, new HorizontalLayout(saveButton, cancelButton)));
                 editDialog.open();
             });

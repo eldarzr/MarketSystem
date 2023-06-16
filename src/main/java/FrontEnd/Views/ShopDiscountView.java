@@ -92,164 +92,44 @@ public class ShopDiscountView extends BaseView implements HasUrlParameter<String
         showDiscounts();
 
         //***************Simple Discount Button*****************
-        addSimpleDiscount = new Button("Add Simple Discount");
-        addSimpleDiscount.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
-        addSimpleDiscount.getStyle().set("color", "white");
-
-        // Create the dialog
-        Dialog addDiscountDialog = new Dialog();
-
-        // Create the form layout to add the input fields
-        FormLayout formLayout = new FormLayout();
-
-        // Add the discount percentage field
-        IntegerField percentageField = new IntegerField("Discount Percentage");
-        formLayout.add(percentageField);
-
-        // Add the sub type field
-        Select<String> subTypeSelect = new Select<String>();
-        subTypeSelect.setItems("Category", "Product", "Shop");
-        subTypeSelect.setLabel("Discount Sub Type");
-        formLayout.add(subTypeSelect);
-        subTypeSelect.addValueChangeListener(event -> {
-            selectedSubType = event.getValue();
-            // Do something with the selected sub type
-        });
-
-        // Add the appropriate input fields based on the sub type
-        ComboBox<String> subTypeField = new ComboBox<>();
-        subTypeField.setLabel("Name");
-        subTypeField.setVisible(false);
-        subTypeSelect.addValueChangeListener(event -> {
-            selectedSubType = event.getValue();
-            subTypeField.setLabel(selectedSubType + " Name");
-            subTypeField.setVisible(!event.getValue().equals("Shop"));
-            if (selectedSubType.equalsIgnoreCase("Product")) {
-                // Populate the ComboBox with the list of products from the shop
-                List<String> productList = getProductListFromShop();
-                subTypeField.setItems(productList);
-            }else if(selectedSubType.equalsIgnoreCase("Category"))
-            {
-                List<String> CategoriesList = getShopCategories();
-                subTypeField.setItems(CategoriesList);
-            }
-        });
-        formLayout.add(subTypeField);
-
-        // Add the save button to submit the form data
-        Button saveButton = new Button("Save", e -> {
-            int discountPercentage = percentageField.getValue();
-            String discountSubType = subTypeSelect.getValue();
-            String discountSubTypeValue = subTypeField.getValue();
-
-            processRequest(discountPercentage,discountSubType,discountSubTypeValue);
-
-            showDiscountGird();
-
-            // Close the dialog
-            addDiscountDialog.close();
-        });
-
-        Button cancelButton = new Button("Cancel", e -> addDiscountDialog.close());
-
-        saveButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
-        saveButton.getStyle().set("color", "white");
-
-
-        cancelButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
-        cancelButton.getStyle().set("color", "white");
-
-        // Add the buttons to the button layout
-        HorizontalLayout buttonLayout = new HorizontalLayout(cancelButton, saveButton);
-        buttonLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.END);
-        buttonLayout.setWidthFull();
-
-        // Add the form layout and save button to the dialog
-        addDiscountDialog.add(formLayout, buttonLayout);
-
-        // Open the dialog when the add simple discount button is clicked
-        addSimpleDiscount.addClickListener(e -> addDiscountDialog.open());
-
+        HorizontalLayout buttonLayout = SimpleDiscountButton();
 
         //*************compoundButton**************
-
-        addCompoundDiscount = new Button("Make Compound Discount");
-        addCompoundDiscount.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
-        addCompoundDiscount.getStyle().set("color", "white");
-        addCompoundDiscount.setVisible(discountGrid.getFooterRows().size() > 1);
-        discountGrid.addSelectionListener(e -> addCompoundDiscount.setVisible(discountGrid.getSelectedItems().size() > 1));
-
-        // Add a listener to the button
-        addCompoundDiscount.addClickListener(event -> {
-            // Get the currently selected items from the grid
-            List<DiscountDataObj> selectedDiscounts = discountGrid.getSelectedItems().stream().toList();
-            if(!(selectedDiscounts.size() >= 2))
-                return;
-            // Create a dialog for the user to choose the type of compound discount
-            Dialog dialog = new Dialog();
-            dialog.getElement().getStyle().set("word-wrap", "break-word");
-            dialog.setWidth("400px");
-            Label label = new Label("Select a type of compound discount");
-            label.getElement().getStyle().set("white-space", "normal");
-            label.getElement().getStyle().set("word-wrap", "break-word");
-
-            ComboBox<String> comboBox = new ComboBox<>();
-            comboBox.setItems("Max", "Sum", "Xor"); // Replace with your own types
-            comboBox.getElement().getStyle().set("white-space", "normal");
-            comboBox.getElement().getStyle().set("word-wrap", "break-word");
-
-
-
-            Select<String> xorDecisionRule = new Select<>();
-            xorDecisionRule.setLabel("Select Xor Decision Rule");
-            xorDecisionRule.setVisible(false);
-            xorDecisionRule.setItems(XOR_DECISION_RULE_SMALLER_ID, XOR_DECISION_RULE_BIGGEST_DISCOUNT, XOR_DECISION_RULE_SMALLEST_DISCOUNT);
-            comboBox.addValueChangeListener(event1 -> {
-                xorDecisionRule.setVisible(event1.getValue().equalsIgnoreCase("Xor"));
-            });
-
-            Button confirmButton = new Button("Confirm");
-            confirmButton.addClickListener(confirmEvent -> {
-                String selectedType = comboBox.getValue();
-                String selectedXorDecision = xorDecisionRule.getValue();
-                // Send the selected discounts and type to the backend for processing
-                // Your backend implementation here
-                Set<DiscountDataObj> discountsSelected = discountGrid.getSelectedItems();
-                handleCompoundDiscountRequest(discountsSelected,selectedType,selectedXorDecision);
-
-                showDiscountGird();
-
-                dialog.close();
-            });
-            enableButton(confirmButton);
-
-            Button addCompoundCancelButton = new Button("Cancel");
-            addCompoundCancelButton.addClickListener(confirmEvent -> dialog.close());
-            // Add the buttons to the button layout
-            HorizontalLayout buttonLayout2 = new HorizontalLayout(addCompoundCancelButton, confirmButton);
-            buttonLayout2.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.END);
-            buttonLayout2.setWidthFull();
-            enableButton(addCompoundCancelButton);
-
-            FormLayout formLayout2 = new FormLayout();
-            dialog.add(label, comboBox, xorDecisionRule, buttonLayout2);
-            formLayout2.setColspan(comboBox, 2);
-            dialog.add(formLayout2);
-            formLayout2.setMaxWidth("500px");
-            formLayout2.getStyle().set("margin", "0 auto");
-            formLayout2.getStyle().set("text-align", "center");
-            formLayout2.getStyle().set("display", "flex");
-            formLayout2.getStyle().set("flex-direction", "column");
-            formLayout2.getStyle().set("align-items", "center");
-            dialog.setCloseOnEsc(true);
-            dialog.setCloseOnOutsideClick(true);
-
-
-            dialog.open();
-        });
-
+        CompoundDiscountButton();
         //********************Manage Rules*********************
 
+        manageRulesButton(buttonLayout);
+
+        //*************remove discount*************************
+        removeDiscountButton();
+
+        //**********************summary************************
+        HorizontalLayout horizontalLayout = new HorizontalLayout(addSimpleDiscount, addCompoundDiscount,manageRuleButton, removeDiscount);
+
+        add(horizontalLayout);
+
+    }
+
+    private void removeDiscountButton() {
+        removeDiscount = new Button("Remove Discount");
+        enableButton(removeDiscount);
+        removeDiscount.addClickListener(removeEvent -> {
+           List<DiscountDataObj> discountDataObjs = discountGrid.getSelectedItems().stream().toList();
+           if(discountDataObjs.size() != 1){
+               Notification.show("Please choose exactly one discount");
+               return;
+           }
+           DiscountDataObj discountChosen = discountDataObjs.get(0);
+           handleRemoveDiscount(discountChosen.getDiscountId());
+
+            showDiscountGird();
+        });
+        removeDiscount.setVisible(false);
+        discountGrid.addSelectionListener(e -> removeDiscount.setVisible(discountGrid.getSelectedItems().size() == 1));
+        enableButton(removeDiscount);
+    }
+
+    private void manageRulesButton(HorizontalLayout buttonLayout) {
         // Create the dialog
         Dialog ruleDialog = new Dialog();
         ruleDialog.setCloseOnEsc(true);
@@ -282,10 +162,6 @@ public class ShopDiscountView extends BaseView implements HasUrlParameter<String
         ruleTypeSelect.setItems(MinProductQuantityLabel, MaxProductQuantityLabel, MinFromCategoryQuantityLabel, MaxFromCategoryQuantityLabel, BagPriceHigherThanLabel);
         ruleFormManageRule.add(ruleTypeSelect);
 
-//        ComboBox<String> subTypeField = new ComboBox<>();
-//        subTypeField.setLabel("Name");
-//        subTypeField.setVisible(false);
-
         IntegerField quantityField = new IntegerField("Quantity");
         ComboBox<String> productField = new ComboBox("Product Name");
         productField.setItems(getProductListFromShop());
@@ -306,6 +182,20 @@ public class ShopDiscountView extends BaseView implements HasUrlParameter<String
         ruleFormManageRule.add(categoryField);
         ruleFormManageRule.add(priceField);
         ruleFormManageRule.add(actionTypeSelect);
+
+        manageRuleButton.addClickListener(e -> {
+            ruleTypeSelect.setValue("");
+            quantityField.setVisible(false);
+            quantityField.clear();
+            priceField.setVisible(false);
+            productField.clear();
+            categoryField.setVisible(false);
+            categoryField.clear();
+            priceField.setVisible(false);
+            priceField.clear();
+            actionTypeSelect.setVisible(false);
+            actionTypeSelect.clear();
+        });
 
         // Add value change listeners to show/hide the appropriate input fields
         ruleTypeSelect.addValueChangeListener(event -> {
@@ -366,12 +256,52 @@ public class ShopDiscountView extends BaseView implements HasUrlParameter<String
             String product = productField.getValue();
             String category = categoryField.getValue();
             Double price = priceField.getValue();
-            handleAddRuleRequest(selectedDiscount,ruleType,ActionWithOldRule,quantity,product,category,price);
+            boolean isValid = true;
+            if(ruleType == null || ruleType.isEmpty()){
+                isValid = false;
+                ruleTypeSelect.setErrorMessage("please pick rule type");
+                ruleTypeSelect.setInvalid(true);
+            }
+            else{
+                if(!ruleType.equalsIgnoreCase(BagPriceHigherThanLabel)){
+                    if(quantity == null || (quantity < 0)){
+                        isValid = false;
+                        quantityField.setInvalid(true);
+                        quantityField.setErrorMessage("please insert non negative quantity");
+                    }
+                }
+                if(ruleType.equalsIgnoreCase(MinProductQuantityLabel) || ruleType.equalsIgnoreCase(MaxProductQuantityLabel)){
+                    if(product == null || product.isEmpty()){
+                        isValid = false;
+                        productField.setInvalid(true);
+                        productField.setErrorMessage("please select product");
+                    }
+                }
+                if(ruleType.equalsIgnoreCase(MinFromCategoryQuantityLabel) || ruleType.equalsIgnoreCase(MaxFromCategoryQuantityLabel)){
+                    if(category == null || category.isEmpty()){
+                        isValid = false;
+                        categoryField.setInvalid(true);
+                        categoryField.setErrorMessage("please select category");
+                    }
+                }
+                if(ruleType.equals(BagPriceHigherThanLabel) && ((price == null) || (price < 0))){
+                    isValid = false;
+                    priceField.setInvalid(true);
+                    priceField.setErrorMessage("please insert a non negative price");
+                }
+                boolean displayActionWithOld = discountGrid.getSelectedItems().stream().toList().get(0).getDiscountRule() != null;
+                if(displayActionWithOld && ((actionTypeSelect == null) || actionTypeSelect.isEmpty())){
+                    isValid = false;
+                    actionTypeSelect.setInvalid(true);
+                    actionTypeSelect.setErrorMessage("please choose Action with old rule");
+                }
+            }
+            if(isValid){
+                handleAddRuleRequest(selectedDiscount,ruleType,ActionWithOldRule,quantity,product,category,price);
+                showDiscountGird();
+                ruleDialog.close();
+            }
 
-            showDiscountGird();
-
-            ruleTypeSelect.setValue("");
-            ruleDialog.close();
         });
         resetRuleButton.addClickListener(event -> {
             SResponse res =marketService.resetDiscountRule(shopModel.getName(),getCurrentUser().getName(),discountGrid.getSelectedItems().stream().toList().get(0));
@@ -384,45 +314,223 @@ public class ShopDiscountView extends BaseView implements HasUrlParameter<String
             ruleDialog.close();
         });
 
+
         // Define the layout for the dialog buttons
         HorizontalLayout buttonLayout2 = new HorizontalLayout(addRuleButton, resetRuleButton);
         buttonLayout.setSpacing(true);
 
 
-
         // Add the buttons to the dialog
         ruleDialog.add(ruleFormManageRule,buttonLayout2);
+    }
 
-        //*************remove discount*************************
-        removeDiscount = new Button("Remove Discount");
-        enableButton(removeDiscount);
-        removeDiscount.addClickListener(removeEvent -> {
-           List<DiscountDataObj> discountDataObjs = discountGrid.getSelectedItems().stream().toList();
-           if(discountDataObjs.size() != 1){
-               Notification.show("Please choose exactly one discount");
-               return;
-           }
-           DiscountDataObj discountChosen = discountDataObjs.get(0);
-           handleRemoveDiscount(discountChosen.getDiscountId());
+    private HorizontalLayout SimpleDiscountButton() {
+        addSimpleDiscount = new Button("Add Simple Discount");
+        addSimpleDiscount.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
+        addSimpleDiscount.getStyle().set("color", "white");
 
-            showDiscountGird();
+        // Create the dialog
+        Dialog addDiscountDialog = new Dialog();
+
+        // Create the form layout to add the input fields
+        FormLayout formLayout = new FormLayout();
+
+        // Add the discount percentage field
+        IntegerField percentageField = new IntegerField("Discount Percentage");
+        formLayout.add(percentageField);
+
+        // Add the sub type field
+        Select<String> subTypeSelect = new Select<String>();
+        subTypeSelect.setItems("Category", "Product", "Shop");
+        subTypeSelect.setLabel("Discount Sub Type");
+        formLayout.add(subTypeSelect);
+        subTypeSelect.addValueChangeListener(event -> {
+            selectedSubType = event.getValue();
+            // Do something with the selected sub type
         });
-        removeDiscount.setVisible(false);
-        discountGrid.addSelectionListener(e -> removeDiscount.setVisible(discountGrid.getSelectedItems().size() == 1));
-        enableButton(removeDiscount);
 
-        //**********************summary************************
-        HorizontalLayout horizontalLayout = new HorizontalLayout(addSimpleDiscount, addCompoundDiscount,manageRuleButton, removeDiscount);
+        // Add the appropriate input fields based on the sub type
+        ComboBox<String> subTypeField = new ComboBox<>();
+        subTypeField.setLabel("Name");
+        subTypeField.setVisible(false);
+        subTypeSelect.addValueChangeListener(event -> {
+            subTypeField.setVisible(false);
+            selectedSubType = event.getValue();
+            subTypeField.setLabel(selectedSubType + " Name");
+            subTypeField.setVisible(!event.getValue().equals("Shop"));
+            if (selectedSubType.equalsIgnoreCase("Product")) {
+                // Populate the ComboBox with the list of products from the shop
+                List<String> productList = getProductListFromShop();
+                subTypeField.setItems(productList);
+            }else if(selectedSubType.equalsIgnoreCase("Category"))
+            {
+                List<String> CategoriesList = getShopCategories();
+                subTypeField.setItems(CategoriesList);
+            }
+        });
+        formLayout.add(subTypeField);
 
-        add(horizontalLayout);
+        // Add the save button to submit the form data
+        Button saveButton = new Button("Save", e -> {
+            Integer discountPercentage = percentageField.getValue();
+            String discountSubType = subTypeSelect.getValue();
+            String discountSubTypeValue = subTypeField.getValue();
+            boolean isValid = true;
+            if(discountSubType == null || discountSubType.isEmpty()){
+                isValid = false;
+                subTypeSelect.setErrorMessage("please select sub type");
+                subTypeSelect.setInvalid(true);
+            }
+            if(discountPercentage == null || discountPercentage > 100 || discountPercentage < 0){
+                isValid = false;
+                percentageField.setErrorMessage("percentage nust be in range 0 - 100");
+                percentageField.setInvalid(true);
+            }
+            if(discountSubType == null){
+                isValid = false;
+                subTypeSelect.setErrorMessage("please select Sub Type");
+                subTypeSelect.setInvalid(true);
+            }
+            if(!discountSubType.equalsIgnoreCase("shop") && discountSubTypeValue == null){
+                isValid = false;
+                subTypeField.setErrorMessage("please insert Sub Type Value");
+                subTypeField.setInvalid(true);
+            }
 
+            if(isValid){
+                processRequest(discountPercentage,discountSubType,discountSubTypeValue);
+                showDiscountGird();
+                // Close the dialog
+                addDiscountDialog.close();
+            }
+        });
+
+        Button cancelButton = new Button("Cancel", e -> addDiscountDialog.close());
+
+        saveButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
+        saveButton.getStyle().set("color", "white");
+
+
+        cancelButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
+        cancelButton.getStyle().set("color", "white");
+
+
+
+        // Add the buttons to the button layout
+        HorizontalLayout buttonLayout = new HorizontalLayout(cancelButton, saveButton);
+        buttonLayout.setDefaultVerticalComponentAlignment(Alignment.END);
+        buttonLayout.setWidthFull();
+
+        // Add the form layout and save button to the dialog
+        addDiscountDialog.add(formLayout, buttonLayout);
+
+        // Open the dialog when the add simple discount button is clicked
+        addSimpleDiscount.addClickListener(
+                e -> {
+                    percentageField.clear();
+                    subTypeSelect.setValue("");
+                    subTypeField.clear();
+                    subTypeField.setVisible(false);
+                    addDiscountDialog.open();
+                });
+        return buttonLayout;
+    }
+
+    private void CompoundDiscountButton() {
+        addCompoundDiscount = new Button("Make Compound Discount");
+        addCompoundDiscount.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
+        addCompoundDiscount.getStyle().set("color", "white");
+        addCompoundDiscount.setVisible(discountGrid.getFooterRows().size() > 1);
+        discountGrid.addSelectionListener(e -> addCompoundDiscount.setVisible(discountGrid.getSelectedItems().size() > 1));
+        // Add a listener to the button
+        addCompoundDiscount.addClickListener(event -> {
+            // Get the currently selected items from the grid
+            List<DiscountDataObj> selectedDiscounts = discountGrid.getSelectedItems().stream().toList();
+            if(!(selectedDiscounts.size() >= 2))
+                return;
+            // Create a dialog for the user to choose the type of compound discount
+            Dialog dialog = new Dialog();
+            dialog.getElement().getStyle().set("word-wrap", "break-word");
+            dialog.setWidth("400px");
+            Label label = new Label("Select a type of compound discount");
+            label.getElement().getStyle().set("white-space", "normal");
+            label.getElement().getStyle().set("word-wrap", "break-word");
+
+            ComboBox<String> comboBox = new ComboBox<>();
+            comboBox.setItems("Max", "Sum", "Xor"); // Replace with your own types
+            comboBox.getElement().getStyle().set("white-space", "normal");
+            comboBox.getElement().getStyle().set("word-wrap", "break-word");
+            comboBox.clear();
+
+
+
+            Select<String> xorDecisionRule = new Select<>();
+            xorDecisionRule.setLabel("Select Xor Decision Rule");
+            xorDecisionRule.setVisible(false);
+            xorDecisionRule.setItems(XOR_DECISION_RULE_SMALLER_ID, XOR_DECISION_RULE_BIGGEST_DISCOUNT, XOR_DECISION_RULE_SMALLEST_DISCOUNT);
+            comboBox.addValueChangeListener(event1 -> {
+                xorDecisionRule.setVisible(event1.getValue().equalsIgnoreCase("Xor"));
+            });
+            xorDecisionRule.clear();
+
+            Button confirmButton = new Button("Confirm");
+            confirmButton.addClickListener(confirmEvent -> {
+                boolean isValid = true;
+                String selectedType = comboBox.getValue();
+                String selectedXorDecision = xorDecisionRule.getValue();
+                Set<DiscountDataObj> discountsSelected = discountGrid.getSelectedItems();
+
+                if(selectedType == null || selectedType.isEmpty()) {
+                    isValid = false;
+                    comboBox.setErrorMessage("Type cannot be empty");
+                    comboBox.setInvalid(true);
+                }
+                if((selectedXorDecision == null || selectedXorDecision.isEmpty()) && selectedType.equalsIgnoreCase("Xor")) {
+                    isValid = false;
+                    xorDecisionRule.setErrorMessage("XOR Decision cannot be empty");
+                    xorDecisionRule.setInvalid(true);
+                }
+
+                if(isValid) {
+                    handleCompoundDiscountRequest(discountsSelected,selectedType,selectedXorDecision);
+                    showDiscountGird();
+                    dialog.close();
+                }
+            });
+            enableButton(confirmButton);
+
+            Button addCompoundCancelButton = new Button("Cancel");
+            addCompoundCancelButton.addClickListener(confirmEvent -> dialog.close());
+            // Add the buttons to the button layout
+            HorizontalLayout buttonLayout2 = new HorizontalLayout(addCompoundCancelButton, confirmButton);
+            buttonLayout2.setDefaultVerticalComponentAlignment(Alignment.END);
+            buttonLayout2.setWidthFull();
+            enableButton(addCompoundCancelButton);
+
+            FormLayout formLayout2 = new FormLayout();
+            dialog.add(label, comboBox, xorDecisionRule, buttonLayout2);
+            formLayout2.setColspan(comboBox, 2);
+            dialog.add(formLayout2);
+            formLayout2.setMaxWidth("500px");
+            formLayout2.getStyle().set("margin", "0 auto");
+            formLayout2.getStyle().set("text-align", "center");
+            formLayout2.getStyle().set("display", "flex");
+            formLayout2.getStyle().set("flex-direction", "column");
+            formLayout2.getStyle().set("align-items", "center");
+            dialog.setCloseOnEsc(true);
+            dialog.setCloseOnOutsideClick(true);
+
+
+            dialog.open();
+
+        });
     }
 
     private List<String> getShopCategories() {
         SResponseT<List<ProductModel>> r = marketService.getShopProducts(getCurrentUser().getName(),shopModel.getName());
         if(!r.isSuccess())
             Notification.show(r.getMessage());
-        List<String> productsName = r.getData().stream().map(ProductModel::getCategory).collect(Collectors.toList());
+        List<String> productsName = r.getData().stream().map(ProductModel::getCategory).collect(Collectors.toSet()).stream().toList();
         return productsName;
     }
 
