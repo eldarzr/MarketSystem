@@ -39,14 +39,6 @@ public class ShopHandler {
                 .map(shop -> shop.getRoleIfExists(userName))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
-//        List<MemberRoleInShop> myShops = new LinkedList<>();
-//        for(Shop shop : shops.values()){
-//           MemberRoleInShop role =  shop.getRoleIfExists(userName);
-//           if (role != null)
-//               myShops.add(role);
-//        }
-
-
     }
 
     public boolean isUserHasRoleInAnyShops(String userName) {
