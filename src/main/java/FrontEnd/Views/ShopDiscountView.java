@@ -88,6 +88,8 @@ public class ShopDiscountView extends BaseView implements HasUrlParameter<String
     }
 
     private void showDiscountPolicyScreen() {
+        //first create the grid and show the discounts
+        showDiscounts();
 
         //***************Simple Discount Button*****************
         addSimpleDiscount = new Button("Add Simple Discount");
@@ -174,6 +176,8 @@ public class ShopDiscountView extends BaseView implements HasUrlParameter<String
         addCompoundDiscount = new Button("Make Compound Discount");
         addCompoundDiscount.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
         addCompoundDiscount.getStyle().set("color", "white");
+        addCompoundDiscount.setVisible(discountGrid.getFooterRows().size() > 1);
+        discountGrid.addSelectionListener(e -> addCompoundDiscount.setVisible(discountGrid.getSelectedItems().size() > 1));
 
         // Add a listener to the button
         addCompoundDiscount.addClickListener(event -> {
@@ -261,6 +265,8 @@ public class ShopDiscountView extends BaseView implements HasUrlParameter<String
         });
         manageRuleButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
         manageRuleButton.getStyle().set("color", "white");
+        manageRuleButton.setVisible(discountGrid.getSelectedItems().size() == 1);
+        discountGrid.addSelectionListener(e -> manageRuleButton.setVisible(discountGrid.getSelectedItems().size() == 1));
 
         FormLayout ruleFormManageRule = new FormLayout();
 
@@ -276,9 +282,16 @@ public class ShopDiscountView extends BaseView implements HasUrlParameter<String
         ruleTypeSelect.setItems(MinProductQuantityLabel, MaxProductQuantityLabel, MinFromCategoryQuantityLabel, MaxFromCategoryQuantityLabel, BagPriceHigherThanLabel);
         ruleFormManageRule.add(ruleTypeSelect);
 
+//        ComboBox<String> subTypeField = new ComboBox<>();
+//        subTypeField.setLabel("Name");
+//        subTypeField.setVisible(false);
+
         IntegerField quantityField = new IntegerField("Quantity");
-        TextField productField = new TextField("Product Name");
-        TextField categoryField = new TextField("Category Name");
+        ComboBox<String> productField = new ComboBox("Product Name");
+        productField.setItems(getProductListFromShop());
+        ComboBox<String> categoryField = new ComboBox<String>("Category Name");
+        categoryField.setItems(getShopCategories());
+
         NumberField priceField = new NumberField("Minimum Price");
 
         // Hide all input fields by default
@@ -338,7 +351,7 @@ public class ShopDiscountView extends BaseView implements HasUrlParameter<String
 
         // Define the buttons for the dialog
         Button addRuleButton = new Button("Add Rule");
-        Button resetRuleButton = new Button("Reset Rule");
+        Button resetRuleButton = new Button("Reset All Rules");
         addRuleButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
         addRuleButton.getStyle().set("color", "white");
         resetRuleButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
@@ -394,11 +407,11 @@ public class ShopDiscountView extends BaseView implements HasUrlParameter<String
 
             showDiscountGird();
         });
+        removeDiscount.setVisible(false);
+        discountGrid.addSelectionListener(e -> removeDiscount.setVisible(discountGrid.getSelectedItems().size() == 1));
         enableButton(removeDiscount);
 
         //**********************summary************************
-        showDiscounts();
-
         HorizontalLayout horizontalLayout = new HorizontalLayout(addSimpleDiscount, addCompoundDiscount,manageRuleButton, removeDiscount);
 
         add(horizontalLayout);
@@ -539,8 +552,6 @@ public class ShopDiscountView extends BaseView implements HasUrlParameter<String
             Notification.show(res.getMessage());
             getUI().ifPresent(ui -> ui.navigate(""));
         }
-
-
 
         discounts = res.getData().getDiscountsById().values().stream().toList();
         discountGrid = new Grid<>(DiscountDataObj.class);
