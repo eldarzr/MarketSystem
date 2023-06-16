@@ -30,6 +30,7 @@ import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.timepicker.TimePicker;
+import com.vaadin.flow.data.provider.Query;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
@@ -113,8 +114,9 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
 
         removeActivePolicyButton = new Button("Remove Active Policy");
         removeActivePolicyButton.addClickListener(e -> {
-            SResponse removeActivePolicyResponse = marketService.setActivePurchasePolicy(getCurrentUser().getName(), shopName, -1);
+            marketService.setActivePurchasePolicy(getCurrentUser().getName(), shopName, -1);
             updatePolicyGrid();
+            updateButtons();
         });
         enableButton(removeActivePolicyButton);
         SResponseT<ShopModel> res = marketService.getShop(shopName);
@@ -134,20 +136,18 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
     private void updateButtons() {
         SResponseT<Integer> activePolicyResponse = marketService.getActivePurchasePolicyId(getCurrentUser().getName(), shopName);
         if(shopProfile != null && shopProfile.getRoles().get(getCurrentUser().getName()).getType().equals(ManageType.MANAGER) && shopProfile.getRoles().get(getCurrentUser().getName()).getPermissions().getManageAccess() == ManageKindEnum.READ_ONLY) {
-            disableButton(createComplexPolicyButton);
-            disableButton(createSimplePolicyButton);
-            disableButton(removeActivePolicyButton);
+            createSimplePolicyButton.setVisible(false);
+            createComplexPolicyButton.setVisible(false);
+            removeActivePolicyButton.setVisible(false);
+
         }
         else{
-            enableButton(createComplexPolicyButton);
-            enableButton(createSimplePolicyButton);
-            enableButton(removeActivePolicyButton);
+            createSimplePolicyButton.setVisible(shopProfile != null && shopProfile.getProducts().size()>0);
+            createComplexPolicyButton.setVisible(policyGrid.getDataProvider().size(new Query<>()) > 1);
         }
         if (activePolicyResponse.isSuccess()) {
             int index = activePolicyResponse.getData();
-            if(index == -1){
-                disableButton(removeActivePolicyButton);
-            }
+            removeActivePolicyButton.setVisible(index != -1);
         }
     }
 
@@ -254,7 +254,9 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
             SResponse res = marketService.addAgePurchasePolicy(getCurrentUser().getName(),shopName,isProduct,toConstraint,positive,sAge,eAge);
             if(!res.isSuccess())Notification.show("Error: "+res.getMessage());
             else {
+                Notification.show("Success!");
                 updatePolicyGrid();
+                updateButtons();
             }
             dialog.close();
         });
@@ -311,7 +313,9 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
             SResponse res = marketService.addQuantityPurchasePolicy(getCurrentUser().getName(),shopName,isProduct,toConstraint,positive,min,max);
             if(!res.isSuccess())Notification.show("Error "+res.getMessage());
             else {
+                Notification.show("Success!");
                 updatePolicyGrid();
+                updateButtons();
             }
             dialog.close();
         });
@@ -370,7 +374,9 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
             SResponse res = marketService.addDatePurchasePolicy(getCurrentUser().getName(),shopName,isProduct,toConstraint,positive,sDate,eDate);
             if(!res.isSuccess())Notification.show("Error "+res.getMessage());
             else {
+                Notification.show("Success!");
                 updatePolicyGrid();
+                updateButtons();
             }
             dialog.close();
         });
@@ -429,7 +435,9 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
             SResponse res = marketService.addTimePurchasePolicy(getCurrentUser().getName(),shopName,isProduct,toConstraint,positive,sTime,eTime);
             if(!res.isSuccess())Notification.show("Error "+res.getMessage());
             else {
+                Notification.show("Success!");
                 updatePolicyGrid();
+                updateButtons();
             }
             dialog.close();
         });
@@ -492,6 +500,7 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
             else {
                 Notification.show("Success!");
                 updatePolicyGrid();
+                updateButtons();
             }
             dialog.close();
         });
@@ -525,6 +534,7 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
             else {
                 Notification.show("Success!");
                 updatePolicyGrid();
+                updateButtons();
             }
             dialog.close();
         });
@@ -557,6 +567,7 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
             else {
                 Notification.show("Success!");
                 updatePolicyGrid();
+                updateButtons();
             }
             dialog.close();
         });
