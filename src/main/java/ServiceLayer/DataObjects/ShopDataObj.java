@@ -33,7 +33,7 @@ public class ShopDataObj{
 		this.products = new ConcurrentHashMap<>();
 		for (ShopProduct product : shop.getProducts())
 			products.put(product.getName(), new ProductDataObj(product));
-		this.active = true;
+		this.active = shop.isActive();
 		this.roles = shop.getRoles();
 	}
 

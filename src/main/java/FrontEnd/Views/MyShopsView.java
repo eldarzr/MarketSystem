@@ -5,6 +5,7 @@ import FrontEnd.Model.ShopModel;
 import FrontEnd.Model.UserModel;
 import FrontEnd.SResponse;
 import FrontEnd.SResponseT;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Label;
@@ -108,16 +109,20 @@ public class MyShopsView extends BaseView {
             enterButton.addClickListener(e -> navigateToShop(role.getRoleShop().getName()));
             enableButton(enterButton);
 
-            Button closeButton = new Button("Close Shop");
-            closeButton.addClickListener(e -> onCloseShop(role.getRoleShop().getName()));
-            closeButton.setVisible(!isAdmin);
-            enableButton(closeButton);
-
             Button historyButton = new Button("Shop history");
             historyButton.addClickListener(e -> navigateToHistory(shopName));
             enableButton(historyButton);
 
-            shopLayout.add(shopNameLabel, roleLabel, enterButton,closeButton, historyButton);
+            Label closed_shop_label= new Label("Closed");
+            if(role.getRoleShop().isActive())
+            {
+                Button closeButton = new Button("Close Shop");
+                closeButton.addClickListener(e -> onCloseShop(role.getRoleShop().getName(),()->shopLayout.replace(closeButton,closed_shop_label)));
+                closeButton.setVisible(!isAdmin);
+                enableButton(closeButton);
+                shopLayout.add(shopNameLabel, roleLabel, enterButton,closeButton, historyButton);
+            }
+            else shopLayout.add(shopNameLabel, roleLabel, enterButton,closed_shop_label, historyButton);
             shopLayout.setFlexGrow(1, shopNameLabel, roleLabel);
             myShopsLayout.add(shopLayout);
         }
@@ -127,7 +132,7 @@ public class MyShopsView extends BaseView {
         getUI().ifPresent(ui -> ui.navigate("shop_history/" + shopName));
     }
 
-    protected void onCloseShop(String shopName) {
+    protected void onCloseShop(String shopName, closeShopCallback callback) {
         Dialog confirmDialog = new Dialog();
         confirmDialog.setCloseOnEsc(false);
         confirmDialog.setCloseOnOutsideClick(false);
@@ -139,6 +144,7 @@ public class MyShopsView extends BaseView {
             if (!res.isSuccess() && res!=null) {
                 Notification.show(res.getMessage());
             } else {
+                callback.call();
                 Notification.show("The shop has been Closed");
             }
             confirmDialog.close();
@@ -182,6 +188,10 @@ public class MyShopsView extends BaseView {
         }
 
 
+    }
+
+    interface closeShopCallback {
+        void call();
     }
 }
 

@@ -127,6 +127,7 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 			}
 			ProductModel currentProduct = productGrid.getSelectedItems().stream().toList().get(0);
 			Dialog dialog = new Dialog();
+			productName.setEnabled(false);
 			dialog.setCloseOnEsc(true);
 			dialog.setCloseOnOutsideClick(true);
 
@@ -159,7 +160,6 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 			});
 
 			cancel.addClickListener(cancelEvent -> dialog.close());
-
 			dialog.open();
 		});
 
@@ -170,7 +170,7 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 			Dialog dialog = new Dialog();
 			dialog.setCloseOnEsc(true);
 			dialog.setCloseOnOutsideClick(true);
-
+			productName.setEnabled(true);
 			Button confirm = new Button("Confirm");
 			enableButton(confirm);
 

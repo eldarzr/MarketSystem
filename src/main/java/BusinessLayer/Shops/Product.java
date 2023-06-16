@@ -35,17 +35,17 @@ public class Product implements ProductIntr, Serializable {
 	@Transient
 	protected double MIN_PRICE = 0;
 	@Transient
-	protected double MIN_DESCRIPTION_LENGTH = 5;
+	protected int MIN_DESCRIPTION_LENGTH = 5;
 	@Transient
-	protected double MAX_DESCRIPTION_LENGTH = 255;
+	protected int MAX_DESCRIPTION_LENGTH = 255;
 	@Transient
-	protected double MIN_CATEGORY_LENGTH = 3;
+	protected int MIN_CATEGORY_LENGTH = 3;
 	@Transient
-	protected double MAX_CATEGORY_LENGTH = 30;
+	protected int MAX_CATEGORY_LENGTH = 30;
 	@Transient
-	protected double MIN_NAME_LENGTH = 3;
+	protected int MIN_NAME_LENGTH = 3;
 	@Transient
-	protected double MAX_NAME_LENGTH = 255;
+	protected int MAX_NAME_LENGTH = 255;
 
 	public Product(String name, String category, String description, double price, String shopName) {
 		this.name = name;
