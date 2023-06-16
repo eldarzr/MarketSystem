@@ -199,14 +199,7 @@ public class Market implements MarketIntr{
         //shopHandler.shopExists(shopName);
         userName = userName.toLowerCase();
         User user = usersHandler.findMemberByName(userName);
-
-        if (shopName == null || shopName.trim().isEmpty() || !(Character.isLetter(shopName.charAt(0)) || Character.isDigit(shopName.charAt(0))))
-        {
-            String errorMsg="Shop name needs to start with a letter\\digit.";
-            logger.severe(errorMsg);
-            throw new Exception(errorMsg);
-        }
-
+        shopHandler.validateShopNameAllowed(shopName);
         Shop shop = new Shop(shopName, userName);
         //user.addFoundedShop(shopName);
         shopHandler.addShop(shopName, shop);

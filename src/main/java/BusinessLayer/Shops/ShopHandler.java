@@ -46,7 +46,14 @@ public class ShopHandler {
                 reduce(false, (acc, cur) -> acc || cur);
     }
 
-
+    public void validateShopNameAllowed(String shopName) throws Exception {
+        if (shopName == null || shopName.trim().isEmpty() || !(Character.isLetter(shopName.charAt(0)) || Character.isDigit(shopName.charAt(0))))
+    {
+        String errorMsg="Shop name needs to start with a letter\\digit.";
+        logger.severe(errorMsg);
+        throw new Exception(errorMsg);
+    }
+    }
 
 
     private static class  ShopHolder {

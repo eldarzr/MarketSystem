@@ -99,8 +99,7 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
         viewPermissionsButton = new Button("ViewPermissions", e -> handleViewPermissionsButtonClick2());
         setDefaultStyle(viewPermissionsButton);
 
-        add(new HorizontalLayout(promoteButton, removeOwnerButton, viewPermissionsButton));
-
+        add(new HorizontalLayout(removeOwnerButton, viewPermissionsButton));
         newManagerTextField = new TextField();
         newManagerTextField.setPlaceholder("Enter new manager's username");
         add(newManagerTextField);
@@ -168,7 +167,6 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
             return;
         }
         startVertificationDialog();
-        refreshView();
     }
 
     private void startVertificationDialog() {
@@ -184,6 +182,7 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
                 Notification.show(res.getMessage());
             } else {
                 Notification.show(clickedRole.getRoleUser() + " and his subordinates has been removed.");
+                refreshView();
             }
             dialog.close();
         });
@@ -200,7 +199,8 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
         if (!res.isSuccess() && res != null) {
             Notification.show(res.getMessage());
         } else {
-            Notification.show("User : " + actOn + " is an Owner now!");
+
+//            Notification.show("User : " + actOn + " is an Owner now!");
         }
     }
 
@@ -250,7 +250,7 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
 
         // Determine the current manage access type from the clickedRole
         int manageAccess = clickedRole.getManageKind().getValue();
-
+        Label title = new Label("Choose the required manage access");
         Dialog dialog = new Dialog();
         dialog.setWidth("600px");
 
@@ -279,7 +279,7 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
         fullAccessButton.addClickListener(event -> highlightButton(accessButtons, 2));
 
         HorizontalLayout layout = new HorizontalLayout();
-        layout.add(readOnlyButton, managePermissionsButton, fullAccessButton);
+        layout.add(new VerticalLayout(title),readOnlyButton, managePermissionsButton, fullAccessButton);
 
         Button changePermissionsButton = new Button("Change Permissions");
         setDefaultStyle(changePermissionsButton);

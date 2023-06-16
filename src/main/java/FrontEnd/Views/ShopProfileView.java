@@ -274,15 +274,22 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 		if(shopProfile == null)return;
 		if(shopProfile.getRoles().get(getCurrentUser().getName()).getType().equals(ManageType.MANAGER) && shopProfile.getRoles().get(getCurrentUser().getName()).getPermissions().getManageAccess() == ManageKindEnum.READ_ONLY) {
 			//Notification.show("Read Only Manager");
-			disableButton(editProductButton);
-			disableButton(addProductButton);
-			disableButton(removeProductButton);
+			hideButton(editProductButton);
+			hideButton(manageDiscount);
+			hideButton(addProductButton);
+			hideButton(removeProductButton);
 		}
 		else{
 			enableButton(editProductButton);
+			enableButton(manageDiscount);
 			enableButton(addProductButton);
 			enableButton(removeProductButton);
 		}
+	}
+
+	private void hideButton(Button editProductButton) {
+		editProductButton.getStyle().set("opacity", "0");
+
 	}
 
 	private void addProduct(String productName, String productCategory, String productDescription, Double productPrice, Integer productQuantity) {
