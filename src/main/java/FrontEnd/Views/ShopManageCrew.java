@@ -126,6 +126,7 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
     }
 
     protected void updateShopStaff() {
+        scrollView.removeAll();
         SResponseT<List<MemberRoleInShopModel>> res = marketService.getShopManagersAndPermissions(currentUser, shopProfile.getName());
         if (res.isSuccess()) {
             List<MemberRoleInShopModel> shopRoles = res.getData();
@@ -287,7 +288,7 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
             // Determine which button is highlighted and save its index
             int chosenAccess = -1;
             for (int i = 0; i < accessButtons.length; i++) {
-                if ("bold".equals(accessButtons[i].getStyle().get("font-weight"))) {
+                if ("1".equals(accessButtons[i].getStyle().get("opacity"))) {
                     chosenAccess = i;
                     break;
                 }
@@ -300,7 +301,7 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
             }
             if (res.isSuccess()) {
                 Notification.show("Permissions changes successfully");
-//                clickedRole = res.getData();
+                updateShopStaff();
             }
         dialog.close();
         });
