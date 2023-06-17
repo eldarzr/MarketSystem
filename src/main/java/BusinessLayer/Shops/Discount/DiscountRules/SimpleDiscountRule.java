@@ -7,6 +7,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "simple_discount_rules")
+@DiscriminatorValue("SIMPLE")
 public class SimpleDiscountRule extends DiscountRule{
 
     @Column(name = "rule_main_type", insertable = false, updatable = false)

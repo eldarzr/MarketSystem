@@ -20,7 +20,7 @@ public abstract class Discount {
     @Column(name = "b_id")
     protected int discountId;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "discount_rule_id")
     DiscountRule discountRule;
 
