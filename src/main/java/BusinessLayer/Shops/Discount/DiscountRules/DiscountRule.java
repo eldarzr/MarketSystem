@@ -7,7 +7,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "discount_rule")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "rule_main_type")
+@DiscriminatorColumn(name = "rule_main_type", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue(value = "DISCOUNT_RULE")
 public abstract class DiscountRule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

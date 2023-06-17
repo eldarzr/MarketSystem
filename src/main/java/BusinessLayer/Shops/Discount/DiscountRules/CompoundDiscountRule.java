@@ -7,6 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "compound_discount_rules")
+@DiscriminatorValue("COMPOUND")
 public class CompoundDiscountRule extends DiscountRule {
 
     @Column(name = "rule_main_type", insertable = false, updatable = false)
