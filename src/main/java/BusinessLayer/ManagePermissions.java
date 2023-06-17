@@ -54,7 +54,8 @@ public class ManagePermissions implements Serializable {
 	}
 
 	public void changeToManageAccess() {
-		changeToReadOnlyAccess();
+		//changeToReadOnlyAccess();
+		resetPermissions();
 		permissions.set(MANAGE_STOCK.getValue(), true);
 		permissions.set(MANAGE_BIDS.getValue(), true);
 		permissions.set(MANAGE_PURCHASE_TYPE.getValue(), true);
@@ -162,10 +163,13 @@ public class ManagePermissions implements Serializable {
 		switch (permission){
 			case 0:
 				changeToReadOnlyAccess();
+				break;
 			case 1:
 				changeToManageAccess();
+				break;
 			case 2:
 				changeToFullAccess();
+				break;
 		}
 	}
 }
