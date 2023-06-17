@@ -556,6 +556,8 @@ public class Market implements MarketIntr{
         logger.info(String.format("Attempt by user %s to update product %s quantity to %d from shop %s in cart.", userName,productName,newQuantity,shopName));
         User user = usersHandler.findLoginUser(userName);
         Shop shop = shopHandler.getShop(shopName);
+        if(newQuantity<0)
+            throw new IllegalArgumentException("Can't have negative quantity");
         boolean foundProduct = false;
         for(ShopProduct product : shop.getProducts()){
             if(product.getName().equals(productName)){
