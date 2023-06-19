@@ -120,6 +120,7 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 		editProductButton = new Button("Edit Product");
 		editProductButton.getStyle().set("color", "white");
 		disableButton(editProductButton);
+		editProductButton.setVisible(false);
 		editProductButton.addClickListener(event -> {
 			if(productGrid.getSelectedItems().size() != 1){
 				Notification.show("please select exactly one product");
@@ -198,11 +199,35 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 			dialog.add(formLayoutEditProduct);
 
 			confirm.addClickListener(confirmEvent -> {
-				addProduct(productName.getValue(),productCategory.getValue(),productDescription.getValue()
-						,productPrice.getValue(),productQuantity.getValue());
+				boolean isValid = true;
+				if(productName.getValue() == null || productName.getValue().isEmpty()){
+					isValid = false;
+					productName.setInvalid(true);
+					productName.setErrorMessage("please insert product name");
+				}
+				if(productCategory.getValue() == null || productCategory.getValue().length() < 3){
+					isValid = false;
+					productCategory.setInvalid(true);
+					productCategory.setErrorMessage("please category must be longer than 3");
+				}
+				if(productPrice.getValue() == null){
+					isValid = false;
+					productPrice.setInvalid(true);
+					productPrice.setErrorMessage("please insert product price");
+				}
+				if(productQuantity.getValue() == null || productQuantity.getValue() < 0){
+					isValid = false;
+					productQuantity.setInvalid(true);
+					productQuantity.setErrorMessage("please insert product non negative quantity");
+				}
+				if(isValid){
+					String desc = productDescription.getValue() == null ? "" : productDescription.getValue();
+					addProduct(productName.getValue(),productCategory.getValue(),desc
+							,productPrice.getValue(),productQuantity.getValue());
 
-				refreshProducts();
-				dialog.close();
+					refreshProducts();
+					dialog.close();
+				}
 			});
 
 			cancel.addClickListener(cancelEvent -> dialog.close());
@@ -213,6 +238,7 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 		removeProductButton = new Button("Remove Product");
 		removeProductButton.getStyle().set("color", "white");
 		enableButton(removeProductButton);
+		removeProductButton.setVisible(false);
 		removeProductButton.addClickListener(addEvent -> {
 			List<ProductModel> productModels = productGrid.getSelectedItems().stream().toList();
 			if(productModels.size() != 1){
@@ -263,6 +289,11 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 
 		showProducts();
 
+		productGrid.addSelectionListener(e -> {
+			editProductButton.setVisible(productGrid.getSelectedItems().size() == 1);
+			removeProductButton.setVisible(productGrid.getSelectedItems().size() == 1);
+		});
+
 		HorizontalLayout horizontalLayout = new HorizontalLayout(manageRolesButton, editProductButton,addProductButton,removeProductButton,manageDiscount,purchasePoliciesButton,bidsButton);
 
 		add(horizontalLayout);
@@ -273,7 +304,6 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 	private void updateButtons() {
 		if(shopProfile == null)return;
 		if(shopProfile.getRoles().get(getCurrentUser().getName()).getType().equals(ManageType.MANAGER) && shopProfile.getRoles().get(getCurrentUser().getName()).getPermissions().getManageAccess() == ManageKindEnum.READ_ONLY) {
-			//Notification.show("Read Only Manager");
 			hideButton(editProductButton);
 			hideButton(manageDiscount);
 			hideButton(addProductButton);
@@ -324,12 +354,6 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 				Notification.show(res.getMessage());
 			else Notification.show("Updated Quantity successfully");
 		}
-//		if(!productName.equals(currentProduct.getName())){
-//			SResponse res = marketService.updateProductName(getCurrentUser().getName(), shopProfile.getName(),currentProduct.getName(),productName);
-//			if(!res.isSuccess())
-//				Notification.show(res.getMessage());
-//			else Notification.show("Updated Name successfully");
-//		}
 	}
 
 	private void refreshProducts(){
@@ -350,23 +374,12 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 		}
 
 
-
 		products = shopRes.getData().getProducts().values().stream().toList();
-//		productDataProvider = new ListDataProvider<>(products);
 
 		productGrid = new Grid<>(ProductModel.class);
 		productGrid.setItems(products);
 		productGrid.setSelectionMode(Grid.SelectionMode.MULTI);
 
-
-//		productGrid = new Grid<>();
-//		productGrid.addColumn(ProductModel::getName).setHeader("Product Name");
-//		productGrid.addColumn(ProductModel::getDescription).setHeader("Description");
-//		productGrid.addColumn(ProductModel::getCategory).setHeader("Category");
-//		productGrid.addColumn(ProductModel::getPrice).setHeader("Price");
-//		productGrid.addColumn(ProductModel::getQuantity).setHeader("Quantity");
-//
-//		productGrid.setDataProvider(productDataProvider);
 
 		productGrid.addSelectionListener(event -> {
 			Optional<ProductModel> selectedUser = event.getFirstSelectedItem();

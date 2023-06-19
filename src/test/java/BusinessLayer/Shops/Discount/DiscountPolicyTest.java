@@ -3,7 +3,6 @@ package BusinessLayer.Shops.Discount;
 import BusinessLayer.Purchases.ShopBag;
 import BusinessLayer.Purchases.ShopBagItem;
 import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRuleName;
-import BusinessLayer.Shops.Discount.XorDecisionRules.XorDecisionRulesFactory;
 import BusinessLayer.Shops.FinalBagPriceResult;
 import BusinessLayer.Shops.Product;
 import org.junit.jupiter.api.AfterEach;
@@ -80,6 +79,17 @@ class DiscountPolicyTest {
         assertEquals(milkCartonPriceAfterDiscount,Math.floor((milkCartonPriceBeforeDiscount*0.8)*SimpleDiscount.ROUND_FACTOR)/SimpleDiscount.ROUND_FACTOR);
         assertNotEquals(totalBagPriceBefore,totalBagPriceAfter);
         assertTrue(Math.abs(totalBagPriceBefore*0.8-discountResult.getTotalPriceAfterDiscount()) < 0.1);
+    }
+
+    @Test
+    void addNegativePercentageDiscount() {
+        try{
+            discountPolicy.addShopDiscount(-10);
+            fail("successful add of negative percentage discount");
+        }
+        catch (Exception e){
+
+        }
     }
 
     @Test
