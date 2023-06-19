@@ -40,4 +40,6 @@ public abstract class Invoice {
 	public String getDeliveryMethod() {
 		return deliveryMethod;
 	}
+
+	public abstract Long getId();
 }

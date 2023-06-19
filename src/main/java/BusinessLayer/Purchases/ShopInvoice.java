@@ -47,4 +47,9 @@ public class ShopInvoice extends Invoice {
 	public String getShopName() {
 		return shopName;
 	}
+
+	@Override
+	public Long getId() {
+		return this.id;
+	}
 }

@@ -10,6 +10,7 @@ public abstract class InvoiceDataObj {
 	private String userName;
 	private String paymentMethod;
 	private String deliveryMethod;
+	private Long id;
 	protected final int PRODUCT_NAME = 0;
 	protected final int PRODUCT_DESCRIPTION = 1;
 	protected final int PRODUCT_CATEGORY = 2;
@@ -26,6 +27,7 @@ public abstract class InvoiceDataObj {
 			this.userName = invoice.getUserName();
 			this.paymentMethod = invoice.getPaymentMethod();
 			this.deliveryMethod = invoice.getDeliveryMethod();
+			this.id = invoice.getId();
 	}
 
 	public String getUserName() {
@@ -38,5 +40,9 @@ public abstract class InvoiceDataObj {
 
 	public String getDeliveryMethod() {
 		return deliveryMethod;
+	}
+
+	public Long getId() {
+		return id;
 	}
 }

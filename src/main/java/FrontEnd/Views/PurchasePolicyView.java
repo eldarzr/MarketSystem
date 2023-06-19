@@ -581,6 +581,7 @@ public class PurchasePolicyView extends BaseView implements BeforeEnterObserver 
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
+        if (checkIfFirstScreen(event)) return;
         event.getRouteParameters().get("shopName").ifPresent(shopName -> {
             this.shopName = shopName;
             updateAfterUserNameChange(getCurrentUser());

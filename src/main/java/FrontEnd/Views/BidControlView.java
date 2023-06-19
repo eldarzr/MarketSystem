@@ -154,6 +154,7 @@ public class BidControlView extends BaseView implements BeforeEnterObserver {
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
+        if (checkIfFirstScreen(event)) return;
         //Notification.show("before enter");
         event.getRouteParameters().get("shopName").ifPresent(shopName -> {
             //Notification.show("Updating shopName");

@@ -118,6 +118,7 @@ public class DiscountPolicy {
         }
         discountResult.setDiscountAppliedDescriptions(discountsAppliedDescriptions);
         discountResult.setTotalPriceAfterDiscount(shopBag.calculatePrice());
+        discountResult.setShopBagAfterDiscount(shopBag);
         return discountResult;
     }
 

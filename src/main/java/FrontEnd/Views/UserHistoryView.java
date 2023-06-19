@@ -67,15 +67,24 @@ public class UserHistoryView extends BaseView {
 
         Grid<UserInvoiceModel> historyGrid = new Grid<>();
         historyGrid.setItems(userInvoiceModels);
-        historyGrid.addColumn(InvoiceModel::getUserName).setHeader("User Name");
+        historyGrid.addColumn(InvoiceModel::getId).setHeader("invoice id");
         historyGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
 
 
-        Grid<String> shopGrid = new Grid<>();
-//        HashMap<String, HashMap<String, List<String>>> productInfoInShop = userInvoiceModels.get(0).getProductInfoInShop();
-//        List<String> shopList = new ArrayList<>(productInfoInShop.keySet());
-//        shopGrid.setItems(shopList);
-        shopGrid.addColumn(shop -> shop).setHeader("shop Name");
+        Label priceBeforeDiscount = new Label();
+        VerticalLayout origPriceVerticalLayout = new VerticalLayout(new Label("price before discount"), priceBeforeDiscount);
+
+        Label priceAfterDiscount = new Label();
+        VerticalLayout newPriceVerticalLayout = new VerticalLayout(new Label("price after discount"), priceAfterDiscount);
+
+        HorizontalLayout invoiceLayout = new HorizontalLayout(origPriceVerticalLayout, newPriceVerticalLayout);
+        invoiceLayout.setVisible(false);
+
+
+        Grid<ShopInfoModel> shopGrid = new Grid<>();
+        shopGrid.addColumn(ShopInfoModel::getShopName).setHeader("shop Name");
+        shopGrid.addColumn(ShopInfoModel::getPriceBeforeDiscount).setHeader("price before discount");
+        shopGrid.addColumn(ShopInfoModel::getPriceAfterDiscount).setHeader("price after discount");
         shopGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
 
 
@@ -86,19 +95,23 @@ public class UserHistoryView extends BaseView {
         innerGrid.addColumn(ProductInfoModel::getDescription).setHeader("product description");
         innerGrid.addColumn(ProductInfoModel::getCategory).setHeader("product category");
         innerGrid.addColumn(ProductInfoModel::getPrice).setHeader("product price");
+        innerGrid.addColumn(ProductInfoModel::getPriceAfterDiscount).setHeader("product price after discount");
         innerGrid.addColumn(ProductInfoModel::getQuantity).setHeader("product quantity");
         innerGrid.setSelectionMode(Grid.SelectionMode.NONE);
 
         historyGrid.addSelectionListener(event -> {
             UserInvoiceModel userInvoiceModel = event.getFirstSelectedItem().orElse(null);
             if (userInvoiceModel != null) {
+                priceBeforeDiscount.setText(String.valueOf(userInvoiceModel.getPriceBeforeDiscount()));
+                priceAfterDiscount.setText(String.valueOf(userInvoiceModel.getPriceAfterDiscount()));
+                invoiceLayout.setVisible(true);
                 HashMap<String, ShopInfoModel> productInfoInShop = userInvoiceModel.getProductInfoInShop();
                 List<String> shopList = new ArrayList<>(productInfoInShop.keySet());
-                shopGrid.setItems(shopList);
+                shopGrid.setItems(productInfoInShop.values());
                 shopGrid.addSelectionListener(event2 -> {
-                    String selectedShop = event2.getFirstSelectedItem().orElse(null);
+                    ShopInfoModel selectedShop = event2.getFirstSelectedItem().orElse(null);
                     if (selectedShop != null) {
-                        List<ProductInfoModel> innerFields = productInfoInShop.get(selectedShop).getProductInfos();
+                        List<ProductInfoModel> innerFields = selectedShop.getProductInfos();
                         innerGrid.setItems(innerFields);
                     } else {
                         innerGrid.setItems(Collections.emptyList());
@@ -106,6 +119,7 @@ public class UserHistoryView extends BaseView {
                 });
             } else {
                 shopGrid.setItems(Collections.emptyList());
+                invoiceLayout.setVisible(false);
             }
         });
 
