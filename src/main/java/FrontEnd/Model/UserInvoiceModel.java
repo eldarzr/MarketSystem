@@ -34,4 +34,13 @@ public class UserInvoiceModel extends InvoiceModel implements Serializable {
 	public HashMap<String, ShopInfoModel> getProductInfoInShop() {
 		return productInfoInShop;
 	}
+
+	public double getPriceBeforeDiscount() {
+		return productInfoInShop.values().stream().map(ShopInfoModel::getPriceBeforeDiscount).reduce(0.0, Double::sum);
+	}
+
+	public double getPriceAfterDiscount() {
+		return productInfoInShop.values().stream().map(ShopInfoModel::getPriceAfterDiscount).reduce(0.0, Double::sum);
+	}
+
 }

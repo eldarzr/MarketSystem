@@ -1,5 +1,7 @@
 package BusinessLayer.Shops;
 
+import BusinessLayer.Purchases.ShopBag;
+
 import java.util.List;
 
 public class FinalBagPriceResult {
@@ -7,6 +9,7 @@ public class FinalBagPriceResult {
     List<String> discountAppliedDescriptions;
     private double priceBeforeDiscount;
     private double totalPriceAfterDiscount;
+    private ShopBag shopBagAfterDiscount;
 
     public static FinalBagPriceResult makeDiscountResult(){
         return  new FinalBagPriceResult();
@@ -34,5 +37,13 @@ public class FinalBagPriceResult {
 
     public void setTotalPriceAfterDiscount(double totalPriceAfterDiscount) {
         this.totalPriceAfterDiscount = totalPriceAfterDiscount;
+    }
+
+    public ShopBag getShopBagAfterDiscount() {
+        return shopBagAfterDiscount;
+    }
+
+    public void setShopBagAfterDiscount(ShopBag shopBagAfterDiscount) {
+        this.shopBagAfterDiscount = shopBagAfterDiscount;
     }
 }

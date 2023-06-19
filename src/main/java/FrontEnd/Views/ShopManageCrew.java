@@ -65,6 +65,7 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
 
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
+        if (checkIfFirstScreen(event)) return;
         currentUser = getCurrentUser().getName();
         if (parameter != null && !parameter.isEmpty()) {
             SResponseT<ShopModel> res = marketService.getShop(parameter);

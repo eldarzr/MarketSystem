@@ -21,10 +21,7 @@ import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.router.HasUrlParameter;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.*;
 import jakarta.servlet.http.HttpSession;
 
@@ -42,6 +39,8 @@ public abstract class BaseView extends VerticalLayout implements BeforeEnterObse
 	protected MarketService marketService = MarketService.getInstance();
 	private HorizontalLayout horizontalLayout;
 	private Button goToCartButton;
+	private Button goToHomeButton;
+	private Button goToSearchButton;
 	private Button profileButton;
 	private Button bellButton;
 	private Span numberOfNotifications;
@@ -51,6 +50,17 @@ public abstract class BaseView extends VerticalLayout implements BeforeEnterObse
 	private HorizontalLayout loginLayout;
 	private HorizontalLayout logoutLayout;
 
+	protected boolean checkIfFirstScreen(BeforeEvent event){
+		Object isUserInit = VaadinSession.getCurrent().getAttribute("isUserInit");
+		if (!(isUserInit instanceof Boolean) || !((Boolean) isUserInit)) {
+			VaadinSession.getCurrent().setAttribute("isUserInit", true);
+			event.getUI().navigate("");
+			event.rerouteTo("");
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	public void beforeEnter(BeforeEnterEvent event) {
 		if (marketService.getInitState().getData() == FAIL) {
@@ -58,12 +68,7 @@ public abstract class BaseView extends VerticalLayout implements BeforeEnterObse
 			event.rerouteTo("fail_init");
 		}
 		else {
-			Object isUserInit = VaadinSession.getCurrent().getAttribute("isUserInit");
-			if (!(isUserInit instanceof Boolean) || !((Boolean) isUserInit)) {
-				VaadinSession.getCurrent().setAttribute("isUserInit", true);
-				event.getUI().navigate("");
-				event.rerouteTo("");
-			}
+			checkIfFirstScreen(event);
 		}
 	}
 
@@ -85,6 +90,24 @@ public abstract class BaseView extends VerticalLayout implements BeforeEnterObse
 		goToCartButton.addClickListener(e ->
 				goToCartButton.getUI().ifPresent(ui ->
 						ui.navigate("cart"))
+		);
+
+		goToHomeButton = new Button(new Icon(VaadinIcon.HOME));
+		goToHomeButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
+		goToHomeButton.getStyle().set("color", "white");
+
+		goToHomeButton.addClickListener(e ->
+				goToHomeButton.getUI().ifPresent(ui ->
+						ui.navigate(""))
+		);
+
+		goToSearchButton = new Button(new Icon(VaadinIcon.SEARCH));
+		goToSearchButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
+		goToSearchButton.getStyle().set("color", "white");
+
+		goToSearchButton.addClickListener(e ->
+				goToSearchButton.getUI().ifPresent(ui ->
+						ui.navigate("search"))
 		);
 
 		numberOfNotifications = new Span("0");
@@ -142,7 +165,7 @@ public abstract class BaseView extends VerticalLayout implements BeforeEnterObse
 		userMenu.getStyle().set("display", "flex");
 		userMenu.getStyle().set("align-items", "center");
 
-		horizontalLayout = new HorizontalLayout(userMenu,goToCartButton,profileButton,bellButton);
+		horizontalLayout = new HorizontalLayout(userMenu, goToHomeButton,goToCartButton,profileButton,bellButton, goToSearchButton);
 		horizontalLayout.getStyle().set("background-color", "#FFFFFF");
 		horizontalLayout.getStyle().set("padding", "1rem");
 		horizontalLayout.getStyle().set("border", "1px solid #ccc");

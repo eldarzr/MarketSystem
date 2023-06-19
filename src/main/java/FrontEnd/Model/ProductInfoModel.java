@@ -9,6 +9,7 @@ public class ProductInfoModel {
 	protected String category;
 	protected String description;
 	protected double price;
+	protected double priceAfterDiscount;
 	protected double quantity;
 
 	public ProductInfoModel(ProductInfoDataObj productInfo) {
@@ -16,6 +17,7 @@ public class ProductInfoModel {
 		this.category = productInfo.getCategory();
 		this.description = productInfo.getDescription();
 		this.price = productInfo.getPrice();
+		this.priceAfterDiscount = productInfo.getPriceAfterDiscount();
 		this.quantity = productInfo.getQuantity();
 	}
 
@@ -43,4 +45,7 @@ public class ProductInfoModel {
 		return quantity;
 	}
 
+	public double getPriceAfterDiscount() {
+		return priceAfterDiscount;
+	}
 }

@@ -45,4 +45,12 @@ private List<ProductInfoModel> productInfoInShop;
 	public String getShopName() {
 		return shopName;
 	}
+
+	public double totalOrigPrice(){
+		return productInfoInShop.stream().map(prod -> prod.price).reduce(0.0, Double::sum);
+	}
+
+	public double totalNewPrice(){
+		return productInfoInShop.stream().map(prod -> prod.priceAfterDiscount).reduce(0.0, Double::sum);
+	}
 }

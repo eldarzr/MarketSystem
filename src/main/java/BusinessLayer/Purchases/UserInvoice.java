@@ -32,14 +32,20 @@ public class UserInvoice extends Invoice {
 		shopInfos = new HashMap<>();
 	}
 
-	public void addProduct(String shopName, Product product, int quantity){
+	public void addProduct(String shopName, Product product, int quantity, double priceAfterDiscount){
 		if (!shopInfos.containsKey(shopName)) {
 			shopInfos.put(shopName, new ShopInfo(shopName));
 		}
-		shopInfos.get(shopName).addProduct(new ProductInfo(product,quantity));
+		shopInfos.get(shopName).addProduct(new ProductInfo(product,quantity, priceAfterDiscount));
 	}
 
 	public Map<String, ShopInfo> getProductInfoInShop() {
 		return shopInfos;
 	}
+
+	@Override
+	public Long getId() {
+		return this.id;
+	}
+
 }

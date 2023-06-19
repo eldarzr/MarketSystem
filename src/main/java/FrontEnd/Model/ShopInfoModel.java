@@ -32,4 +32,12 @@ public class ShopInfoModel {
 	public List<ProductInfoModel> getProductInfos() {
 		return productInfos;
 	}
+
+	public double getPriceBeforeDiscount() {
+		return productInfos.stream().map(prod -> prod.price).reduce(0.0, Double::sum);
+	}
+
+	public double getPriceAfterDiscount() {
+		return productInfos.stream().map(prod -> prod.priceAfterDiscount).reduce(0.0, Double::sum);
+	}
 }
