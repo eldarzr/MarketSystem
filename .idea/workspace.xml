@@ -6,8 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="b632bc94-40ae-4fc8-ad09-f0a6a998ea35" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Purchases/Purchase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Purchases/Purchase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/BusinessLayer/MarketPurchsae.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/BusinessLayer/MarketPurchsae.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/InitFiles/TestsConfig.jason" beforeDir="false" afterPath="$PROJECT_DIR$/src/InitFiles/TestsConfig.jason" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BusinessLayer/Shops/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BusinessLayer/Shops/Product.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/BaseView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/BaseView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/ShopProfileView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrontEnd/Views/ShopProfileView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/BusinessLayer/Shops/Discount/DiscountPolicyTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/BusinessLayer/Shops/Discount/DiscountPolicyTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -231,17 +234,13 @@
       <item itemvalue="JUnit.All in MarketSystem" />
       <item itemvalue="JUnit.MarketgetShopTest" />
       <item itemvalue="JUnit.MarketPurchasePolicyTests.quantityPolicyFailPurchase" />
+      <item itemvalue="JUnit.MarketPurchsae.purchaseMoreThanProductQuantityInShop" />
       <item itemvalue="Maven.MarketSystem [mvn,exec:java]" />
       <item itemvalue="Smart Tomcat.tomcat" />
-      <item itemvalue="JUnit.MarketPurchsae.purchaseMoreThanProductQuantityInShop" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.All in MarketSystem" />
-        <item itemvalue="JUnit.MarketPurchsae.purchaseMoreThanProductQuantityInShop" />
-        <item itemvalue="JUnit.MarketPurchasePolicyTests.quantityPolicyFailPurchase" />
-        <item itemvalue="JUnit.MarketgetShopTest" />
-        <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
   </component>
@@ -275,47 +274,6 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/IntegrationTests/MarketPurchasePolicyTests.java</url>
-          <line>65</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/BusinessLayer/Purchases/Purchase.java</url>
-          <line>177</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/BusinessLayer/Purchases/Purchase.java</url>
-          <line>165</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/BusinessLayer/Purchases/Purchase.java</url>
-          <line>97</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/BusinessLayer/Purchases/Purchase.java</url>
-          <line>125</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/BusinessLayer/MarketPurchsae.java</url>
-          <line>92</line>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/BusinessLayer/MarketPurchsae.java</url>
-          <line>89</line>
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -153,13 +153,12 @@ public abstract class BaseView extends VerticalLayout implements BeforeEnterObse
 		title.setVisible(false);
 
 		Icon profileIcon = VaadinIcon.USER.create();
-		profileButton = new Button(profileIcon); // VaadinSession.getCurrent().getAttribute(UserModel.class).getUserType() == UserType.GUEST ?
-//				e -> Notification.show("Please login to access your profile") :
-//				e -> getUI().ifPresent(ui -> ui.navigate("profile")));
+		profileButton = new Button(profileIcon);
 		profileButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
 		profileButton.getStyle().set("color", "white");
 		profileButton.addClickListener(e -> handleProfile()
 		);
+		profileButton.setVisible(false);
 
 		Div userMenu = new Div(userIcon, userNameLabel);
 		userMenu.getStyle().set("display", "flex");
@@ -172,7 +171,6 @@ public abstract class BaseView extends VerticalLayout implements BeforeEnterObse
 		horizontalLayout.getStyle().set("border-radius", "5px");
 		add(horizontalLayout, title);
 
-//		updateUserNameOnScreen(userModel);
 		setCurrentUser(userModel);
 		boolean isGuest = userModel.getUserType() == UserType.GUEST;
 		if (isGuest)
@@ -263,8 +261,8 @@ public abstract class BaseView extends VerticalLayout implements BeforeEnterObse
 			Notification.show("logout successfully");
 			marketService.removeNotificationCallback(userModel.getName());
 			userModel = new UserModel(res.getData(), res.getData());
-			Notification.show(userModel.getName());
-			setCurrentUser(userModel);
+			VaadinSession.getCurrent().setAttribute(UserModel.class, userModel);
+			updateUserNameOnScreen(userModel);
 			horizontalLayout.remove(logoutLayout);
 			showLoginScreen();
 			getUI().ifPresent(ui -> ui.navigate(""));
@@ -289,8 +287,13 @@ public abstract class BaseView extends VerticalLayout implements BeforeEnterObse
 	private void showLogoutScreen(){
 		LoadUserNotifications();
         updateNotificationButton(getCurrentUser().getName());
+		profileButton.setVisible(true);
 		Button logoutButton = new Button("Logout");
-		logoutButton.addClickListener(click -> logout());
+		logoutButton.addClickListener(click -> {
+			profileButton.setVisible(false);
+			bellButton.setVisible(false);
+			logout();
+		});
 		logoutButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
 		logoutButton.getStyle().set("color", "white");
 		logoutLayout = new HorizontalLayout(logoutButton);

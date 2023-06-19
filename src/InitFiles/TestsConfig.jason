@@ -9,7 +9,7 @@
 
     "externalSystems":
     {
-        "webAddress": "https://external-systems.000webhostapp.com/"
+        "webAddress": "https://external-systems.000webhostapp.com"
     },
 
     "systemAdmin":

@@ -10,7 +10,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 @Entity
 @Table(name = "products")
-//@IdClass(ProductId.class)
 public class Product implements ProductIntr, Serializable {
 
 	@Id
@@ -118,10 +117,6 @@ public class Product implements ProductIntr, Serializable {
 	}
 
 	public void setDescription(String description) throws Exception {
-		if(description.length() > MAX_DESCRIPTION_LENGTH)
-			throw new Exception(String.format("product description must be shorter then %s", MAX_DESCRIPTION_LENGTH));
-		if(description.length() < MIN_DESCRIPTION_LENGTH)
-			throw new Exception(String.format("product description must be longer then %s", MIN_DESCRIPTION_LENGTH));
 		this.description = description;
 	}
 
