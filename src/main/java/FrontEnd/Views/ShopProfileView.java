@@ -54,7 +54,7 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 
 	@Override
 	protected void updateAfterUserNameChange(UserModel userModel) {
-			updateButtons();
+			//updateButtons();
 	}
 
 	@Override
@@ -67,7 +67,10 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 				add(new Text(shopProfile.getName()));
 				showShopProfileScreen();
 			}
-			else Notification.show(res.getMessage());
+			else{ Notification.show(res.getMessage());
+//				getUI().ifPresent(ui -> ui.navigate(""));
+
+			}
 		}
 	}
 
