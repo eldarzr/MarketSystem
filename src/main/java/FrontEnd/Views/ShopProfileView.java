@@ -54,12 +54,13 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 
 	@Override
 	protected void updateAfterUserNameChange(UserModel userModel) {
-			updateButtons();
+			//updateButtons();
 	}
 
 	@Override
 	public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
 		//Notification.show("aaa");
+		if (checkIfFirstScreen(event)) return;
 		if (parameter != null && !parameter.isEmpty()) {
 			SResponseT<ShopModel> res = marketService.getShop(parameter);
 			if (res.isSuccess()) {
@@ -67,7 +68,10 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 				add(new Text(shopProfile.getName()));
 				showShopProfileScreen();
 			}
-			else Notification.show(res.getMessage());
+			else{ Notification.show(res.getMessage());
+//				getUI().ifPresent(ui -> ui.navigate(""));
+
+			}
 		}
 	}
 

@@ -27,15 +27,19 @@ public class ProductInfo {
 	@Column(name = "quantity")
 	protected double quantity;
 
+	@Column(name = "priceAfterDiscount")
+	protected double priceAfterDiscount;
+
 	public ProductInfo() {
 	}
 
-	public ProductInfo(Product product, int quantity) {
+	public ProductInfo(Product product, int quantity, double priceAfterDiscount) {
 		this.name = product.getName();
 		this.category = product.getCategory();
 		this.description = product.getDescription();
 		this.price = product.getPrice();
 		this.quantity = quantity;
+		this.priceAfterDiscount = priceAfterDiscount;
 	}
 
 	public Long getId() {
@@ -60,6 +64,10 @@ public class ProductInfo {
 
 	public double getQuantity() {
 		return quantity;
+	}
+
+	public double getPriceAfterDiscount() {
+		return priceAfterDiscount;
 	}
 
 	// getters and setters...

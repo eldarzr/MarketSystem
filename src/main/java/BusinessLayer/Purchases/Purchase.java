@@ -99,7 +99,7 @@ public class Purchase implements PurchaseIntr{
         FinalCartPriceResult finalPriceResultResult = computeCartPrice();
         reduceProductsQuantity(shopsAndProducts);
         productsReducedFromShop = true;
-        addProductsToInvoices(shopsAndProducts);
+        addProductsToInvoices(shopsAndProducts, finalPriceResultResult);
         return finalPriceResultResult;
     }
 
@@ -230,15 +230,18 @@ public class Purchase implements PurchaseIntr{
             throw new Exception("Revert Payment failed");
     }
 
-    public void addProductsToInvoices(Map<String, ShopBag> shopsAndProducts) {
+    public void addProductsToInvoices(Map<String, ShopBag> shopsAndProducts, FinalCartPriceResult finalPriceResultResult) {
         for(String shopName : shopsAndProducts.keySet()){
+            ShopBag shopBagAfterDiscount = finalPriceResultResult.getShopBag(shopName);
             ShopInvoice shopInvoice = new ShopInvoice
                     (user.getName(), paymentDetails.toString(), supplyDetails.toString(), shopName);
             PersistenceManager.getInstance().persistObj(shopInvoice);
             ShopBag shopBag = shopsAndProducts.get(shopName);
             for (ShopBagItem shopBagItem : shopBag.getProductsAndQuantities().values()){
-                userInvoice.addProduct(shopName, shopBagItem.getProduct(), shopBagItem.getQuantity());
-                shopInvoice.addProduct(new ProductInfo(shopBagItem.getProduct(), shopBagItem.getQuantity()));
+                double priceAfterDiscount = shopBagAfterDiscount.getProductsAndQuantities()
+                        .get(shopBagItem.getProductName()).getProduct().getPrice();
+                userInvoice.addProduct(shopName, shopBagItem.getProduct(), shopBagItem.getQuantity(), priceAfterDiscount);
+                shopInvoice.addProduct(new ProductInfo(shopBagItem.getProduct(), shopBagItem.getQuantity(), priceAfterDiscount));
             }
             shopInvoices.add(shopInvoice);
         }

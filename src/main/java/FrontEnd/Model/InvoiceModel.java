@@ -9,6 +9,7 @@ public abstract class InvoiceModel {
 	private String userName;
 	private String paymentMethod;
 	private String deliveryMethod;
+	private long id;
 	public final int PRODUCT_NAME = 0;
 	public static final int PRODUCT_DESCRIPTION = 1;
 	public static final int PRODUCT_CATEGORY = 2;
@@ -22,9 +23,10 @@ public abstract class InvoiceModel {
 	}
 
 	public InvoiceModel(InvoiceDataObj invoice) {
-			this.userName = invoice.getUserName();
-			this.paymentMethod = invoice.getPaymentMethod();
-			this.deliveryMethod = invoice.getDeliveryMethod();
+		this.userName = invoice.getUserName();
+		this.paymentMethod = invoice.getPaymentMethod();
+		this.deliveryMethod = invoice.getDeliveryMethod();
+		this.id = invoice.getId();
 	}
 
 	public String getUserName() {
@@ -39,4 +41,7 @@ public abstract class InvoiceModel {
 		return deliveryMethod;
 	}
 
+	public long getId() {
+		return id;
+	}
 }

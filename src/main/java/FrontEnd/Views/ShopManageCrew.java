@@ -11,14 +11,12 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.html.H4;
-import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -28,6 +26,7 @@ import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
 
+import javax.swing.plaf.basic.BasicBorders;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -65,6 +64,7 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
 
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
+        if (checkIfFirstScreen(event)) return;
         currentUser = getCurrentUser().getName();
         if (parameter != null && !parameter.isEmpty()) {
             SResponseT<ShopModel> res = marketService.getShop(parameter);
@@ -256,11 +256,11 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
         dialog.setWidth("600px");
 
         Button readOnlyButton = new Button("Read Only");
-        setDefaultStyle(readOnlyButton);
+        setRedStyle(readOnlyButton);
         Button managePermissionsButton = new Button("Manage Permissions");
-        setDefaultStyle(managePermissionsButton);
+        setRedStyle(managePermissionsButton);
         Button fullAccessButton = new Button("Full Access");
-        setDefaultStyle(fullAccessButton);
+        setRedStyle(fullAccessButton);
 
         // An array of buttons for easy access
         Button[] accessButtons = new Button[]{readOnlyButton, managePermissionsButton, fullAccessButton};
@@ -279,8 +279,9 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
         managePermissionsButton.addClickListener(event -> highlightButton(accessButtons, 1));
         fullAccessButton.addClickListener(event -> highlightButton(accessButtons, 2));
 
-        HorizontalLayout layout = new HorizontalLayout();
-        layout.add(new VerticalLayout(title),readOnlyButton, managePermissionsButton, fullAccessButton);
+        VerticalLayout layout = new VerticalLayout();
+        HorizontalLayout buttonsLayout = new HorizontalLayout();
+        buttonsLayout.add(readOnlyButton, managePermissionsButton, fullAccessButton);
 
         Button changePermissionsButton = new Button("Change Permissions");
         setDefaultStyle(changePermissionsButton);
@@ -306,9 +307,31 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
         dialog.close();
         });
 
-        layout.add(new VerticalLayout(changePermissionsButton));
+// Add an 'X' icon button to close the dialog
+        Button closeBtn = new Button(new Icon(VaadinIcon.CLOSE_SMALL));
+        setRedStyle(closeBtn);
+        closeBtn.addClickListener(event -> dialog.close());
+        closeBtn.getStyle().set("margin", "0");
+        closeBtn.getStyle().set("padding", "0");
+
+// Create a header for the dialog using FlexLayout
+        FlexLayout header = new FlexLayout();
+        header.setWidth("100%");
+        header.setJustifyContentMode(JustifyContentMode.BETWEEN);
+        header.add(title, closeBtn);
+
+        layout.add(header, buttonsLayout, changePermissionsButton);
         dialog.add(layout);
         dialog.open();
+//
+//        layout.add(title,buttonsLayout,changePermissionsButton);
+//        dialog.add(layout);
+//        dialog.open();
+    }
+
+    private void setRedStyle(Button button) {
+        button.getStyle().set("background-image", "linear-gradient(to right,#ba1e1e , #f35151)");
+        button.getStyle().set("color", "white");
     }
 
     private void highlightButton(Button[] buttons, int indexToHighlight) {
@@ -337,8 +360,8 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
     private void openApprovalsDialog(List<PendingOwnerModel> pendingOwners) {
         Dialog dialog = new Dialog();
         dialog.setWidth("600px");
+
         pendingOwnersGrid = new Grid<>();
-//        pendingOwnersList = new ArrayList<>(pendingOwners);
         pendingOwnersList = acheivePendingOwnersName(pendingOwners);
         pendingOwnersGrid.setItems(pendingOwnersList);
 
@@ -352,12 +375,21 @@ public class ShopManageCrew extends BaseView implements HasUrlParameter<String> 
             Button approveButton = new Button("Approve", event -> handleApproveButtonClick(owner));
             setDefaultStyle(approveButton);
 
-
             layout.add(ownerSpan, approveButton);
             return layout;
         }));
 
-        dialog.add(pendingOwnersGrid);
+// Add an 'X' icon button to close the dialog
+        Button closeBtn = new Button(new Icon(VaadinIcon.CLOSE_SMALL));
+        setRedStyle(closeBtn);
+        closeBtn.addClickListener(event -> dialog.close());
+
+        HorizontalLayout dialogHeader = new HorizontalLayout();
+        dialogHeader.add(closeBtn);
+        dialogHeader.setWidth("100%");
+        dialogHeader.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+
+        dialog.add(dialogHeader, pendingOwnersGrid);
         dialog.open();
     }
 

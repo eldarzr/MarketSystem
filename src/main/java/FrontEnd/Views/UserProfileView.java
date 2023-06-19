@@ -46,6 +46,7 @@ public class UserProfileView extends BaseView implements HasUrlParameter<String>
 
 	@Override
 	public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
+		if (checkIfFirstScreen(event)) return;
 		if (parameter != null && !parameter.isEmpty()) {
 //			userProfile = new Gson().fromJson(parameter, UserModel.class);
 			SResponseT<UserModel> res = marketService.getUser(parameter);
