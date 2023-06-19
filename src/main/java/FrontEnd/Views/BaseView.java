@@ -262,8 +262,10 @@ public abstract class BaseView extends VerticalLayout implements BeforeEnterObse
 			marketService.removeNotificationCallback(userModel.getName());
 			userModel = new UserModel(res.getData(), res.getData());
 			VaadinSession.getCurrent().setAttribute(UserModel.class, userModel);
+			updateUserNameOnScreen(userModel);
+			horizontalLayout.remove(logoutLayout);
+			showLoginScreen();
 			getUI().ifPresent(ui -> ui.navigate(""));
-			setCurrentUser(userModel);
 		} else
 			Notification.show(res.getMessage());
 		return res.isSuccess();
@@ -287,7 +289,11 @@ public abstract class BaseView extends VerticalLayout implements BeforeEnterObse
         updateNotificationButton(getCurrentUser().getName());
 		profileButton.setVisible(true);
 		Button logoutButton = new Button("Logout");
-		logoutButton.addClickListener(click -> logout());
+		logoutButton.addClickListener(click -> {
+			profileButton.setVisible(false);
+			bellButton.setVisible(false);
+			logout();
+		});
 		logoutButton.getStyle().set("background-image", "linear-gradient(to right,#ffcc33 , #ffb347)");
 		logoutButton.getStyle().set("color", "white");
 		logoutLayout = new HorizontalLayout(logoutButton);
