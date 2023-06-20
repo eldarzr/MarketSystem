@@ -230,10 +230,11 @@ public class Shop implements ShopIntr {
 			throwException("the founder permissions cannot change");
 		if (actorMRIS.getType() != ManageType.OWNER)
 			throwException("only owners can set permissions");
+
+		actOn = actOn.toLowerCase();
 		if (!roles.containsKey(actOn)) {
 			throwException("you cannot set permissions to user that dosent already have a role in the shop. User :" + actOn);
 		}
-		actOn = actOn.toLowerCase();
 		MemberRoleInShop reqRole = roles.get(actOn);
 		String roleGrantor = reqRole.getGrantor();
 		if (!roleGrantor.equals(actor) || !actor.equals(founderUserName))
