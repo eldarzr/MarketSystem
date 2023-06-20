@@ -101,9 +101,10 @@ public class UserRepository {
     }
 
     public void removeMember(String userName) {
-        if (getMember(userName) == null)
+        User user=getMember(userName);
+        if (user == null)
             throwException("this user is not registered");
-        members.remove(userName);
+        members.remove(user);
         removeMemberFromDB(userName);
     }
 

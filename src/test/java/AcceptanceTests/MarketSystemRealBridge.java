@@ -13,6 +13,7 @@ import BusinessLayer.Shops.ProductIntr;
 import BusinessLayer.Shops.PurchasePolicies.PurchasePolicy;
 import BusinessLayer.Shops.Shop;
 import BusinessLayer.Shops.ShopProduct;
+import BusinessLayer.Users.User;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -448,6 +449,16 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     public void loadState(String stateFilePath) throws Exception {
         BufferedReader reader = new BufferedReader(new FileReader(stateFilePath));
         market.loadState(reader);
+    }
+
+    @Override
+    public String removeUser(String admin, String userName)  throws Exception{
+        return market.removeUser(admin,userName);
+    }
+    @Override
+    public User getUser(String userName)
+    {
+        return market.getUser(userName);
     }
 
 }

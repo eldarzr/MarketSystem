@@ -155,4 +155,8 @@ public interface MarketIntr {
     void loadState(BufferedReader StateReader) throws Exception;
 	
 	public boolean approveOwner(String appointedBy,String appointee , String shopName ) throws Exception;
+
+    String removeUser(String admin, String userName)  throws Exception;
+
+    User getUser(String userName);
 }

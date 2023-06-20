@@ -261,6 +261,8 @@ public class Shop implements ShopIntr {
 	public void closeShop(String userName) throws Exception {
 		if (!this.founderUserName.equals(userName))
 			throwException("Only the founder can close a store.");
+		if(!this.active)
+			throwException("the shop is already closed.");
 		this.active = false;
 		//TODO : Only owners & Admins can acheive information on the shop.
 		//TODO : products of the store should be unavilable now when a member looking for them.

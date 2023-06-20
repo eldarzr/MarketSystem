@@ -3,6 +3,7 @@ package AcceptanceTests;
 import BusinessLayer.Bids.Bid;
 import BusinessLayer.Notifications.Notification;
 import BusinessLayer.Shops.PurchasePolicies.PurchasePolicy;
+import BusinessLayer.Users.User;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -429,5 +430,15 @@ public class MarketSystemProxyBridge implements MarketSystemBridge {
     @Override
     public void addIfPurchasePolicy(String userName, String shopName, int pid1, int pid2) throws Exception {
 
+    }
+
+    @Override
+    public String removeUser(String admin, String userName) {
+        return "";
+    }
+
+    public User getUser(String userName)
+    {
+        return null;
     }
 }
