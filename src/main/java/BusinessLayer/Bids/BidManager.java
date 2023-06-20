@@ -36,6 +36,21 @@ public class BidManager {
         bidIdToApproves.put(res,new ArrayList<>());
         return res;
     }
+    // This function is called when one of the owners is fired, so that if they were the only one left to approve a bid, it will be approved
+    public void approveAllFullyApprovedBids(Collection<String> shouldApprove) throws Exception {
+        List<Bid> bids = bidData.getAllBids();
+        for(Bid b : bids){
+            int id = b.getId();
+            boolean fullyApproved = checkFullyApproved(id,shouldApprove);
+            if(fullyApproved){
+                bidData.approveBid(id);
+                Bid approved = bidData.getBid(id);
+                Notification notification = new Notification(approved.getUserName(), "Your bid has been approved! ");
+                NotificationPublisher.getInstance().notify(b.getUserName(),notification);
+            }
+        }
+    }
+
     public void approveBid(int id, String userName, Collection<String> shouldApprove) throws Exception {
         // Check if the bid exists
         if(!bidIdToApproves.containsKey(id))throw new Exception("bid with id "+id+" doesn't exist");

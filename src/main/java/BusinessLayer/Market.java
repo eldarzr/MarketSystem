@@ -403,7 +403,7 @@ public class Market implements MarketIntr{
         usersHandler.findMemberByName(userToRemove);
         Shop reqShop = checkForShop(shopName);
         reqShop.removeOwner(managerName,userToRemove);
-
+        reqShop.handleShopOwnerRemoval(usersHandler.getUser(managerName));
         //notify removed owner
         String message=String.format("Manager %s removed you as shop-manager of shop %s.", managerName, shopName);
         Notification notification=new Notification(managerName,message);
