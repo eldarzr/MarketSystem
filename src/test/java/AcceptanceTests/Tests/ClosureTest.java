@@ -69,13 +69,6 @@ public class ClosureTest {
 
     @AfterEach
     public void tearDown() throws Exception {
-        // Close shop
-        marketSystem.closeShop(shopOwner, shopName);
-        // Unregister users and clear data
-        //todo: uncomment this lines
-//        marketSystem.unregister("shopOwner");
-//        marketSystem.unregister("shopManager");
-
         marketSystem.clearData();
     }
 
@@ -104,6 +97,44 @@ public class ClosureTest {
             assertEquals(0, searchResults.size());
         } catch (Exception e) {
             fail("Failed to search for product: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testNonExistingShopClosure() {
+
+        // Close shop
+        try {
+            marketSystem.closeShop(shopOwner, "test");
+            fail("Closed fake shop");
+        } catch (Exception ignored) {}
+    }
+
+    @Test
+    public void testShopDoubleClosure() {
+        // Check initial shop status
+
+        // Check product search
+        try {
+            Collection<ProductBridge> searchResults = marketSystem.basicSearch(shopOwner, productName);
+            assertEquals(1, searchResults.size());
+        } catch (Exception e) {
+            fail("Failed to search for product: " + e.getMessage());
+        }
+
+        // Close shop
+        try {
+            marketSystem.closeShop(shopOwner, shopName);
+        } catch (Exception e) {
+            fail("Failed to close shop: " + e.getMessage());
+        }
+
+        // Close shop again
+        try {
+            marketSystem.closeShop(shopOwner, shopName);
+            fail("Able to close Shop which is already closed");
+        } catch (Exception e) {
+            assertEquals(e.getMessage(),"the shop is already closed.");
         }
     }
 }

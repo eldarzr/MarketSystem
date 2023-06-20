@@ -1,0 +1,10 @@
+register(user1, user1@gmail.com, Aa123456);
+register(user2, user2@gmail.com, Aa123456);
+register(user3, user3@gmail.com, Aa123456);
+register(user4, user4@gmail.com, Aa123456);
+register(user5, user5@gmail.com, Aa123456);
+login(user2, Aa123456);
+createShop(user2, shop1);
+addNewProduct(user2, shop1, Bamba, snacks, Good product, 20);
+addProductItems(user2, shop1, Bamba,10);
+logout(user2);

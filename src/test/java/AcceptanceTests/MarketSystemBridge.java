@@ -3,6 +3,7 @@ package AcceptanceTests;
 import BusinessLayer.Bids.Bid;
 import BusinessLayer.Notifications.Notification;
 import BusinessLayer.Shops.PurchasePolicies.PurchasePolicy;
+import BusinessLayer.Users.User;
 
 import java.time.LocalDate;
 import java.util.Collection;
@@ -174,4 +175,8 @@ public interface MarketSystemBridge {
     public void addIfPurchasePolicy(String userName, String shopName,int pid1, int pid2)throws Exception;
 
     public void loadState(String stateFilePath) throws Exception;
+
+    public String removeUser(String admin,String userName) throws Exception;
+
+    public User getUser(String userName);
 }
