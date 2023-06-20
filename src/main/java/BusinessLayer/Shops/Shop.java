@@ -182,7 +182,10 @@ public class Shop implements ShopIntr {
 
 		boolean res = ownersHandler.approveOwner(actor,actOn);
 		if(res) {
-			String message = String.format("User %s appointed you as shop-owner of shop %s.", actor, this.name);
+			if(!roles.containsKey(actOn))
+				return res;
+			String grantor = roles.get(actOn).getGrantor();
+			String message = String.format("User %s appointed you as shop-owner of shop %s.", grantor, this.name);
 			Notification notification = new Notification(actor, message);
 			NotificationPublisher.getInstance().notify(actOn, notification);
 			logger.info(String.format("User %s appointed %s as shop-owner of shop %s.", actor, actOn, this.name));
