@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AcheiveCrewInformations {
 
@@ -53,6 +54,22 @@ public class AcheiveCrewInformations {
     }
 
     @Test
+    void NoSuchShop_Failure() throws Exception {
+    assertThrows(Exception.class , ()->market.getShopManagersAndPermissions("eldar", "Shopipi"));
+    }
+
+    @Test
+    void ManagerAskForInfo_Failure() throws Exception {
+        assertThrows(Exception.class , ()->market.getShopManagersAndPermissions("gabi", "shopEldar"));
+    }
+
+    @Test
+    void dosentHaveRoleAsksForInfo_Failure() throws Exception {
+        assertThrows(Exception.class , ()->market.getShopManagersAndPermissions("Idan", "shopEldar"));
+    }
+
+
+    @Test
     void readOnly_validate() throws Exception {
 //        market.appointShopManager("Eldar", "Naor", shopNames[0]);
         market.changeManagerAccess("Eldar","Naor", shopNames[0],ManageKindEnum.READ_ONLY.getValue());
@@ -90,6 +107,18 @@ public class AcheiveCrewInformations {
     void readOnly_success() throws Exception {
         market.changeManagerAccess("Eldar","Naor", "shopEldar",ManageKindEnum.READ_ONLY.getValue());
        assertEquals("ColaK", market.getProduct("Naor",shopNames[0],"CoLaK").getName());
+    }
+    @Test
+    void readOnly_failure() throws Exception {
+        market.changeManagerAccess("Eldar","Naor", "shopEldar",ManageKindEnum.READ_ONLY.getValue());
+        assertThrows(Exception.class , () -> market.removeProduct("Naor","shopEldar","ColaK"));
+    }
+
+    @Test
+    void ManageRead_success() throws Exception {
+        market.changeManagerAccess("Eldar","Naor", "shopEldar", ManageKindEnum.MANAGE_READ_ACCESS.getValue());
+        assertEquals("ColaK", market.getProduct("Naor",shopNames[0],"ColaK").getName());
+        market.removeProduct("Naor","shopEldar","ColaK");
     }
 }
 
