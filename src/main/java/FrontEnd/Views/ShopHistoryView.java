@@ -111,7 +111,6 @@ public class ShopHistoryView extends BaseView implements HasUrlParameter<String>
     @Override
     public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
         if (checkIfFirstScreen(event)) return;
-        Notification.show("aaa");
         if (parameter != null && !parameter.isEmpty()) {
             SResponseT<ShopModel> res = marketService.getShop(parameter);
             if (res.isSuccess()) {

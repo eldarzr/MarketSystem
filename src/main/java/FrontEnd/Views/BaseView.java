@@ -219,13 +219,13 @@ public abstract class BaseView extends VerticalLayout implements BeforeEnterObse
 			if (res.isSuccess()){
 				Notification.show("login successfully");
 				userModel = res.getData();
-				Notification.show(userModel.getName());
+				//Notification.show(userModel.getName());
 				setCurrentUser(userModel);
 				horizontalLayout.remove(loginLayout);
 				showLogoutScreen();
 			}
 			else
-				Notification.show(res.getMessage());
+				Notification.show("Login failed: "+res.getMessage());
 			return res.isSuccess();
 		}
 		return false;

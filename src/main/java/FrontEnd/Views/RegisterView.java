@@ -65,7 +65,7 @@ public class RegisterView extends BaseView {
 			Notification.show("Enter an email address");
 		} else {
 			SResponseT <UserModel> res = marketService.register(username, email, password1);
-			Notification.show( res.isSuccess() ? "Check your email." : res.getMessage());
+			Notification.show( res.isSuccess() ? "User successfully registered to the system." : res.getMessage());
 			return res.isSuccess();
 		}
 		return false;
