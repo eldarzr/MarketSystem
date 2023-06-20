@@ -59,7 +59,7 @@ public class ShopProfileView extends BaseView implements HasUrlParameter<String>
 
 	@Override
 	public void setParameter(BeforeEvent event, @OptionalParameter String parameter) {
-		//Notification.show("aaa");
+
 		if (checkIfFirstScreen(event)) return;
 		if (parameter != null && !parameter.isEmpty()) {
 			SResponseT<ShopModel> res = marketService.getShop(parameter);

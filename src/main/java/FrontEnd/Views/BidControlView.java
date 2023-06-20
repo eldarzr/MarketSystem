@@ -47,6 +47,8 @@ public class BidControlView extends BaseView implements BeforeEnterObserver {
         grid = new Grid<>(BidDataObj.class);
         select = new Select<>();
         select.setItems(BidDataObj.approved, BidDataObj.pending, BidDataObj.rejected);
+
+
         select.addValueChangeListener(event -> updateGrid());
         approveButton = new Button("Approve", click -> approveBid());
         approveButton.getStyle().set("color", "white");
@@ -63,9 +65,9 @@ public class BidControlView extends BaseView implements BeforeEnterObserver {
         counterBidField.setStep(0.01);
         counterBidDialog.add(counterBidField);
         counterBidDialog.add(new Button("Submit Offer", click -> submitCounterBid()));
-        if(shopName == null){
-            System.out.println("shopname is null");
-        }
+//        if(shopName == null){
+//            //System.out.println("shopname is null");
+//        }
         HorizontalLayout buttonsLayout = new HorizontalLayout(approveButton,counterButton,rejectButton);
         VerticalLayout layout = new VerticalLayout(select, grid, buttonsLayout);
         add(layout);
