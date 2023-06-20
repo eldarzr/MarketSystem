@@ -1,0 +1,16 @@
+register(user1, user1@gmail.com, Aa123456);
+addAdmin(user1);
+register(user2, user2@gmail.com, Aa123456);
+register(user3, user3@gmail.com, Aa123456);
+register(user4, user4@gmail.com, Aa123456);
+register(user5, user5@gmail.com, Aa123456);
+register(user6, user6@gmail.com, Aa123456);
+login(user2, Aa123456);
+createShop(user2, shop1);
+addNewProduct(user2, shop1, Bamba, snacks, Good product, 30);
+addProductItems(user2, shop1, Bamba,20);
+appointShopManager(user2, user3, shop1);
+changeManagerAccess(user2, user3, shop1, 1);
+appointShopOwner(user2, user4, shop1);
+appointShopOwner(user2, user5, shop1);
+logout(user2);
