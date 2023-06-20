@@ -117,6 +117,10 @@ public class Product implements ProductIntr, Serializable {
 	}
 
 	public void setDescription(String description) throws Exception {
+		if(description.length() > MAX_DESCRIPTION_LENGTH)
+			throw new Exception(String.format("product description must be shorter then %d", MAX_DESCRIPTION_LENGTH));
+		if(description.length() < MIN_DESCRIPTION_LENGTH)
+			throw new Exception(String.format("product description must be longer then %d", MIN_DESCRIPTION_LENGTH));
 		this.description = description;
 	}
 
