@@ -55,7 +55,7 @@ class MarketAppointManagerOwnerTests {
     }
 
     @Test
-    void appointShopOwner_failure3()  {
+    void appointShopOwner_ApointeeIsAlreadyAnOwner_failure3()  {
         Exception exception = assertThrows(Exception.class, () ->   market.appointShopOwner("naor","eldar","shop1"));
         System.out.println(exception.getMessage());
     }
@@ -71,39 +71,45 @@ class MarketAppointManagerOwnerTests {
     }
 
     @Test
-    void appointShopManager_failure1()  {
+    void appointShopManager_ActOnDosentExist_failure1()  {
+        Exception exception = assertThrows(Exception.class, () ->   market.appointShopManager("eldar","KraviTzK","shop1"));
+        System.out.println(exception.getMessage());
+    }
+
+    @Test
+    void appointShopManager_NoRoleTryToAppoint_failure1()  {
         Exception exception = assertThrows(Exception.class, () ->   market.appointShopManager("niv12","eldar","shop1"));
         System.out.println(exception.getMessage());
     }
 
     @Test
-    void appointShopManager_failure2()  {
+    void appointShopManager_OwnerTriesAppointHimselfToManager_failure2()  {
         Exception exception = assertThrows(Exception.class, () ->   market.appointShopManager("eldar","eldar","shop1"));
         System.out.println(exception.getMessage());
     }
 
-//    @Test
-//    void appointShopManager_failure3() throws Exception {
-//        market.appointShopOwner("eldar","naor","shop1");
-//        Exception exception = assertThrows(Exception.class, () ->   market.appointShopManager("naor","eldar","shop1"));
-//        System.out.println(exception.getMessage());
-//    }
+    @Test
+    void appointShopManager_ManagerTryAppointHisGrantor_failure3() throws Exception {
+        market.appointShopOwner("eldar","naor","shop1");
+        Exception exception = assertThrows(Exception.class, () ->   market.appointShopManager("naor","eldar","shop1"));
+        System.out.println(exception.getMessage());
+    }
 //
-//    @Test
-//    void appointShopManager_failure4() throws Exception {
-//        market.appointShopOwner("eldar","naor","shop1");
-//        Exception exception = assertThrows(Exception.class, () ->   market.appointShopManager("naor","naor","shop1"));
-//        System.out.println(exception.getMessage());
-//    }
+    @Test
+    void appointShopManager_OwnerTryToAppointHimself_failure4() throws Exception {
+        market.appointShopOwner("eldar","naor","shop1");
+        Exception exception = assertThrows(Exception.class, () ->   market.appointShopManager("naor","naor","shop1"));
+        System.out.println(exception.getMessage());
+    }
 
     @Test
-    void appointShopManager_failure5() throws Exception {
+    void appointShopManager_ManagerTryToAppointManager_failure() throws Exception {
         market.appointShopManager("eldar","naor","shop1");
         Exception exception = assertThrows(Exception.class, () ->   market.appointShopManager("naor","niv12","shop1"));
         System.out.println(exception.getMessage());
     }
     @Test
-    void appointShopManager_failure6() throws Exception {
+    void appointShopManager_ManagerTryToAppointOwner_failure6() throws Exception {
         market.appointShopManager("eldar","naor","shop1");
 //        MemberRoleInShop role = market.checkForShop("shop1").validateUserHasRole("naor");
         Exception exception = assertThrows(Exception.class, () ->   market.appointShopOwner("naor","niv12","shop1"));
