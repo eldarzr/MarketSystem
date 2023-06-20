@@ -5,6 +5,7 @@ import BusinessLayer.Shops.Product;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -83,5 +84,9 @@ public class BidData {
     public Bid getBid(int id) throws Exception {
         if(!bidMap.containsKey(id))throw new Exception("No bid with id: "+id);
         return bidMap.get(id);
+    }
+
+    public List<Bid> getAllBids() {
+        return bidMap.values().stream().toList();
     }
 }

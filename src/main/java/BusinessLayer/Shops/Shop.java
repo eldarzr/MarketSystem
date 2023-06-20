@@ -663,5 +663,10 @@ public class Shop implements ShopIntr {
 		MemberRoleInShop reqRole =  validateUserHasRole(actor);
 		return ownersHandler.getPendingsOwnersObj();
 	}
+
+	public void handleShopOwnerRemoval(User user) throws Exception {
+		Collection<String> shouldApprove = getBidResponsibleUsers(user);
+		bidManager.approveAllFullyApprovedBids(shouldApprove);
+	}
 }
 

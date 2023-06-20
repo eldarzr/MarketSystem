@@ -355,8 +355,8 @@ public class MarketSystemRealBridge implements MarketSystemBridge {
     }
 
     @Override
-    public void removeShopOwner(String ShopOwner, String shopOwner, String shopName) {
-        throw new UnsupportedOperationException();
+    public void removeShopOwner(String managerName, String userToRemove, String shopName) throws Exception {
+        market.removeShopOwner(managerName,userToRemove, shopName);
     }
 
     @Override

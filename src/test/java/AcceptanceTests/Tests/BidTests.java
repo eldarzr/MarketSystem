@@ -14,7 +14,6 @@ import java.util.Collection;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BidTests {
-
     private MarketSystemBridge market= new MarketSystemRealBridge();
     private String tempUserName;
     private String category = "category";
@@ -126,6 +125,30 @@ public class BidTests {
             market.rejectBid(jane,shopName,0);
             fail("Jane should not be able to reject a bid in shop "+shopName);
         }catch (Exception ignored){}
+    }
+
+    @Test
+    public void OwnerRemovedMakesBidApproved(){
+        String bidderUserName = "bidder12";
+        String bidderMail = "bidder12@gmail.com";
+
+        try{
+            market.register(bidderUserName,bidderMail,pass);
+            market.login(bidderUserName,pass);
+            market.login(john, pass);
+            market.login(jane,pass);
+            market.appointShopOwner(john,jane,shopName);
+            market.createBidOffer(bidderUserName,item1,shopName,5);
+            Collection<Bid> bids = market.getPendingBids(john,shopName);
+            Bid b = bids.stream().toList().get(0);
+            market.approveBid(john, shopName,b.getId());
+            assertEquals(b.getStatus(), BidStatus.PENDING);
+            // Bid should be approved as soon as jane is fired
+            market.removeShopOwner(john, jane, shopName);
+            assertEquals(b.getStatus(), BidStatus.APPROVED);
+        }catch (Exception e){
+            fail("Bid should be approved as soon as jane is fired");
+        }
     }
 
 }

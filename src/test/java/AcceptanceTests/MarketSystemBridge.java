@@ -147,7 +147,7 @@ public interface MarketSystemBridge {
 
     Collection<Integer> getManagerPermissionsInShop(String shopManager, String shopName) throws Exception;
 
-    void removeShopOwner(String ShopOwner, String shopOwner, String shopName);
+    void removeShopOwner(String managerName, String userToRemove, String shopName) throws Exception;
 
     //Bid functions
     public void createBidOffer (String userName, String productName, String shopName, double bidPrice) throws Exception ;
